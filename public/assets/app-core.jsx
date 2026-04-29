@@ -2,6 +2,14 @@
 // Main app component
 const { useState, useEffect, useMemo, useRef, useCallback } = React;
 
+// Snap tolerance: locations farther than this from any rail line are treated as
+// "off-rail" and produce no train list. Tuned for handheld use; revisit when
+// zoom-aware tolerances are added.
+const MAX_SNAP_DIST_KM = 2;
+// A line counts as a candidate (selectable in the chip row) if it is within
+// MAX_SNAP_DIST_KM of the user AND within this much of the closest line.
+const CANDIDATE_GRACE_KM = 1.0;
+
 const Icon = ({ id, size = 18 }) =>
   React.createElement("svg", { width: size, height: size, "aria-hidden": true },
     React.createElement("use", { href: `assets/icons.svg#${id}` }));
@@ -85,32 +93,52 @@ function App() {
     setTypeFilters([]);
   };
 
-  // ============= COMPUTE NEAREST RAIL POINT + TRAINS =============
-  const { nearest, trains } = useMemo(() => {
-    if (!location) return { nearest: null, trains: [] };
+  // ============= COMPUTE LINE CANDIDATES =============
+  // All lines within tolerance, sorted by distance. The first is the default
+  // active line; the user can switch via the chip row in the train sheet.
+  const [activeLineId, setActiveLineId] = useState(null);
+  const { candidates, offRail } = useMemo(() => {
+    if (!location) return { candidates: [], offRail: null };
     const lines = RAIL_DATA[region].lines;
+    const all = lines
+      .map(line => ({ ...RailUtil.closestOnLine(location, line), line }))
+      .sort((a, b) => a.dist - b.dist);
+    const best = all[0];
+    if (!best) return { candidates: [], offRail: null };
+    if (best.dist > MAX_SNAP_DIST_KM) {
+      return { candidates: [], offRail: { lineName: best.line.name, dist: best.dist } };
+    }
+    const candidates = all.filter(c =>
+      c.dist <= MAX_SNAP_DIST_KM && c.dist <= best.dist + CANDIDATE_GRACE_KM
+    );
+    return { candidates, offRail: null };
+  }, [location, region]);
 
-    // Find closest point across all lines
-    let nearest = null;
-    lines.forEach(line => {
-      const p = RailUtil.closestOnLine(location, line.stations);
-      if (!nearest || p.dist < nearest.dist) {
-        nearest = { ...p, line };
-      }
-    });
+  // Keep activeLineId in sync with the candidates list.
+  useEffect(() => {
+    if (candidates.length === 0) {
+      if (activeLineId !== null) setActiveLineId(null);
+      return;
+    }
+    if (!activeLineId || !candidates.some(c => c.line.id === activeLineId)) {
+      setActiveLineId(candidates[0].line.id);
+    }
+  }, [candidates, activeLineId]);
 
-    // Pull all trains for the target date
+  // The nearest snap point of the *active* candidate.
+  const nearest = useMemo(() => {
+    if (candidates.length === 0) return null;
+    return candidates.find(c => c.line.id === activeLineId) || candidates[0];
+  }, [candidates, activeLineId]);
+
+  // Trains on the active line, with time-of-passage at the snap point.
+  const trains = useMemo(() => {
+    if (!nearest) return [];
     const dayTrains = TrainGen.generate(region, targetTime);
-
-    // Keep only trains on the nearest line, and compute their time-of-passage
-    // at the nearest point (interpolate between surrounding stops).
     const out = [];
     dayTrains.forEach(train => {
       if (train.line.id !== nearest.line.id) return;
-      // Find the two stops surrounding nearest.km
       const stops = train.stops;
-      const ascending = stops[0].km < stops[stops.length-1].km;
-      // locate the segment that contains nearest.km
       let passTime = null, prevStop = null, nextStop = null;
       for (let i = 0; i < stops.length - 1; i++) {
         const a = stops[i], b = stops[i+1];
@@ -125,12 +153,9 @@ function App() {
       if (!passTime) return;
       out.push({ ...train, passTime, prevStop, nextStop });
     });
-
-    // Sort by approach time relative to targetTime
     out.sort((a, b) => Math.abs(a.passTime - targetTime) - Math.abs(b.passTime - targetTime));
-
-    return { nearest, trains: out };
-  }, [location, region, targetTime]);
+    return out;
+  }, [nearest, region, targetTime]);
 
   // Apply filters
   const filteredTrains = useMemo(() => {
@@ -167,7 +192,7 @@ function App() {
         if (T >= a.time.getTime() && T <= b.time.getTime()) {
           const u = (T - a.time.getTime()) / (b.time.getTime() - a.time.getTime());
           const km = a.km + u * (b.km - a.km);
-          const pos = RailUtil.positionAtKm(train.line.stations, km);
+          const pos = RailUtil.positionAtKm(train.line, km);
           result.push({ ...train, livePos: pos, liveKm: km });
           break;
         }
@@ -223,7 +248,7 @@ function App() {
         region, location, setLocation, pickFromMap,
         useGeolocation, favorites, addFavorite, removeFavorite, pickFavorite,
         targetTime, setTargetTime, quickPick, handleQuickPick, setQuickPick,
-        now, nearest, timeFocusTick,
+        now, nearest, offRail, timeFocusTick,
       }),
       React.createElement(MapArea, {
         region, location, nearest, liveTrains, targetTime, now,
@@ -242,7 +267,8 @@ function App() {
       React.createElement(TrainSheet, {
         collapsed: sheetCollapsed,
         onToggle: () => setSheetCollapsed(!sheetCollapsed),
-        nearest, trains: filteredTrains, totalCount: trains.length,
+        nearest, offRail, candidates, activeLineId, setActiveLineId,
+        trains: filteredTrains, totalCount: trains.length,
         liveTrainCount: liveTrains.length,
         dirFilter, setDirFilter,
         typeFilters, setTypeFilters, availableTypes,
@@ -299,7 +325,7 @@ function Panel(props) {
     open, collapsed, onClose, region, location, setLocation, useGeolocation,
     favorites, addFavorite, removeFavorite, pickFavorite,
     targetTime, setTargetTime, quickPick, handleQuickPick, setQuickPick,
-    now, nearest, timeFocusTick,
+    now, nearest, offRail, timeFocusTick,
   } = props;
   // Ref to the time-control section so we can scroll & flash it when the map HUD is clicked.
   const timeSectionRef = useRef(null);
@@ -492,7 +518,14 @@ function Panel(props) {
             React.createElement("span", null, "Google 導航"),
           ),
         ),
-      ) : React.createElement("div", { className: "nearest-empty" }, "請先選擇位置"),
+      ) : offRail
+        ? React.createElement("div", { className: "nearest-empty" },
+            React.createElement("div", { style: { color: 'var(--me-text-primary)', marginBottom: 4 } },
+              "目前位置不在任何鐵道附近"),
+            React.createElement("div", { style: { fontSize: 11, color: 'var(--me-text-muted)' } },
+              `最近的「${offRail.lineName}」距離 ${offRail.dist.toFixed(1)} km`),
+          )
+        : React.createElement("div", { className: "nearest-empty" }, "請先選擇位置"),
     ),
   );
 }
