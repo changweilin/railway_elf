@@ -1,0 +1,180 @@
+/* ==========================================================
+   Mapping Elf — Colors & Type
+   Extracted from src/styles/main.css (design tokens) and
+   src/index.html (font stack).
+   ========================================================== */
+
+/* ---------- Fonts (via Google Fonts) ---------- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
+
+:root {
+  /* ==============================
+     COLOR — Surfaces (dark theme)
+     ============================== */
+  --me-bg-primary:   #0f1117;  /* app background */
+  --me-bg-secondary: #161822;  /* bottom panel */
+  --me-bg-tertiary:  #1e2030;  /* inputs, stat cards, chips */
+  --me-bg-glass:        rgba(22, 24, 34, 0.85);
+  --me-bg-glass-hover:  rgba(30, 32, 48, 0.90);
+
+  /* ==============================
+     COLOR — Text
+     ============================== */
+  --me-text-primary:   #e8eaf0;
+  --me-text-secondary: #9ca3af;
+  --me-text-muted:     #6b7280;
+
+  /* ==============================
+     COLOR — Brand / Accent
+     The signature mint→blue gradient shows up in:
+       • logo mark
+       • app title wordmark
+       • primary buttons
+       • active chips
+       • active layer switcher
+       • temperature readouts
+     ============================== */
+  --me-accent-primary:   #6ee7b7; /* mint */
+  --me-accent-secondary: #3b82f6; /* blue */
+  --me-accent-gradient: linear-gradient(135deg, #6ee7b7 0%, #3b82f6 100%);
+  --me-accent-gradient-subtle: linear-gradient(135deg,
+      rgba(110,231,183,0.15) 0%,
+      rgba( 59,130,246,0.15) 100%);
+
+  /* ==============================
+     COLOR — Semantic
+     Used for stat tiles, notifications, status dots,
+     and the 4-way route-alternative palette.
+     ============================== */
+  --me-success: #34d399;   /* ascent, online status */
+  --me-info:    #60a5fa;   /* distance */
+  --me-warning: #fbbf24;   /* max elevation, offline */
+  --me-danger:  #f87171;   /* descent, destructive */
+
+  /* Route alternatives (always used in this order) */
+  --me-alt-0: #6ee7b7;
+  --me-alt-1: #60a5fa;
+  --me-alt-2: #f59e0b;
+  --me-alt-3: #f87171;
+
+  /* ==============================
+     COLOR — Borders
+     Borders are hairlines of white at very low alpha —
+     glassmorphism convention, not hard lines.
+     ============================== */
+  --me-border:       rgba(255, 255, 255, 0.06);
+  --me-border-hover: rgba(255, 255, 255, 0.12);
+
+  /* ==============================
+     SHADOW — Elevation
+     ============================== */
+  --me-shadow-sm:   0 2px 8px  rgba(0,0,0,0.30);
+  --me-shadow-md:   0 4px 16px rgba(0,0,0,0.40);
+  --me-shadow-lg:   0 8px 32px rgba(0,0,0,0.50);
+  --me-shadow-glow: 0 0   20px rgba(110,231,183,0.15);
+
+  /* ==============================
+     RADIUS
+     ============================== */
+  --me-radius-sm: 8px;
+  --me-radius-md: 12px;
+  --me-radius-lg: 16px;
+  --me-radius-xl: 20px;
+
+  /* ==============================
+     SPACING (implicit — derived from component padding)
+     The codebase uses these values as de-facto scale.
+     ============================== */
+  --me-space-1: 4px;
+  --me-space-2: 6px;
+  --me-space-3: 8px;
+  --me-space-4: 10px;
+  --me-space-5: 12px;
+  --me-space-6: 14px;
+  --me-space-7: 16px;
+  --me-space-8: 20px;
+  --me-space-9: 24px;
+
+  /* ==============================
+     LAYOUT CONSTANTS
+     ============================== */
+  --me-panel-width:         380px;
+  --me-toolbar-height:      56px;
+  --me-bottom-panel-height: 190px;
+
+  /* ==============================
+     MOTION
+     Every transition in the app uses one of these
+     three durations. Short for affordances, normal
+     for state, smooth for panels.
+     ============================== */
+  --me-transition-fast:   0.15s ease;
+  --me-transition-normal: 0.25s ease;
+  --me-transition-smooth: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ==============================
+     TYPE — Families
+     Inter + Noto Sans TC is a deliberate CJK pairing:
+     Inter sets Latin text, Noto Sans TC handles the
+     Traditional Chinese UI strings, fallbacks for native.
+     ============================== */
+  --me-font-sans: 'Inter', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+  --me-font-mono: 'SF Mono', 'Cascadia Code', ui-monospace, Menlo, Consolas, monospace;
+
+  /* ==============================
+     TYPE — Semantic sizes
+     The app is information-dense. Type is small by
+     default (14px body) with a tight hierarchy.
+     ============================== */
+  --me-h1-size: 28px; --me-h1-weight: 700; --me-h1-lh: 1.15; --me-h1-tracking: -0.02em;
+  --me-h2-size: 22px; --me-h2-weight: 700; --me-h2-lh: 1.2;  --me-h2-tracking: -0.01em;
+  --me-h3-size: 18px; --me-h3-weight: 600; --me-h3-lh: 1.25;
+  --me-h4-size: 14px; --me-h4-weight: 600; --me-h4-lh: 1.3;  /* section headers */
+  --me-body-size: 14px; --me-body-weight: 400; --me-body-lh: 1.45;
+  --me-sm-size: 13px;   --me-xs-size: 12px;  --me-xxs-size: 11px;
+  --me-micro-size: 10px;
+
+  /* Display numbers (stat values, temperature) */
+  --me-stat-size: 16px;  --me-stat-weight: 700;
+  --me-temp-size: 32px;  --me-temp-weight: 700;
+}
+
+/* ==========================================================
+   Semantic element styles
+   ========================================================== */
+body.me-root {
+  font-family: var(--me-font-sans);
+  font-size: var(--me-body-size);
+  line-height: var(--me-body-lh);
+  color: var(--me-text-primary);
+  background: var(--me-bg-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.me-h1 {
+  font-size: var(--me-h1-size);
+  font-weight: var(--me-h1-weight);
+  line-height: var(--me-h1-lh);
+  letter-spacing: var(--me-h1-tracking);
+  background: var(--me-accent-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.me-h2 { font-size: var(--me-h2-size); font-weight: var(--me-h2-weight); line-height: var(--me-h2-lh); letter-spacing: var(--me-h2-tracking); color: var(--me-text-primary); }
+.me-h3 { font-size: var(--me-h3-size); font-weight: var(--me-h3-weight); line-height: var(--me-h3-lh); color: var(--me-text-primary); }
+.me-h4 { font-size: var(--me-h4-size); font-weight: var(--me-h4-weight); line-height: var(--me-h4-lh); color: var(--me-text-primary); display: flex; align-items: center; gap: 8px; }
+
+.me-p       { font-size: var(--me-body-size); color: var(--me-text-primary); }
+.me-p-muted { font-size: var(--me-sm-size);   color: var(--me-text-secondary); }
+.me-caption { font-size: var(--me-xxs-size);  color: var(--me-text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
+.me-mono    { font-family: var(--me-font-mono); font-size: var(--me-xs-size); color: var(--me-text-secondary); }
+.me-hint    { font-size: var(--me-xxs-size); color: var(--me-text-muted); }
+
+/* Stat number — large, bold, sometimes gradient */
+.me-stat-value     { font-size: var(--me-stat-size); font-weight: var(--me-stat-weight); color: var(--me-text-primary); }
+.me-stat-value-grad{
+  font-size: var(--me-temp-size); font-weight: var(--me-temp-weight);
+  background: var(--me-accent-gradient);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
