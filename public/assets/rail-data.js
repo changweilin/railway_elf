@@ -172,6 +172,51 @@ window.RAIL_DATA = {
 };
 
 // ========================================================
+// MERGE GENERATED SHAPES (from rail-data.generated.js, if present)
+// Each line in RAIL_SHAPES contributes:
+//   - line.shape: [{lat,lng,km}, ...] — high-resolution polyline along the real
+//     railway alignment, with cumulative km for fast lookup
+//   - station.km is overwritten with the cumulative km of the station projected
+//     onto the shape (so stations and shape stay numerically consistent)
+// When a line has no generated shape, line.shape stays undefined and helpers
+// fall back to the station-to-station polyline as before.
+// ========================================================
+(function mergeShapes(){
+  const shapes = window.RAIL_SHAPES;
+  if (!shapes) return;
+  for (const region of Object.values(window.RAIL_DATA)) {
+    for (const line of region.lines) {
+      const gen = shapes[line.id];
+      if (!gen || !gen.shape || gen.shape.length < 2) continue;
+      // Build shape with cumulative km in one pass
+      const pts = gen.shape;
+      const out = new Array(pts.length);
+      let cum = 0;
+      out[0] = { lat: pts[0][0], lng: pts[0][1], km: 0 };
+      for (let i = 1; i < pts.length; i++) {
+        const a = out[i-1];
+        const b = { lat: pts[i][0], lng: pts[i][1] };
+        // Inline haversine to avoid forward-ref to RailUtil (defined below)
+        const R = 6371;
+        const toRad = d => d * Math.PI / 180;
+        const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
+        const la1 = toRad(a.lat), la2 = toRad(b.lat);
+        const x = Math.sin(dLat/2)**2 + Math.cos(la1)*Math.cos(la2)*Math.sin(dLng/2)**2;
+        cum += 2 * R * Math.asin(Math.sqrt(x));
+        out[i] = { lat: b.lat, lng: b.lng, km: cum };
+      }
+      line.shape = out;
+      // Update station km from generator (already projected onto shape)
+      if (gen.stationKms) {
+        for (const st of line.stations) {
+          if (gen.stationKms[st.name] != null) st.km = gen.stationKms[st.name];
+        }
+      }
+    }
+  }
+})();
+
+// ========================================================
 // GEO HELPERS
 // ========================================================
 window.RailUtil = (function(){
@@ -209,12 +254,23 @@ window.RailUtil = (function(){
     };
   }
 
-  // Find the closest point on a polyline (array of {lat,lng,km})
-  // Returns {lat,lng, km, segmentIndex, dist}
-  function closestOnLine(P, stations) {
+  // Pick the polyline to query for a given line: prefer the high-res shape from
+  // rail-data.generated.js, fall back to the station-to-station path.
+  function polylineFor(lineOrStations) {
+    // Backward-compat: if caller passed a stations array directly, use it.
+    if (Array.isArray(lineOrStations)) return lineOrStations;
+    const line = lineOrStations;
+    return (line.shape && line.shape.length >= 2) ? line.shape : line.stations;
+  }
+
+  // Find the closest point on a line's polyline.
+  // Accepts either a line object (preferred) or a stations array (legacy).
+  // Returns {lat, lng, km, segmentIndex, dist}.
+  function closestOnLine(P, lineOrStations) {
+    const poly = polylineFor(lineOrStations);
     let best = null;
-    for (let i = 0; i < stations.length - 1; i++) {
-      const A = stations[i], B = stations[i+1];
+    for (let i = 0; i < poly.length - 1; i++) {
+      const A = poly[i], B = poly[i+1];
       const proj = projectOnSegment(P, A, B);
       const km = A.km + proj.t * (B.km - A.km);
       if (!best || proj.dist < best.dist) {
@@ -224,13 +280,14 @@ window.RailUtil = (function(){
     return best;
   }
 
-  // Given a line's stations (with km) and a cumulative km value, return lat/lng of that position.
-  function positionAtKm(stations, km) {
-    if (km <= stations[0].km) return { lat: stations[0].lat, lng: stations[0].lng };
-    const last = stations[stations.length - 1];
+  // Given a line and a cumulative km value, return lat/lng of that position.
+  function positionAtKm(lineOrStations, km) {
+    const poly = polylineFor(lineOrStations);
+    if (km <= poly[0].km) return { lat: poly[0].lat, lng: poly[0].lng };
+    const last = poly[poly.length - 1];
     if (km >= last.km) return { lat: last.lat, lng: last.lng };
-    for (let i = 0; i < stations.length - 1; i++) {
-      const A = stations[i], B = stations[i+1];
+    for (let i = 0; i < poly.length - 1; i++) {
+      const A = poly[i], B = poly[i+1];
       if (km >= A.km && km <= B.km) {
         const t = (km - A.km) / (B.km - A.km);
         return { lat: A.lat + t * (B.lat - A.lat), lng: A.lng + t * (B.lng - A.lng) };

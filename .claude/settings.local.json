@@ -8,7 +8,10 @@
       "PowerShell(Get-NetTCPConnection *)",
       "PowerShell(netsh int *)",
       "PowerShell(Get-CimInstance *)",
-      "PowerShell($avoid = @\\(5173, 6287\\); $candidates = 4180,4280,4380,4480,4880,3001,3002,8181; foreach \\($p in $candidates\\) { if \\($avoid -contains $p\\) { continue }; try { $l = New-Object System.Net.Sockets.TcpListener\\([System.Net.IPAddress]::Any, $p\\); $l.Start\\(\\); $l.Stop\\(\\); \"FREE: $p\"; break } catch { \"BUSY: $p\" } })"
+      "PowerShell($avoid = @\\(5173, 6287\\); $candidates = 4180,4280,4380,4480,4880,3001,3002,8181; foreach \\($p in $candidates\\) { if \\($avoid -contains $p\\) { continue }; try { $l = New-Object System.Net.Sockets.TcpListener\\([System.Net.IPAddress]::Any, $p\\); $l.Start\\(\\); $l.Stop\\(\\); \"FREE: $p\"; break } catch { \"BUSY: $p\" } })",
+      "Bash(echo \"---exit:$?\")",
+      "Bash(node --check scripts/fetch-rail-shapes.mjs)",
+      "Bash(node --input-type=module -e ' *)"
     ]
   }
 }

@@ -64,7 +64,8 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, mapLa
     railLinesRef.current = {};
 
     RAIL_DATA[region].lines.forEach(line => {
-      const coords = line.stations.map(s => [s.lat, s.lng]);
+      const poly = (line.shape && line.shape.length >= 2) ? line.shape : line.stations;
+      const coords = poly.map(s => [s.lat, s.lng]);
       // Glow + main
       const glow = L.polyline(coords, { color: line.color, weight: 7, opacity: 0.18 }).addTo(map);
       const main = L.polyline(coords, { color: line.color, weight: 3, opacity: 0.9 }).addTo(map);
@@ -218,7 +219,7 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, mapLa
 // ============================================================
 // TRAIN SHEET (bottom)
 // ============================================================
-function TrainSheet({ collapsed, onToggle, nearest, trains, totalCount, liveTrainCount, dirFilter, setDirFilter, typeFilters, setTypeFilters, availableTypes, targetTime, onSelect }) {
+function TrainSheet({ collapsed, onToggle, nearest, offRail, candidates, activeLineId, setActiveLineId, trains, totalCount, liveTrainCount, dirFilter, setDirFilter, typeFilters, setTypeFilters, availableTypes, targetTime, onSelect }) {
   const toggleType = (t) => {
     setTypeFilters(typeFilters.includes(t)
       ? typeFilters.filter(x => x !== t)
@@ -343,9 +344,34 @@ function TrainSheet({ collapsed, onToggle, nearest, trains, totalCount, liveTrai
           React.createElement("span", { className: "sheet-live-dot" }),
           liveTrainCount, " 列運行中",
         ),
-        nearest ? nearest.line.name : "—"),
+        nearest ? nearest.line.name : (offRail ? "不在鐵道附近" : "—")),
     ),
     !collapsed && React.createElement(React.Fragment, null,
+      candidates && candidates.length > 1 && React.createElement("div", {
+        className: "sheet-filters",
+        style: { borderBottom: '1px dashed var(--me-border)' },
+      },
+        React.createElement("span", {
+          style: { fontSize: 11, color: 'var(--me-text-muted)', alignSelf: 'center', marginRight: 4 },
+        }, "在這附近："),
+        candidates.map(c =>
+          React.createElement("button", {
+            key: c.line.id,
+            className: "pill " + (c.line.id === activeLineId ? 'active' : ''),
+            onClick: () => setActiveLineId && setActiveLineId(c.line.id),
+            title: `${c.line.name} · ${c.dist.toFixed(2)} km`,
+          },
+            React.createElement("span", {
+              className: "pill-dot",
+              style: { background: c.line.color },
+            }),
+            c.line.name,
+            React.createElement("span", {
+              style: { fontSize: 10, opacity: 0.65, marginLeft: 4 },
+            }, c.dist.toFixed(1), " km"),
+          )
+        ),
+      ),
       React.createElement("div", { className: "sheet-filters" },
         React.createElement("button", {
           className: "pill " + (dirFilter === 'all' ? 'active' : ''),
@@ -373,8 +399,11 @@ function TrainSheet({ collapsed, onToggle, nearest, trains, totalCount, liveTrai
       React.createElement("div", { className: "train-list" },
         trains.length === 0
           ? React.createElement("div", { className: "train-empty" },
-              React.createElement(Icon, { id: "me-clock", size: 32 }),
-              React.createElement("div", null, "沒有符合的列車"))
+              React.createElement(Icon, { id: offRail ? "me-locate" : "me-clock", size: 32 }),
+              React.createElement("div", null,
+                offRail
+                  ? `目前位置不在任何鐵道附近（最近的「${offRail.lineName}」距離 ${offRail.dist.toFixed(1)} km）`
+                  : "沒有符合的列車"))
           : trains.slice(0, 40).map(t =>
               React.createElement(TrainCard, {
                 key: t.id, train: t, targetTime, onSelect: () => onSelect(t),
