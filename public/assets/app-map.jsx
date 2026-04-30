@@ -448,12 +448,12 @@ function TrainCard({ train, targetTime, onSelect }) {
       ),
       prev && next && React.createElement("div", { className: "tc-segment" },
         React.createElement("span", { className: "tc-seg-stop" },
-          React.createElement("span", { className: "tc-seg-time" }, formatClock(prev.time)),
+          React.createElement("span", { className: "tc-seg-time" }, formatClock(prev.departure)),
           React.createElement("span", { className: "tc-seg-name" }, prev.name),
         ),
         React.createElement("span", { className: "tc-seg-arrow" }, "──▶"),
         React.createElement("span", { className: "tc-seg-stop" },
-          React.createElement("span", { className: "tc-seg-time" }, formatClock(next.time)),
+          React.createElement("span", { className: "tc-seg-time" }, formatClock(next.arrival)),
           React.createElement("span", { className: "tc-seg-name" }, next.name),
         ),
       ),
@@ -525,7 +525,7 @@ function TrainModal({ train, nearest, targetTime, onClose }) {
         }, "停靠站"),
         React.createElement("div", { className: "timetable" },
           train.stops.map((s, i) => {
-            const past = s.time < targetTime;
+            const past = s.arrival < targetTime;
             const isHighlight = nearest && (
               (train.stops[i-1] && nearest.km >= Math.min(s.km, train.stops[i-1].km) && nearest.km <= Math.max(s.km, train.stops[i-1].km)) ||
               (train.stops[i+1] && nearest.km >= Math.min(s.km, train.stops[i+1].km) && nearest.km <= Math.max(s.km, train.stops[i+1].km))
@@ -538,7 +538,7 @@ function TrainModal({ train, nearest, targetTime, onClose }) {
             },
               React.createElement("span", { className: "tt-name" }, s.name),
               React.createElement("span", { className: "tt-dist" }, s.km.toFixed(1) + ' km'),
-              React.createElement("span", { className: "tt-time" }, formatClock(s.time)),
+              React.createElement("span", { className: "tt-time" }, formatClock(s.arrival)),
             );
           })
         ),

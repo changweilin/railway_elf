@@ -132,23 +132,44 @@ function App() {
   }, [candidates, activeLineId]);
 
   // Trains on the active line, with time-of-passage at the snap point.
+  // Uses each train's pre-computed kinematic segments (from rail-data.js
+  // TrainGen) so the snap-point pass time accounts for accel/cruise/decel and
+  // any dwell at adjacent stations.
   const trains = useMemo(() => {
     if (!nearest) return [];
     const dayTrains = TrainGen.generate(region, targetTime);
     const out = [];
+    const EPS_KM = 1e-6;
     dayTrains.forEach(train => {
       if (train.line.id !== nearest.line.id) return;
       const stops = train.stops;
+      const segs = train.segments;
       let passTime = null, prevStop = null, nextStop = null;
-      for (let i = 0; i < stops.length - 1; i++) {
-        const a = stops[i], b = stops[i+1];
-        const lo = Math.min(a.km, b.km), hi = Math.max(a.km, b.km);
-        if (nearest.km >= lo && nearest.km <= hi) {
-          const t = (nearest.km - a.km) / (b.km - a.km);
-          passTime = new Date(a.time.getTime() + t * (b.time.getTime() - a.time.getTime()));
-          prevStop = a; nextStop = b;
+
+      // Locate the segment whose canonical km range brackets nearest.km.
+      for (let i = 0; i < segs.length; i++) {
+        const seg = segs[i];
+        const lo = Math.min(seg.kmStartCanonical, seg.kmEndCanonical);
+        const hi = Math.max(seg.kmStartCanonical, seg.kmEndCanonical);
+        if (nearest.km < lo - EPS_KM || nearest.km > hi + EPS_KM) continue;
+
+        // Snap-on-station handling: if the snap point sits at the segment's
+        // start station with nonzero dwell, the train is dwelling — passTime
+        // = arrival of that station.
+        if (Math.abs(nearest.km - seg.kmStartCanonical) < EPS_KM && stops[i].dwellSec > 0) {
+          passTime = stops[i].arrival;
+          prevStop = stops[i];
+          nextStop = stops[i+1];
           break;
         }
+        // Convert canonical km → directional local km within segment, then
+        // invert the kinematic profile to get τ.
+        const xLocalKm = Math.abs(nearest.km - seg.kmStartCanonical);
+        const tau = RailUtil.timeAtKmInSegment(seg.kin, xLocalKm * 1000);
+        passTime = new Date(seg.tDepart.getTime() + tau * 1000);
+        prevStop = stops[i];
+        nextStop = stops[i+1];
+        break;
       }
       if (!passTime) return;
       out.push({ ...train, passTime, prevStop, nextStop });
@@ -174,6 +195,8 @@ function App() {
   }, [trains]);
 
   // ============= LIVE TRAINS (showing on map within ±30 min of now) =============
+  // Uses pre-computed kinematic segments to evaluate position at time T,
+  // including dwell-window detection so markers freeze briefly at stations.
   const liveTrains = useMemo(() => {
     if (!nearest) return [];
     const dayTrains = TrainGen.generate(region, targetTime);
@@ -185,18 +208,41 @@ function App() {
       const T = targetTime.getTime();
       if (T < start - windowMs || T > end + windowMs) return;
       if (T < start || T > end) return; // only those currently running
-      // Find current km via interpolation across stops
+
       const stops = train.stops;
-      for (let i = 0; i < stops.length - 1; i++) {
-        const a = stops[i], b = stops[i+1];
-        if (T >= a.time.getTime() && T <= b.time.getTime()) {
-          const u = (T - a.time.getTime()) / (b.time.getTime() - a.time.getTime());
-          const km = a.km + u * (b.km - a.km);
-          const pos = RailUtil.positionAtKm(train.line, km);
-          result.push({ ...train, livePos: pos, liveKm: km });
+      const segs = train.segments;
+
+      // Dwell window: train is sitting at stops[i] between arrival and departure.
+      let phase = null, km = null;
+      for (let i = 0; i < stops.length; i++) {
+        const s = stops[i];
+        if (s.dwellSec > 0 && T >= s.arrival.getTime() && T <= s.departure.getTime()) {
+          phase = 'dwelling';
+          km = s.km;
           break;
         }
       }
+      // Otherwise locate the segment T falls into and evaluate kmAtTimeInSegment.
+      if (km == null) {
+        for (let i = 0; i < segs.length; i++) {
+          const seg = segs[i];
+          const tD = seg.tDepart.getTime(), tA = seg.tArrive.getTime();
+          if (T >= tD && T <= tA) {
+            const tau = (T - tD) / 1000;
+            const xLocalM = RailUtil.kmAtTimeInSegment(seg.kin, tau);
+            const xLocalKm = xLocalM / 1000;
+            // Canonical km grows or shrinks with the direction; pick sign from
+            // the segment's canonical endpoints.
+            const dirSign = seg.kmEndCanonical >= seg.kmStartCanonical ? 1 : -1;
+            km = seg.kmStartCanonical + dirSign * xLocalKm;
+            phase = 'running';
+            break;
+          }
+        }
+      }
+      if (km == null) return;
+      const pos = RailUtil.positionAtKm(train.line, km);
+      result.push({ ...train, livePos: pos, liveKm: km, phase });
     });
     return result;
   }, [region, targetTime, nearest]);

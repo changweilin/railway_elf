@@ -50,10 +50,12 @@ const TDX_LINE_MAP = {
 // OSM Overpass relations for Japanese lines.
 // Overpass query: relation["route"="train"]["ref"="<ref>"] — verified manually.
 // If a line spans multiple operating segments, list multiple refs and we'll stitch.
+// Verified via Overpass name search 2026-04-30. Use single-direction "route"
+// relations (not route_master) so that `>` recurse-down yields the way list directly.
 const OSM_LINE_MAP = {
-  "Tokaido-Shinkansen": { name: "Tōkaidō Shinkansen", relationIds: [331190] },
-  "JR-Yamanote":        { name: "Yamanote Line",      relationIds: [1739797] },
-  "JR-Chuo":            { name: "Chūō Line (Rapid)",  relationIds: [1854747] },
+  "Tokaido-Shinkansen": { name: "Tōkaidō Shinkansen", relationIds: [5263977] },   // single-direction route
+  "JR-Yamanote":        { name: "Yamanote Line (Outer)", relationIds: [1972920] }, // 外回り = clean loop
+  "JR-Chuo":            { name: "Chūō Line Rapid (down)", relationIds: [10363876] }, // 下り (Tokyo→west)
 };
 
 // Simplification tolerance (km). 0.005 = 5 m. Bigger = smaller file, more loss.
@@ -286,23 +288,50 @@ async function fetchTdxShapes() {
 // OSM Overpass (Japan)
 // ---------------------------------------------------------------------------
 
+const OVERPASS_ENDPOINTS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+  "https://overpass.private.coffee/api/interpreter",
+  "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+];
+
+async function overpassQuery(query) {
+  let lastErr;
+  for (const url of OVERPASS_ENDPOINTS) {
+    for (let attempt = 1; attempt <= 2; attempt++) {
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "content-type": "application/x-www-form-urlencoded",
+            "user-agent": "railway-elf-shape-fetcher/1.0 (build-time tool)",
+            accept: "application/json",
+          },
+          body: "data=" + encodeURIComponent(query),
+        });
+        if (res.ok) return res.json();
+        lastErr = new Error(`${url} → ${res.status}`);
+        console.warn(`[OSM]   ${url} attempt ${attempt}: ${res.status}`);
+        if (res.status === 429 || res.status >= 500) {
+          await new Promise(r => setTimeout(r, 3000 * attempt));
+          continue;
+        }
+        break; // non-retryable for this endpoint
+      } catch (e) {
+        lastErr = e;
+        console.warn(`[OSM]   ${url} attempt ${attempt}: ${e.message}`);
+        await new Promise(r => setTimeout(r, 2000 * attempt));
+      }
+    }
+  }
+  throw lastErr || new Error("All Overpass endpoints failed");
+}
+
 async function fetchOsmShape(internalId, cfg) {
   const relClause = cfg.relationIds.map(id => `relation(${id});`).join("");
-  const query = `[out:json][timeout:90];(${relClause});out body;>;out skel qt;`;
-  const url = "https://overpass-api.de/api/interpreter";
+  const query = `[out:json][timeout:180];(${relClause});out body;>;out skel qt;`;
   console.log(`[OSM] ${internalId} (${cfg.name}) — querying…`);
-  // Overpass rejects requests with no UA (returns 406). Identify ourselves.
-  const res = await fetch(url, {
-    method: "POST",
-    headers: {
-      "content-type": "application/x-www-form-urlencoded",
-      "user-agent": "railway-elf-shape-fetcher/1.0 (build-time tool)",
-      accept: "application/json",
-    },
-    body: "data=" + encodeURIComponent(query),
-  });
-  if (!res.ok) throw new Error(`Overpass ${internalId} failed: ${res.status}`);
-  const json = await res.json();
+  const json = await overpassQuery(query);
 
   const nodes = new Map();
   const ways = new Map();
