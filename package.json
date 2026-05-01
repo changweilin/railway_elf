@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "build:rail-data": "node scripts/fetch-rail-shapes.mjs",
+    "build:rail-data": "node --env-file-if-exists=.env scripts/fetch-rail-shapes.mjs",
+    "build:rail-data:tw": "node --env-file-if-exists=.env scripts/fetch-rail-shapes.mjs --skip-jp",
+    "build:rail-data:jp": "node scripts/fetch-rail-shapes.mjs --skip-tw",
     "check:timing": "node scripts/check-train-timing.mjs"
   },
   "devDependencies": {

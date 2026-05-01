@@ -16,7 +16,8 @@
       "Bash(node -e ' *)",
       "Bash(node --check C:/Users/user/Documents/app/railway_elf/public/assets/rail-data.js)",
       "Bash(node --check public/assets/rail-data.js)",
-      "Bash(node --check scripts/check-train-timing.mjs)"
+      "Bash(node --check scripts/check-train-timing.mjs)",
+      "Bash(node --check C:/Users/user/Documents/app/railway_elf/scripts/fetch-rail-shapes.mjs)"
     ]
   }
 }

@@ -1,0 +1,20 @@
+node_modules/
+dist/
+.vite/
+
+# Build / runtime artifacts that should not be committed
+.ai_working
+
+# Local environment — TDX credentials live here
+.env
+.env.local
+.env.*.local
+
+# Network response cache for scripts/fetch-rail-shapes.mjs
+scripts/.cache/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

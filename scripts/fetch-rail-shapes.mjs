@@ -6,27 +6,37 @@
 //   TDX_CLIENT_ID=xxx TDX_CLIENT_SECRET=yyy node scripts/fetch-rail-shapes.mjs
 //
 // Optional flags:
-//   --skip-tw     Skip Taiwan (TDX). Useful when iterating on Japan-only.
-//   --skip-jp     Skip Japan (OSM). Useful when iterating on Taiwan-only.
-//   --pretty      Pretty-print the generated JS (default: minified-ish).
+//   --skip-tw         Skip Taiwan (TDX). Useful when iterating on Japan-only.
+//   --skip-jp         Skip Japan (OSM). Useful when iterating on Taiwan-only.
+//   --pretty          Pretty-print the generated JS (default: minified-ish).
+//   --no-cache        Disable disk cache read+write (always hit network, no fallback).
+//   --refresh-cache   Bypass cache read but still update the cache on success.
+//
+// Env vars:
+//   OFFLINE=1   Skip all network calls, serve everything from scripts/.cache/.
+//               Useful for re-running the build step without internet.
 //
 // Output:
 //   public/assets/rail-data.generated.js — sets window.RAIL_SHAPES = { [lineId]: { shape, stationKms } }
 //
 // Get a TDX account at https://tdx.transportdata.tw/ (free tier is fine).
 
-import { writeFileSync, readFileSync } from "node:fs";
+import { writeFileSync, readFileSync, mkdirSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
+import { createHash } from "node:crypto";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const OUT_PATH = resolve(ROOT, "public/assets/rail-data.generated.js");
+const CACHE_DIR = resolve(__dirname, ".cache");
 
 const args = new Set(process.argv.slice(2));
 const SKIP_TW = args.has("--skip-tw");
 const SKIP_JP = args.has("--skip-jp");
 const PRETTY = args.has("--pretty");
+const NO_CACHE = args.has("--no-cache");
+const REFRESH_CACHE = args.has("--refresh-cache");
 
 // ---------------------------------------------------------------------------
 // CONFIG: which internal line ids map to which upstream sources.
@@ -211,6 +221,79 @@ function stitchPolylines(polylines) {
 }
 
 // ---------------------------------------------------------------------------
+// CACHE + RETRY
+//
+// Successful JSON responses are stored in scripts/.cache/<sha1(key)>.json so a
+// later run that hits 429/500/timeout can fall back to last-known-good data
+// instead of producing an empty rail-data.generated.js.
+// ---------------------------------------------------------------------------
+
+function cachePathFor(key) {
+  if (!existsSync(CACHE_DIR)) mkdirSync(CACHE_DIR, { recursive: true });
+  const hash = createHash("sha1").update(key).digest("hex").slice(0, 16);
+  return resolve(CACHE_DIR, `${hash}.json`);
+}
+
+function readCache(key) {
+  if (NO_CACHE) return null;
+  const p = cachePathFor(key);
+  if (!existsSync(p)) return null;
+  try { return JSON.parse(readFileSync(p, "utf8")); }
+  catch { return null; }
+}
+
+function writeCache(key, value) {
+  if (NO_CACHE) return;
+  try { writeFileSync(cachePathFor(key), JSON.stringify(value), "utf8"); }
+  catch (e) { console.warn(`[cache] write failed: ${e.message}`); }
+}
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// Generic retry with exponential backoff. fn must throw on error.
+async function withRetry(label, fn, { attempts = 4, baseMs = 1500 } = {}) {
+  let lastErr;
+  for (let i = 1; i <= attempts; i++) {
+    try { return await fn(); }
+    catch (e) {
+      lastErr = e;
+      if (i === attempts) break;
+      const wait = baseMs * 2 ** (i - 1);
+      console.warn(`[retry] ${label} attempt ${i}/${attempts}: ${e.message} — backoff ${wait}ms`);
+      await sleep(wait);
+    }
+  }
+  throw lastErr;
+}
+
+// Fetch JSON with retry + disk cache fallback. Cache is keyed on `cacheKey`.
+// On network failure after all retries, returns the cached value if present.
+// Pass `retryOpts: { attempts: 1 }` for fetchers that already do their own
+// retry/fallback (avoids ballooning total attempts to N×M).
+async function fetchJsonCached(cacheKey, label, fetcher, retryOpts) {
+  if (process.env.OFFLINE === "1") {
+    const cached = readCache(cacheKey);
+    if (cached) {
+      console.log(`[cache] ${label}: using cached (OFFLINE=1)`);
+      return cached;
+    }
+    throw new Error(`OFFLINE=1 but no cache for ${label}`);
+  }
+  try {
+    const fresh = await withRetry(label, fetcher, retryOpts);
+    writeCache(cacheKey, fresh);
+    return fresh;
+  } catch (e) {
+    const cached = readCache(cacheKey);
+    if (cached) {
+      console.warn(`[cache] ${label}: network failed (${e.message}) — using cached copy`);
+      return cached;
+    }
+    throw e;
+  }
+}
+
+// ---------------------------------------------------------------------------
 // TDX (Taiwan)
 // ---------------------------------------------------------------------------
 
@@ -220,32 +303,43 @@ async function tdxAuth() {
   if (!id || !secret) {
     throw new Error("TDX_CLIENT_ID / TDX_CLIENT_SECRET not set. Get them at https://tdx.transportdata.tw/");
   }
-  const body = new URLSearchParams({
-    grant_type: "client_credentials",
-    client_id: id,
-    client_secret: secret,
+  return withRetry("TDX auth", async () => {
+    const body = new URLSearchParams({
+      grant_type: "client_credentials",
+      client_id: id,
+      client_secret: secret,
+    });
+    const res = await fetch(
+      "https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token",
+      { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body }
+    );
+    if (!res.ok) throw new Error(`TDX auth failed: ${res.status} ${await res.text()}`);
+    const json = await res.json();
+    return json.access_token;
   });
-  const res = await fetch(
-    "https://tdx.transportdata.tw/auth/realms/TDXConnect/protocol/openid-connect/token",
-    { method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" }, body }
-  );
-  if (!res.ok) throw new Error(`TDX auth failed: ${res.status} ${await res.text()}`);
-  const json = await res.json();
-  return json.access_token;
 }
 
 async function tdxFetch(token, path) {
-  const url = `https://tdx.transportdata.tw/api/basic/v3${path}`;
-  const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${token}`, accept: "application/json" },
+  return fetchJsonCached(`tdx:${path}`, `TDX ${path}`, async () => {
+    const url = `https://tdx.transportdata.tw/api/basic/v3${path}`;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}`, accept: "application/json" },
+    });
+    if (!res.ok) throw new Error(`TDX ${path} failed: ${res.status}`);
+    return res.json();
   });
-  if (!res.ok) throw new Error(`TDX ${path} failed: ${res.status}`);
-  return res.json();
 }
 
 async function fetchTdxShapes() {
-  console.log("[TDX] Authenticating…");
-  const token = await tdxAuth();
+  // If OFFLINE=1, skip auth — we'll read everything from cache anyway.
+  let token = null;
+  if (process.env.OFFLINE !== "1") {
+    console.log("[TDX] Authenticating…");
+    try { token = await tdxAuth(); }
+    catch (e) {
+      console.warn(`[TDX] auth failed: ${e.message} — will try cache`);
+    }
+  }
 
   console.log("[TDX] Fetching TRA shapes…");
   const traData = await tdxFetch(token, "/Rail/TRA/Shape?$format=JSON");
@@ -331,7 +425,12 @@ async function fetchOsmShape(internalId, cfg) {
   const relClause = cfg.relationIds.map(id => `relation(${id});`).join("");
   const query = `[out:json][timeout:180];(${relClause});out body;>;out skel qt;`;
   console.log(`[OSM] ${internalId} (${cfg.name}) — querying…`);
-  const json = await overpassQuery(query);
+  const cacheKey = `osm:${internalId}:${cfg.relationIds.sort().join(",")}`;
+  const json = await fetchJsonCached(
+    cacheKey, `OSM ${internalId}`,
+    () => overpassQuery(query),
+    { attempts: 1 }, // overpassQuery already loops 4 endpoints × 2 retries
+  );
 
   const nodes = new Map();
   const ways = new Map();

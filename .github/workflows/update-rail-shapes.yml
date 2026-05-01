@@ -1,0 +1,77 @@
+name: Update rail shapes
+
+on:
+  schedule:
+    # 1st of each month, 02:00 UTC (10:00 Asia/Taipei)
+    - cron: "0 2 1 * *"
+  workflow_dispatch:
+    inputs:
+      skip_tw:
+        description: "Skip Taiwan (TDX)"
+        type: boolean
+        default: false
+      skip_jp:
+        description: "Skip Japan (OSM)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Restore shape cache
+        uses: actions/cache@v4
+        with:
+          path: scripts/.cache
+          key: rail-shape-cache-${{ github.run_id }}
+          restore-keys: |
+            rail-shape-cache-
+
+      - name: Fetch rail shapes
+        env:
+          TDX_CLIENT_ID: ${{ secrets.TDX_CLIENT_ID }}
+          TDX_CLIENT_SECRET: ${{ secrets.TDX_CLIENT_SECRET }}
+        run: |
+          FLAGS=""
+          if [ "${{ inputs.skip_tw }}" = "true" ]; then FLAGS="$FLAGS --skip-tw"; fi
+          if [ "${{ inputs.skip_jp }}" = "true" ]; then FLAGS="$FLAGS --skip-jp"; fi
+          node scripts/fetch-rail-shapes.mjs $FLAGS
+
+      - name: Detect diff
+        id: diff
+        run: |
+          if git diff --quiet -- public/assets/rail-data.generated.js; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No shape changes."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- public/assets/rail-data.generated.js
+          fi
+
+      - name: Open PR with refreshed shapes
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: chore/refresh-rail-shapes
+          title: "chore: refresh rail-data.generated.js"
+          commit-message: "chore: refresh rail-data.generated.js from TDX + OSM"
+          body: |
+            Automated refresh from `scripts/fetch-rail-shapes.mjs`.
+
+            Triggered by: `${{ github.event_name }}`
+            Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Review the diff for unexpected line/station shifts before merging.
+          add-paths: |
+            public/assets/rail-data.generated.js
+          delete-branch: true
