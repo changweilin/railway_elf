@@ -52,9 +52,14 @@ const REFRESH_CACHE = args.has("--refresh-cache");
 //   1007 北迴線
 //   1008 台東線
 // THSR is fetched from /Rail/THSR/Shape (single line, no LineID mapping needed).
+// Each entry can be a plain LineID string, or {lineId, from, to} to take a
+// sub-segment of that LineID's polyline cut between two lat/lng anchor points.
 const TDX_LINE_MAP = {
-  "TRA-West": ["1001", "1002", "1004"],     // 基隆 → 高雄, stitched in order
-  "TRA-East": ["1006", "1007", "1008"],     // 樹林/八堵 → 宜蘭 → 花蓮 → 台東
+  "TRA-West": ["WL"],     // 西部幹線(基隆 → 高雄,單一 LineString)
+  "TRA-East": [           // 東部幹線實際營運從樹林發車,需要 WL[樹林→八堵] + EL 拼接
+    { lineId: "WL", from: { lat: 24.9935, lng: 121.4253 }, to: { lat: 25.1056, lng: 121.7150 } },
+    "EL",
+  ],
 };
 
 // OSM Overpass relations for Japanese lines.
@@ -63,8 +68,16 @@ const TDX_LINE_MAP = {
 // Verified via Overpass name search 2026-04-30. Use single-direction "route"
 // relations (not route_master) so that `>` recurse-down yields the way list directly.
 const OSM_LINE_MAP = {
-  "Tokaido-Shinkansen": { name: "Tōkaidō Shinkansen", relationIds: [5263977] },   // single-direction route
-  "JR-Yamanote":        { name: "Yamanote Line (Outer)", relationIds: [1972920] }, // 外回り = clean loop
+  // Tokaido relation 5263977 is bidirectional + sidings + depot (6939 ways → 1029km vs real 552km).
+  // No clean single-direction sub-route exists upstream. Use station-chain corridor filter:
+  // keep only ways within corridorKm of station chain, then bin by projected km and pick the
+  // way nearest to the chain centerline per bin — collapses up/down tracks into one.
+  "Tokaido-Shinkansen": {
+    name: "Tōkaidō Shinkansen",
+    relationIds: [5263977],
+    corridor: { corridorKm: 0.7, binKm: 0.15, parallelKm: 0.08 },
+  },
+  "JR-Yamanote":        { name: "Yamanote Line (Outer)", relationIds: [1972920], loopAnchor: { lat: 35.6812, lng: 139.7671 } }, // 外回り 環狀,以東京站切開
   "JR-Chuo":            { name: "Chūō Line Rapid (down)", relationIds: [10363876] }, // 下り (Tokyo→west)
 };
 
@@ -197,27 +210,70 @@ function parseCoordList(s) {
 
 // Stitch multiple polylines into one, ordering by which endpoint of the next
 // polyline is closest to the running tail. Reverses segments as needed.
+// Slice a polyline between two lat/lng anchor points by snapping to the
+// nearest vertex on each side. Returns the inclusive sub-array, reversed if
+// `to` precedes `from` in the polyline order.
+function sliceByAnchors(poly, from, to) {
+  let iFrom = 0, dFrom = Infinity, iTo = 0, dTo = Infinity;
+  for (let i = 0; i < poly.length; i++) {
+    const df = haversine(poly[i], from);
+    const dt = haversine(poly[i], to);
+    if (df < dFrom) { dFrom = df; iFrom = i; }
+    if (dt < dTo) { dTo = dt; iTo = i; }
+  }
+  if (iFrom <= iTo) return poly.slice(iFrom, iTo + 1);
+  return poly.slice(iTo, iFrom + 1).reverse();
+}
+
+// Stitch multiple polylines into one chain. For small N we try every start
+// (segment, end) and pick the chain with the smallest total inter-segment
+// bridge distance — this avoids the there-and-back artifact that pure
+// greedy produces on trunks like WL (3 sub-segments {基隆-八堵, 八堵-桃園area,
+// 桃園-高雄}). For large N (OSM way lists with thousands of segments) we
+// fall back to greedy-from-segment-0 to keep the build fast.
 function stitchPolylines(polylines) {
   if (polylines.length === 0) return [];
-  const remaining = polylines.map(p => p.slice());
-  let result = remaining.shift();
-  while (remaining.length) {
-    const tail = result[result.length - 1];
-    let bestIdx = 0, bestDist = Infinity, bestReverse = false;
-    for (let i = 0; i < remaining.length; i++) {
-      const seg = remaining[i];
-      const dHead = haversine(tail, seg[0]);
-      const dTail = haversine(tail, seg[seg.length - 1]);
-      if (dHead < bestDist) { bestDist = dHead; bestIdx = i; bestReverse = false; }
-      if (dTail < bestDist) { bestDist = dTail; bestIdx = i; bestReverse = true; }
+  if (polylines.length === 1) return polylines[0].slice();
+
+  function greedyFrom(startS, startEnd) {
+    const used = new Set([startS]);
+    let chain = polylines[startS].slice();
+    if (startEnd === "tail") chain.reverse();
+    let totalBridge = 0;
+    while (used.size < polylines.length) {
+      const tail = chain[chain.length - 1];
+      let bestS = -1, bestRev = false, bestDist = Infinity;
+      for (let s = 0; s < polylines.length; s++) {
+        if (used.has(s)) continue;
+        const dH = haversine(tail, polylines[s][0]);
+        const dT = haversine(tail, polylines[s][polylines[s].length - 1]);
+        if (dH < bestDist) { bestDist = dH; bestS = s; bestRev = false; }
+        if (dT < bestDist) { bestDist = dT; bestS = s; bestRev = true; }
+      }
+      if (bestS < 0) break;
+      let pts = polylines[bestS].slice();
+      if (bestRev) pts.reverse();
+      if (haversine(tail, pts[0]) < 0.001) pts = pts.slice(1);
+      chain = chain.concat(pts);
+      totalBridge += bestDist;
+      used.add(bestS);
     }
-    let next = remaining.splice(bestIdx, 1)[0];
-    if (bestReverse) next.reverse();
-    // Skip duplicate junction point
-    if (haversine(tail, next[0]) < 0.001) next = next.slice(1);
-    result = result.concat(next);
+    return { chain, totalBridge };
   }
-  return result;
+
+  // O(n^3) — only viable for small n. TDX trunk lines have ≤5 segments.
+  const SMALL_N = 20;
+  if (polylines.length <= SMALL_N) {
+    let best = null;
+    for (let s = 0; s < polylines.length; s++) {
+      for (const end of ["head", "tail"]) {
+        const candidate = greedyFrom(s, end);
+        if (!best || candidate.totalBridge < best.totalBridge) best = candidate;
+      }
+    }
+    return best.chain;
+  }
+  return greedyFrom(0, "head").chain;
 }
 
 // ---------------------------------------------------------------------------
@@ -319,9 +375,10 @@ async function tdxAuth() {
   });
 }
 
-async function tdxFetch(token, path) {
-  return fetchJsonCached(`tdx:${path}`, `TDX ${path}`, async () => {
-    const url = `https://tdx.transportdata.tw/api/basic/v3${path}`;
+async function tdxFetch(token, path, { version = "v3" } = {}) {
+  const cacheKey = version === "v3" ? `tdx:${path}` : `tdx:${version}:${path}`;
+  return fetchJsonCached(cacheKey, `TDX ${path}`, async () => {
+    const url = `https://tdx.transportdata.tw/api/basic/${version}${path}`;
     const res = await fetch(url, {
       headers: { Authorization: `Bearer ${token}`, accept: "application/json" },
     });
@@ -347,21 +404,33 @@ async function fetchTdxShapes() {
     .reduce((acc, row) => { acc[row.LineID] = row.Geometry; return acc; }, {});
 
   console.log("[TDX] Fetching THSR shapes…");
-  const thsrData = await tdxFetch(token, "/Rail/THSR/Shape?$format=JSON");
+  // THSR Shape lives only on v2 — v3 returns 404.
+  const thsrData = await tdxFetch(token, "/Rail/THSR/Shape?$format=JSON", { version: "v2" });
   const thsrShapes = thsrData.Shapes || thsrData;
 
   const out = {};
 
   // TRA: stitch sub-lines per internal id
-  for (const [internalId, lineIds] of Object.entries(TDX_LINE_MAP)) {
+  for (const [internalId, entries] of Object.entries(TDX_LINE_MAP)) {
     const polys = [];
-    for (const lid of lineIds) {
+    for (const entry of entries) {
+      const lid = typeof entry === "string" ? entry : entry.lineId;
       const wkt = traShapes[lid];
       if (!wkt) {
         console.warn(`[TDX] TRA LineID ${lid} not found, skipping`);
         continue;
       }
-      polys.push(...parseWkt(wkt));
+      const parsed = parseWkt(wkt);
+      if (typeof entry === "string") {
+        polys.push(...parsed);
+      } else {
+        // Sub-segment per anchor pair — find the longest parsed segment that
+        // hits both anchors (in practice TRA shapes are a single LINESTRING).
+        for (const seg of parsed) {
+          const sliced = sliceByAnchors(seg, entry.from, entry.to);
+          if (sliced.length >= 2) polys.push(sliced);
+        }
+      }
     }
     if (polys.length === 0) continue;
     out[internalId] = stitchPolylines(polys);
@@ -421,7 +490,7 @@ async function overpassQuery(query) {
   throw lastErr || new Error("All Overpass endpoints failed");
 }
 
-async function fetchOsmShape(internalId, cfg) {
+async function fetchOsmShape(internalId, cfg, stations) {
   const relClause = cfg.relationIds.map(id => `relation(${id});`).join("");
   const query = `[out:json][timeout:180];(${relClause});out body;>;out skel qt;`;
   console.log(`[OSM] ${internalId} (${cfg.name}) — querying…`);
@@ -445,21 +514,164 @@ async function fetchOsmShape(internalId, cfg) {
   for (const rel of relations) {
     for (const m of rel.members) {
       if (m.type !== "way") continue;
+      // Skip station platforms — they're not running track.
+      if (m.role === "platform" || m.role === "stop") continue;
       const wayNodes = ways.get(m.ref);
       if (!wayNodes) continue;
       const coords = wayNodes.map(nid => nodes.get(nid)).filter(Boolean);
       if (coords.length >= 2) polys.push(coords);
     }
   }
-  console.log(`[OSM] ${internalId}: ${polys.length} ways, stitching…`);
-  return stitchPolylines(polys);
+
+  let stitched;
+  if (cfg.corridor && stations && stations.length >= 2) {
+    // Centerline reconstruction — bypasses connectivity-based stitching entirely.
+    const { shape, vertexStats } = reconstructCorridorShape(polys, stations, cfg.corridor);
+    console.log(
+      `[OSM] ${internalId}: ${polys.length} ways → ` +
+      `${vertexStats.kept}/${vertexStats.total} vertices in corridor → ${shape.length} centerline points`
+    );
+    stitched = shape;
+  } else {
+    // Spatial dedupe: when an OSM route relation includes both up/down tracks
+    // (or main + siding), parallel ways collapse into one geometric line.
+    const processed = dedupeParallelWays(polys, 0.04);
+    if (processed.length !== polys.length) {
+      console.log(`[OSM] ${internalId}: ${polys.length} ways → ${processed.length} after parallel dedupe`);
+    }
+    console.log(`[OSM] ${internalId}: ${processed.length} ways, stitching…`);
+    stitched = stitchPolylines(processed);
+  }
+  if (cfg.loopAnchor) {
+    stitched = rotateLoopToAnchor(stitched, cfg.loopAnchor);
+  }
+  return stitched;
 }
 
-async function fetchOsmShapes() {
+// For closed-loop lines (e.g. Yamanote), greedy stitch produces a polyline
+// that starts wherever way[0] sat — typically not at the line's anchor
+// station. Rotate it so the loop starts at the nearest vertex to `anchor`.
+function rotateLoopToAnchor(poly, anchor) {
+  if (poly.length < 3) return poly;
+  let bestIdx = 0, bestDist = Infinity;
+  for (let i = 0; i < poly.length; i++) {
+    const d = haversine(poly[i], anchor);
+    if (d < bestDist) { bestDist = d; bestIdx = i; }
+  }
+  if (bestIdx === 0) return poly;
+  const isLoop = haversine(poly[0], poly[poly.length - 1]) < 0.1;
+  if (!isLoop) return poly.slice(bestIdx); // open chain — just slice
+  const open = poly.slice(0, -1); // drop closing duplicate
+  const rotated = open.slice(bestIdx).concat(open.slice(0, bestIdx));
+  rotated.push(rotated[0]); // re-close
+  return rotated;
+}
+
+// Station-chain centerline reconstruction. For noisy OSM relations (Tokaido)
+// where the relation contains bidirectional tracks + sidings + depots and
+// no clean upstream relation exists, ignore connectivity and rebuild a single
+// polyline:
+//   1. Project every way vertex onto the station chain → (km, dist).
+//   2. Drop vertices farther than corridorKm from the chain (depot/branch removal).
+//   3. Bucket surviving vertices by km bin (sampleKm).
+//   4. Emit one polyline point per bin = centroid of all vertices in the bin.
+// Adjacent up/down tracks within the corridor average to a single mid-line,
+// so the result follows the real corridor shape with length ≈ chain length.
+function reconstructCorridorShape(polys, stations, opts) {
+  const { corridorKm = 0.7, sampleKm = 0.1 } = opts;
+  const chain = stations.map(s => ({ lat: s.lat, lng: s.lng }));
+  const chainKm = cumulativeKm(chain);
+
+  function projectOnChain(point) {
+    let best = { km: 0, dist: Infinity };
+    for (let i = 0; i < chain.length - 1; i++) {
+      const p = projectOnSegment(point, chain[i], chain[i + 1]);
+      if (p.dist < best.dist) {
+        best = {
+          km: chainKm[i] + p.t * (chainKm[i + 1] - chainKm[i]),
+          dist: p.dist,
+        };
+      }
+    }
+    return best;
+  }
+
+  const buckets = new Map();
+  let kept = 0, total = 0;
+  for (const poly of polys) {
+    for (const v of poly) {
+      total++;
+      const proj = projectOnChain(v);
+      if (proj.dist > corridorKm) continue;
+      kept++;
+      const bin = Math.floor(proj.km / sampleKm);
+      let arr = buckets.get(bin);
+      if (!arr) { arr = []; buckets.set(bin, arr); }
+      arr.push({ lat: v.lat, lng: v.lng });
+    }
+  }
+
+  const out = [];
+  const sortedBins = [...buckets.keys()].sort((a, b) => a - b);
+  for (const bin of sortedBins) {
+    const arr = buckets.get(bin);
+    let sLat = 0, sLng = 0;
+    for (const v of arr) { sLat += v.lat; sLng += v.lng; }
+    out.push({ lat: sLat / arr.length, lng: sLng / arr.length });
+  }
+  return { shape: out, vertexStats: { kept, total } };
+}
+
+function dedupeParallelWays(polys, parallelKm) {
+  const buckets = new Map(); // "iLat,iLng" → [polyIdx]
+  const cell = 0.001; // ~110 m
+  function cellKey(p) { return Math.round(p.lat / cell) + "," + Math.round(p.lng / cell); }
+  function nearby(p) {
+    const iLat = Math.round(p.lat / cell), iLng = Math.round(p.lng / cell);
+    const out = [];
+    for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) {
+      const arr = buckets.get((iLat + dx) + "," + (iLng + dy));
+      if (arr) out.push(...arr);
+    }
+    return out;
+  }
+  function distPointToPolyline(p, poly) {
+    let m = Infinity;
+    for (const q of poly) {
+      const d = haversine(p, q);
+      if (d < m) m = d;
+      if (m < 0.001) return m;
+    }
+    return m;
+  }
+  const keep = [];
+  for (let i = 0; i < polys.length; i++) {
+    const a = polys[i];
+    const reps = [a[0], a[Math.floor(a.length / 2)], a[a.length - 1]];
+    let dup = false;
+    const candidates = new Set(reps.flatMap(r => nearby(r)));
+    for (const j of candidates) {
+      const b = polys[j];
+      if (Math.abs(a.length - b.length) > Math.max(a.length, b.length) * 0.7) continue;
+      if (reps.every(r => distPointToPolyline(r, b) < parallelKm)) { dup = true; break; }
+    }
+    if (dup) continue;
+    keep.push(i);
+    for (const r of reps) {
+      const k = cellKey(r);
+      let arr = buckets.get(k);
+      if (!arr) { arr = []; buckets.set(k, arr); }
+      arr.push(i);
+    }
+  }
+  return keep.map(i => polys[i]);
+}
+
+async function fetchOsmShapes(stationsByLineId) {
   const out = {};
   for (const [id, cfg] of Object.entries(OSM_LINE_MAP)) {
     try {
-      out[id] = await fetchOsmShape(id, cfg);
+      out[id] = await fetchOsmShape(id, cfg, stationsByLineId[id]);
     } catch (e) {
       console.warn(`[OSM] ${id} failed: ${e.message}`);
     }
@@ -491,10 +703,33 @@ function buildOutput(rawShapes, stationsByLineId) {
   const result = {};
   for (const [lineId, rawShape] of Object.entries(rawShapes)) {
     if (!rawShape || rawShape.length < 2) continue;
-    const simplified = simplify(rawShape, SIMPLIFY_TOLERANCE_KM);
-    const shapeKm = cumulativeKm(simplified);
+    let simplified = simplify(rawShape, SIMPLIFY_TOLERANCE_KM);
+    let shapeKm = cumulativeKm(simplified);
 
     const stations = stationsByLineId[lineId] || [];
+
+    // Polyline direction may not match the station order in rail-data.js
+    // (e.g. TDX returns the West Trunk parameterised 桃園→Keelung while
+    // stations are listed Keelung→Kaohsiung; OSM Yamanote loop greedy-stitches
+    // counter-clockwise while stations go clockwise). Reverse the polyline if
+    // the second station projects farther along it than the second-to-last
+    // (works for both linear and loop lines).
+    if (stations.length >= 4) {
+      const probeA = stationKmOnShape(stations[1], simplified, shapeKm).km;
+      const probeB = stationKmOnShape(stations[stations.length - 2], simplified, shapeKm).km;
+      if (probeA > probeB) {
+        simplified = simplified.slice().reverse();
+        shapeKm = cumulativeKm(simplified);
+      }
+    } else if (stations.length >= 2) {
+      const first = stationKmOnShape(stations[0], simplified, shapeKm).km;
+      const last = stationKmOnShape(stations[stations.length - 1], simplified, shapeKm).km;
+      if (first > last) {
+        simplified = simplified.slice().reverse();
+        shapeKm = cumulativeKm(simplified);
+      }
+    }
+
     const stationKms = {};
     let maxStationDist = 0;
     for (const st of stations) {
@@ -536,7 +771,7 @@ async function main() {
     catch (e) { console.error(`[TDX] failed: ${e.message}`); }
   }
   if (!SKIP_JP) {
-    try { Object.assign(rawShapes, await fetchOsmShapes()); }
+    try { Object.assign(rawShapes, await fetchOsmShapes(stationsByLineId)); }
     catch (e) { console.error(`[OSM] failed: ${e.message}`); }
   }
 

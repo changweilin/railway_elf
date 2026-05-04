@@ -140,11 +140,38 @@ CI 第一次跑必須要有網路；之後就算 TDX/Overpass 暫時掛了，bui
 
 ---
 
+## 目前線形狀態（2026-05-04 重新驗證）
+
+| 線                    | shape 來源 | 站點偏移 | monotonic 檢查 | 備註 |
+|-----------------------|------------|----------|----------------|------|
+| TRA-West              | TDX v3 `WL` | 944 m | ✅            | 拼接 3 段(基隆-八堵-桃園 gap 14km-高雄)|
+| TRA-East              | TDX v3 `WL[樹林→八堵]` + `EL` | 957 m | ✅ | 西部主幹的樹林-八堵段 + 東部幹線 |
+| THSR                  | TDX v2 `HSRL` | 1284 m | ✅ | v3 的 THSR Shape endpoint 不存在,固定走 v2 |
+| JR-Chuo               | OSM rel 10363876 | 101 m | ✅ | |
+| JR-Yamanote           | OSM rel 1972920 | 49 m | ✅ | parallel dedupe 把 75km 雙軌縮成 34.5km 真實環長,`loopAnchor=東京` 旋轉,前端 `loopClosureKm` 處理閉合 |
+| Tokaido-Shinkansen    | OSM rel 5263977 | 130 m | ✅ | 6939 條 way 中 21k 頂點走廊過濾(0.7km)→ centerline 重建,465km(真實 552km,centroid 平均把曲線拉直但拓撲正確) |
+
+## TDX schema 變更紀錄(2026-05 之前 vs 之後)
+
+- **TRA `LineID` 從數字 → 字母碼**:`1001/1002/...` 全部下架,改成 `WL/EL/YL/NL/TT/...` 等字母碼。腳本 `TDX_LINE_MAP` 已更新。
+- **THSR Shape endpoint 從 v3 拿掉**:v3 path 回 404,v2 仍可用。`tdxFetch` 加了 `version` 參數,THSR 固定走 v2。
+- **WL 是 MULTILINESTRING(3 段)**:基隆-八堵 / 八堵-桃園area / 桃園-高雄,中間有 ~14km 真實 gap(可能由 WL-N/-M 子段填補,目前先讓 stitch 直線連接,視覺上幾乎不察覺)。
+
 ## 已知問題
 
-東海道新幹線、山手線目前抓到 shape 但 `stationKms` 非單調遞增，
-`rail-data.js` 的 monotonic 檢查會 skip 合併，畫面 fallback 成站對站直線。
-詳見 `scripts/fetch-rail-shapes.mjs` 裡 `stitchPolylines` / `stationKmOnShape`，
-要修：
-- 山手線：環狀線需要選個錨點（例如東京站）切開再投影
-- 新幹線：上下行 relation 需要篩成單向，或鎖定 ref 過濾
+### Tokaido-Shinkansen — 走廊重建,長度 16% 短少
+
+OSM relation `5263977` 含 6939 條 way,既是上下行又含岔線/廠區,parent relation 是空的(無 route_master),OSM 上游也沒有單向 sub-route 可換。腳本走的是「站點走廊 centerline 重建」(`reconstructCorridorShape`):
+
+1. 把所有 way 頂點投影到站點鏈,丟掉距站點鏈 > 0.7 km 的點
+2. 把存活頂點按投影 km 切 0.1 km 一格
+3. 每格輸出一個 centroid 作為 polyline 一個點
+
+雙軌會自然平均成中線,結果 465 km(真實 552 km,16% 短)、站點偏移 130 m、monotonic ✅。視覺上沿正確走廊,只是 centroid 平均把急彎拉直一些。前端 `mergeShapes` 會用 generated 的 stationKms 當權威,所以列車動畫總長按 465 km 跑。
+
+如果未來 OSM 補上單向 sub-route relation 或 route_master 拆分,可以拿掉 `corridor` 設定回到一般 dedupe + stitch 路徑。
+
+### TRA-West 14 km gap
+
+`WL` 的 3 個 sub-segment 中,seg[0] head (24.99, 121.32) 與 seg[1] tail (25.12, 121.30) 是 14 km 真實 gap,可能由其他 LineID(`WL-N` / `WL-M`)填補。目前 stitch 用最短橋接距離演算法直接連兩端,在 桃園 區域有一條~14km 直線跨接的視覺 artifact。
+如果想修,可以在 `TDX_LINE_MAP["TRA-West"]` 加上對應 `WL-N` / `WL-M` 的 entry。

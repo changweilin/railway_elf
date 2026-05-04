@@ -17,7 +17,22 @@
       "Bash(node --check C:/Users/user/Documents/app/railway_elf/public/assets/rail-data.js)",
       "Bash(node --check public/assets/rail-data.js)",
       "Bash(node --check scripts/check-train-timing.mjs)",
-      "Bash(node --check C:/Users/user/Documents/app/railway_elf/scripts/fetch-rail-shapes.mjs)"
+      "Bash(node --check C:/Users/user/Documents/app/railway_elf/scripts/fetch-rail-shapes.mjs)",
+      "Bash(git check-ignore *)",
+      "Bash(node *)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code} \\(%{size_download} bytes\\)\\\\n\" http://localhost:4180/)",
+      "Bash(netstat -ano)",
+      "Bash(curl -s http://localhost:4180/assets/rail-data.generated.js -o C:/tmp_served.js)",
+      "Read(//c//**)",
+      "Bash(curl -s -o /tmp/served.js -w \"%{http_code} %{size_download}\\\\n\" http://localhost:4180/assets/rail-data.generated.js)",
+      "Read(//tmp/**)",
+      "Bash(tailscale.exe ip *)",
+      "Bash(\"/c/Program Files/Tailscale/tailscale.exe\" ip -4)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}, %{size_download} bytes\\\\n\" --max-time 5 http://100.120.189.89:4180/)",
+      "Bash(curl -s -o /tmp/check.js -w \"HTTP %{http_code}, %{size_download} bytes\\\\n\" http://localhost:4180/assets/rail-data.generated.js)",
+      "WebFetch(domain:www.openstreetmap.org)",
+      "WebFetch(domain:overpass-api.de)",
+      "Bash(OFFLINE=1 node scripts/fetch-rail-shapes.mjs --skip-tw)"
     ]
   }
 }

@@ -45,7 +45,7 @@ window.RAIL_DATA = {
           { name: "新竹", lat: 24.8083, lng: 121.0406, km: 80.0 },
           { name: "苗栗", lat: 24.6094, lng: 120.8251, km: 120.0 },
           { name: "台中", lat: 24.1124, lng: 120.6151, km: 175.0 },
-          { name: "彰化", lat: 24.0174, lng: 120.4251, km: 200.0 },
+          { name: "彰化", lat: 23.8728, lng: 120.5956, km: 215.0 },
           { name: "雲林", lat: 23.7353, lng: 120.4164, km: 240.0 },
           { name: "嘉義", lat: 23.4598, lng: 120.3272, km: 272.0 },
           { name: "台南", lat: 22.9248, lng: 120.2853, km: 325.0 },
@@ -195,11 +195,18 @@ window.RAIL_DATA = {
       // kms that break schedule generation. When that happens, skip the merge
       // for this line — the station-to-station polyline fallback still draws.
       if (gen.stationKms) {
+        // Loop lines (e.g. 山手線) list the anchor station twice — first at
+        // km 0 and last at the polyline total length. The generator's flat
+        // name→km dict can only hold one value per name, so synthesize the
+        // closing km from gen.totalKm for the trailing duplicate.
+        const isLoopLine = line.stations.length >= 3 &&
+          line.stations[0].name === line.stations[line.stations.length - 1].name;
         let monotonic = true;
         let prev = -Infinity;
         for (let i = 0; i < line.stations.length; i++) {
           const st = line.stations[i];
-          const k = gen.stationKms[st.name];
+          const isLoopBack = isLoopLine && i === line.stations.length - 1 && gen.totalKm != null;
+          const k = isLoopBack ? gen.totalKm : gen.stationKms[st.name];
           if (k == null) continue;
           // Allow ties only if two adjacent stations have the same name
           // (loop closure), otherwise require strict increase.
@@ -237,8 +244,13 @@ window.RAIL_DATA = {
       line.shape = out;
       // Update station km from generator (already projected onto shape)
       if (gen.stationKms) {
-        for (const st of line.stations) {
-          if (gen.stationKms[st.name] != null) st.km = gen.stationKms[st.name];
+        const isLoopLine = line.stations.length >= 3 &&
+          line.stations[0].name === line.stations[line.stations.length - 1].name;
+        for (let i = 0; i < line.stations.length; i++) {
+          const st = line.stations[i];
+          const isLoopBack = isLoopLine && i === line.stations.length - 1 && gen.totalKm != null;
+          const k = isLoopBack ? gen.totalKm : gen.stationKms[st.name];
+          if (k != null) st.km = k;
         }
       }
     }
