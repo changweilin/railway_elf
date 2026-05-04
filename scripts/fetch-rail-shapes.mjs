@@ -276,6 +276,47 @@ function stitchPolylines(polylines) {
   return greedyFrom(0, "head").chain;
 }
 
+function coordKey(p) {
+  return `${p.lat.toFixed(6)},${p.lng.toFixed(6)}`;
+}
+
+// TDX occasionally includes a branch as part of a trunk MULTILINESTRING. When
+// stitching later trunk pieces back to the same junction, the branch becomes a
+// closed detour (junction -> branch tail -> straight bridge -> junction). For
+// linear routes, drop those large closed detours and keep the mainline chain.
+function removeLargeClosedDetours(poly, { minLoopKm = 2 } = {}) {
+  const out = [];
+  const seen = new Map();
+  const removed = [];
+
+  for (const p of poly) {
+    const key = coordKey(p);
+    const priorIdx = seen.get(key);
+    if (priorIdx != null) {
+      let loopKm = 0;
+      for (let i = priorIdx + 1; i < out.length; i++) {
+        loopKm += haversine(out[i - 1], out[i]);
+      }
+      if (out.length > priorIdx + 1) {
+        loopKm += haversine(out[out.length - 1], p);
+      }
+      if (loopKm >= minLoopKm) {
+        for (let i = priorIdx + 1; i < out.length; i++) {
+          const innerKey = coordKey(out[i]);
+          if (seen.get(innerKey) === i) seen.delete(innerKey);
+        }
+        removed.push({ from: priorIdx, to: out.length, km: loopKm });
+        out.length = priorIdx + 1;
+        continue;
+      }
+    }
+    seen.set(key, out.length);
+    out.push(p);
+  }
+
+  return { shape: out, removed };
+}
+
 // ---------------------------------------------------------------------------
 // CACHE + RETRY
 //
@@ -433,7 +474,17 @@ async function fetchTdxShapes() {
       }
     }
     if (polys.length === 0) continue;
-    out[internalId] = stitchPolylines(polys);
+    const stitched = stitchPolylines(polys);
+    const repaired = removeLargeClosedDetours(stitched);
+    out[internalId] = repaired.shape;
+    if (repaired.removed.length > 0) {
+      const detail = repaired.removed
+        .map(r => `${r.km.toFixed(1)}km`)
+        .join(", ");
+      console.log(
+        `[TDX] ${internalId}: removed ${repaired.removed.length} stitched closed detour(s): ${detail}`
+      );
+    }
     console.log(`[TDX] ${internalId}: ${out[internalId].length} raw points`);
   }
 

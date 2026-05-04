@@ -144,7 +144,7 @@ CI 第一次跑必須要有網路；之後就算 TDX/Overpass 暫時掛了，bui
 
 | 線                    | shape 來源 | 站點偏移 | monotonic 檢查 | 備註 |
 |-----------------------|------------|----------|----------------|------|
-| TRA-West              | TDX v3 `WL` | 944 m | ✅            | 拼接 3 段(基隆-八堵-桃園 gap 14km-高雄)|
+| TRA-West              | TDX v3 `WL` | 944 m | ✅            | `WL` 內含桃園→北桃園支線 detour,產生器會移除閉合 detour 後再輸出主線 |
 | TRA-East              | TDX v3 `WL[樹林→八堵]` + `EL` | 957 m | ✅ | 西部主幹的樹林-八堵段 + 東部幹線 |
 | THSR                  | TDX v2 `HSRL` | 1284 m | ✅ | v3 的 THSR Shape endpoint 不存在,固定走 v2 |
 | JR-Chuo               | OSM rel 10363876 | 101 m | ✅ | |
@@ -155,7 +155,7 @@ CI 第一次跑必須要有網路；之後就算 TDX/Overpass 暫時掛了，bui
 
 - **TRA `LineID` 從數字 → 字母碼**:`1001/1002/...` 全部下架,改成 `WL/EL/YL/NL/TT/...` 等字母碼。腳本 `TDX_LINE_MAP` 已更新。
 - **THSR Shape endpoint 從 v3 拿掉**:v3 path 回 404,v2 仍可用。`tdxFetch` 加了 `version` 參數,THSR 固定走 v2。
-- **WL 是 MULTILINESTRING(3 段)**:基隆-八堵 / 八堵-桃園area / 桃園-高雄,中間有 ~14km 真實 gap(可能由 WL-N/-M 子段填補,目前先讓 stitch 直線連接,視覺上幾乎不察覺)。
+- **WL 是 MULTILINESTRING(3 段)**:其中一段會從台鐵桃園往北桃園/林口方向繞出支線,再被 stitch 接回桃園→高雄主線。`removeLargeClosedDetours` 會移除這種「同一 junction 繞出去又回來」的大型閉合 detour,避免桃園附近出現直線跨接 artifact。
 
 ## 已知問題
 
@@ -171,7 +171,8 @@ OSM relation `5263977` 含 6939 條 way,既是上下行又含岔線/廠區,paren
 
 如果未來 OSM 補上單向 sub-route relation 或 route_master 拆分,可以拿掉 `corridor` 設定回到一般 dedupe + stitch 路徑。
 
-### TRA-West 14 km gap
+### TRA-West 桃園 detour
 
-`WL` 的 3 個 sub-segment 中,seg[0] head (24.99, 121.32) 與 seg[1] tail (25.12, 121.30) 是 14 km 真實 gap,可能由其他 LineID(`WL-N` / `WL-M`)填補。目前 stitch 用最短橋接距離演算法直接連兩端,在 桃園 區域有一條~14km 直線跨接的視覺 artifact。
-如果想修,可以在 `TDX_LINE_MAP["TRA-West"]` 加上對應 `WL-N` / `WL-M` 的 entry。
+`WL` 的 3 個 sub-segment 中,seg[1] 會先經過台鐵桃園 junction (24.99, 121.32),再往北桃園/林口方向延伸到 (25.12, 121.30)。stitch 接上 seg[0] 的桃園→高雄主線時,會形成「桃園→北桃園 detour→直線回桃園」的閉合路徑,在地圖上看起來像被捷運/支線拉歪。
+
+產生器現在會在 stitch 後移除大型閉合 detour,保留基隆/八堵→桃園→高雄主線。若未來 TDX 把支線拆到獨立 LineID,可以再把這段規則收斂成更明確的 LineID mapping。
