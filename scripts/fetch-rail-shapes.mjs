@@ -60,6 +60,22 @@ const TDX_LINE_MAP = {
     { lineId: "WL", from: { lat: 24.9935, lng: 121.4253 }, to: { lat: 25.1056, lng: 121.7150 } },
     "EL",
   ],
+  // TRA branch lines (TDX provides direct shape per LineID).
+  // Note: TDX LineID labels do not match the colloquial Taiwanese names —
+  // verified via the /Rail/TRA/Shape feed: SA=深澳線, and SL is a single
+  // LineID whose MULTILINESTRING bundles both 沙崙線 (Tainan) AND 南迴線
+  // (枋寮↔台東) as separate segments. We disambiguate by anchor-slicing.
+  // 阿里山林業鐵路 is operated by 林務局, not TRA — not in the TDX feed and
+  // falls back to the station-to-station polyline.
+  "TRA-Pingxi": ["PX"], // 平溪線
+  "TRA-Neiwan": ["NW"], // 內灣線
+  "TRA-Jiji":   ["JJ"], // 集集線
+  "TRA-Shalun": [
+    { lineId: "SL", from: { lat: 22.9197, lng: 120.2360 }, to: { lat: 22.9252, lng: 120.2853 } },
+  ],
+  "TRA-South-Link": [
+    { lineId: "SL", from: { lat: 22.3672, lng: 120.5961 }, to: { lat: 22.7930, lng: 121.1243 } },
+  ],
 };
 
 // OSM Overpass relations for Japanese lines.
@@ -79,6 +95,25 @@ const OSM_LINE_MAP = {
   },
   "JR-Yamanote":        { name: "Yamanote Line (Outer)", relationIds: [1972920], loopAnchor: { lat: 35.6812, lng: 139.7671 } }, // 外回り 環狀,以東京站切開
   "JR-Chuo":            { name: "Chūō Line Rapid (down)", relationIds: [10363876] }, // 下り (Tokyo→west)
+
+  // Taiwan Metro / LRT — single-direction sub-routes (NOT route_masters).
+  // Using a master would pull both directional sub-routes whose tracks may be
+  // > 40 m apart, defeating the parallel-way dedupe and yielding a doubled
+  // polyline. Pick one direction per line.
+  "TPE-Red":      { name: "Tamsui-Xinyi (S)",  relationIds: [5378981] }, // 南向 淡水→象山
+  "TPE-Blue":     { name: "Bannan",            relationIds: [199038]  }, // 南港→土城
+  "TPE-Green":    { name: "Songshan-Xindian",  relationIds: [4250357] }, // 順向
+  "TPE-Brown":    { name: "Wenhu",             relationIds: [447449]  }, // 順向
+  // 中和新蘆 is a Y-junction; 4250354 (蘆洲 順向) covers 蘆洲→南勢角 (matches our chain).
+  "TPE-Yellow":   { name: "Zhonghe-Xinlu (蘆洲)", relationIds: [4250354] },
+  "TYMRT":        { name: "Taoyuan Airport MRT", relationIds: [8487062] }, // 台北→環北
+  "KHH-Red":      { name: "KRTC Red",          relationIds: [4174828] }, // 小港→岡山
+  "KHH-Orange":   { name: "KRTC Orange",       relationIds: [4174827] }, // 哈瑪星→大寮
+  // KHH circular LRT — closed loop. Anchor at 籬仔內 (first station in our chain).
+  "KHH-LRT":      { name: "KRTC Circular LRT", relationIds: [6826886], loopAnchor: { lat: 22.5985, lng: 120.3134 } }, // 順行
+  "Tamsui-LRT":   { name: "Danhai LRT (上行)",  relationIds: [9154523] }, // 紅樹林→崁頂
+  // Alishan main line (嘉義→阿里山). Mountain spurs (神木/沼平/祝山) are separate relations.
+  "Alishan-Forest": { name: "Alishan Forest Railway", relationIds: [5570989] },
 };
 
 // Simplification tolerance (km). 0.005 = 5 m. Bigger = smaller file, more loss.
@@ -212,8 +247,11 @@ function parseCoordList(s) {
 // polyline is closest to the running tail. Reverses segments as needed.
 // Slice a polyline between two lat/lng anchor points by snapping to the
 // nearest vertex on each side. Returns the inclusive sub-array, reversed if
-// `to` precedes `from` in the polyline order.
-function sliceByAnchors(poly, from, to) {
+// `to` precedes `from` in the polyline order. Returns [] when either anchor
+// is farther than `maxAnchorKm` from the polyline — needed for MULTILINESTRING
+// inputs where some segments don't contain the anchors at all (e.g. TDX's
+// SL LineID bundles both 沙崙線 and 南迴線 as separate segments).
+function sliceByAnchors(poly, from, to, maxAnchorKm = 3) {
   let iFrom = 0, dFrom = Infinity, iTo = 0, dTo = Infinity;
   for (let i = 0; i < poly.length; i++) {
     const df = haversine(poly[i], from);
@@ -221,6 +259,7 @@ function sliceByAnchors(poly, from, to) {
     if (df < dFrom) { dFrom = df; iFrom = i; }
     if (dt < dTo) { dTo = dt; iTo = i; }
   }
+  if (dFrom > maxAnchorKm || dTo > maxAnchorKm) return [];
   if (iFrom <= iTo) return poly.slice(iFrom, iTo + 1);
   return poly.slice(iTo, iFrom + 1).reverse();
 }
@@ -543,7 +582,9 @@ async function overpassQuery(query) {
 
 async function fetchOsmShape(internalId, cfg, stations) {
   const relClause = cfg.relationIds.map(id => `relation(${id});`).join("");
-  const query = `[out:json][timeout:180];(${relClause});out body;>;out skel qt;`;
+  // `>>` (recurse-down full) drills through route_master → sub-routes → ways → nodes
+  // in one step. Single-route relations behave the same as with `>`.
+  const query = `[out:json][timeout:180];(${relClause});out body;>>;out skel qt;`;
   console.log(`[OSM] ${internalId} (${cfg.name}) — querying…`);
   const cacheKey = `osm:${internalId}:${cfg.relationIds.sort().join(",")}`;
   const json = await fetchJsonCached(
@@ -561,16 +602,25 @@ async function fetchOsmShape(internalId, cfg, stations) {
     else if (el.type === "relation") relations.push(el);
   }
 
+  // Deduplicate ways by ID across relations. Overpass `out body;>>;` echoes the
+  // queried relation back in the recurse output, so a route relation often
+  // appears twice — without dedup, every way member gets pushed into polys
+  // twice and parallelWay dedupe must clean it up later (sometimes too
+  // aggressively, dropping unique track segments).
+  const seenWayIds = new Set();
   const polys = [];
   for (const rel of relations) {
     for (const m of rel.members) {
       if (m.type !== "way") continue;
-      // Skip station platforms — they're not running track.
       if (m.role === "platform" || m.role === "stop") continue;
+      if (seenWayIds.has(m.ref)) continue;
       const wayNodes = ways.get(m.ref);
       if (!wayNodes) continue;
       const coords = wayNodes.map(nid => nodes.get(nid)).filter(Boolean);
-      if (coords.length >= 2) polys.push(coords);
+      if (coords.length >= 2) {
+        polys.push(coords);
+        seenWayIds.add(m.ref);
+      }
     }
   }
 
@@ -602,6 +652,10 @@ async function fetchOsmShape(internalId, cfg, stations) {
 // For closed-loop lines (e.g. Yamanote), greedy stitch produces a polyline
 // that starts wherever way[0] sat — typically not at the line's anchor
 // station. Rotate it so the loop starts at the nearest vertex to `anchor`.
+// We always rotate cyclically (treating the chain as a loop) when loopAnchor
+// is set: even when the stitched endpoints don't exactly close (>100 m gap
+// from missing junction ways), cyclic rotation preserves all vertices and
+// keeps the anchor at km 0.
 function rotateLoopToAnchor(poly, anchor) {
   if (poly.length < 3) return poly;
   let bestIdx = 0, bestDist = Infinity;
@@ -611,10 +665,9 @@ function rotateLoopToAnchor(poly, anchor) {
   }
   if (bestIdx === 0) return poly;
   const isLoop = haversine(poly[0], poly[poly.length - 1]) < 0.1;
-  if (!isLoop) return poly.slice(bestIdx); // open chain — just slice
-  const open = poly.slice(0, -1); // drop closing duplicate
+  const open = isLoop ? poly.slice(0, -1) : poly;
   const rotated = open.slice(bestIdx).concat(open.slice(0, bestIdx));
-  rotated.push(rotated[0]); // re-close
+  if (isLoop) rotated.push(rotated[0]); // re-close
   return rotated;
 }
 
@@ -777,6 +830,39 @@ function buildOutput(rawShapes, stationsByLineId) {
       const last = stationKmOnShape(stations[stations.length - 1], simplified, shapeKm).km;
       if (first > last) {
         simplified = simplified.slice().reverse();
+        shapeKm = cumulativeKm(simplified);
+      }
+    }
+
+    // Leading/trailing stations that are far from the polyline endpoints can
+    // happen on branch lines whose upstream geometry starts at the branch
+    // divergence rather than the junction station (e.g. TDX 內灣線 begins at
+    // 北新竹 not 新竹; 沙崙線 begins south of 中洲). Such stations all clamp
+    // to km=0 (or km=totalKm), which breaks the merge's monotonicity check.
+    // Prepend/append their coordinates so each gets its own anchor.
+    const STUCK_DIST_KM = 0.5;
+    {
+      const stuckPrefix = [];
+      for (let i = 0; i < stations.length; i++) {
+        const probe = stationKmOnShape(stations[i], simplified, shapeKm);
+        if (probe.km < 1e-6 && probe.dist > STUCK_DIST_KM) stuckPrefix.push(stations[i]);
+        else break;
+      }
+      if (stuckPrefix.length) {
+        simplified = [...stuckPrefix.map(s => ({ lat: s.lat, lng: s.lng })), ...simplified];
+        shapeKm = cumulativeKm(simplified);
+      }
+    }
+    {
+      const stuckSuffix = [];
+      const totalK = shapeKm[shapeKm.length - 1];
+      for (let i = stations.length - 1; i >= 0; i--) {
+        const probe = stationKmOnShape(stations[i], simplified, shapeKm);
+        if (probe.km > totalK - 1e-6 && probe.dist > STUCK_DIST_KM) stuckSuffix.unshift(stations[i]);
+        else break;
+      }
+      if (stuckSuffix.length) {
+        simplified = [...simplified, ...stuckSuffix.map(s => ({ lat: s.lat, lng: s.lng }))];
         shapeKm = cumulativeKm(simplified);
       }
     }

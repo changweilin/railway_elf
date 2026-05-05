@@ -13,6 +13,7 @@ window.RAIL_DATA = {
         name: "台鐵西部幹線",
         nameEn: "TRA West Coast Line",
         color: "#6ee7b7",
+        category: "TRA",
         directions: { up: "北上 (往基隆)", down: "南下 (往高雄)" },
         stations: [
           { name: "基隆", lat: 25.1315, lng: 121.7405, km: 0 },
@@ -36,6 +37,7 @@ window.RAIL_DATA = {
         name: "台灣高鐵",
         nameEn: "Taiwan High Speed Rail",
         color: "#60a5fa",
+        category: "HSR",
         directions: { up: "北上 (往南港)", down: "南下 (往左營)" },
         stations: [
           { name: "南港", lat: 25.0521, lng: 121.6069, km: 0 },
@@ -57,6 +59,7 @@ window.RAIL_DATA = {
         name: "台鐵東部幹線",
         nameEn: "TRA East Coast Line",
         color: "#f59e0b",
+        category: "TRA",
         directions: { up: "北上 (往樹林)", down: "南下 (往花蓮/台東)" },
         stations: [
           { name: "樹林", lat: 24.9935, lng: 121.4253, km: 0 },
@@ -75,6 +78,411 @@ window.RAIL_DATA = {
           { name: "台東", lat: 22.7930, lng: 121.1243, km: 374.0 },
         ],
       },
+      {
+        id: "TRA-South-Link",
+        name: "台鐵南迴線",
+        nameEn: "TRA South-Link Line",
+        color: "#fb923c",
+        category: "TRA",
+        directions: { up: "西行 (往枋寮)", down: "東行 (往台東)" },
+        stations: [
+          { name: "枋寮", lat: 22.3672, lng: 120.5961, km: 0 },
+          { name: "加祿", lat: 22.3501, lng: 120.6125, km: 4.4 },
+          { name: "內獅", lat: 22.3132, lng: 120.6322, km: 9.0 },
+          { name: "枋山", lat: 22.2768, lng: 120.6539, km: 14.0 },
+          { name: "古莊", lat: 22.3098, lng: 120.7872, km: 26.7 },
+          { name: "大武", lat: 22.3525, lng: 120.9059, km: 45.7 },
+          { name: "瀧溪", lat: 22.4631, lng: 120.9555, km: 57.0 },
+          { name: "金崙", lat: 22.5325, lng: 120.9684, km: 64.7 },
+          { name: "太麻里", lat: 22.6094, lng: 121.0058, km: 73.4 },
+          { name: "知本", lat: 22.7060, lng: 121.0640, km: 85.7 },
+          { name: "康樂", lat: 22.7619, lng: 121.1078, km: 92.7 },
+          { name: "台東", lat: 22.7930, lng: 121.1243, km: 98.2 },
+        ],
+      },
+      {
+        id: "TRA-Pingxi",
+        name: "台鐵平溪線",
+        nameEn: "TRA Pingxi Line",
+        color: "#fb7185",
+        category: "TRA",
+        directions: { up: "西行 (往三貂嶺)", down: "東行 (往菁桐)" },
+        stations: [
+          { name: "三貂嶺", lat: 25.0584, lng: 121.8208, km: 0 },
+          { name: "大華", lat: 25.0467, lng: 121.8138, km: 1.7 },
+          { name: "十分", lat: 25.0418, lng: 121.7748, km: 5.6 },
+          { name: "望古", lat: 25.0438, lng: 121.7595, km: 7.4 },
+          { name: "嶺腳", lat: 25.0349, lng: 121.7452, km: 9.0 },
+          { name: "平溪", lat: 25.0257, lng: 121.7392, km: 10.6 },
+          { name: "菁桐", lat: 25.0252, lng: 121.7271, km: 12.9 },
+        ],
+      },
+      {
+        id: "TRA-Neiwan",
+        name: "台鐵內灣線",
+        nameEn: "TRA Neiwan Line",
+        color: "#84cc16",
+        category: "TRA",
+        directions: { up: "北行 (往新竹)", down: "南行 (往內灣)" },
+        stations: [
+          { name: "新竹", lat: 24.8016, lng: 120.9717, km: 0 },
+          { name: "北新竹", lat: 24.8064, lng: 120.9819, km: 1.0 },
+          { name: "千甲", lat: 24.8128, lng: 120.9980, km: 2.7 },
+          { name: "新莊", lat: 24.8170, lng: 121.0119, km: 4.0 },
+          { name: "竹中", lat: 24.8132, lng: 121.0264, km: 5.8 },
+          { name: "上員", lat: 24.7649, lng: 121.0727, km: 9.7 },
+          { name: "榮華", lat: 24.7449, lng: 121.0850, km: 11.9 },
+          { name: "竹東", lat: 24.7367, lng: 121.0907, km: 14.6 },
+          { name: "橫山", lat: 24.7233, lng: 121.1281, km: 19.0 },
+          { name: "九讚頭", lat: 24.7242, lng: 121.1404, km: 20.4 },
+          { name: "合興", lat: 24.7207, lng: 121.1675, km: 23.3 },
+          { name: "富貴", lat: 24.7126, lng: 121.1810, km: 24.8 },
+          { name: "內灣", lat: 24.7077, lng: 121.1866, km: 27.1 },
+        ],
+      },
+      {
+        id: "TRA-Jiji",
+        name: "台鐵集集線",
+        nameEn: "TRA Jiji Line",
+        color: "#a3e635",
+        category: "TRA",
+        directions: { up: "西行 (往二水)", down: "東行 (往車埕)" },
+        stations: [
+          { name: "二水", lat: 23.8087, lng: 120.6230, km: 0 },
+          { name: "源泉", lat: 23.8159, lng: 120.6526, km: 2.7 },
+          { name: "濁水", lat: 23.8302, lng: 120.7008, km: 7.7 },
+          { name: "龍泉", lat: 23.8356, lng: 120.7345, km: 11.5 },
+          { name: "集集", lat: 23.8284, lng: 120.7869, km: 16.6 },
+          { name: "水里", lat: 23.8117, lng: 120.8538, km: 23.2 },
+          { name: "車埕", lat: 23.8290, lng: 120.8653, km: 29.7 },
+        ],
+      },
+      {
+        id: "TRA-Shalun",
+        name: "台鐵沙崙線",
+        nameEn: "TRA Shalun Line",
+        color: "#fde047",
+        category: "TRA",
+        directions: { up: "北行 (往中洲)", down: "南行 (往沙崙)" },
+        stations: [
+          { name: "中洲", lat: 22.9197, lng: 120.2360, km: 0 },
+          { name: "長榮大學", lat: 22.9089, lng: 120.2493, km: 2.0 },
+          { name: "沙崙", lat: 22.9252, lng: 120.2853, km: 5.3 },
+        ],
+      },
+      {
+        id: "Alishan-Forest",
+        name: "阿里山林業鐵路",
+        nameEn: "Alishan Forest Railway",
+        color: "#22c55e",
+        category: "TRA",
+        directions: { up: "下行 (往嘉義)", down: "上行 (往阿里山)" },
+        stations: [
+          { name: "嘉義", lat: 23.4797, lng: 120.4497, km: 0 },
+          { name: "北門", lat: 23.4847, lng: 120.4597, km: 1.6 },
+          { name: "鹿麻產", lat: 23.4892, lng: 120.4877, km: 4.4 },
+          { name: "竹崎", lat: 23.5240, lng: 120.5559, km: 14.2 },
+          { name: "樟腦寮", lat: 23.5184, lng: 120.6127, km: 23.3 },
+          { name: "獨立山", lat: 23.5170, lng: 120.6371, km: 27.4 },
+          { name: "梨園寮", lat: 23.5135, lng: 120.6577, km: 32.3 },
+          { name: "交力坪", lat: 23.5043, lng: 120.6717, km: 35.6 },
+          { name: "水社寮", lat: 23.5093, lng: 120.7035, km: 40.5 },
+          { name: "奮起湖", lat: 23.4947, lng: 120.7203, km: 45.7 },
+          { name: "多林", lat: 23.4925, lng: 120.7501, km: 50.9 },
+          { name: "十字路", lat: 23.4793, lng: 120.7783, km: 55.3 },
+          { name: "阿里山", lat: 23.5099, lng: 120.8030, km: 71.4 },
+        ],
+      },
+      {
+        id: "TPE-Red",
+        name: "台北捷運淡水信義線",
+        nameEn: "Taipei Metro Tamsui-Xinyi Line",
+        color: "#e2554b",
+        category: "Metro",
+        directions: { up: "北上 (往淡水)", down: "南下 (往象山)" },
+        stations: [
+          { name: "淡水", lat: 25.1677, lng: 121.4451, km: 0 },
+          { name: "紅樹林", lat: 25.1547, lng: 121.4598, km: 2.0 },
+          { name: "竹圍", lat: 25.1366, lng: 121.4598, km: 4.4 },
+          { name: "關渡", lat: 25.1257, lng: 121.4671, km: 6.0 },
+          { name: "忠義", lat: 25.1308, lng: 121.4736, km: 7.3 },
+          { name: "復興崗", lat: 25.1373, lng: 121.4855, km: 8.5 },
+          { name: "北投", lat: 25.1322, lng: 121.4985, km: 10.0 },
+          { name: "奇岩", lat: 25.1257, lng: 121.5009, km: 11.0 },
+          { name: "唭哩岸", lat: 25.1208, lng: 121.5052, km: 11.8 },
+          { name: "石牌", lat: 25.1147, lng: 121.5155, km: 13.0 },
+          { name: "明德", lat: 25.1086, lng: 121.5189, km: 14.0 },
+          { name: "芝山", lat: 25.1029, lng: 121.5221, km: 14.9 },
+          { name: "士林", lat: 25.0928, lng: 121.5260, km: 16.1 },
+          { name: "劍潭", lat: 25.0850, lng: 121.5253, km: 17.0 },
+          { name: "圓山", lat: 25.0712, lng: 121.5197, km: 18.9 },
+          { name: "民權西路", lat: 25.0626, lng: 121.5193, km: 20.0 },
+          { name: "雙連", lat: 25.0577, lng: 121.5205, km: 20.9 },
+          { name: "中山", lat: 25.0526, lng: 121.5204, km: 21.6 },
+          { name: "台北車站", lat: 25.0461, lng: 121.5169, km: 22.9 },
+          { name: "台大醫院", lat: 25.0421, lng: 121.5176, km: 23.8 },
+          { name: "中正紀念堂", lat: 25.0353, lng: 121.5185, km: 24.6 },
+          { name: "東門", lat: 25.0339, lng: 121.5285, km: 25.7 },
+          { name: "大安森林公園", lat: 25.0303, lng: 121.5360, km: 26.5 },
+          { name: "大安", lat: 25.0327, lng: 121.5435, km: 27.6 },
+          { name: "信義安和", lat: 25.0331, lng: 121.5527, km: 28.4 },
+          { name: "台北101/世貿", lat: 25.0334, lng: 121.5650, km: 29.5 },
+          { name: "象山", lat: 25.0327, lng: 121.5705, km: 30.3 },
+        ],
+      },
+      {
+        id: "TPE-Blue",
+        name: "台北捷運板南線",
+        nameEn: "Taipei Metro Bannan Line",
+        color: "#1763b8",
+        category: "Metro",
+        directions: { up: "西行 (往頂埔)", down: "東行 (往南港展覽館)" },
+        stations: [
+          { name: "頂埔", lat: 24.9606, lng: 121.4193, km: 0 },
+          { name: "永寧", lat: 24.9667, lng: 121.4361, km: 1.7 },
+          { name: "土城", lat: 24.9728, lng: 121.4439, km: 2.7 },
+          { name: "海山", lat: 24.9858, lng: 121.4486, km: 4.2 },
+          { name: "亞東醫院", lat: 24.9986, lng: 121.4528, km: 5.8 },
+          { name: "府中", lat: 25.0083, lng: 121.4592, km: 7.0 },
+          { name: "板橋", lat: 25.0144, lng: 121.4637, km: 7.7 },
+          { name: "新埔", lat: 25.0218, lng: 121.4685, km: 8.7 },
+          { name: "江子翠", lat: 25.0306, lng: 121.4717, km: 10.0 },
+          { name: "龍山寺", lat: 25.0353, lng: 121.4998, km: 13.0 },
+          { name: "西門", lat: 25.0420, lng: 121.5081, km: 14.2 },
+          { name: "台北車站", lat: 25.0461, lng: 121.5169, km: 15.5 },
+          { name: "善導寺", lat: 25.0451, lng: 121.5236, km: 16.1 },
+          { name: "忠孝新生", lat: 25.0420, lng: 121.5331, km: 17.2 },
+          { name: "忠孝復興", lat: 25.0418, lng: 121.5436, km: 18.3 },
+          { name: "忠孝敦化", lat: 25.0415, lng: 121.5512, km: 19.0 },
+          { name: "國父紀念館", lat: 25.0413, lng: 121.5577, km: 19.6 },
+          { name: "市政府", lat: 25.0412, lng: 121.5658, km: 20.5 },
+          { name: "永春", lat: 25.0407, lng: 121.5762, km: 21.6 },
+          { name: "後山埤", lat: 25.0454, lng: 121.5828, km: 22.5 },
+          { name: "昆陽", lat: 25.0509, lng: 121.5945, km: 23.7 },
+          { name: "南港", lat: 25.0524, lng: 121.6071, km: 24.9 },
+          { name: "南港展覽館", lat: 25.0556, lng: 121.6175, km: 25.9 },
+        ],
+      },
+      {
+        id: "TPE-Green",
+        name: "台北捷運松山新店線",
+        nameEn: "Taipei Metro Songshan-Xindian Line",
+        color: "#0e8c4a",
+        directions: { up: "南下 (往新店)", down: "北上 (往松山)" },
+        category: "Metro",
+        stations: [
+          { name: "新店", lat: 24.9577, lng: 121.5384, km: 0 },
+          { name: "新店區公所", lat: 24.9670, lng: 121.5417, km: 1.0 },
+          { name: "七張", lat: 24.9728, lng: 121.5417, km: 1.7 },
+          { name: "大坪林", lat: 24.9826, lng: 121.5413, km: 2.9 },
+          { name: "景美", lat: 24.9925, lng: 121.5412, km: 4.0 },
+          { name: "萬隆", lat: 25.0023, lng: 121.5395, km: 5.1 },
+          { name: "公館", lat: 25.0144, lng: 121.5346, km: 6.6 },
+          { name: "台電大樓", lat: 25.0244, lng: 121.5285, km: 7.9 },
+          { name: "古亭", lat: 25.0270, lng: 121.5226, km: 8.6 },
+          { name: "中正紀念堂", lat: 25.0353, lng: 121.5185, km: 9.6 },
+          { name: "小南門", lat: 25.0381, lng: 121.5108, km: 10.4 },
+          { name: "西門", lat: 25.0420, lng: 121.5081, km: 11.0 },
+          { name: "北門", lat: 25.0490, lng: 121.5103, km: 11.9 },
+          { name: "中山", lat: 25.0526, lng: 121.5204, km: 13.1 },
+          { name: "松江南京", lat: 25.0524, lng: 121.5326, km: 14.5 },
+          { name: "南京復興", lat: 25.0521, lng: 121.5440, km: 15.7 },
+          { name: "台北小巨蛋", lat: 25.0520, lng: 121.5512, km: 16.5 },
+          { name: "南京三民", lat: 25.0517, lng: 121.5681, km: 18.3 },
+          { name: "松山", lat: 25.0497, lng: 121.5774, km: 19.4 },
+        ],
+      },
+      {
+        id: "TPE-Brown",
+        name: "台北捷運文湖線",
+        nameEn: "Taipei Metro Wenhu Line",
+        color: "#a8744f",
+        category: "Metro",
+        directions: { up: "南下 (往動物園)", down: "北上 (往南港展覽館)" },
+        stations: [
+          { name: "動物園", lat: 24.9988, lng: 121.5793, km: 0 },
+          { name: "木柵", lat: 25.0001, lng: 121.5683, km: 1.2 },
+          { name: "萬芳社區", lat: 25.0021, lng: 121.5713, km: 1.9 },
+          { name: "萬芳醫院", lat: 25.0010, lng: 121.5582, km: 3.0 },
+          { name: "辛亥", lat: 25.0050, lng: 121.5495, km: 4.0 },
+          { name: "麟光", lat: 25.0144, lng: 121.5547, km: 5.0 },
+          { name: "六張犁", lat: 25.0233, lng: 121.5535, km: 6.0 },
+          { name: "科技大樓", lat: 25.0260, lng: 121.5435, km: 7.2 },
+          { name: "大安", lat: 25.0327, lng: 121.5435, km: 7.9 },
+          { name: "忠孝復興", lat: 25.0418, lng: 121.5436, km: 8.9 },
+          { name: "南京復興", lat: 25.0521, lng: 121.5440, km: 10.0 },
+          { name: "中山國中", lat: 25.0612, lng: 121.5443, km: 11.0 },
+          { name: "松山機場", lat: 25.0631, lng: 121.5520, km: 11.9 },
+          { name: "大直", lat: 25.0795, lng: 121.5471, km: 13.6 },
+          { name: "劍南路", lat: 25.0843, lng: 121.5556, km: 14.5 },
+          { name: "西湖", lat: 25.0820, lng: 121.5664, km: 15.8 },
+          { name: "港墘", lat: 25.0806, lng: 121.5752, km: 16.7 },
+          { name: "文德", lat: 25.0775, lng: 121.5859, km: 17.7 },
+          { name: "內湖", lat: 25.0838, lng: 121.5944, km: 18.7 },
+          { name: "大湖公園", lat: 25.0840, lng: 121.6020, km: 19.5 },
+          { name: "葫洲", lat: 25.0721, lng: 121.6075, km: 21.1 },
+          { name: "東湖", lat: 25.0668, lng: 121.6152, km: 22.0 },
+          { name: "南港軟體園區", lat: 25.0596, lng: 121.6155, km: 23.0 },
+          { name: "南港展覽館", lat: 25.0556, lng: 121.6175, km: 24.0 },
+        ],
+      },
+      {
+        id: "TPE-Yellow",
+        name: "台北捷運中和新蘆線",
+        nameEn: "Taipei Metro Zhonghe-Xinlu Line",
+        color: "#dfa226",
+        category: "Metro",
+        directions: { up: "北行 (往蘆洲)", down: "南行 (往南勢角)" },
+        stations: [
+          { name: "南勢角", lat: 24.9883, lng: 121.5099, km: 0 },
+          { name: "景安", lat: 24.9929, lng: 121.5054, km: 1.0 },
+          { name: "永安市場", lat: 25.0014, lng: 121.5081, km: 2.0 },
+          { name: "頂溪", lat: 25.0143, lng: 121.5152, km: 3.6 },
+          { name: "古亭", lat: 25.0270, lng: 121.5226, km: 5.4 },
+          { name: "東門", lat: 25.0339, lng: 121.5285, km: 6.5 },
+          { name: "忠孝新生", lat: 25.0420, lng: 121.5331, km: 7.6 },
+          { name: "松江南京", lat: 25.0524, lng: 121.5326, km: 8.8 },
+          { name: "行天宮", lat: 25.0613, lng: 121.5326, km: 9.8 },
+          { name: "中山國小", lat: 25.0703, lng: 121.5260, km: 11.0 },
+          { name: "民權西路", lat: 25.0626, lng: 121.5193, km: 12.0 },
+          { name: "大橋頭", lat: 25.0635, lng: 121.5106, km: 13.0 },
+          { name: "三重國小", lat: 25.0703, lng: 121.4954, km: 14.4 },
+          { name: "三和國中", lat: 25.0760, lng: 121.4895, km: 15.4 },
+          { name: "徐匯中學", lat: 25.0817, lng: 121.4830, km: 16.4 },
+          { name: "三民高中", lat: 25.0902, lng: 121.4799, km: 17.4 },
+          { name: "蘆洲", lat: 25.0891, lng: 121.4654, km: 19.0 },
+        ],
+      },
+      {
+        id: "TYMRT",
+        name: "桃園機場捷運",
+        nameEn: "Taoyuan Airport MRT",
+        color: "#9c34a4",
+        category: "Metro",
+        directions: { up: "東行 (往台北車站)", down: "西行 (往環北)" },
+        stations: [
+          { name: "台北車站", lat: 25.0461, lng: 121.5169, km: 0 },
+          { name: "三重", lat: 25.0596, lng: 121.4853, km: 6.4 },
+          { name: "新北產業園區", lat: 25.0631, lng: 121.4570, km: 9.4 },
+          { name: "新莊副都心", lat: 25.0436, lng: 121.4593, km: 11.5 },
+          { name: "泰山", lat: 25.0497, lng: 121.4382, km: 13.7 },
+          { name: "泰山貴和", lat: 25.0395, lng: 121.4194, km: 16.0 },
+          { name: "體育大學", lat: 25.0190, lng: 121.3856, km: 22.7 },
+          { name: "長庚醫院", lat: 25.0349, lng: 121.3654, km: 25.2 },
+          { name: "林口", lat: 25.0702, lng: 121.3608, km: 28.5 },
+          { name: "山鼻", lat: 25.0641, lng: 121.3194, km: 31.5 },
+          { name: "坑口", lat: 25.0699, lng: 121.2861, km: 34.4 },
+          { name: "機場第一航廈", lat: 25.0773, lng: 121.2335, km: 38.7 },
+          { name: "機場第二航廈", lat: 25.0732, lng: 121.2316, km: 39.5 },
+          { name: "機場旅館", lat: 25.0628, lng: 121.2360, km: 40.7 },
+          { name: "大園", lat: 25.0488, lng: 121.2102, km: 43.7 },
+          { name: "橫山", lat: 25.0286, lng: 121.2151, km: 45.9 },
+          { name: "領航", lat: 25.0188, lng: 121.2329, km: 47.7 },
+          { name: "高鐵桃園站", lat: 25.0127, lng: 121.2149, km: 49.7 },
+          { name: "桃園體育園區", lat: 25.0064, lng: 121.2257, km: 50.9 },
+          { name: "興南", lat: 24.9933, lng: 121.2392, km: 52.5 },
+          { name: "環北", lat: 24.9669, lng: 121.2256, km: 54.4 },
+        ],
+      },
+      {
+        id: "KHH-Red",
+        name: "高雄捷運紅線",
+        nameEn: "Kaohsiung MRT Red Line",
+        color: "#e2554b",
+        category: "Metro",
+        directions: { up: "北上 (往南岡山)", down: "南下 (往小港)" },
+        stations: [
+          { name: "南岡山", lat: 22.7977, lng: 120.2941, km: 0 },
+          { name: "岡山", lat: 22.7791, lng: 120.2905, km: 2.3 },
+          { name: "橋頭火車站", lat: 22.7592, lng: 120.3013, km: 5.0 },
+          { name: "橋頭糖廠", lat: 22.7553, lng: 120.3066, km: 5.5 },
+          { name: "青埔", lat: 22.7445, lng: 120.3107, km: 6.6 },
+          { name: "都會公園", lat: 22.7263, lng: 120.3125, km: 8.7 },
+          { name: "楠梓加工區", lat: 22.7115, lng: 120.3144, km: 10.4 },
+          { name: "後勁", lat: 22.6991, lng: 120.3145, km: 11.6 },
+          { name: "油廠國小", lat: 22.6868, lng: 120.3134, km: 12.9 },
+          { name: "世運", lat: 22.6873, lng: 120.3001, km: 14.6 },
+          { name: "左營", lat: 22.6870, lng: 120.3082, km: 15.6 },
+          { name: "巨蛋", lat: 22.6726, lng: 120.3023, km: 17.2 },
+          { name: "凹子底", lat: 22.6603, lng: 120.3008, km: 18.5 },
+          { name: "後驛", lat: 22.6521, lng: 120.3010, km: 19.4 },
+          { name: "高雄車站", lat: 22.6395, lng: 120.3023, km: 20.7 },
+          { name: "美麗島", lat: 22.6313, lng: 120.3022, km: 21.6 },
+          { name: "中央公園", lat: 22.6253, lng: 120.3003, km: 22.4 },
+          { name: "三多商圈", lat: 22.6112, lng: 120.3018, km: 23.9 },
+          { name: "獅甲", lat: 22.6014, lng: 120.3037, km: 24.9 },
+          { name: "凱旋", lat: 22.5921, lng: 120.3074, km: 26.0 },
+          { name: "前鎮高中", lat: 22.5746, lng: 120.3140, km: 28.1 },
+          { name: "草衙", lat: 22.5651, lng: 120.3296, km: 29.9 },
+          { name: "高雄國際機場", lat: 22.5576, lng: 120.3402, km: 31.1 },
+          { name: "小港", lat: 22.5650, lng: 120.3576, km: 32.7 },
+        ],
+      },
+      {
+        id: "KHH-Orange",
+        name: "高雄捷運橘線",
+        nameEn: "Kaohsiung MRT Orange Line",
+        color: "#f99c2a",
+        category: "Metro",
+        directions: { up: "西行 (往西子灣)", down: "東行 (往大寮)" },
+        stations: [
+          { name: "西子灣", lat: 22.6201, lng: 120.2670, km: 0 },
+          { name: "鹽埕埔", lat: 22.6244, lng: 120.2842, km: 1.7 },
+          { name: "市議會", lat: 22.6275, lng: 120.2942, km: 2.7 },
+          { name: "美麗島", lat: 22.6313, lng: 120.3022, km: 3.6 },
+          { name: "信義國小", lat: 22.6325, lng: 120.3168, km: 5.0 },
+          { name: "文化中心", lat: 22.6310, lng: 120.3267, km: 6.0 },
+          { name: "五塊厝", lat: 22.6296, lng: 120.3411, km: 7.4 },
+          { name: "技擊館", lat: 22.6276, lng: 120.3534, km: 8.6 },
+          { name: "衛武營", lat: 22.6249, lng: 120.3622, km: 9.6 },
+          { name: "鳳山西站", lat: 22.6266, lng: 120.3531, km: 11.5 },
+          { name: "鳳山", lat: 22.6266, lng: 120.3601, km: 12.5 },
+          { name: "大東", lat: 22.6266, lng: 120.3681, km: 13.3 },
+          { name: "鳳山國中", lat: 22.6196, lng: 120.3801, km: 15.0 },
+          { name: "大寮", lat: 22.6055, lng: 120.3954, km: 17.2 },
+        ],
+      },
+      {
+        id: "KHH-LRT",
+        name: "高雄環狀輕軌",
+        nameEn: "Kaohsiung Circular LRT",
+        color: "#5dbb46",
+        category: "LRT",
+        directions: { up: "順行", down: "逆行" },
+        stations: [
+          { name: "籬仔內", lat: 22.5985, lng: 120.3134, km: 0 },
+          { name: "凱旋瑞田", lat: 22.5965, lng: 120.3047, km: 1.0 },
+          { name: "前鎮之星", lat: 22.5948, lng: 120.2974, km: 1.8 },
+          { name: "凱旋中華", lat: 22.6012, lng: 120.2950, km: 2.5 },
+          { name: "夢時代", lat: 22.5983, lng: 120.3068, km: 3.4 },
+          { name: "經貿園區", lat: 22.6068, lng: 120.2951, km: 4.5 },
+          { name: "軟體園區", lat: 22.6175, lng: 120.2902, km: 5.8 },
+          { name: "高雄展覽館", lat: 22.6068, lng: 120.2884, km: 6.8 },
+          { name: "高雄圖書館", lat: 22.6125, lng: 120.2891, km: 7.6 },
+          { name: "真愛碼頭", lat: 22.6188, lng: 120.2842, km: 8.3 },
+          { name: "駁二大義", lat: 22.6196, lng: 120.2774, km: 9.0 },
+          { name: "駁二蓬萊", lat: 22.6209, lng: 120.2747, km: 9.5 },
+          { name: "哈瑪星", lat: 22.6188, lng: 120.2696, km: 10.1 },
+        ],
+      },
+      {
+        id: "Tamsui-LRT",
+        name: "淡海輕軌",
+        nameEn: "Danhai LRT",
+        color: "#48a4cf",
+        category: "LRT",
+        directions: { up: "北行 (往崁頂)", down: "南行 (往紅樹林)" },
+        stations: [
+          { name: "紅樹林", lat: 25.1547, lng: 121.4598, km: 0 },
+          { name: "竿蓁林", lat: 25.1614, lng: 121.4523, km: 1.0 },
+          { name: "淡金鄧公", lat: 25.1685, lng: 121.4499, km: 1.8 },
+          { name: "淡金北新", lat: 25.1734, lng: 121.4519, km: 2.5 },
+          { name: "新市一路", lat: 25.1801, lng: 121.4571, km: 3.4 },
+          { name: "濱海義山", lat: 25.1844, lng: 121.4513, km: 4.3 },
+          { name: "濱海沙崙", lat: 25.1908, lng: 121.4475, km: 5.2 },
+          { name: "崁頂", lat: 25.1812, lng: 121.4393, km: 6.5 },
+        ],
+      },
     ],
     trainTemplates: [
       // TRA West — various types. accel/decel in m/s²; dwellSec is default per non-endpoint stop.
@@ -88,6 +496,29 @@ window.RAIL_DATA = {
       { line: "TRA-East", type: "普悠瑪", badge: "普悠瑪", badgeColor: "#34d399", speed: 110, interval: 90, accel: 0.65, decel: 0.65, dwellSec: 45 },
       { line: "TRA-East", type: "自強",   badge: "自強",   badgeColor: "#f87171", speed: 95,  interval: 45, accel: 0.55, decel: 0.55, dwellSec: 45 },
       { line: "TRA-East", type: "區間",   badge: "區間",   badgeColor: "#60a5fa", speed: 60,  interval: 30, accel: 0.85, decel: 0.90, dwellSec: 30 },
+      // TRA branches
+      { line: "TRA-South-Link", type: "自強", badge: "自強", badgeColor: "#f87171", speed: 90, interval: 60, accel: 0.55, decel: 0.55, dwellSec: 45 },
+      { line: "TRA-South-Link", type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 55, interval: 90, accel: 0.85, decel: 0.90, dwellSec: 30 },
+      { line: "TRA-Pingxi",     type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 30, interval: 60, accel: 0.85, decel: 0.90, dwellSec: 45 },
+      { line: "TRA-Neiwan",     type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 45, interval: 30, accel: 0.85, decel: 0.90, dwellSec: 30 },
+      { line: "TRA-Jiji",       type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 45, interval: 60, accel: 0.85, decel: 0.90, dwellSec: 30 },
+      { line: "TRA-Shalun",     type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 50, interval: 30, accel: 0.85, decel: 0.90, dwellSec: 30 },
+      { line: "Alishan-Forest", type: "阿里山號", badge: "阿里山", badgeColor: "#22c55e", speed: 25, interval: 240, accel: 0.40, decel: 0.50, dwellSec: 60 },
+      // Taipei Metro
+      { line: "TPE-Red",    type: "捷運", badge: "紅",   badgeColor: "#e2554b", speed: 60, interval: 6, accel: 1.00, decel: 1.10, dwellSec: 25 },
+      { line: "TPE-Blue",   type: "捷運", badge: "藍",   badgeColor: "#1763b8", speed: 60, interval: 5, accel: 1.00, decel: 1.10, dwellSec: 25 },
+      { line: "TPE-Green",  type: "捷運", badge: "綠",   badgeColor: "#0e8c4a", speed: 60, interval: 6, accel: 1.00, decel: 1.10, dwellSec: 25 },
+      { line: "TPE-Brown",  type: "捷運", badge: "文湖", badgeColor: "#a8744f", speed: 50, interval: 4, accel: 1.00, decel: 1.10, dwellSec: 20 },
+      { line: "TPE-Yellow", type: "捷運", badge: "黃",   badgeColor: "#dfa226", speed: 60, interval: 7, accel: 1.00, decel: 1.10, dwellSec: 25 },
+      // Taoyuan Airport MRT
+      { line: "TYMRT", type: "普通車", badge: "普通", badgeColor: "#9c34a4", speed: 70,  interval: 15, accel: 0.90, decel: 1.00, dwellSec: 30 },
+      { line: "TYMRT", type: "直達車", badge: "直達", badgeColor: "#c084fc", speed: 100, interval: 30, accel: 0.90, decel: 1.00, dwellSec: 30 },
+      // Kaohsiung MRT
+      { line: "KHH-Red",    type: "捷運", badge: "紅", badgeColor: "#e2554b", speed: 60, interval: 8, accel: 1.00, decel: 1.10, dwellSec: 25 },
+      { line: "KHH-Orange", type: "捷運", badge: "橘", badgeColor: "#f99c2a", speed: 60, interval: 8, accel: 1.00, decel: 1.10, dwellSec: 25 },
+      // LRT
+      { line: "KHH-LRT",    type: "輕軌", badge: "輕軌", badgeColor: "#5dbb46", speed: 30, interval: 12, accel: 0.80, decel: 0.90, dwellSec: 20 },
+      { line: "Tamsui-LRT", type: "輕軌", badge: "輕軌", badgeColor: "#48a4cf", speed: 30, interval: 15, accel: 0.80, decel: 0.90, dwellSec: 20 },
     ],
   },
 
@@ -101,6 +532,7 @@ window.RAIL_DATA = {
         name: "東海道新幹線",
         nameEn: "Tokaido Shinkansen",
         color: "#6ee7b7",
+        category: "HSR",
         directions: { up: "上り (東京方面)", down: "下り (新大阪方面)" },
         stations: [
           { name: "東京", lat: 35.6812, lng: 139.7671, km: 0 },
@@ -121,6 +553,7 @@ window.RAIL_DATA = {
         name: "山手線",
         nameEn: "JR Yamanote Line",
         color: "#34d399",
+        category: "TRA",
         directions: { up: "外回り (澀谷→新宿→池袋)", down: "内回り (池袋→新宿→澀谷)" },
         stations: [
           { name: "東京", lat: 35.6812, lng: 139.7671, km: 0 },
@@ -144,6 +577,7 @@ window.RAIL_DATA = {
         name: "中央線",
         nameEn: "JR Chuo Rapid Line",
         color: "#fbbf24",
+        category: "TRA",
         directions: { up: "上り (往東京)", down: "下り (往高尾)" },
         stations: [
           { name: "東京", lat: 35.6812, lng: 139.7671, km: 0 },
@@ -192,35 +626,28 @@ window.RAIL_DATA = {
       // Validate the projected station kms before applying. Multi-segment or
       // loop shapes (e.g. Tokaido stitched across multiple relations, Yamanote
       // loop without a canonical anchor) can produce non-monotonic projected
-      // kms that break schedule generation. When that happens, skip the merge
-      // for this line — the station-to-station polyline fallback still draws.
+      // kms that break schedule generation. When that happens, keep the
+      // polyline geometry but discard the projected stationKms — the merge
+      // still benefits from the curved shape, while station kms fall back to
+      // the hand-coded values from the station list (preserved monotonicity).
+      let useGenStationKms = true;
       if (gen.stationKms) {
-        // Loop lines (e.g. 山手線) list the anchor station twice — first at
-        // km 0 and last at the polyline total length. The generator's flat
-        // name→km dict can only hold one value per name, so synthesize the
-        // closing km from gen.totalKm for the trailing duplicate.
         const isLoopLine = line.stations.length >= 3 &&
           line.stations[0].name === line.stations[line.stations.length - 1].name;
-        let monotonic = true;
         let prev = -Infinity;
         for (let i = 0; i < line.stations.length; i++) {
           const st = line.stations[i];
           const isLoopBack = isLoopLine && i === line.stations.length - 1 && gen.totalKm != null;
           const k = isLoopBack ? gen.totalKm : gen.stationKms[st.name];
           if (k == null) continue;
-          // Allow ties only if two adjacent stations have the same name
-          // (loop closure), otherwise require strict increase.
           if (k < prev || (k === prev && (i === 0 || line.stations[i-1].name !== st.name))) {
-            monotonic = false;
+            useGenStationKms = false;
             break;
           }
           prev = k;
         }
-        if (!monotonic) {
-          if (typeof console !== 'undefined') {
-            console.warn(`[rail-data] skipping shape merge for line "${line.id}": projected station kms are non-monotonic`);
-          }
-          continue;
+        if (!useGenStationKms && typeof console !== 'undefined') {
+          console.warn(`[rail-data] line "${line.id}": projected station kms non-monotonic; using polyline shape with hand-coded station kms`);
         }
       }
 
@@ -242,8 +669,11 @@ window.RAIL_DATA = {
         out[i] = { lat: b.lat, lng: b.lng, km: cum };
       }
       line.shape = out;
-      // Update station km from generator (already projected onto shape)
-      if (gen.stationKms) {
+      // Update station km from generator only when the projection is
+      // monotonic (validated above). Otherwise leave st.km at the hand-coded
+      // value, but rescale it to fit within the polyline's total length so
+      // train kinematics line up with the visible track.
+      if (gen.stationKms && useGenStationKms) {
         const isLoopLine = line.stations.length >= 3 &&
           line.stations[0].name === line.stations[line.stations.length - 1].name;
         for (let i = 0; i < line.stations.length; i++) {
@@ -251,6 +681,19 @@ window.RAIL_DATA = {
           const isLoopBack = isLoopLine && i === line.stations.length - 1 && gen.totalKm != null;
           const k = isLoopBack ? gen.totalKm : gen.stationKms[st.name];
           if (k != null) st.km = k;
+        }
+      } else if (gen.totalKm != null && line.stations.length >= 2) {
+        // Non-monotonic projection: rescale hand-coded kms to span the
+        // polyline. Keeps inter-station spacing proportional to data while
+        // letting trains traverse the full visible track length.
+        const last = line.stations[line.stations.length - 1].km;
+        const first = line.stations[0].km;
+        const span = last - first;
+        if (span > 0) {
+          const scale = gen.totalKm / span;
+          for (const st of line.stations) {
+            st.km = (st.km - first) * scale;
+          }
         }
       }
     }

@@ -10,6 +10,13 @@ const MAX_SNAP_DIST_KM = 2;
 // MAX_SNAP_DIST_KM of the user AND within this much of the closest line.
 const CANDIDATE_GRACE_KM = 1.0;
 
+const RAIL_CATEGORIES = [
+  { key: 'TRA',   label: '台鐵' },
+  { key: 'HSR',   label: '高鐵' },
+  { key: 'Metro', label: '捷運' },
+  { key: 'LRT',   label: '輕軌' },
+];
+
 const Icon = ({ id, size = 18 }) =>
   React.createElement("svg", { width: size, height: size, "aria-hidden": true },
     React.createElement("use", { href: `assets/icons.svg#${id}` }));
@@ -44,6 +51,13 @@ function App() {
   const [mapLayer, setMapLayer] = useState('dark');
   const [dirFilter, setDirFilter] = useState('all');     // 'all' | 'up' | 'down'
   const [typeFilters, setTypeFilters] = useState([]);    // array of type strings
+  const [enabledCategories, setEnabledCategories] = useState(() => {
+    try {
+      const v = JSON.parse(localStorage.getItem('relf.cats') || 'null');
+      if (Array.isArray(v) && v.every(s => typeof s === 'string')) return v;
+    } catch {}
+    return RAIL_CATEGORIES.map(c => c.key);
+  });
   const [selectedTrain, setSelectedTrain] = useState(null);
   const [sheetCollapsed, setSheetCollapsed] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);        // mobile drawer
@@ -66,6 +80,17 @@ function App() {
   useEffect(() => {
     localStorage.setItem('relf.favs', JSON.stringify(favorites));
   }, [favorites]);
+
+  // Persist category filters
+  useEffect(() => {
+    localStorage.setItem('relf.cats', JSON.stringify(enabledCategories));
+  }, [enabledCategories]);
+
+  const toggleCategory = (cat) => {
+    setEnabledCategories(prev => prev.includes(cat)
+      ? prev.filter(c => c !== cat)
+      : [...prev, cat]);
+  };
 
   // Default GPS: try geolocation once
   useEffect(() => {
@@ -97,9 +122,14 @@ function App() {
   // All lines within tolerance, sorted by distance. The first is the default
   // active line; the user can switch via the chip row in the train sheet.
   const [activeLineId, setActiveLineId] = useState(null);
+  const visibleLines = useMemo(() =>
+    RAIL_DATA[region].lines.filter(l => enabledCategories.includes(l.category)),
+    [region, enabledCategories]);
+  const visibleLineIds = useMemo(() => new Set(visibleLines.map(l => l.id)), [visibleLines]);
   const { candidates, offRail } = useMemo(() => {
     if (!location) return { candidates: [], offRail: null };
-    const lines = RAIL_DATA[region].lines;
+    const lines = visibleLines;
+    if (lines.length === 0) return { candidates: [], offRail: null };
     const all = lines
       .map(line => ({ ...RailUtil.closestOnLine(location, line), line }))
       .sort((a, b) => a.dist - b.dist);
@@ -112,7 +142,7 @@ function App() {
       c.dist <= MAX_SNAP_DIST_KM && c.dist <= best.dist + CANDIDATE_GRACE_KM
     );
     return { candidates, offRail: null };
-  }, [location, region]);
+  }, [location, visibleLines]);
 
   // Keep activeLineId in sync with the candidates list.
   useEffect(() => {
@@ -203,6 +233,7 @@ function App() {
     const windowMs = 30 * 60 * 1000;
     const result = [];
     dayTrains.forEach(train => {
+      if (!visibleLineIds.has(train.line.id)) return;
       const start = train.startTime.getTime();
       const end = train.endTime.getTime();
       const T = targetTime.getTime();
@@ -245,7 +276,7 @@ function App() {
       result.push({ ...train, livePos: pos, liveKm: km, phase });
     });
     return result;
-  }, [region, targetTime, nearest]);
+  }, [region, targetTime, nearest, visibleLineIds]);
 
   // ============= HANDLERS =============
   const [flyTo, setFlyTo] = useState(null); // {lat, lng, ts} — triggers map flyTo
@@ -295,9 +326,11 @@ function App() {
         useGeolocation, favorites, addFavorite, removeFavorite, pickFavorite,
         targetTime, setTargetTime, quickPick, handleQuickPick, setQuickPick,
         now, nearest, offRail, timeFocusTick,
+        enabledCategories, toggleCategory,
       }),
       React.createElement(MapArea, {
         region, location, nearest, liveTrains, targetTime, now,
+        visibleLines,
         mapLayer, setMapLayer,
         onMapClick: pickFromMap,
         onLocate: useGeolocation,
@@ -372,6 +405,7 @@ function Panel(props) {
     favorites, addFavorite, removeFavorite, pickFavorite,
     targetTime, setTargetTime, quickPick, handleQuickPick, setQuickPick,
     now, nearest, offRail, timeFocusTick,
+    enabledCategories, toggleCategory,
   } = props;
   // Ref to the time-control section so we can scroll & flash it when the map HUD is clicked.
   const timeSectionRef = useRef(null);
@@ -440,6 +474,37 @@ function Panel(props) {
         React.createElement("div", {
           style: { fontFamily: 'var(--me-font-mono)', fontSize: 11, color: 'var(--me-text-muted)' },
         }, `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`),
+      ),
+    ),
+
+    // CATEGORY FILTERS
+    React.createElement("div", { className: "panel-section" },
+      React.createElement("div", { className: "ps-header" },
+        React.createElement("div", { className: "ps-title" },
+          React.createElement(Icon, { id: "me-route", size: 16 }),
+          "鐵道類型",
+        ),
+      ),
+      React.createElement("div", { className: "pill-group" },
+        RAIL_CATEGORIES.map(c =>
+          React.createElement("button", {
+            key: c.key,
+            className: "pill " + (enabledCategories.includes(c.key) ? 'active' : ''),
+            onClick: () => toggleCategory(c.key),
+            "aria-pressed": enabledCategories.includes(c.key),
+          },
+            React.createElement("span", {
+              className: "pill-check",
+              style: {
+                width: 12, height: 12, borderRadius: 3,
+                border: '1px solid currentColor',
+                display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+                fontSize: 10, lineHeight: 1, marginRight: 2,
+              },
+            }, enabledCategories.includes(c.key) ? '✓' : ''),
+            c.label,
+          )
+        ),
       ),
     ),
 

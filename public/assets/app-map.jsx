@@ -2,7 +2,7 @@
 // Map component — Leaflet integration
 const { useState: useStateM, useEffect: useEffectM, useRef: useRefM, useMemo: useMemoM } = React;
 
-function MapArea({ region, location, nearest, liveTrains, targetTime, now, mapLayer, setMapLayer, onMapClick, onLocate, flyTo, onTrainClick, onHudClick }) {
+function MapArea({ region, location, nearest, liveTrains, targetTime, now, visibleLines, mapLayer, setMapLayer, onMapClick, onLocate, flyTo, onTrainClick, onHudClick }) {
   const [hudMode, setHudMode] = useStateM('predict'); // 'predict' | 'now'
   const mapRef = useRefM(null);
   const leafletRef = useRefM(null);
@@ -55,18 +55,28 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, mapLa
     }).addTo(map);
   }, [mapLayer]);
 
-  // Draw rail lines when region changes
+  // Draw rail lines when region or visibleLines change.
+  // Adds layers for newly-visible lines and removes layers for filtered-out
+  // lines incrementally, so toggling a category does not trigger a full redraw.
   useEffectM(() => {
     const map = leafletRef.current;
     if (!map) return;
-    // Clear prior
-    Object.values(railLinesRef.current).forEach(ls => ls.forEach(l => map.removeLayer(l)));
-    railLinesRef.current = {};
+    const lines = visibleLines || RAIL_DATA[region].lines;
+    const visibleIds = new Set(lines.map(l => l.id));
 
-    RAIL_DATA[region].lines.forEach(line => {
+    // Remove layers for lines that are no longer visible
+    Object.keys(railLinesRef.current).forEach(id => {
+      if (!visibleIds.has(id)) {
+        railLinesRef.current[id].forEach(l => map.removeLayer(l));
+        delete railLinesRef.current[id];
+      }
+    });
+
+    // Add layers for newly-visible lines
+    lines.forEach(line => {
+      if (railLinesRef.current[line.id]) return;
       const poly = (line.shape && line.shape.length >= 2) ? line.shape : line.stations;
       const coords = poly.map(s => [s.lat, s.lng]);
-      // Glow + main
       const glow = L.polyline(coords, { color: line.color, weight: 7, opacity: 0.18 }).addTo(map);
       const main = L.polyline(coords, { color: line.color, weight: 3, opacity: 0.9 }).addTo(map);
       const stationDots = line.stations.map(s =>
@@ -78,8 +88,13 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, mapLa
       );
       railLinesRef.current[line.id] = [glow, main, ...stationDots];
     });
+  }, [region, visibleLines]);
 
-    // Fit bounds to region
+  // Fit bounds when region changes (use full region, not filtered list, so
+  // the initial framing is stable even if a category is toggled off).
+  useEffectM(() => {
+    const map = leafletRef.current;
+    if (!map) return;
     const allCoords = RAIL_DATA[region].lines.flatMap(l => l.stations.map(s => [s.lat, s.lng]));
     if (allCoords.length) map.fitBounds(allCoords, { padding: [40, 40] });
   }, [region]);

@@ -32,7 +32,12 @@
       "Bash(curl -s -o /tmp/check.js -w \"HTTP %{http_code}, %{size_download} bytes\\\\n\" http://localhost:4180/assets/rail-data.generated.js)",
       "WebFetch(domain:www.openstreetmap.org)",
       "WebFetch(domain:overpass-api.de)",
-      "Bash(OFFLINE=1 node scripts/fetch-rail-shapes.mjs --skip-tw)"
+      "Bash(OFFLINE=1 node scripts/fetch-rail-shapes.mjs --skip-tw)",
+      "Bash(curl *)",
+      "Bash(cp public/assets/app-core.jsx /tmp/app-core.js)",
+      "Bash(cp public/assets/app-map.jsx /tmp/app-map.js)",
+      "Bash(OFFLINE=1 node scripts/fetch-rail-shapes.mjs --skip-jp)",
+      "Bash(git stash *)"
     ]
   }
 }
