@@ -1176,23 +1176,30 @@ body.sheet-resizing .leaflet-container { pointer-events: none; }
   overflow: hidden;
   white-space: nowrap;
   color: var(--me-text-primary); font-weight: 500;
-  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 14px), transparent 100%);
-  mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 14px), transparent 100%);
+  /* Establish a containment context so the inner span's marquee can read
+     this element's width (100cqw) and slide by the exact overflow amount. */
+  container-type: inline-size;
+  /* Soft trailing fade — small enough that the last character is still
+     readable when the marquee has slid the text fully into view. */
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 6px), transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 6px), transparent 100%);
 }
 .tc-seg-name-inner {
   display: inline-block;
   will-change: transform;
   /* Always-on slow marquee so long names like 南港展覽館 reveal themselves
      over time. The min(0px, …) clamp resolves to 0 for names that fit, so
-     short-named cards stay perfectly still — only overflowing text moves. */
+     short-named cards stay perfectly still — only overflowing text moves.
+     `100cqw` is the actual width of .tc-seg-name, so the slide ends with
+     the text's right edge aligned to the container's right edge. */
   animation: tc-name-marquee 12s ease-in-out infinite;
 }
 .train-card.passing .tc-seg-name-inner {
   animation-duration: 8s;
 }
 @keyframes tc-name-marquee {
-  0%, 12%, 100% { transform: translateX(0); }
-  50%, 70%      { transform: translateX(min(0px, calc(-100% + 4em))); }
+  0%, 10%, 100% { transform: translateX(0); }
+  55%, 80%      { transform: translateX(min(0px, calc(100cqw - 100% - 6px))); }
 }
 @media (prefers-reduced-motion: reduce) {
   .tc-seg-name-inner { animation: none; }
