@@ -202,9 +202,13 @@ function App() {
         break;
       }
       if (!passTime) return;
+      // Drop already-passed trains so the sheet only shows upcoming ones.
+      // A 30-second grace lets a train still appear briefly while it crosses
+      // the snap point, but after that it is hidden.
+      if (passTime - targetTime < -30 * 1000) return;
       out.push({ ...train, passTime, prevStop, nextStop });
     });
-    out.sort((a, b) => Math.abs(a.passTime - targetTime) - Math.abs(b.passTime - targetTime));
+    out.sort((a, b) => a.passTime - b.passTime);
     return out;
   }, [nearest, region, targetTime]);
 
@@ -283,6 +287,24 @@ function App() {
   const pickFromMap = (latlng) => {
     setLocation({ lat: latlng.lat, lng: latlng.lng, name: `${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)}` });
   };
+  // Fly the map to a train's best-known position. Map markers carry livePos
+  // directly; sheet entries do not, so we look up the matching live train by
+  // id, falling back to the user's snap point and finally the first stop.
+  const flyToTrain = useCallback((train) => {
+    if (!train) return;
+    let pos = train.livePos || null;
+    if (!pos) {
+      const live = liveTrains.find(l => l.id === train.id);
+      if (live) pos = live.livePos;
+    }
+    if (!pos && nearest && train.passTime instanceof Date) {
+      pos = { lat: nearest.lat, lng: nearest.lng };
+    }
+    if (!pos && train.stops && train.stops[0]) {
+      pos = { lat: train.stops[0].lat, lng: train.stops[0].lng };
+    }
+    if (pos) setFlyTo({ lat: pos.lat, lng: pos.lng, ts: Date.now() });
+  }, [liveTrains, nearest]);
   const useGeolocation = () => {
     if (!navigator.geolocation) { alert('瀏覽器不支援定位'); return; }
     navigator.geolocation.getCurrentPosition(pos => {
@@ -357,6 +379,7 @@ function App() {
     selectedTrain && React.createElement(TrainModal, {
       train: selectedTrain, nearest, targetTime,
       onClose: () => setSelectedTrain(null),
+      onFlyToTrain: (t) => { flyToTrain(t); setSelectedTrain(null); },
     }),
   );
 }

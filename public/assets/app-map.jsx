@@ -13,16 +13,24 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, visib
   const trainMarkersRef = useRefM({});
   const tileLayerRef = useRefM(null);
 
+  // Track whether the map has been framed once. Controls whether region
+  // changes refit the wide bounds (subsequent switches) or defer to the
+  // location-driven framing (first paint).
+  const initialFramedRef = useRefM(false);
+
   // Init Leaflet once
   useEffectM(() => {
     if (!window.L) return;
     if (leafletRef.current) return;
+    const initCenter = location ? [location.lat, location.lng] : RAIL_DATA[region].center;
+    const initZoom = location ? 13 : RAIL_DATA[region].zoom;
     const map = L.map(mapRef.current, {
-      center: RAIL_DATA[region].center,
-      zoom: RAIL_DATA[region].zoom,
+      center: initCenter,
+      zoom: initZoom,
       zoomControl: true,
       attributionControl: true,
     });
+    if (location) initialFramedRef.current = true;
     leafletRef.current = map;
 
     map.on('click', (e) => {
@@ -90,11 +98,13 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, visib
     });
   }, [region, visibleLines]);
 
-  // Fit bounds when region changes (use full region, not filtered list, so
-  // the initial framing is stable even if a category is toggled off).
+  // Fit bounds only when the user explicitly switches region after the first
+  // paint. The initial framing is handled by the location effect below so the
+  // map opens centred on the user, not zoomed out to the whole network.
   useEffectM(() => {
     const map = leafletRef.current;
     if (!map) return;
+    if (!initialFramedRef.current) return;
     const allCoords = RAIL_DATA[region].lines.flatMap(l => l.stations.map(s => [s.lat, s.lng]));
     if (allCoords.length) map.fitBounds(allCoords, { padding: [40, 40] });
   }, [region]);
@@ -167,11 +177,19 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, visib
     });
   }, [liveTrains, onTrainClick]);
 
-  // Pan to location when it changes meaningfully
+  // Centre on the user's location whenever it changes. On first paint, also
+  // bump the zoom up so the user lands on a usable street-level view instead
+  // of the wide region-default zoom.
   useEffectM(() => {
     const map = leafletRef.current;
     if (!map || !location) return;
-    map.panTo([location.lat, location.lng], { animate: true, duration: 0.4 });
+    if (!initialFramedRef.current) {
+      map.setView([location.lat, location.lng], 13, { animate: false });
+      initialFramedRef.current = true;
+      return;
+    }
+    const targetZoom = Math.max(map.getZoom() || 0, 13);
+    map.flyTo([location.lat, location.lng], targetZoom, { duration: 0.6 });
   }, [location && location.lat, location && location.lng]);
 
   // FlyTo + zoom when GPS button pressed
@@ -485,13 +503,33 @@ function TrainCard({ train, targetTime, onSelect }) {
 // ============================================================
 // TRAIN DETAIL MODAL
 // ============================================================
-function TrainModal({ train, nearest, targetTime, onClose }) {
-  const diffMs = train.passTime - targetTime;
-  const cd = formatCountdown(diffMs);
-  const totalKm = train.stops[train.stops.length-1].km - train.stops[0].km;
+function TrainModal({ train, nearest, targetTime, onClose, onFlyToTrain }) {
+  // Trains can arrive here from two sources:
+  //   • the bottom sheet — they carry passTime/prevStop/nextStop computed at
+  //     the user's snap point;
+  //   • a marker click on the map — they carry livePos/liveKm/phase but no
+  //     snap-point fields.
+  // Treat all snap-point-specific data as optional so a map click never
+  // throws (formatClock(undefined) used to crash the whole tree).
+  const hasPassTime = train.passTime instanceof Date && !isNaN(train.passTime);
+  const diffMs = hasPassTime ? (train.passTime - targetTime) : null;
+  const cd = hasPassTime ? formatCountdown(diffMs) : null;
+  const firstStop = train.stops[0];
+  const lastStop = train.stops[train.stops.length - 1];
+  const totalKm = lastStop.km - firstStop.km;
   const duration = (train.endTime - train.startTime) / 60000;
+  const stopsCount = train.stops.length;
+  const phaseLabel = train.phase === 'dwelling' ? '停靠中'
+    : train.phase === 'running' ? '運行中'
+    : null;
 
-  // Decide which stop is "past" vs "upcoming" relative to targetTime
+  // Find the upcoming stop relative to targetTime — used to highlight the
+  // train's progress along the timetable when no snap point is available.
+  let upcomingIdx = -1;
+  for (let i = 0; i < train.stops.length; i++) {
+    if (train.stops[i].arrival >= targetTime) { upcomingIdx = i; break; }
+  }
+
   return React.createElement("div", { className: "modal-backdrop", onClick: onClose },
     React.createElement("div", { className: "modal", onClick: (e) => e.stopPropagation() },
       React.createElement("div", { className: "modal-head" },
@@ -504,36 +542,140 @@ function TrainModal({ train, nearest, targetTime, onClose }) {
             padding: '4px 10px', fontSize: 11,
           },
         }, train.badge),
-        React.createElement("div", null,
+        React.createElement("div", { style: { flex: 1, minWidth: 0 } },
           React.createElement("div", {
             style: { fontFamily: 'var(--me-font-mono)', fontSize: 18, fontWeight: 700 }
           }, train.number, " 次"),
           React.createElement("div", {
             style: { fontSize: 12, color: 'var(--me-text-secondary)' }
-          }, train.directionLabel),
+          }, train.directionLabel || (train.direction === 'up' ? '北上' : '南下')),
+        ),
+        phaseLabel && React.createElement("span", {
+          style: {
+            display: 'inline-flex', alignItems: 'center', gap: 6,
+            padding: '4px 10px',
+            fontSize: 11, fontWeight: 600,
+            borderRadius: 999,
+            background: train.phase === 'dwelling' ? 'rgba(251,191,36,0.15)' : 'rgba(34,197,94,0.15)',
+            color: train.phase === 'dwelling' ? 'var(--me-warning)' : '#22c55e',
+            border: `1px solid ${train.phase === 'dwelling' ? 'rgba(251,191,36,0.35)' : 'rgba(34,197,94,0.35)'}`,
+          },
+        },
+          React.createElement("span", {
+            style: {
+              width: 6, height: 6, borderRadius: '50%',
+              background: 'currentColor',
+              animation: train.phase === 'running' ? 'pulse 1.5s ease-in-out infinite' : 'none',
+            },
+          }),
+          phaseLabel,
+        ),
+        onFlyToTrain && React.createElement("button", {
+          className: "modal-action",
+          onClick: () => onFlyToTrain(train),
+          title: "在地圖上顯示列車位置",
+        },
+          React.createElement(Icon, { id: "me-locate", size: 14 }),
+          React.createElement("span", null, "顯示位置"),
         ),
         React.createElement("button", { className: "modal-close", onClick: onClose },
           React.createElement(Icon, { id: "me-close", size: 18 })),
       ),
       React.createElement("div", { className: "modal-body" },
-        React.createElement("div", { className: "modal-stats" },
-          React.createElement("div", { className: "modal-stat" },
-            React.createElement("div", { className: "modal-stat-label" }, "通過時間"),
-            React.createElement("div", { className: "modal-stat-value" }, formatClock(train.passTime))),
-          React.createElement("div", { className: "modal-stat" },
-            React.createElement("div", { className: "modal-stat-label" }, "倒數"),
+        // Route summary — start station → end station along this line.
+        React.createElement("div", {
+          style: {
+            display: 'grid',
+            gridTemplateColumns: '1fr auto 1fr',
+            gap: 12, alignItems: 'center',
+            padding: '12px',
+            background: 'var(--me-bg-tertiary)',
+            border: '1px solid var(--me-border)',
+            borderRadius: 'var(--me-radius-sm)',
+            marginBottom: 12,
+          },
+        },
+          React.createElement("div", { style: { textAlign: 'left', minWidth: 0 } },
             React.createElement("div", {
-              className: "modal-stat-value",
-              style: diffMs >= 0 && diffMs < 5*60000 ? {
-                background: 'var(--me-accent-gradient)',
-                WebkitBackgroundClip: 'text', backgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              } : {},
-            }, cd.text + (cd.unit.includes('分') ? ' 分' : cd.unit === '即將通過' ? '' : ' h')),
+              style: { fontSize: 10, color: 'var(--me-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }
+            }, "起站"),
+            React.createElement("div", {
+              style: { fontSize: 14, fontWeight: 600, color: 'var(--me-text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }
+            }, firstStop.name),
+            React.createElement("div", {
+              style: { fontFamily: 'var(--me-font-mono)', fontSize: 12, color: 'var(--me-text-secondary)' }
+            }, formatClock(firstStop.departure)),
           ),
+          React.createElement("div", {
+            style: { display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, color: 'var(--me-text-muted)', fontSize: 11 },
+          },
+            React.createElement("span", null, train.line.name),
+            React.createElement("span", { style: { fontSize: 14 } }, "──▶"),
+          ),
+          React.createElement("div", { style: { textAlign: 'right', minWidth: 0 } },
+            React.createElement("div", {
+              style: { fontSize: 10, color: 'var(--me-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }
+            }, "迄站"),
+            React.createElement("div", {
+              style: { fontSize: 14, fontWeight: 600, color: 'var(--me-text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }
+            }, lastStop.name),
+            React.createElement("div", {
+              style: { fontFamily: 'var(--me-font-mono)', fontSize: 12, color: 'var(--me-text-secondary)' }
+            }, formatClock(lastStop.arrival)),
+          ),
+        ),
+        React.createElement("div", { className: "modal-stats" },
+          hasPassTime
+            ? React.createElement("div", { className: "modal-stat" },
+                React.createElement("div", { className: "modal-stat-label" }, "通過時間"),
+                React.createElement("div", { className: "modal-stat-value" }, formatClock(train.passTime)))
+            : React.createElement("div", { className: "modal-stat" },
+                React.createElement("div", { className: "modal-stat-label" }, "出發"),
+                React.createElement("div", { className: "modal-stat-value" }, formatClock(firstStop.departure))),
+          hasPassTime
+            ? React.createElement("div", { className: "modal-stat" },
+                React.createElement("div", { className: "modal-stat-label" }, "倒數"),
+                React.createElement("div", {
+                  className: "modal-stat-value",
+                  style: diffMs >= 0 && diffMs < 5*60000 ? {
+                    background: 'var(--me-accent-gradient)',
+                    WebkitBackgroundClip: 'text', backgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                  } : {},
+                }, cd.text + (cd.unit.includes('分') ? ' 分' : cd.unit === '即將通過' ? '' : ' ' + cd.unit)),
+              )
+            : React.createElement("div", { className: "modal-stat" },
+                React.createElement("div", { className: "modal-stat-label" }, "終點"),
+                React.createElement("div", { className: "modal-stat-value" }, formatClock(lastStop.arrival))),
           React.createElement("div", { className: "modal-stat" },
             React.createElement("div", { className: "modal-stat-label" }, "全程"),
             React.createElement("div", { className: "modal-stat-value" }, Math.round(duration) + ' 分')),
+          React.createElement("div", { className: "modal-stat" },
+            React.createElement("div", { className: "modal-stat-label" }, "里程"),
+            React.createElement("div", { className: "modal-stat-value" }, totalKm.toFixed(1) + ' km')),
+          React.createElement("div", { className: "modal-stat" },
+            React.createElement("div", { className: "modal-stat-label" }, "停靠"),
+            React.createElement("div", { className: "modal-stat-value" }, stopsCount + ' 站')),
+          React.createElement("div", { className: "modal-stat" },
+            React.createElement("div", { className: "modal-stat-label" }, "車種"),
+            React.createElement("div", { className: "modal-stat-value", style: { fontSize: 14 } }, train.type)),
+        ),
+        nearest && hasPassTime && React.createElement("div", {
+          style: {
+            display: 'flex', alignItems: 'center', gap: 8,
+            padding: '8px 10px', marginBottom: 12,
+            background: 'rgba(251,191,36,0.08)',
+            border: '1px solid rgba(251,191,36,0.25)',
+            borderRadius: 'var(--me-radius-sm)',
+            fontSize: 12, color: 'var(--me-text-secondary)',
+          },
+        },
+          React.createElement(Icon, { id: "me-locate", size: 14 }),
+          React.createElement("span", null,
+            "於距您 ",
+            React.createElement("strong", { style: { color: 'var(--me-warning)' } }, nearest.dist.toFixed(2), " km"),
+            " 的軌道上經過 (里程 ", nearest.km.toFixed(1), " km)",
+          ),
         ),
         React.createElement("div", {
           style: { fontSize: 12, color: 'var(--me-text-muted)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.05em' }
@@ -541,17 +683,19 @@ function TrainModal({ train, nearest, targetTime, onClose }) {
         React.createElement("div", { className: "timetable" },
           train.stops.map((s, i) => {
             const past = s.arrival < targetTime;
-            const isHighlight = nearest && (
-              (train.stops[i-1] && nearest.km >= Math.min(s.km, train.stops[i-1].km) && nearest.km <= Math.max(s.km, train.stops[i-1].km)) ||
-              (train.stops[i+1] && nearest.km >= Math.min(s.km, train.stops[i+1].km) && nearest.km <= Math.max(s.km, train.stops[i+1].km))
-            );
-            // Pick highlight = prevStop / nextStop at nearest
-            const hl = nearest && (train.prevStop && train.prevStop.stationIdx === s.stationIdx);
+            const isUpcoming = i === upcomingIdx;
+            const hl = nearest && train.prevStop && train.prevStop.stationIdx === s.stationIdx;
+            const dwellMin = s.dwellSec ? Math.round(s.dwellSec / 60) : 0;
             return React.createElement("div", {
               key: i,
-              className: "tt-stop " + (past ? "past " : "") + (hl ? "highlight" : ""),
+              className: "tt-stop " + (past ? "past " : "") + (hl || (isUpcoming && !hasPassTime) ? "highlight" : ""),
             },
-              React.createElement("span", { className: "tt-name" }, s.name),
+              React.createElement("span", { className: "tt-name" },
+                s.name,
+                dwellMin > 0 && React.createElement("span", {
+                  style: { fontSize: 10, color: 'var(--me-text-muted)', marginLeft: 6, fontWeight: 400 },
+                }, "停 ", dwellMin, " 分"),
+              ),
               React.createElement("span", { className: "tt-dist" }, s.km.toFixed(1) + ' km'),
               React.createElement("span", { className: "tt-time" }, formatClock(s.arrival)),
             );
