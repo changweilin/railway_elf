@@ -1,0 +1,70 @@
+{
+  "自強": {
+    "icon": "assets/train-icons/tze-chiang.png",
+    "kind": "express"
+  },
+  "莒光": {
+    "icon": "assets/train-icons/chu-kuang.png",
+    "kind": "limited"
+  },
+  "區間": {
+    "icon": "assets/train-icons/local-emu.png",
+    "kind": "commuter"
+  },
+  "高鐵": {
+    "icon": "assets/train-icons/thsr-700t.png",
+    "kind": "shinkansen"
+  },
+  "太魯閣": {
+    "icon": "assets/train-icons/taroko.png",
+    "kind": "express"
+  },
+  "普悠瑪": {
+    "icon": "assets/train-icons/puyuma.png",
+    "kind": "express"
+  },
+  "阿里山號": {
+    "icon": "assets/train-icons/alishan-express.png",
+    "kind": "heritage"
+  },
+  "捷運": {
+    "icon": "assets/train-icons/metro.png",
+    "kind": "metro"
+  },
+  "普通車": {
+    "icon": "assets/train-icons/tymetro-commuter.png",
+    "kind": "commuter"
+  },
+  "直達車": {
+    "icon": "assets/train-icons/tymetro-express.png",
+    "kind": "express"
+  },
+  "輕軌": {
+    "icon": "assets/train-icons/lrt.png",
+    "kind": "lrt"
+  },
+  "のぞみ": {
+    "icon": "assets/train-icons/shinkansen-nozomi.png",
+    "kind": "shinkansen"
+  },
+  "ひかり": {
+    "icon": "assets/train-icons/shinkansen-hikari.png",
+    "kind": "shinkansen"
+  },
+  "こだま": {
+    "icon": "assets/train-icons/shinkansen-kodama.png",
+    "kind": "shinkansen"
+  },
+  "山手線": {
+    "icon": "assets/train-icons/yamanote.png",
+    "kind": "commuter"
+  },
+  "快速": {
+    "icon": "assets/train-icons/chuo-rapid.png",
+    "kind": "express"
+  },
+  "特別快速": {
+    "icon": "assets/train-icons/chuo-special-rapid.png",
+    "kind": "express"
+  }
+}

@@ -74,12 +74,14 @@ function checkTrain(train, regionKey) {
   }
 
   // 3. Trip duration bounds. Lower bound = constant-speed transit + dwells.
-  // Upper bound = lower + 25% kinematic overhead allowance.
+  // Upper bound allows for accel/decel overhead AND curvature-induced
+  // slowdowns; mountain branches (Pingxi / Alishan / TRA-East mountain
+  // sections) can roughly double the floor time once curve speed limits bite.
   const totalKmCanonical = Math.abs(
     stops[stops.length - 1].km - stops[0].km
   );
   const lowerSec = (totalKmCanonical / speed) * 3600 + totalDwellSec;
-  const upperSec = lowerSec * 1.25 + 60; // tolerate +60s slack for tiny lines
+  const upperSec = lowerSec * 2.5 + 60; // tolerate +60s slack for tiny lines
   const actualSec = (endTime.getTime() - startTime.getTime()) / 1000;
   if (actualSec < lowerSec - 1) {
     fail(`${tag}: trip ${actualSec.toFixed(1)}s < theoretical floor ${lowerSec.toFixed(1)}s`);
@@ -96,14 +98,14 @@ function checkTrain(train, regionKey) {
   // 5. Round-trip kmAtTime / timeAtKm at segment midpoint
   for (let i = 0; i < segments.length; i++) {
     const seg = segments[i];
-    const L = seg.kin.La + seg.kin.Lc + seg.kin.Ld;
+    const L = seg.kin.L;
     if (!(L > 0)) {
       fail(`${tag} seg[${i}]: zero-length segment`);
       continue;
     }
-    const xMid = L / 2;
-    const tau = RailUtil.timeAtKmInSegment(seg.kin, xMid);
-    const xBack = RailUtil.kmAtTimeInSegment(seg.kin, tau);
+    const xMid = seg.kin.nodes[0].x + L / 2;
+    const tau = RailUtil.timeAtKmInProfile(seg.kin, xMid);
+    const xBack = RailUtil.kmAtTimeInProfile(seg.kin, tau);
     if (Math.abs(xBack - xMid) > 1) {
       fail(`${tag} seg[${i}]: round-trip error ${Math.abs(xBack-xMid).toFixed(3)} m`);
     }

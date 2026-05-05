@@ -485,40 +485,42 @@ window.RAIL_DATA = {
       },
     ],
     trainTemplates: [
-      // TRA West — various types. accel/decel in m/s²; dwellSec is default per non-endpoint stop.
-      { line: "TRA-West", type: "自強", badge: "自強", badgeColor: "#f87171", speed: 90,  interval: 30, accel: 0.55, decel: 0.55, dwellSec: 45 },
-      { line: "TRA-West", type: "莒光", badge: "莒光", badgeColor: "#fbbf24", speed: 75,  interval: 60, accel: 0.45, decel: 0.50, dwellSec: 60 },
-      { line: "TRA-West", type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 55,  interval: 20, accel: 0.85, decel: 0.90, dwellSec: 30 },
-      // THSR
-      { line: "THSR",     type: "高鐵", badge: "HSR",  badgeColor: "#6ee7b7", speed: 260, interval: 15, accel: 0.72, decel: 0.70, dwellSec: 60 },
-      // TRA East
-      { line: "TRA-East", type: "太魯閣", badge: "太魯閣", badgeColor: "#a78bfa", speed: 110, interval: 90, accel: 0.65, decel: 0.65, dwellSec: 45 },
-      { line: "TRA-East", type: "普悠瑪", badge: "普悠瑪", badgeColor: "#34d399", speed: 110, interval: 90, accel: 0.65, decel: 0.65, dwellSec: 45 },
-      { line: "TRA-East", type: "自強",   badge: "自強",   badgeColor: "#f87171", speed: 95,  interval: 45, accel: 0.55, decel: 0.55, dwellSec: 45 },
-      { line: "TRA-East", type: "區間",   badge: "區間",   badgeColor: "#60a5fa", speed: 60,  interval: 30, accel: 0.85, decel: 0.90, dwellSec: 30 },
+      // TRA West — various types. accel/decel in m/s²; aLat is the lateral
+      // comfort cap (m/s²) used to derive curve speed limits. dwellSec is the
+      // default per non-endpoint stop.
+      { line: "TRA-West", type: "自強", badge: "自強", badgeColor: "#f87171", speed: 90,  interval: 30, accel: 0.55, decel: 0.55, aLat: 0.65, dwellSec: 45 },
+      { line: "TRA-West", type: "莒光", badge: "莒光", badgeColor: "#fbbf24", speed: 75,  interval: 60, accel: 0.45, decel: 0.50, aLat: 0.55, dwellSec: 60 },
+      { line: "TRA-West", type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 55,  interval: 20, accel: 0.85, decel: 0.90, aLat: 0.65, dwellSec: 30 },
+      // THSR — non-tilting high-speed
+      { line: "THSR",     type: "高鐵", badge: "HSR",  badgeColor: "#6ee7b7", speed: 260, interval: 15, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
+      // TRA East — Taroko / Puyuma are tilting EMUs, hence higher aLat.
+      { line: "TRA-East", type: "太魯閣", badge: "太魯閣", badgeColor: "#a78bfa", speed: 110, interval: 90, accel: 0.65, decel: 0.65, aLat: 1.30, dwellSec: 45 },
+      { line: "TRA-East", type: "普悠瑪", badge: "普悠瑪", badgeColor: "#34d399", speed: 110, interval: 90, accel: 0.65, decel: 0.65, aLat: 1.30, dwellSec: 45 },
+      { line: "TRA-East", type: "自強",   badge: "自強",   badgeColor: "#f87171", speed: 95,  interval: 45, accel: 0.55, decel: 0.55, aLat: 0.65, dwellSec: 45 },
+      { line: "TRA-East", type: "區間",   badge: "區間",   badgeColor: "#60a5fa", speed: 60,  interval: 30, accel: 0.85, decel: 0.90, aLat: 0.65, dwellSec: 30 },
       // TRA branches
-      { line: "TRA-South-Link", type: "自強", badge: "自強", badgeColor: "#f87171", speed: 90, interval: 60, accel: 0.55, decel: 0.55, dwellSec: 45 },
-      { line: "TRA-South-Link", type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 55, interval: 90, accel: 0.85, decel: 0.90, dwellSec: 30 },
-      { line: "TRA-Pingxi",     type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 30, interval: 60, accel: 0.85, decel: 0.90, dwellSec: 45 },
-      { line: "TRA-Neiwan",     type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 45, interval: 30, accel: 0.85, decel: 0.90, dwellSec: 30 },
-      { line: "TRA-Jiji",       type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 45, interval: 60, accel: 0.85, decel: 0.90, dwellSec: 30 },
-      { line: "TRA-Shalun",     type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 50, interval: 30, accel: 0.85, decel: 0.90, dwellSec: 30 },
-      { line: "Alishan-Forest", type: "阿里山號", badge: "阿里山", badgeColor: "#22c55e", speed: 25, interval: 240, accel: 0.40, decel: 0.50, dwellSec: 60 },
+      { line: "TRA-South-Link", type: "自強", badge: "自強", badgeColor: "#f87171", speed: 90, interval: 60, accel: 0.55, decel: 0.55, aLat: 0.65, dwellSec: 45 },
+      { line: "TRA-South-Link", type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 55, interval: 90, accel: 0.85, decel: 0.90, aLat: 0.65, dwellSec: 30 },
+      { line: "TRA-Pingxi",     type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 30, interval: 60, accel: 0.85, decel: 0.90, aLat: 0.65, dwellSec: 45 },
+      { line: "TRA-Neiwan",     type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 45, interval: 30, accel: 0.85, decel: 0.90, aLat: 0.65, dwellSec: 30 },
+      { line: "TRA-Jiji",       type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 45, interval: 60, accel: 0.85, decel: 0.90, aLat: 0.65, dwellSec: 30 },
+      { line: "TRA-Shalun",     type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 50, interval: 30, accel: 0.85, decel: 0.90, aLat: 0.65, dwellSec: 30 },
+      { line: "Alishan-Forest", type: "阿里山號", badge: "阿里山", badgeColor: "#22c55e", speed: 25, interval: 240, accel: 0.40, decel: 0.50, aLat: 0.45, dwellSec: 60 },
       // Taipei Metro
-      { line: "TPE-Red",    type: "捷運", badge: "紅",   badgeColor: "#e2554b", speed: 60, interval: 6, accel: 1.00, decel: 1.10, dwellSec: 25 },
-      { line: "TPE-Blue",   type: "捷運", badge: "藍",   badgeColor: "#1763b8", speed: 60, interval: 5, accel: 1.00, decel: 1.10, dwellSec: 25 },
-      { line: "TPE-Green",  type: "捷運", badge: "綠",   badgeColor: "#0e8c4a", speed: 60, interval: 6, accel: 1.00, decel: 1.10, dwellSec: 25 },
-      { line: "TPE-Brown",  type: "捷運", badge: "文湖", badgeColor: "#a8744f", speed: 50, interval: 4, accel: 1.00, decel: 1.10, dwellSec: 20 },
-      { line: "TPE-Yellow", type: "捷運", badge: "黃",   badgeColor: "#dfa226", speed: 60, interval: 7, accel: 1.00, decel: 1.10, dwellSec: 25 },
+      { line: "TPE-Red",    type: "捷運", badge: "紅",   badgeColor: "#e2554b", speed: 60, interval: 6, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "TPE-Blue",   type: "捷運", badge: "藍",   badgeColor: "#1763b8", speed: 60, interval: 5, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "TPE-Green",  type: "捷運", badge: "綠",   badgeColor: "#0e8c4a", speed: 60, interval: 6, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "TPE-Brown",  type: "捷運", badge: "文湖", badgeColor: "#a8744f", speed: 50, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 20 },
+      { line: "TPE-Yellow", type: "捷運", badge: "黃",   badgeColor: "#dfa226", speed: 60, interval: 7, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       // Taoyuan Airport MRT
-      { line: "TYMRT", type: "普通車", badge: "普通", badgeColor: "#9c34a4", speed: 70,  interval: 15, accel: 0.90, decel: 1.00, dwellSec: 30 },
-      { line: "TYMRT", type: "直達車", badge: "直達", badgeColor: "#c084fc", speed: 100, interval: 30, accel: 0.90, decel: 1.00, dwellSec: 30 },
+      { line: "TYMRT", type: "普通車", badge: "普通", badgeColor: "#9c34a4", speed: 70,  interval: 15, accel: 0.90, decel: 1.00, aLat: 0.95, dwellSec: 30 },
+      { line: "TYMRT", type: "直達車", badge: "直達", badgeColor: "#c084fc", speed: 100, interval: 30, accel: 0.90, decel: 1.00, aLat: 0.95, dwellSec: 30 },
       // Kaohsiung MRT
-      { line: "KHH-Red",    type: "捷運", badge: "紅", badgeColor: "#e2554b", speed: 60, interval: 8, accel: 1.00, decel: 1.10, dwellSec: 25 },
-      { line: "KHH-Orange", type: "捷運", badge: "橘", badgeColor: "#f99c2a", speed: 60, interval: 8, accel: 1.00, decel: 1.10, dwellSec: 25 },
+      { line: "KHH-Red",    type: "捷運", badge: "紅", badgeColor: "#e2554b", speed: 60, interval: 8, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "KHH-Orange", type: "捷運", badge: "橘", badgeColor: "#f99c2a", speed: 60, interval: 8, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       // LRT
-      { line: "KHH-LRT",    type: "輕軌", badge: "輕軌", badgeColor: "#5dbb46", speed: 30, interval: 12, accel: 0.80, decel: 0.90, dwellSec: 20 },
-      { line: "Tamsui-LRT", type: "輕軌", badge: "輕軌", badgeColor: "#48a4cf", speed: 30, interval: 15, accel: 0.80, decel: 0.90, dwellSec: 20 },
+      { line: "KHH-LRT",    type: "輕軌", badge: "輕軌", badgeColor: "#5dbb46", speed: 30, interval: 12, accel: 0.80, decel: 0.90, aLat: 0.80, dwellSec: 20 },
+      { line: "Tamsui-LRT", type: "輕軌", badge: "輕軌", badgeColor: "#48a4cf", speed: 30, interval: 15, accel: 0.80, decel: 0.90, aLat: 0.80, dwellSec: 20 },
     ],
   },
 
@@ -595,12 +597,12 @@ window.RAIL_DATA = {
       },
     ],
     trainTemplates: [
-      { line: "Tokaido-Shinkansen", type: "のぞみ",     badge: "のぞみ", badgeColor: "#6ee7b7", speed: 270, interval: 10, accel: 0.72, decel: 0.70, dwellSec: 60 },
-      { line: "Tokaido-Shinkansen", type: "ひかり",     badge: "ひかり", badgeColor: "#fbbf24", speed: 220, interval: 30, accel: 0.72, decel: 0.70, dwellSec: 45 },
-      { line: "Tokaido-Shinkansen", type: "こだま",     badge: "こだま", badgeColor: "#60a5fa", speed: 160, interval: 30, accel: 0.72, decel: 0.70, dwellSec: 60 },
-      { line: "JR-Yamanote",        type: "山手線",     badge: "山手",   badgeColor: "#34d399", speed: 35,  interval: 4,  accel: 1.00, decel: 1.10, dwellSec: 25 },
-      { line: "JR-Chuo",            type: "快速",       badge: "快速",   badgeColor: "#fbbf24", speed: 55,  interval: 8,  accel: 0.85, decel: 0.95, dwellSec: 25 },
-      { line: "JR-Chuo",            type: "特別快速",   badge: "特快",   badgeColor: "#f87171", speed: 70,  interval: 20, accel: 0.80, decel: 0.90, dwellSec: 30 },
+      { line: "Tokaido-Shinkansen", type: "のぞみ",     badge: "のぞみ", badgeColor: "#6ee7b7", speed: 270, interval: 10, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
+      { line: "Tokaido-Shinkansen", type: "ひかり",     badge: "ひかり", badgeColor: "#fbbf24", speed: 220, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 45 },
+      { line: "Tokaido-Shinkansen", type: "こだま",     badge: "こだま", badgeColor: "#60a5fa", speed: 160, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
+      { line: "JR-Yamanote",        type: "山手線",     badge: "山手",   badgeColor: "#34d399", speed: 35,  interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "JR-Chuo",            type: "快速",       badge: "快速",   badgeColor: "#fbbf24", speed: 55,  interval: 8,  accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 25 },
+      { line: "JR-Chuo",            type: "特別快速",   badge: "特快",   badgeColor: "#f87171", speed: 70,  interval: 20, accel: 0.80, decel: 0.90, aLat: 0.85, dwellSec: 30 },
     ],
   },
 };
@@ -622,6 +624,35 @@ window.RAIL_DATA = {
     for (const line of region.lines) {
       const gen = shapes[line.id];
       if (!gen || !gen.shape || gen.shape.length < 2) continue;
+
+      // Build shape with cumulative km in one pass
+      const pts = gen.shape;
+      const out = new Array(pts.length);
+      let cum = 0;
+      out[0] = { lat: pts[0][0], lng: pts[0][1], km: 0 };
+      for (let i = 1; i < pts.length; i++) {
+        const a = out[i-1];
+        const b = { lat: pts[i][0], lng: pts[i][1] };
+        // Inline haversine to avoid forward-ref to RailUtil (defined below)
+        const R = 6371;
+        const toRad = d => d * Math.PI / 180;
+        const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
+        const la1 = toRad(a.lat), la2 = toRad(b.lat);
+        const x = Math.sin(dLat/2)**2 + Math.cos(la1)*Math.cos(la2)*Math.sin(dLng/2)**2;
+        cum += 2 * R * Math.asin(Math.sqrt(x));
+        out[i] = { lat: b.lat, lng: b.lng, km: cum };
+      }
+      line.shape = out;
+
+      // When the build script emits a full TDX-derived stations array (only for
+      // TRA-West, TRA-East, TRA-South-Link), replace the hand-coded stub entirely.
+      // The projected km values come straight from the shape projection and are
+      // guaranteed monotonic by construction, so we skip the stationKms
+      // monotonicity check for these lines.
+      if (gen.stations && gen.stations.length > 0) {
+        line.stations = gen.stations.map(s => ({ name: s.name, lat: s.lat, lng: s.lng, km: s.km }));
+        continue; // shape + stations done; skip the stationKms path below
+      }
 
       // Validate the projected station kms before applying. Multi-segment or
       // loop shapes (e.g. Tokaido stitched across multiple relations, Yamanote
@@ -651,24 +682,6 @@ window.RAIL_DATA = {
         }
       }
 
-      // Build shape with cumulative km in one pass
-      const pts = gen.shape;
-      const out = new Array(pts.length);
-      let cum = 0;
-      out[0] = { lat: pts[0][0], lng: pts[0][1], km: 0 };
-      for (let i = 1; i < pts.length; i++) {
-        const a = out[i-1];
-        const b = { lat: pts[i][0], lng: pts[i][1] };
-        // Inline haversine to avoid forward-ref to RailUtil (defined below)
-        const R = 6371;
-        const toRad = d => d * Math.PI / 180;
-        const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
-        const la1 = toRad(a.lat), la2 = toRad(b.lat);
-        const x = Math.sin(dLat/2)**2 + Math.cos(la1)*Math.cos(la2)*Math.sin(dLng/2)**2;
-        cum += 2 * R * Math.asin(Math.sqrt(x));
-        out[i] = { lat: b.lat, lng: b.lng, km: cum };
-      }
-      line.shape = out;
       // Update station km from generator only when the projection is
       // monotonic (validated above). Otherwise leave st.km at the hand-coded
       // value, but rescale it to fit within the polyline's total length so
@@ -781,76 +794,237 @@ window.RailUtil = (function(){
   }
 
   // ====================================================
-  // Kinematic helpers (trapezoidal velocity profile per inter-station segment).
-  // All inputs in SI: L (m), v (m/s), a, d (m/s²). Returns time in seconds and
-  // position in metres from segment start. Pure functions — shared by TrainGen
-  // (build time) and the React memos (runtime).
+  // Kinematic helpers (curvature-aware velocity profile per inter-station run).
+  // The profile object is a chain of (x, v, t) nodes along the actual polyline:
+  // each node carries its position from departure (m), the speed at that node
+  // (m/s), and the elapsed time since departure (s). Speed at every node is
+  // capped by both the template cruise speed and the lateral-acceleration limit
+  // sqrt(aLat · R), where R is the local curve radius from the polyline shape.
+  // A forward (accel-limited) and backward (decel-limited) sweep then enforces
+  // kinematic feasibility, giving a profile that starts and ends at rest.
+  // Pure functions — shared by TrainGen (build time) and the React memos.
   // ====================================================
 
-  // Build the segment kinematics for a run of L metres at cruise v with accel a
-  // and decel d. Picks trapezoidal or triangular profile automatically.
-  function kinematicSegment(L, v, a, d) {
-    if (!(L > 0)) {
-      return { tA: 0, tC: 0, tD: 0, La: 0, Lc: 0, Ld: 0, vTop: 0, T: 0, triangular: true };
+  // Min plausible curve radius. Caps the slowdown from noisy polyline points
+  // (e.g. OSM zig-zag artefacts) that would otherwise produce R values far
+  // tighter than real track geometry permits.
+  const MIN_CURVE_RADIUS_M = 60;
+  const DEFAULT_A_LAT = 0.65;
+
+  // Curvature radius (m) at every interior node of `points` via 3-point
+  // circumscribed-circle formula in a local flat (lat/lng → metres) frame.
+  // Endpoints get Infinity (boundary handled via vCap=0 at stations).
+  function curvatureRadii(points) {
+    const N = points.length;
+    const out = new Array(N).fill(Infinity);
+    if (N < 3) return out;
+    let sumLat = 0;
+    for (const p of points) sumLat += p.lat;
+    const latMid = sumLat / N;
+    const kx = Math.cos(latMid * Math.PI / 180) * 111320; // m per deg lng
+    const ky = 110570; // m per deg lat
+    for (let i = 1; i < N - 1; i++) {
+      const A = points[i-1], B = points[i], C = points[i+1];
+      const ax = A.lng * kx, ay = A.lat * ky;
+      const bx = B.lng * kx, by = B.lat * ky;
+      const cx = C.lng * kx, cy = C.lat * ky;
+      const dAB = Math.hypot(bx-ax, by-ay);
+      const dBC = Math.hypot(cx-bx, cy-by);
+      const dCA = Math.hypot(ax-cx, ay-cy);
+      const cross2 = Math.abs((bx-ax)*(cy-ay) - (by-ay)*(cx-ax));
+      if (cross2 < 1e-6) { out[i] = Infinity; continue; }
+      out[i] = (dAB * dBC * dCA) / (2 * cross2);
     }
-    const Lcrit = (v*v) / (2*a) + (v*v) / (2*d);
-    if (L < Lcrit) {
-      // Triangular: peak velocity vp < v
-      const vp = Math.sqrt(2 * L * a * d / (a + d));
-      const tA = vp / a;
-      const tD = vp / d;
-      const La = (vp*vp) / (2*a);
-      const Ld = L - La; // by construction
-      return { tA, tC: 0, tD, La, Lc: 0, Ld, vTop: vp, T: tA + tD, triangular: true };
-    }
-    // Trapezoidal
-    const tA = v / a;
-    const tD = v / d;
-    const La = (v*v) / (2*a);
-    const Ld = (v*v) / (2*d);
-    const Lc = L - La - Ld;
-    const tC = Lc / v;
-    return { tA, tC, tD, La, Lc, Ld, vTop: v, T: tA + tC + tD, triangular: false };
+    return out;
   }
 
-  // Position (m from segment start) at time τ (s since departing prior station).
-  function kmAtTimeInSegment(seg, tau) {
-    if (tau <= 0) return 0;
-    if (tau >= seg.T) return seg.La + seg.Lc + seg.Ld;
-    if (tau <= seg.tA) {
-      // Phase 1: accelerating from rest. a = vTop / tA
-      const a = seg.vTop / seg.tA;
-      return 0.5 * a * tau * tau;
+  // Extract points along `line.shape` between canonical kms kmA and kmB, in
+  // travel direction (so x grows from 0 to total length). Endpoints are
+  // interpolated onto the polyline. Sub-segments longer than maxStepM are
+  // densified (linearly between consecutive shape points) so the kinematic
+  // sweep has enough resolution to spend distance accelerating/decelerating.
+  function shapeBetween(line, kmA, kmB, maxStepM) {
+    if (maxStepM == null) maxStepM = 250;
+    const poly = polylineFor(line);
+    const reverse = kmB < kmA;
+    const lo = Math.min(kmA, kmB);
+    const hi = Math.max(kmA, kmB);
+    const interp = (i, k) => {
+      const A = poly[i], B = poly[i+1];
+      const span = B.km - A.km;
+      const t = span > 0 ? (k - A.km) / span : 0;
+      return {
+        lat: A.lat + (B.lat - A.lat) * t,
+        lng: A.lng + (B.lng - A.lng) * t,
+        km: k,
+      };
+    };
+    let iLo = 0;
+    for (let i = 0; i < poly.length - 1; i++) {
+      if (poly[i].km <= lo && poly[i+1].km >= lo) { iLo = i; break; }
     }
-    if (tau <= seg.tA + seg.tC) {
-      // Phase 2: cruising
-      return seg.La + seg.vTop * (tau - seg.tA);
+    let iHi = poly.length - 2;
+    for (let i = poly.length - 2; i >= 0; i--) {
+      if (poly[i].km <= hi && poly[i+1].km >= hi) { iHi = i; break; }
     }
-    // Phase 3: decelerating. d = vTop / tD
-    const d = seg.vTop / seg.tD;
-    const tp = tau - seg.tA - seg.tC;
-    return seg.La + seg.Lc + seg.vTop * tp - 0.5 * d * tp * tp;
+    const raw = [interp(iLo, lo)];
+    for (let i = iLo + 1; i <= iHi; i++) {
+      if (poly[i].km > lo && poly[i].km < hi) raw.push(poly[i]);
+    }
+    raw.push(interp(iHi, hi));
+
+    const seq = reverse ? raw.slice().reverse() : raw;
+    const xOf = reverse
+      ? (km) => (hi - km) * 1000
+      : (km) => (km - lo) * 1000;
+
+    const out = [{ lat: seq[0].lat, lng: seq[0].lng, x: xOf(seq[0].km) }];
+    for (let i = 1; i < seq.length; i++) {
+      const prev = out[out.length - 1];
+      const next = { lat: seq[i].lat, lng: seq[i].lng, x: xOf(seq[i].km) };
+      const dx = next.x - prev.x;
+      if (dx > maxStepM) {
+        const k = Math.ceil(dx / maxStepM);
+        for (let j = 1; j < k; j++) {
+          const t = j / k;
+          out.push({
+            lat: prev.lat + (next.lat - prev.lat) * t,
+            lng: prev.lng + (next.lng - prev.lng) * t,
+            x: prev.x + dx * t,
+          });
+        }
+      }
+      out.push(next);
+    }
+    return out;
   }
 
-  // Time (s since departing prior station) at position x (m from segment start).
-  function timeAtKmInSegment(seg, x) {
-    const L = seg.La + seg.Lc + seg.Ld;
-    if (x <= 0) return 0;
-    if (x >= L) return seg.T;
-    if (x <= seg.La) {
-      const a = seg.vTop / seg.tA;
-      return Math.sqrt(2 * x / a);
+  // Build a velocity profile along `points` (with x in metres from start).
+  // Returns { L, T, nodes:[{x, v, t}, ...] }. The profile starts and ends at
+  // rest (v=0 at first/last node) and respects vCruise + curvature limits +
+  // accel/decel feasibility from a forward/backward sweep.
+  function kinematicProfile(points, vCruise, accel, decel, aLat) {
+    const N = points.length;
+    if (N < 2 || !(points[N-1].x - points[0].x > 0)) {
+      const x0 = N > 0 ? points[0].x : 0;
+      return { L: 0, T: 0, nodes: [{ x: x0, v: 0, t: 0 }] };
     }
-    if (x <= seg.La + seg.Lc) {
-      return seg.tA + (x - seg.La) / seg.vTop;
+    const L = points[N-1].x - points[0].x;
+    const aLatEff = (aLat != null && aLat > 0) ? aLat : DEFAULT_A_LAT;
+    const R = curvatureRadii(points);
+
+    // 1. Speed cap at each node: cruise ∧ curvature limit. Endpoints clamped to
+    // 0 so the sweep starts and ends at rest.
+    const vCap = new Array(N);
+    for (let i = 0; i < N; i++) {
+      if (i === 0 || i === N - 1) { vCap[i] = 0; continue; }
+      const r = isFinite(R[i]) ? Math.max(R[i], MIN_CURVE_RADIUS_M) : Infinity;
+      const vCurve = isFinite(r) ? Math.sqrt(aLatEff * r) : Infinity;
+      vCap[i] = Math.min(vCruise, vCurve);
     }
-    const d = seg.vTop / seg.tD;
-    const remaining = L - x;
-    return seg.T - Math.sqrt(2 * remaining / d);
+
+    // 2. Forward sweep: accel-limited from preceding node.
+    const v = new Array(N);
+    v[0] = 0;
+    for (let i = 1; i < N; i++) {
+      const dx = points[i].x - points[i-1].x;
+      const vAccel = Math.sqrt(v[i-1]*v[i-1] + 2 * accel * dx);
+      v[i] = Math.min(vCap[i], vAccel);
+    }
+
+    // 3. Backward sweep: decel-limited into following node.
+    for (let i = N - 2; i >= 0; i--) {
+      const dx = points[i+1].x - points[i].x;
+      const vDecel = Math.sqrt(v[i+1]*v[i+1] + 2 * decel * dx);
+      v[i] = Math.min(v[i], vDecel);
+    }
+
+    // 4. Time integration. Within each sub-segment v varies linearly with x
+    // under constant acceleration, so dt = 2·dx / (v0+v1) (exact).
+    const nodes = new Array(N);
+    nodes[0] = { x: points[0].x, v: v[0], t: 0 };
+    let t = 0;
+    for (let i = 1; i < N; i++) {
+      const dx = points[i].x - points[i-1].x;
+      const vSum = v[i-1] + v[i];
+      let dt;
+      if (vSum > 1e-9) {
+        dt = (2 * dx) / vSum;
+      } else if (dx > 0) {
+        // Both endpoints at rest with non-zero dx — only happens at degenerate
+        // boundaries; fall back to constant-accel-from-rest time.
+        dt = Math.sqrt(2 * dx / Math.max(accel, 0.01));
+      } else {
+        dt = 0;
+      }
+      t += dt;
+      nodes[i] = { x: points[i].x, v: v[i], t };
+    }
+    return { L, T: t, nodes };
+  }
+
+  // Position (m from start) at time τ (s since departure).
+  function kmAtTimeInProfile(profile, tau) {
+    const nodes = profile.nodes;
+    if (tau <= 0) return nodes[0].x;
+    if (tau >= profile.T) return nodes[nodes.length - 1].x;
+    let lo = 0, hi = nodes.length - 1;
+    while (lo + 1 < hi) {
+      const mid = (lo + hi) >> 1;
+      if (nodes[mid].t <= tau) lo = mid; else hi = mid;
+    }
+    const a = nodes[lo], b = nodes[hi];
+    const dt = b.t - a.t;
+    if (dt <= 0) return a.x;
+    const v0 = a.v, v1 = b.v;
+    const acc = (v1 - v0) / dt; // local constant acceleration
+    const tau1 = tau - a.t;
+    return a.x + v0 * tau1 + 0.5 * acc * tau1 * tau1;
+  }
+
+  // Time (s since departure) at position x (m from start). Subtracts the
+  // start offset so this works regardless of whether profile.nodes[0].x is 0.
+  function timeAtKmInProfile(profile, x) {
+    const nodes = profile.nodes;
+    if (x <= nodes[0].x) return 0;
+    if (x >= nodes[nodes.length - 1].x) return profile.T;
+    let lo = 0, hi = nodes.length - 1;
+    while (lo + 1 < hi) {
+      const mid = (lo + hi) >> 1;
+      if (nodes[mid].x <= x) lo = mid; else hi = mid;
+    }
+    const a = nodes[lo], b = nodes[hi];
+    const dx = b.x - a.x;
+    if (dx <= 0) return a.t;
+    const dt = b.t - a.t;
+    const v0 = a.v, v1 = b.v;
+    const acc = (v1 - v0) / dt;
+    const xLocal = x - a.x;
+    if (Math.abs(acc) < 1e-9) {
+      return a.t + xLocal / Math.max(v0, 1e-9);
+    }
+    // Solve x_local = v0·τ + 0.5·acc·τ² for τ ≥ 0.
+    const disc = v0 * v0 + 2 * acc * xLocal;
+    const sqrtD = Math.sqrt(Math.max(0, disc));
+    return a.t + (-v0 + sqrtD) / acc;
+  }
+
+  // Normalize Chinese station names so user input "台北" / "台東" matches the
+  // TDX-canonical "臺北" / "臺東" (and vice versa). The two glyphs are
+  // semantically identical in Taiwan place names; TDX uses 臺, common usage
+  // mixes both. This collapses 臺 → 台 for keys, queries, and equality checks.
+  // For display, the canonical TDX form (with 臺) is preserved in `station.name`.
+  function normalizeName(s) {
+    return typeof s === 'string' ? s.replace(/臺/g, '台') : s;
+  }
+  function namesEqual(a, b) {
+    return normalizeName(a) === normalizeName(b);
   }
 
   return { haversine, projectOnSegment, closestOnLine, positionAtKm,
-           kinematicSegment, kmAtTimeInSegment, timeAtKmInSegment };
+           shapeBetween, curvatureRadii,
+           kinematicProfile, kmAtTimeInProfile, timeAtKmInProfile,
+           normalizeName, namesEqual };
 })();
 
 // ========================================================
@@ -873,7 +1047,7 @@ window.TrainGen = (function(){
     const region = RAIL_DATA[regionKey];
     const dateKey = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
     // Bump the version suffix when the kinematic model changes.
-    const cacheKey = regionKey + "|" + dateKey + "|kinV1";
+    const cacheKey = regionKey + "|" + dateKey + "|kinV2";
     if (cache[cacheKey]) return cache[cacheKey];
 
     const trains = [];
@@ -887,6 +1061,7 @@ window.TrainGen = (function(){
       const numTrains = Math.max(1, Math.floor((svcEnd - svcStart) / tpl.interval));
       const vCruise = tpl.speed / 3.6; // km/h → m/s
       const accel = tpl.accel, decel = tpl.decel, defaultDwell = tpl.dwellSec;
+      const aLat = tpl.aLat; // m/s² lateral comfort cap (per train type)
 
       for (let dir = 0; dir < 2; dir++) { // 0 = down, 1 = up
         // Build a directional view: stations in travel order, with km-from-origin
@@ -899,14 +1074,15 @@ window.TrainGen = (function(){
         const stationIdxOf = (sidx) => dir === 1 ? (line.stations.length - 1 - sidx) : sidx;
         const localKmOf = (st) => dir === 1 ? (lastKm - st.km) : st.km;
 
-        // Pre-compute kinematic segments once per (template, direction). Each
-        // segment runs between consecutive stations in travel order; tDepart /
-        // tArrive are filled in per-train below.
+        // Pre-compute kinematic profiles once per (template, direction). Each
+        // profile runs between consecutive stations in travel order along the
+        // actual polyline shape (so curve radii limit the speed locally);
+        // tDepart / tArrive are filled in per-train below.
         const segTemplates = [];
         for (let i = 0; i < stationsDir.length - 1; i++) {
           const a = stationsDir[i], b = stationsDir[i+1];
-          const Lkm = Math.abs(localKmOf(b) - localKmOf(a));
-          const seg = RailUtil.kinematicSegment(Lkm * 1000, vCruise, accel, decel);
+          const pts = RailUtil.shapeBetween(line, a.km, b.km);
+          const seg = RailUtil.kinematicProfile(pts, vCruise, accel, decel, aLat);
           segTemplates.push({
             kin: seg,
             kmStartCanonical: a.km,

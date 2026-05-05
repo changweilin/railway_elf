@@ -2,6 +2,72 @@
 // Map component — Leaflet integration
 const { useState: useStateM, useEffect: useEffectM, useRef: useRefM, useMemo: useMemoM } = React;
 
+// Top-down PNG icons keyed by exact `train.type`. Mirrors
+// public/assets/train-icons/train-icon-map.json — keep them in sync. All PNGs
+// are 256×256 with the nose pointing up in image space; rotating the <img> by
+// the compass heading aligns the nose with travel direction.
+const TRAIN_ICON_MAP = {
+  '自強':       { src: '/assets/train-icons/tze-chiang.png',          kind: 'express' },
+  '莒光':       { src: '/assets/train-icons/chu-kuang.png',           kind: 'limited' },
+  '區間':       { src: '/assets/train-icons/local-emu.png',           kind: 'commuter' },
+  '高鐵':       { src: '/assets/train-icons/thsr-700t.png',           kind: 'shinkansen' },
+  '太魯閣':     { src: '/assets/train-icons/taroko.png',              kind: 'express' },
+  '普悠瑪':     { src: '/assets/train-icons/puyuma.png',              kind: 'express' },
+  '阿里山號':   { src: '/assets/train-icons/alishan-express.png',     kind: 'heritage' },
+  '捷運':       { src: '/assets/train-icons/metro.png',               kind: 'metro' },
+  '普通車':     { src: '/assets/train-icons/tymetro-commuter.png',    kind: 'commuter' },
+  '直達車':     { src: '/assets/train-icons/tymetro-express.png',     kind: 'express' },
+  '輕軌':       { src: '/assets/train-icons/lrt.png',                 kind: 'lrt' },
+  'のぞみ':     { src: '/assets/train-icons/shinkansen-nozomi.png',   kind: 'shinkansen' },
+  'ひかり':     { src: '/assets/train-icons/shinkansen-hikari.png',   kind: 'shinkansen' },
+  'こだま':     { src: '/assets/train-icons/shinkansen-kodama.png',   kind: 'shinkansen' },
+  '山手線':     { src: '/assets/train-icons/yamanote.png',            kind: 'commuter' },
+  '快速':       { src: '/assets/train-icons/chuo-rapid.png',          kind: 'express' },
+  '特別快速':   { src: '/assets/train-icons/chuo-special-rapid.png',  kind: 'express' },
+};
+
+// Display size per kind (PNG canvases are square, so width === height).
+// Real-world size hierarchy: shinkansen > express > commuter ≈ limited >
+// metro > lrt ≈ heritage.
+const TRAIN_ICON_KIND_SIZE = {
+  shinkansen: 44,
+  express:    38,
+  limited:    36,
+  commuter:   36,
+  metro:      32,
+  lrt:        28,
+  heritage:   28,
+};
+
+// Warm the browser cache on script load so the first marker render finds the
+// PNG already decoded — otherwise the icon pops in a frame later.
+(function preloadTrainIcons() {
+  if (typeof Image === 'undefined') return;
+  Object.values(TRAIN_ICON_MAP).forEach(({ src }) => {
+    const img = new Image();
+    img.src = src;
+  });
+})();
+
+function buildTrainMarkerHtml(train) {
+  const heading = (typeof train.heading === 'number' && isFinite(train.heading)) ? train.heading : 0;
+  const dimmed = train.phase === 'dwelling' ? ' dwelling' : '';
+  const dirCls = train.direction === 'up' ? ' northbound' : ' southbound';
+  const entry = TRAIN_ICON_MAP[train.type];
+  const size = (entry && TRAIN_ICON_KIND_SIZE[entry.kind]) || 34;
+  const half = size / 2;
+  const labelTop = half + 4;
+  const inner = entry
+    ? `<img src="${entry.src}" alt="" draggable="false" />`
+    // Fallback for any future type missing from the map: a coloured dot so the
+    // train still appears, with badge colour as the visual cue.
+    : `<div class="train-icon-fallback" style="background:${train.badgeColor}"></div>`;
+  return `<div class="train-marker-v2${dirCls}${dimmed}" style="--col:${train.badgeColor};--rot:${heading.toFixed(1)}deg">
+    <div class="train-icon" style="width:${size}px;height:${size}px;left:${-half}px;top:${-half}px">${inner}</div>
+    <div class="train-marker-label" style="top:${labelTop}px">${train.badge} ${train.number}</div>
+  </div>`;
+}
+
 function MapArea({ region, location, nearest, liveTrains, targetTime, now, visibleLines, mapLayer, setMapLayer, onMapClick, onLocate, flyTo, onTrainClick, onHudClick }) {
   const [hudMode, setHudMode] = useStateM('predict'); // 'predict' | 'now'
   const mapRef = useRefM(null);
@@ -83,17 +149,21 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, visib
     // Add layers for newly-visible lines
     lines.forEach(line => {
       if (railLinesRef.current[line.id]) return;
-      const poly = (line.shape && line.shape.length >= 2) ? line.shape : line.stations;
+      const hasShape = line.shape && line.shape.length >= 2;
+      const poly = hasShape ? line.shape : line.stations;
       const coords = poly.map(s => [s.lat, s.lng]);
       const glow = L.polyline(coords, { color: line.color, weight: 7, opacity: 0.18 }).addTo(map);
       const main = L.polyline(coords, { color: line.color, weight: 3, opacity: 0.9 }).addTo(map);
-      const stationDots = line.stations.map(s =>
-        L.circleMarker([s.lat, s.lng], {
+      // When a real-world shape is present, station hand-coded lat/lng may drift
+      // off the track polyline; snap dots to positionAtKm so they sit on the line.
+      const stationDots = line.stations.map(s => {
+        const pos = hasShape ? RailUtil.positionAtKm(line, s.km) : { lat: s.lat, lng: s.lng };
+        return L.circleMarker([pos.lat, pos.lng], {
           radius: 3, color: line.color, fillColor: '#0f1117',
           fillOpacity: 1, weight: 2,
         }).bindTooltip(s.name, { direction: 'top', offset: [0,-4], className: 'station-tip' })
-         .addTo(map)
-      );
+         .addTo(map);
+      });
       railLinesRef.current[line.id] = [glow, main, ...stationDots];
     });
   }, [region, visibleLines]);
@@ -157,18 +227,24 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, visib
       }
     });
     liveTrains.forEach(train => {
-      const dirCls = train.direction === 'up' ? 'northbound' : 'southbound';
-      const html = `<div class="train-marker ${dirCls}" style="color:${train.badgeColor}">
-        <span class="train-marker-dot"></span>
-        <span>${train.badge} ${train.number}</span>
-      </div>`;
-      const icon = L.divIcon({
-        className: '', html, iconSize: [1,1], iconAnchor: [0, 0],
-      });
-      if (trainMarkersRef.current[train.id]) {
-        trainMarkersRef.current[train.id].setLatLng([train.livePos.lat, train.livePos.lng]);
-        trainMarkersRef.current[train.id].setIcon(icon);
+      const heading = (typeof train.heading === 'number' && isFinite(train.heading)) ? train.heading : 0;
+      const dwelling = train.phase === 'dwelling';
+      const existing = trainMarkersRef.current[train.id];
+      if (existing) {
+        // Tick update: just move and rotate. Avoid setIcon — that swaps the
+        // entire DOM and would re-decode the PNG every second, causing flicker.
+        existing.setLatLng([train.livePos.lat, train.livePos.lng]);
+        const el = existing.getElement();
+        const wrapper = el && el.querySelector('.train-marker-v2');
+        if (wrapper) {
+          wrapper.style.setProperty('--rot', heading.toFixed(1) + 'deg');
+          wrapper.classList.toggle('dwelling', dwelling);
+        }
       } else {
+        const icon = L.divIcon({
+          className: '', html: buildTrainMarkerHtml(train),
+          iconSize: [1,1], iconAnchor: [0, 0],
+        });
         const m = L.marker([train.livePos.lat, train.livePos.lng], { icon, zIndexOffset: 500 })
           .addTo(map)
           .on('click', () => onTrainClick(train));

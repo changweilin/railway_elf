@@ -55,7 +55,12 @@ const REFRESH_CACHE = args.has("--refresh-cache");
 // Each entry can be a plain LineID string, or {lineId, from, to} to take a
 // sub-segment of that LineID's polyline cut between two lat/lng anchor points.
 const TDX_LINE_MAP = {
-  "TRA-West": ["WL"],     // 西部幹線(基隆 → 高雄,單一 LineString)
+  // 西部幹線 — WL StationOfLine ends at 屏東; PL (屏東線) extends 屏東 → 枋寮.
+  // Append PL[屏東→枋寮] so the line connects to TRA-South-Link's start anchor.
+  "TRA-West": [
+    "WL",
+    { lineId: "PL", from: { lat: 22.6690, lng: 120.4862 }, to: { lat: 22.3683, lng: 120.5953 } },
+  ],
   "TRA-East": [           // 東部幹線實際營運從樹林發車,需要 WL[樹林→八堵] + EL 拼接
     { lineId: "WL", from: { lat: 24.9935, lng: 121.4253 }, to: { lat: 25.1056, lng: 121.7150 } },
     "EL",
@@ -467,6 +472,12 @@ async function tdxFetch(token, path, { version = "v3" } = {}) {
   });
 }
 
+// Lines for which we derive station lists from TDX instead of from rail-data.js.
+const TDX_FULL_STATION_LINES = new Set(["TRA-West", "TRA-East", "TRA-South-Link"]);
+
+// Built by fetchTdxShapes; consumed by buildOutput.
+let tdxStationsByInternalId = {};
+
 async function fetchTdxShapes() {
   // If OFFLINE=1, skip auth — we'll read everything from cache anyway.
   let token = null;
@@ -482,6 +493,175 @@ async function fetchTdxShapes() {
   const traData = await tdxFetch(token, "/Rail/TRA/Shape?$format=JSON");
   const traShapes = (traData.Shapes || traData) // v3 wraps in {Shapes}, older versions don't
     .reduce((acc, row) => { acc[row.LineID] = row.Geometry; return acc; }, {});
+
+  // ── NEW: fetch all TRA stations and station-of-line lists ──────────────────
+  console.log("[TDX] Fetching TRA station list…");
+  const stationListData = await tdxFetch(token, "/Rail/TRA/Station?$format=JSON");
+  const stationRows = stationListData.Stations || stationListData;
+  const stationById = {};
+  for (const row of stationRows) {
+    stationById[row.StationID] = {
+      name: row.StationName.Zh_tw,
+      lat:  row.StationPosition.PositionLat,
+      lng:  row.StationPosition.PositionLon,
+    };
+  }
+
+  console.log("[TDX] Fetching TRA station-of-line list…");
+  const solData = await tdxFetch(token, "/Rail/TRA/StationOfLine?$format=JSON");
+  const solRows = solData.StationOfLines || solData;
+  // tdxStationsByLineId[lineId] = [{name, lat, lng, sequence}, ...] sorted by Sequence
+  const tdxStationsByLineId = {};
+  for (const row of solRows) {
+    const lid = row.LineID;
+    const arr = [];
+    for (const s of (row.Stations || [])) {
+      const info = stationById[s.StationID];
+      if (!info) continue;
+      arr.push({ ...info, sequence: s.Sequence });
+    }
+    arr.sort((a, b) => a.sequence - b.sequence);
+    tdxStationsByLineId[lid] = arr;
+  }
+
+  // ── Build TDX-derived ordered station lists for the three in-scope lines ───
+  // Helper: find closest station in an array to a given {lat,lng}.
+  function closestIdx(arr, anchor) {
+    let best = 0, bestD = Infinity;
+    for (let i = 0; i < arr.length; i++) {
+      const d = haversine(arr[i], anchor);
+      if (d < bestD) { bestD = d; best = i; }
+    }
+    return best;
+  }
+
+  // TDX WL includes a routing-only entry "臺北-環島" (StationID 1001) at the
+  // same CumulativeDistance as 臺北. It is not a real passenger stop — filter
+  // it and any similar "-環島" suffixed entries from all in-scope station lists.
+  function isRoutingNode(name) {
+    // "環島" — TDX virtual loop-routing nodes (not real platforms).
+    // "基地"/"機廠" — depots/maintenance bases that fall inside the corridor
+    //   filter when deriving stations from polyline geometry (e.g. 潮州基地).
+    return name.includes("環島") || name.includes("基地") || name.includes("機廠");
+  }
+
+  // Derive a corridor-filtered ordered station list for a TDX shape LineID
+  // when StationOfLine doesn't carry it (e.g. PL, NL, TT). Projects every TRA
+  // station onto the longest polyline in the WKT and keeps those within
+  // corridorKm of the line, ordered by km along the polyline. Optional anchor
+  // slicing trims to the inclusive segment between two lat/lng points.
+  function stationsAlongShapeLineId(lineId, opts = {}) {
+    const { corridorKm = 0.3, fromAnchor, toAnchor } = opts;
+    const wkt = traShapes[lineId];
+    if (!wkt) return [];
+    const segs = parseWkt(wkt);
+    const seg = segs.reduce((a, b) => (b.length > a.length ? b : a), segs[0] || []);
+    if (seg.length < 2) return [];
+    const segKm = cumulativeKm(seg);
+    const allStations = Object.values(stationById);
+    const onLine = [];
+    for (const st of allStations) {
+      let bestKm = 0, bestDist = Infinity;
+      for (let i = 0; i < seg.length - 1; i++) {
+        const p = projectOnSegment(st, seg[i], seg[i + 1]);
+        if (p.dist < bestDist) {
+          bestDist = p.dist;
+          bestKm = segKm[i] + p.t * (segKm[i + 1] - segKm[i]);
+        }
+      }
+      if (bestDist <= corridorKm) onLine.push({ ...st, _km: bestKm });
+    }
+    onLine.sort((a, b) => a._km - b._km);
+    let sliced = onLine;
+    if (fromAnchor && toAnchor) {
+      const iFrom = closestIdx(onLine, fromAnchor);
+      const iTo = closestIdx(onLine, toAnchor);
+      const lo = Math.min(iFrom, iTo), hi = Math.max(iFrom, iTo);
+      sliced = onLine.slice(lo, hi + 1);
+      if (iFrom > iTo) sliced.reverse();
+    }
+    return sliced.map(s => ({ name: s.name, lat: s.lat, lng: s.lng }));
+  }
+
+  // TRA-West: WL verbatim + PL[屏東→枋寮] derived from PL polyline + station list.
+  // (PL is in /Rail/TRA/Shape but not in /Rail/TRA/StationOfLine.)
+  if (tdxStationsByLineId["WL"]) {
+    const wlStations = tdxStationsByLineId["WL"]
+      .filter(s => !isRoutingNode(s.name))
+      .map(s => ({ name: s.name, lat: s.lat, lng: s.lng }));
+    const plStations = stationsAlongShapeLineId("PL", {
+      corridorKm: 0.4,
+      fromAnchor: { lat: 22.6690, lng: 120.4862 }, // 屏東
+      toAnchor:   { lat: 22.3683, lng: 120.5953 }, // 枋寮
+    });
+    const wlNames = new Set(wlStations.map(s => s.name));
+    const plAppend = plStations.filter(s => !wlNames.has(s.name) && !isRoutingNode(s.name));
+    const combined = [...wlStations, ...plAppend];
+    tdxStationsByInternalId["TRA-West"] = combined;
+    if (plAppend.length > 0) {
+      console.log(`[TDX] TRA-West: ${wlStations.length} WL + ${plAppend.length} PL (屏東→枋寮) = ${combined.length} stations from TDX`);
+    } else {
+      console.log(`[TDX] TRA-West: ${combined.length} stations from TDX (PL section not derived)`);
+    }
+  } else {
+    console.warn("[TDX] TRA-West: WL not found in StationOfLine — will use hand-coded stations");
+  }
+
+  // TRA-East: WL[樹林→八堵] slice  +  EL list, deduped at seam
+  {
+    const wl = tdxStationsByLineId["WL"] || [];
+    const el = tdxStationsByLineId["EL"] || [];
+    const wlFrom = { lat: 24.9935, lng: 121.4253 }; // 樹林
+    const wlTo   = { lat: 25.1056, lng: 121.7150 }; // 八堵
+    const iFrom  = closestIdx(wl, wlFrom);
+    const iTo    = closestIdx(wl, wlTo);
+    let wlSlice;
+    if (iFrom <= iTo) {
+      wlSlice = wl.slice(iFrom, iTo + 1);
+    } else {
+      wlSlice = wl.slice(iTo, iFrom + 1).reverse();
+    }
+    const wlSliceFiltered = wlSlice.filter(s => !isRoutingNode(s.name));
+    const wlNames = new Set(wlSliceFiltered.map(s => s.name));
+    // Append EL stations, dropping any that share a name already present in wlSliceFiltered
+    const combined = [
+      ...wlSliceFiltered.map(s => ({ name: s.name, lat: s.lat, lng: s.lng })),
+      ...el.filter(s => !wlNames.has(s.name) && !isRoutingNode(s.name)).map(s => ({ name: s.name, lat: s.lat, lng: s.lng })),
+    ];
+    if (combined.length > 0) {
+      tdxStationsByInternalId["TRA-East"] = combined;
+      console.log(
+        `[TDX] TRA-East: ${wlSliceFiltered.length} WL stations (樹林→八堵) + ` +
+        `${combined.length - wlSliceFiltered.length} EL stations = ${combined.length} total`
+      );
+    } else {
+      console.warn("[TDX] TRA-East: could not build station list from TDX — will use hand-coded stations");
+    }
+  }
+
+  // TRA-South-Link: SL slice by anchors 枋寮→台東
+  {
+    const sl = tdxStationsByLineId["SL"] || [];
+    const slFrom = { lat: 22.3672, lng: 120.5961 }; // 枋寮
+    const slTo   = { lat: 22.7930, lng: 121.1243 }; // 台東
+    if (sl.length >= 2) {
+      const iFrom = closestIdx(sl, slFrom);
+      const iTo   = closestIdx(sl, slTo);
+      let slSlice;
+      if (iFrom <= iTo) {
+        slSlice = sl.slice(iFrom, iTo + 1);
+      } else {
+        slSlice = sl.slice(iTo, iFrom + 1).reverse();
+      }
+      tdxStationsByInternalId["TRA-South-Link"] = slSlice
+        .filter(s => !isRoutingNode(s.name))
+        .map(s => ({ name: s.name, lat: s.lat, lng: s.lng }));
+      console.log(`[TDX] TRA-South-Link: ${tdxStationsByInternalId["TRA-South-Link"].length} stations from TDX`);
+    } else {
+      console.warn("[TDX] TRA-South-Link: SL not found in StationOfLine — will use hand-coded stations");
+    }
+  }
+  // ──────────────────────────────────────────────────────────────────────────
 
   console.log("[TDX] Fetching THSR shapes…");
   // THSR Shape lives only on v2 — v3 returns 404.
@@ -810,7 +990,12 @@ function buildOutput(rawShapes, stationsByLineId) {
     let simplified = simplify(rawShape, SIMPLIFY_TOLERANCE_KM);
     let shapeKm = cumulativeKm(simplified);
 
-    const stations = stationsByLineId[lineId] || [];
+    // For in-scope lines, use the TDX-derived full station list; otherwise use
+    // the hand-coded list from rail-data.js (used for direction probe + stuck anchors).
+    const isInScope = TDX_FULL_STATION_LINES.has(lineId);
+    const tdxStations = isInScope ? (tdxStationsByInternalId[lineId] || null) : null;
+    // stations used for direction probe and stuck-prefix/suffix anchoring
+    const stations = tdxStations || stationsByLineId[lineId] || [];
 
     // Polyline direction may not match the station order in rail-data.js
     // (e.g. TDX returns the West Trunk parameterised 桃園→Keelung while
@@ -840,6 +1025,7 @@ function buildOutput(rawShapes, stationsByLineId) {
     // 北新竹 not 新竹; 沙崙線 begins south of 中洲). Such stations all clamp
     // to km=0 (or km=totalKm), which breaks the merge's monotonicity check.
     // Prepend/append their coordinates so each gets its own anchor.
+    // For in-scope lines the full TDX list is used so anchoring covers all stations.
     const STUCK_DIST_KM = 0.5;
     {
       const stuckPrefix = [];
@@ -875,14 +1061,32 @@ function buildOutput(rawShapes, stationsByLineId) {
       if (dist > maxStationDist) maxStationDist = dist;
     }
 
-    result[lineId] = {
+    const entry = {
       shape: simplified.map(p => [Number(p.lat.toFixed(6)), Number(p.lng.toFixed(6))]),
       totalKm: Number(shapeKm[shapeKm.length - 1].toFixed(3)),
       stationKms,
     };
+
+    // For in-scope lines, also emit the full projected station list so that
+    // mergeShapes() in rail-data.js can replace the hand-coded stub array.
+    if (isInScope && tdxStations && tdxStations.length > 0) {
+      entry.stations = tdxStations.map(s => {
+        const { km, dist } = stationKmOnShape(s, simplified, shapeKm);
+        if (dist > maxStationDist) maxStationDist = dist;
+        return {
+          name: s.name,
+          lat:  Number(s.lat.toFixed(6)),
+          lng:  Number(s.lng.toFixed(6)),
+          km:   Number(km.toFixed(3)),
+        };
+      });
+    }
+
+    result[lineId] = entry;
     console.log(
       `[OUT] ${lineId}: ${rawShape.length} → ${simplified.length} pts, ` +
-      `total ${result[lineId].totalKm} km, max station offset ${(maxStationDist * 1000).toFixed(0)} m`
+      `total ${entry.totalKm} km, max station offset ${(maxStationDist * 1000).toFixed(0)} m` +
+      (entry.stations ? `, ${entry.stations.length} TDX stations` : "")
     );
   }
   return result;

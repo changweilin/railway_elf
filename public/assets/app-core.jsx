@@ -210,7 +210,7 @@ function App() {
         // Convert canonical km → directional local km within segment, then
         // invert the kinematic profile to get τ.
         const xLocalKm = Math.abs(snap.km - seg.kmStartCanonical);
-        const tau = RailUtil.timeAtKmInSegment(seg.kin, xLocalKm * 1000);
+        const tau = RailUtil.timeAtKmInProfile(seg.kin, xLocalKm * 1000);
         passTime = new Date(seg.tDepart.getTime() + tau * 1000);
         prevStop = stops[i];
         nextStop = stops[i+1];
@@ -272,14 +272,14 @@ function App() {
           break;
         }
       }
-      // Otherwise locate the segment T falls into and evaluate kmAtTimeInSegment.
+      // Otherwise locate the segment T falls into and evaluate kmAtTimeInProfile.
       if (km == null) {
         for (let i = 0; i < segs.length; i++) {
           const seg = segs[i];
           const tD = seg.tDepart.getTime(), tA = seg.tArrive.getTime();
           if (T >= tD && T <= tA) {
             const tau = (T - tD) / 1000;
-            const xLocalM = RailUtil.kmAtTimeInSegment(seg.kin, tau);
+            const xLocalM = RailUtil.kmAtTimeInProfile(seg.kin, tau);
             const xLocalKm = xLocalM / 1000;
             // Canonical km grows or shrinks with the direction; pick sign from
             // the segment's canonical endpoints.
@@ -292,7 +292,23 @@ function App() {
       }
       if (km == null) return;
       const pos = RailUtil.positionAtKm(train.line, km);
-      result.push({ ...train, livePos: pos, liveKm: km, phase });
+      // Heading: compass bearing of travel direction at this point along the
+      // polyline. Sample ±25 m on either side of the train (in canonical km
+      // along the line, signed by travel direction) and take the great-circle
+      // bearing from A→B. Used to rotate the top-down train icon on the map.
+      const dirSign = train.direction === 'up' ? 1 : -1;
+      const probe = 0.025;
+      const a = RailUtil.positionAtKm(train.line, km - dirSign * probe);
+      const b = RailUtil.positionAtKm(train.line, km + dirSign * probe);
+      const φ1 = a.lat * Math.PI / 180;
+      const φ2 = b.lat * Math.PI / 180;
+      const Δλ = (b.lng - a.lng) * Math.PI / 180;
+      const y = Math.sin(Δλ) * Math.cos(φ2);
+      const x = Math.cos(φ1) * Math.sin(φ2) - Math.sin(φ1) * Math.cos(φ2) * Math.cos(Δλ);
+      let heading = Math.atan2(y, x) * 180 / Math.PI;
+      if (!isFinite(heading)) heading = 0;
+      heading = (heading + 360) % 360;
+      result.push({ ...train, livePos: pos, liveKm: km, phase, heading });
     });
     return result;
   }, [region, targetTime, nearest, visibleLineIds]);

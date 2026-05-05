@@ -537,28 +537,53 @@ body {
   50%     { box-shadow: 0 0 0 10px rgba(251,191,36,0.0), 0 2px 8px rgba(0,0,0,0.6); }
 }
 
-/* Train marker */
-.train-marker {
-  display: flex; align-items: center; gap: 6px;
-  padding: 4px 8px 4px 6px;
+/* Train marker — top-down silhouette + non-rotating label.
+   The marker is anchored at lat/lng (0,0); the icon and label are absolutely
+   positioned so the lat/lng falls at the centre of the train body. */
+.train-marker-v2 {
+  position: relative;
+  width: 0; height: 0;
+  pointer-events: auto;
+}
+.train-marker-v2 .train-icon {
+  position: absolute;
+  /* width/height/left/top set inline per kind in buildTrainMarkerHtml */
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.55));
+  transform: rotate(var(--rot, 0deg));
+  transform-origin: 50% 50%;
+  transition: transform 0.6s linear;
+}
+.train-marker-v2 .train-icon img {
+  width: 100%; height: 100%;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+.train-marker-v2 .train-icon-fallback {
+  width: 60%; height: 60%;
+  margin: 20%;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.9);
+}
+.train-marker-v2 .train-marker-label {
+  position: absolute;
+  left: 50%;
+  /* top set inline per kind */
+  transform: translateX(-50%);
+  padding: 1px 6px;
   background: var(--me-bg-glass);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(8px);
   border: 1px solid var(--me-border-hover);
   border-radius: 999px;
-  box-shadow: var(--me-shadow-md);
+  box-shadow: var(--me-shadow-sm, 0 1px 4px rgba(0,0,0,0.3));
   font-family: var(--me-font-mono);
-  font-size: 11px; font-weight: 600;
-  color: var(--me-text-primary);
+  font-size: 10px; font-weight: 600;
+  color: var(--col, var(--me-text-primary));
   white-space: nowrap;
-  transform: translate(-50%, -50%);
+  letter-spacing: 0.02em;
 }
-.train-marker-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: currentColor;
-  box-shadow: 0 0 8px currentColor;
-}
-.train-marker.northbound { color: var(--me-info); }
-.train-marker.southbound { color: var(--me-warning); }
+.train-marker-v2.dwelling .train-icon { opacity: 0.7; }
 
 /* Floating map widgets */
 .map-hud {
