@@ -377,7 +377,9 @@ function TrainSheet({ collapsed, onToggle, nearest, offRail, candidates, activeL
           React.createElement("span", { className: "sheet-live-dot" }),
           liveTrainCount, " 列運行中",
         ),
-        nearest ? nearest.line.name : (offRail ? "不在鐵道附近" : "—")),
+        activeLineId === 'all' && candidates && candidates.length > 1
+          ? `全部 ${candidates.length} 條線`
+          : (nearest ? nearest.line.name : (offRail ? "不在鐵道附近" : "—"))),
     ),
     !collapsed && React.createElement(React.Fragment, null,
       candidates && candidates.length > 1 && React.createElement("div", {
@@ -387,6 +389,23 @@ function TrainSheet({ collapsed, onToggle, nearest, offRail, candidates, activeL
         React.createElement("span", {
           style: { fontSize: 11, color: 'var(--me-text-muted)', alignSelf: 'center', marginRight: 4 },
         }, "在這附近："),
+        React.createElement("button", {
+          key: '__all__',
+          className: "pill " + (activeLineId === 'all' ? 'active' : ''),
+          onClick: () => setActiveLineId && setActiveLineId('all'),
+          title: `全部 ${candidates.length} 條線`,
+        },
+          React.createElement("span", {
+            className: "pill-dot",
+            style: {
+              background: `linear-gradient(135deg, ${candidates.slice(0, 3).map(c => c.line.color).join(', ')})`,
+            },
+          }),
+          "全部",
+          React.createElement("span", {
+            style: { fontSize: 10, opacity: 0.65, marginLeft: 4 },
+          }, candidates.length, " 條"),
+        ),
         candidates.map(c =>
           React.createElement("button", {
             key: c.line.id,
@@ -440,6 +459,7 @@ function TrainSheet({ collapsed, onToggle, nearest, offRail, candidates, activeL
           : trains.slice(0, 40).map(t =>
               React.createElement(TrainCard, {
                 key: t.id, train: t, targetTime, onSelect: () => onSelect(t),
+                showLine: activeLineId === 'all',
               }))
       ),
     ),
@@ -449,7 +469,7 @@ function TrainSheet({ collapsed, onToggle, nearest, offRail, candidates, activeL
 // ============================================================
 // TRAIN CARD
 // ============================================================
-function TrainCard({ train, targetTime, onSelect }) {
+function TrainCard({ train, targetTime, onSelect, showLine }) {
   const diffMs = train.passTime - targetTime;
   const cd = formatCountdown(diffMs);
   const firstStop = train.stops[0].name;
@@ -476,6 +496,24 @@ function TrainCard({ train, targetTime, onSelect }) {
           },
         }, train.badge),
         React.createElement("span", { className: "tc-number" }, train.number, " 次"),
+        showLine && train.line && React.createElement("span", {
+          className: "tc-line-tag",
+          style: {
+            display: 'inline-flex', alignItems: 'center', gap: 4,
+            padding: '2px 6px',
+            fontSize: 10, fontWeight: 500,
+            color: train.line.color,
+            background: train.line.color + '14',
+            border: `1px solid ${train.line.color}33`,
+            borderRadius: 4,
+            whiteSpace: 'nowrap',
+          },
+        },
+          React.createElement("span", {
+            style: { width: 6, height: 6, borderRadius: '50%', background: train.line.color },
+          }),
+          train.line.name,
+        ),
         React.createElement("span", { className: "tc-route-mini" },
           firstStop, " → ", lastStop),
       ),
@@ -660,7 +698,7 @@ function TrainModal({ train, nearest, targetTime, onClose, onFlyToTrain }) {
             React.createElement("div", { className: "modal-stat-label" }, "車種"),
             React.createElement("div", { className: "modal-stat-value", style: { fontSize: 14 } }, train.type)),
         ),
-        nearest && hasPassTime && React.createElement("div", {
+        (train.snap || nearest) && hasPassTime && React.createElement("div", {
           style: {
             display: 'flex', alignItems: 'center', gap: 8,
             padding: '8px 10px', marginBottom: 12,
@@ -671,11 +709,14 @@ function TrainModal({ train, nearest, targetTime, onClose, onFlyToTrain }) {
           },
         },
           React.createElement(Icon, { id: "me-locate", size: 14 }),
-          React.createElement("span", null,
-            "於距您 ",
-            React.createElement("strong", { style: { color: 'var(--me-warning)' } }, nearest.dist.toFixed(2), " km"),
-            " 的軌道上經過 (里程 ", nearest.km.toFixed(1), " km)",
-          ),
+          (() => {
+            const ref = train.snap || nearest;
+            return React.createElement("span", null,
+              "於距您 ",
+              React.createElement("strong", { style: { color: 'var(--me-warning)' } }, ref.dist.toFixed(2), " km"),
+              " 的軌道上經過 (里程 ", ref.km.toFixed(1), " km)",
+            );
+          })(),
         ),
         React.createElement("div", {
           style: { fontSize: 12, color: 'var(--me-text-muted)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.05em' }

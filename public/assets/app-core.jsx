@@ -144,49 +144,64 @@ function App() {
     return { candidates, offRail: null };
   }, [location, visibleLines]);
 
-  // Keep activeLineId in sync with the candidates list.
+  // Keep activeLineId in sync with the candidates list. The sentinel 'all'
+  // (multi-line aggregation) is preserved across candidate changes.
   useEffect(() => {
     if (candidates.length === 0) {
       if (activeLineId !== null) setActiveLineId(null);
       return;
     }
+    if (activeLineId === 'all') return;
     if (!activeLineId || !candidates.some(c => c.line.id === activeLineId)) {
       setActiveLineId(candidates[0].line.id);
     }
   }, [candidates, activeLineId]);
 
-  // The nearest snap point of the *active* candidate.
+  // The nearest snap point used for panel/map UI. In 'all' mode this still
+  // points to the closest line so the "最近的鐵軌" card and the dashed
+  // connector keep showing the user's actual nearest rail.
   const nearest = useMemo(() => {
     if (candidates.length === 0) return null;
+    if (activeLineId === 'all') return candidates[0];
     return candidates.find(c => c.line.id === activeLineId) || candidates[0];
   }, [candidates, activeLineId]);
 
-  // Trains on the active line, with time-of-passage at the snap point.
-  // Uses each train's pre-computed kinematic segments (from rail-data.js
-  // TrainGen) so the snap-point pass time accounts for accel/cruise/decel and
-  // any dwell at adjacent stations.
+  // Trains on the active line(s), with time-of-passage at each line's snap
+  // point. Uses each train's pre-computed kinematic segments (from
+  // rail-data.js TrainGen) so the snap-point pass time accounts for
+  // accel/cruise/decel and any dwell at adjacent stations. When activeLineId
+  // is 'all', the sheet aggregates trains from every candidate line, each
+  // using its own per-line snap point.
+  const activeCandidates = useMemo(() => {
+    if (candidates.length === 0) return [];
+    if (activeLineId === 'all') return candidates;
+    const c = candidates.find(c => c.line.id === activeLineId);
+    return c ? [c] : [candidates[0]];
+  }, [candidates, activeLineId]);
   const trains = useMemo(() => {
-    if (!nearest) return [];
+    if (activeCandidates.length === 0) return [];
     const dayTrains = TrainGen.generate(region, targetTime);
+    const candidateByLine = new Map(activeCandidates.map(c => [c.line.id, c]));
     const out = [];
     const EPS_KM = 1e-6;
     dayTrains.forEach(train => {
-      if (train.line.id !== nearest.line.id) return;
+      const snap = candidateByLine.get(train.line.id);
+      if (!snap) return;
       const stops = train.stops;
       const segs = train.segments;
       let passTime = null, prevStop = null, nextStop = null;
 
-      // Locate the segment whose canonical km range brackets nearest.km.
+      // Locate the segment whose canonical km range brackets snap.km.
       for (let i = 0; i < segs.length; i++) {
         const seg = segs[i];
         const lo = Math.min(seg.kmStartCanonical, seg.kmEndCanonical);
         const hi = Math.max(seg.kmStartCanonical, seg.kmEndCanonical);
-        if (nearest.km < lo - EPS_KM || nearest.km > hi + EPS_KM) continue;
+        if (snap.km < lo - EPS_KM || snap.km > hi + EPS_KM) continue;
 
         // Snap-on-station handling: if the snap point sits at the segment's
         // start station with nonzero dwell, the train is dwelling — passTime
         // = arrival of that station.
-        if (Math.abs(nearest.km - seg.kmStartCanonical) < EPS_KM && stops[i].dwellSec > 0) {
+        if (Math.abs(snap.km - seg.kmStartCanonical) < EPS_KM && stops[i].dwellSec > 0) {
           passTime = stops[i].arrival;
           prevStop = stops[i];
           nextStop = stops[i+1];
@@ -194,7 +209,7 @@ function App() {
         }
         // Convert canonical km → directional local km within segment, then
         // invert the kinematic profile to get τ.
-        const xLocalKm = Math.abs(nearest.km - seg.kmStartCanonical);
+        const xLocalKm = Math.abs(snap.km - seg.kmStartCanonical);
         const tau = RailUtil.timeAtKmInSegment(seg.kin, xLocalKm * 1000);
         passTime = new Date(seg.tDepart.getTime() + tau * 1000);
         prevStop = stops[i];
@@ -206,11 +221,11 @@ function App() {
       // A 30-second grace lets a train still appear briefly while it crosses
       // the snap point, but after that it is hidden.
       if (passTime - targetTime < -30 * 1000) return;
-      out.push({ ...train, passTime, prevStop, nextStop });
+      out.push({ ...train, passTime, prevStop, nextStop, snap });
     });
     out.sort((a, b) => a.passTime - b.passTime);
     return out;
-  }, [nearest, region, targetTime]);
+  }, [activeCandidates, region, targetTime]);
 
   // Apply filters
   const filteredTrains = useMemo(() => {
