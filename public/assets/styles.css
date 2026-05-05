@@ -1134,6 +1134,11 @@ body.sheet-resizing .leaflet-container { pointer-events: none; }
   font-size: 11px;
   color: var(--me-text-muted);
   margin-left: 4px;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .tc-segment {
   display: flex; align-items: center; gap: 6px;
@@ -1143,23 +1148,69 @@ body.sheet-resizing .leaflet-container { pointer-events: none; }
   border: 1px solid rgba(110,231,183,0.15);
   border-radius: var(--me-radius-sm);
   font-size: 11px;
+  min-width: 0;
+  overflow: hidden;
 }
 .tc-seg-stop {
   display: inline-flex; align-items: baseline; gap: 5px;
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
 }
+.tc-seg-stop-end { justify-content: flex-end; }
 .tc-seg-time {
   font-family: var(--me-font-mono);
   font-weight: 600;
   color: var(--me-accent-primary);
   font-variant-numeric: tabular-nums;
   font-size: 12px;
+  flex-shrink: 0;
 }
-.tc-seg-name { color: var(--me-text-primary); font-weight: 500; }
+/* Long station names (e.g. 南港展覽館) used to break the row. Now: nowrap +
+   trailing fade-mask, with a CSS marquee that only auto-runs on the actively
+   "passing" card or on hover. The min(0px, …) clamp keeps short names still. */
+.tc-seg-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  color: var(--me-text-primary); font-weight: 500;
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 14px), transparent 100%);
+  mask-image: linear-gradient(90deg, #000 0, #000 calc(100% - 14px), transparent 100%);
+}
+.tc-seg-name-inner {
+  display: inline-block;
+  will-change: transform;
+  /* Always-on slow marquee so long names like 南港展覽館 reveal themselves
+     over time. The min(0px, …) clamp resolves to 0 for names that fit, so
+     short-named cards stay perfectly still — only overflowing text moves. */
+  animation: tc-name-marquee 12s ease-in-out infinite;
+}
+.train-card.passing .tc-seg-name-inner {
+  animation-duration: 8s;
+}
+@keyframes tc-name-marquee {
+  0%, 12%, 100% { transform: translateX(0); }
+  50%, 70%      { transform: translateX(min(0px, calc(-100% + 4em))); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .tc-seg-name-inner { animation: none; }
+}
 .tc-seg-arrow {
   color: var(--me-text-muted);
   font-size: 10px;
   letter-spacing: -1px;
   flex-shrink: 0;
+}
+
+/* Modal timetable name column — single-line ellipsis so a long station
+   doesn't push the km/time columns off-screen on narrow phones. */
+.tt-name {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .hide { display: none !important; }
 
