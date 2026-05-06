@@ -61,6 +61,12 @@ const TDX_LINE_MAP = {
     "WL",
     { lineId: "PL", from: { lat: 22.6690, lng: 120.4862 }, to: { lat: 22.3683, lng: 120.5953 } },
   ],
+  // 海岸線 — TDX LineID 1003 "CL", 竹南↔彰化. A simple single-LineID fetch;
+  // no anchor-slicing needed (CL is a self-contained line in the TDX feed).
+  // WL-C 為 TDX 海岸線 (竹南→追分,18 站含彰化)。WL-C 形狀只到追分,彰化透過
+  // 成追線 (CZ) 接入但 CZ 在拼接時會被當作 closed detour 移除;為保證 km 單調,
+  // 我們在站表 extraction 時把彰化過濾掉,把追分當作海線南端終點。
+  "TRA-Coast": ["WL-C"],
   "TRA-East": [           // 東部幹線實際營運從樹林發車,需要 WL[樹林→八堵] + EL 拼接
     { lineId: "WL", from: { lat: 24.9935, lng: 121.4253 }, to: { lat: 25.1056, lng: 121.7150 } },
     "EL",
@@ -473,7 +479,7 @@ async function tdxFetch(token, path, { version = "v3" } = {}) {
 }
 
 // Lines for which we derive station lists from TDX instead of from rail-data.js.
-const TDX_FULL_STATION_LINES = new Set(["TRA-West", "TRA-East", "TRA-South-Link"]);
+const TDX_FULL_STATION_LINES = new Set(["TRA-West", "TRA-East", "TRA-South-Link", "TRA-Coast"]);
 
 // Built by fetchTdxShapes; consumed by buildOutput.
 let tdxStationsByInternalId = {};
@@ -636,6 +642,21 @@ async function fetchTdxShapes() {
       );
     } else {
       console.warn("[TDX] TRA-East: could not build station list from TDX — will use hand-coded stations");
+    }
+  }
+
+  // TRA-Coast: WL-C 18 站 (竹南→彰化, in sequence order)。WL-C 形狀只覆蓋
+  // 竹南→追分,彰化由 成追線 CZ 接入。CZ 在 stitch 時會被當作 closed detour
+  // 移除,因此將彰化從站表過濾掉,海線在我們的模型中以追分為終點。
+  {
+    const wlc = tdxStationsByLineId["WL-C"] || [];
+    if (wlc.length >= 2) {
+      tdxStationsByInternalId["TRA-Coast"] = wlc
+        .filter(s => !isRoutingNode(s.name) && s.name !== "彰化")
+        .map(s => ({ name: s.name, lat: s.lat, lng: s.lng }));
+      console.log(`[TDX] TRA-Coast: ${tdxStationsByInternalId["TRA-Coast"].length} stations from TDX (WL-C 海岸線, 彰化過濾)`);
+    } else {
+      console.warn("[TDX] TRA-Coast: WL-C not found in StationOfLine — will use hand-coded stations");
     }
   }
 

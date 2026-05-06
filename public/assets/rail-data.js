@@ -71,6 +71,36 @@ window.RAIL_DATA = {
         ],
       },
       {
+        id: "TRA-Coast",
+        name: "台鐵海岸線",
+        nameEn: "TRA Coast Line",
+        color: "#0ea5e9",
+        category: "TRA",
+        directions: { up: "北上 (往竹南)", down: "南下 (往追分)" },
+        // 竹南→追分 (TDX WL-C 海岸線). 真實服務多繼續經 成追線 接彰化,但海線
+        // 本身的 polyline 終於追分,因此以追分為南端終點。站點與 km 由 build
+        // 步驟由 TDX 寫入 (rail-data.generated.js),這裡的手寫值僅作 fallback。
+        stations: [
+          { name: "竹南", lat: 24.6856, lng: 120.8755, km: 0,    dwellSec: 60 },
+          { name: "談文", lat: 24.6555, lng: 120.8447, km: 4.5  },
+          { name: "大山", lat: 24.6037, lng: 120.7958, km: 10.6 },
+          { name: "後龍", lat: 24.6121, lng: 120.7867, km: 14.1 },
+          { name: "龍港", lat: 24.6463, lng: 120.7700, km: 18.2 },
+          { name: "白沙屯", lat: 24.6854, lng: 120.7584, km: 23.1 },
+          { name: "新埔", lat: 24.7144, lng: 120.7459, km: 28.2 },
+          { name: "通霄", lat: 24.4874, lng: 120.6798, km: 32.0 },
+          { name: "苑裡", lat: 24.4421, lng: 120.6510, km: 38.2 },
+          { name: "日南", lat: 24.3997, lng: 120.6411, km: 42.6 },
+          { name: "大甲", lat: 24.3479, lng: 120.6235, km: 46.4 },
+          { name: "台中港", lat: 24.2842, lng: 120.5618, km: 51.6 },
+          { name: "清水", lat: 24.2683, lng: 120.5666, km: 55.0 },
+          { name: "沙鹿", lat: 24.2342, lng: 120.5660, km: 60.4 },
+          { name: "龍井", lat: 24.1929, lng: 120.5466, km: 65.0 },
+          { name: "大肚", lat: 24.1500, lng: 120.5400, km: 69.7 },
+          { name: "追分", lat: 24.1208, lng: 120.5417, km: 73.2, dwellSec: 60 },
+        ],
+      },
+      {
         id: "THSR",
         name: "台灣高鐵",
         nameEn: "Taiwan High Speed Rail",
@@ -605,6 +635,10 @@ window.RAIL_DATA = {
       { line: "TRA-West", type: "自強", badge: "自強", badgeColor: "#f87171", speed: 90,  interval: 30, accel: 0.55, decel: 0.55, aLat: 0.65, dwellSec: 45 },
       { line: "TRA-West", type: "莒光", badge: "莒光", badgeColor: "#fbbf24", speed: 75,  interval: 60, accel: 0.45, decel: 0.50, aLat: 0.55, dwellSec: 60 },
       { line: "TRA-West", type: "區間", badge: "區間", badgeColor: "#60a5fa", speed: 55,  interval: 20, accel: 0.85, decel: 0.90, aLat: 0.65, dwellSec: 30 },
+      // TRA Coast — 海線 has fewer 自強 services and more 區間/區間快 than 山線.
+      { line: "TRA-Coast", type: "自強",   badge: "自強",   badgeColor: "#f87171", speed: 85, interval: 60, accel: 0.55, decel: 0.55, aLat: 0.65, dwellSec: 45 },
+      { line: "TRA-Coast", type: "區間快", badge: "區間快", badgeColor: "#38bdf8", speed: 70, interval: 60, accel: 0.85, decel: 0.90, aLat: 0.65, dwellSec: 30 },
+      { line: "TRA-Coast", type: "區間",   badge: "區間",   badgeColor: "#60a5fa", speed: 55, interval: 30, accel: 0.85, decel: 0.90, aLat: 0.65, dwellSec: 30 },
       // THSR — non-tilting high-speed
       { line: "THSR",     type: "高鐵", badge: "HSR",  badgeColor: "#6ee7b7", speed: 260, interval: 15, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       // TRA East — Taroko / Puyuma are tilting EMUs, hence higher aLat.

@@ -103,3 +103,20 @@
 2. 再移除 Babel standalone，這是最小的 runtime 依賴瘦身。
 3. 接著把 React/Leaflet 搬進 Vite build，讓 build 開始真正檢查前端程式。
 4. 最後補 UX 失敗狀態與資料品質 guardrails。
+
+## TRA-Coast 海線 — 新增後待執行
+
+新增 `TRA-Coast` 海岸線後，需設定 TDX_CLIENT_ID / TDX_CLIENT_SECRET 並執行取形腳本，讓海線取得高解析度 TDX 真實線形；未執行前海線只渲染站點連線（直線段）。
+
+```sh
+TDX_CLIENT_ID=<your-id> TDX_CLIENT_SECRET=<your-secret> node scripts/fetch-rail-shapes.mjs --skip-jp
+```
+
+建立帳號請至 https://tdx.transportdata.tw/ （免費方案即可）。
+
+執行後預期 log：
+```
+[OUT] TRA-Coast: NNN → NN pts, total ~90 km, max station offset <500 m
+```
+
+偏移超過 500 m 表示 TDX "CL" 線形與手寫站點座標不符，需檢查站點 lat/lng。

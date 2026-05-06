@@ -356,10 +356,20 @@ function App() {
   const addFavorite = () => {
     if (!location) return;
     if (favorites.some(f => f.lat === location.lat && f.lng === location.lng)) return;
-    setFavorites([...favorites, { ...location, id: Date.now() }]);
+    const entry = { ...location, id: Date.now() };
+    if (favorites.length >= 10) {
+      const ok = window.confirm('收藏已達上限 10 個。是否要替換最舊的收藏？');
+      if (!ok) return;
+      setFavorites([...favorites.slice(1), entry]);
+      return;
+    }
+    setFavorites([...favorites, entry]);
   };
   const removeFavorite = (id) => setFavorites(favorites.filter(f => f.id !== id));
-  const pickFavorite = (f) => setLocation({ lat: f.lat, lng: f.lng, name: f.name });
+  const pickFavorite = (f) => {
+    setLocation({ lat: f.lat, lng: f.lng, name: f.name });
+    setFlyTo({ lat: f.lat, lng: f.lng, ts: Date.now() });
+  };
 
   const handleQuickPick = (kind) => {
     setQuickPick(kind);
