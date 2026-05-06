@@ -6,24 +6,26 @@ const { useState: useStateM, useEffect: useEffectM, useRef: useRefM, useMemo: us
 // public/assets/train-icons/train-icon-map.json — keep them in sync. All PNGs
 // are 256×256 with the nose pointing up in image space; rotating the <img> by
 // the compass heading aligns the nose with travel direction.
+// Paths are relative to the document URL so the app works under both `/` (dev)
+// and a project sub-path like `/railway_elf/` (GitHub Pages).
 const TRAIN_ICON_MAP = {
-  '自強':       { src: '/assets/train-icons/tze-chiang.png',          kind: 'express' },
-  '莒光':       { src: '/assets/train-icons/chu-kuang.png',           kind: 'limited' },
-  '區間':       { src: '/assets/train-icons/local-emu.png',           kind: 'commuter' },
-  '高鐵':       { src: '/assets/train-icons/thsr-700t.png',           kind: 'shinkansen' },
-  '太魯閣':     { src: '/assets/train-icons/taroko.png',              kind: 'express' },
-  '普悠瑪':     { src: '/assets/train-icons/puyuma.png',              kind: 'express' },
-  '阿里山號':   { src: '/assets/train-icons/alishan-express.png',     kind: 'heritage' },
-  '捷運':       { src: '/assets/train-icons/metro.png',               kind: 'metro' },
-  '普通車':     { src: '/assets/train-icons/tymetro-commuter.png',    kind: 'commuter' },
-  '直達車':     { src: '/assets/train-icons/tymetro-express.png',     kind: 'express' },
-  '輕軌':       { src: '/assets/train-icons/lrt.png',                 kind: 'lrt' },
-  'のぞみ':     { src: '/assets/train-icons/shinkansen-nozomi.png',   kind: 'shinkansen' },
-  'ひかり':     { src: '/assets/train-icons/shinkansen-hikari.png',   kind: 'shinkansen' },
-  'こだま':     { src: '/assets/train-icons/shinkansen-kodama.png',   kind: 'shinkansen' },
-  '山手線':     { src: '/assets/train-icons/yamanote.png',            kind: 'commuter' },
-  '快速':       { src: '/assets/train-icons/chuo-rapid.png',          kind: 'express' },
-  '特別快速':   { src: '/assets/train-icons/chuo-special-rapid.png',  kind: 'express' },
+  '自強':       { src: 'assets/train-icons/tze-chiang.png',          kind: 'express' },
+  '莒光':       { src: 'assets/train-icons/chu-kuang.png',           kind: 'limited' },
+  '區間':       { src: 'assets/train-icons/local-emu.png',           kind: 'commuter' },
+  '高鐵':       { src: 'assets/train-icons/thsr-700t.png',           kind: 'shinkansen' },
+  '太魯閣':     { src: 'assets/train-icons/taroko.png',              kind: 'express' },
+  '普悠瑪':     { src: 'assets/train-icons/puyuma.png',              kind: 'express' },
+  '阿里山號':   { src: 'assets/train-icons/alishan-express.png',     kind: 'heritage' },
+  '捷運':       { src: 'assets/train-icons/metro.png',               kind: 'metro' },
+  '普通車':     { src: 'assets/train-icons/tymetro-commuter.png',    kind: 'commuter' },
+  '直達車':     { src: 'assets/train-icons/tymetro-express.png',     kind: 'express' },
+  '輕軌':       { src: 'assets/train-icons/lrt.png',                 kind: 'lrt' },
+  'のぞみ':     { src: 'assets/train-icons/shinkansen-nozomi.png',   kind: 'shinkansen' },
+  'ひかり':     { src: 'assets/train-icons/shinkansen-hikari.png',   kind: 'shinkansen' },
+  'こだま':     { src: 'assets/train-icons/shinkansen-kodama.png',   kind: 'shinkansen' },
+  '山手線':     { src: 'assets/train-icons/yamanote.png',            kind: 'commuter' },
+  '快速':       { src: 'assets/train-icons/chuo-rapid.png',          kind: 'express' },
+  '特別快速':   { src: 'assets/train-icons/chuo-special-rapid.png',  kind: 'express' },
 };
 
 // Display size per kind (PNG canvases are square, so width === height).
@@ -174,10 +176,14 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, visib
         // First pass: under-layers (glow / trench / halo), so the main line
         // sits on top regardless of declaration order.
         segs.forEach(seg => {
-          if (seg.type === 'ground') {
+          if (seg.type === 'ground' || seg.type === 'tunnel') {
+            // Tunnel reuses the ground glow — the visual signal that the line
+            // is hidden by topography (rather than by an urban project) is
+            // the dashes alone, without a dark trench.
             layers.push(L.polyline(seg.points, { color: line.color, weight: 7, opacity: 0.18 }).addTo(map));
           } else if (seg.type === 'underground') {
-            // Dark "trench" so the dashed line above reads as recessed track.
+            // Dark "trench" so the dashed line above reads as recessed track
+            // — distinguishes 都會地下化 from a topographical tunnel.
             layers.push(L.polyline(seg.points, { color: '#0f1117', weight: 6, opacity: 0.85 }).addTo(map));
           } else if (seg.type === 'elevated') {
             // White halo so the elevated track reads as lifted off ground.
@@ -188,12 +194,14 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, visib
         segs.forEach(seg => {
           const style = seg.type === 'underground'
             ? { color: line.color, weight: 3, opacity: 1, dashArray: '10,7' }
-            : seg.type === 'elevated'
-              ? { color: line.color, weight: 5, opacity: 1 }
-              : { color: line.color, weight: 3, opacity: 0.95 };
+            : seg.type === 'tunnel'
+              ? { color: line.color, weight: 3, opacity: 0.9, dashArray: '4,5' }
+              : seg.type === 'elevated'
+                ? { color: line.color, weight: 5, opacity: 1 }
+                : { color: line.color, weight: 3, opacity: 0.95 };
           const main = L.polyline(seg.points, style).addTo(map);
           if (seg.note) {
-            const label = { ground: '平面', underground: '地下化', elevated: '高架化' }[seg.type] || seg.type;
+            const label = { ground: '平面', underground: '地下化', tunnel: '隧道', elevated: '高架化' }[seg.type] || seg.type;
             main.bindTooltip(`${line.name} · ${label} · ${seg.note}`, { sticky: true, className: 'station-tip' });
           }
           layers.push(main);

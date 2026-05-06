@@ -615,6 +615,15 @@ function Panel(props) {
         React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 8 } },
           React.createElement("span", {
             style: {
+              display: 'inline-block', width: 28, height: 3,
+              backgroundImage: 'repeating-linear-gradient(to right, currentColor 0 4px, transparent 4px 9px)',
+            },
+          }),
+          "山岳隧道(短虛線)",
+        ),
+        React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 8 } },
+          React.createElement("span", {
+            style: {
               display: 'inline-block', width: 28, height: 5,
               background: 'currentColor',
               boxShadow: '0 0 0 2px rgba(255,255,255,0.55)',

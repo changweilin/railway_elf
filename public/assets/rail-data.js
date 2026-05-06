@@ -9,13 +9,22 @@
 //     ...
 //   ]
 // Conventions:
-//   - `from` and `to` are cumulative km along the line, matching `station.km`.
-//   - Segments must be inside [0, totalKm], sorted by `from`, non-overlapping.
+//   - `from` and `to` are cumulative km in the SAME space as the hand-coded
+//     `station.km` values in this file. After shape merge, both station kms
+//     and grade kms are linearly remapped onto the polyline together, so they
+//     stay aligned. Always author grades using the hand-coded km column —
+//     never the post-merge / TDX-projected values.
+//   - Segments must be inside [0, lastStation.km], sorted by `from`,
+//     non-overlapping.
 //   - Omitted ranges are implicitly "ground"; do not list ground segments.
 //   - `note` is optional, used for tooltips / debugging only.
 // Type values:
-//   "underground" — below grade level. Covers BOTH urban 鐵路地下化 and mountain
-//                   tunnels (隧道) — both render the same way (sunken/hidden).
+//   "underground" — 鐵路地下化 (urban underground project — the line was
+//                   intentionally moved beneath the city to grade-separate
+//                   from streets).
+//   "tunnel"      — 山岳隧道 / 地形隧道 (the line bores through hill or
+//                   topography because the surface route is impractical;
+//                   distinct from 都會地下化 even though both are below grade).
 //   "elevated"    — 鐵路高架化 / viaduct (visibly raised above ground).
 //   "ground"      — 平面 / at-grade (default, not listed).
 
@@ -84,13 +93,14 @@ window.RAIL_DATA = {
         ],
         // 台灣高鐵:全線約 73% 高架、18% 隧道、9% 路堤/平面。標出主要區段:
         // 南港–板橋 與台鐵共構地下化、林口隧道、八卦山隧道。其餘整段以
-        // 高架為主(本身就是 HSR 的標準工法)。
+        // 高架為主(本身就是 HSR 的標準工法)。km 採用本檔站點手寫值
+        // (南港 0、板橋 15、苗栗 120、台中 175、左營 345)。
         grades: [
-          { from: 0,     to: 17.8,  type: "underground", note: "南港–板橋 共構地下化" },
-          { from: 17.8,  to: 25,    type: "underground", note: "林口隧道(約 7.4 km)" },
-          { from: 25,    to: 145,   type: "elevated",    note: "桃園–苗栗 高架(主體)" },
-          { from: 145,   to: 152.5, type: "underground", note: "八卦山隧道(約 7.4 km)" },
-          { from: 152.5, to: 350.7, type: "elevated",    note: "台中–左營 高架(主體)" },
+          { from: 0,    to: 15,    type: "underground", note: "南港–板橋 共構地下化" },
+          { from: 17,   to: 24,    type: "tunnel",      note: "林口隧道(約 7.4 km)" },
+          { from: 24,   to: 142,   type: "elevated",    note: "桃園–苗栗 高架(主體)" },
+          { from: 142,  to: 150,   type: "tunnel",      note: "八卦山隧道(約 7.4 km)" },
+          { from: 150,  to: 345,   type: "elevated",    note: "台中–左營 高架(主體)" },
         ],
       },
       {
@@ -146,7 +156,7 @@ window.RAIL_DATA = {
         // 南迴線:全線多段山岳隧道,下面只標最具代表性的中央隧道。
         // 其餘短隧道未列(後續可細化)。
         grades: [
-          { from: 14, to: 22, type: "underground", note: "中央隧道(約 8.07 km)" },
+          { from: 14, to: 22, type: "tunnel", note: "中央隧道(約 8.07 km)" },
         ],
       },
       {
@@ -191,7 +201,7 @@ window.RAIL_DATA = {
         // 內灣線:新竹–竹中 都會段 2011 年完工高架化。竹中以南為山區
         // 平面/橋梁路段,未細標。
         grades: [
-          { from: 0, to: 4.8, type: "elevated", note: "新竹–竹中 都會高架段" },
+          { from: 0, to: 5.8, type: "elevated", note: "新竹–竹中 都會高架段" },
         ],
       },
       {
@@ -287,7 +297,7 @@ window.RAIL_DATA = {
         // 全段地下。關渡站本身是地下車站,夾在兩段高架之間。
         grades: [
           { from: 1.0,  to: 5.0,  type: "elevated",    note: "紅樹林–竹圍 高架" },
-          { from: 5.0,  to: 6.8,  type: "underground", note: "關渡 地下" },
+          { from: 5.0,  to: 6.8,  type: "tunnel",      note: "關渡 隧道(穿越關渡丘陵)" },
           { from: 6.8,  to: 18.0, type: "elevated",    note: "忠義–圓山 高架" },
           { from: 19.5, to: 30.3, type: "underground", note: "民權西路–象山 地下" },
         ],
@@ -657,9 +667,9 @@ window.RAIL_DATA = {
         // 主要長隧道(新丹那、日本坂);其餘短隧道未列。
         grades: [
           { from: 0,   to: 96,    type: "elevated",    note: "東京–小田原 高架(主體)" },
-          { from: 96,  to: 104,   type: "underground", note: "新丹那トンネル(約 8 km)" },
+          { from: 96,  to: 104,   type: "tunnel",      note: "新丹那トンネル(約 8 km)" },
           { from: 104, to: 190,   type: "elevated",    note: "熱海–静岡 高架/路堤" },
-          { from: 190, to: 192.5, type: "underground", note: "日本坂トンネル(約 2.2 km)" },
+          { from: 190, to: 192.5, type: "tunnel",      note: "日本坂トンネル(約 2.2 km)" },
           { from: 192.5, to: 552.6, type: "elevated",  note: "静岡–新大阪 高架(主體)" },
         ],
       },
@@ -806,6 +816,13 @@ window.RAIL_DATA = {
         }
       }
 
+      // Snapshot hand-coded extremes BEFORE any station-km update, so we can
+      // apply the same linear remap to `line.grades` (whose km values were
+      // authored in hand-coded km space alongside the station list).
+      const handFirst = line.stations[0].km;
+      const handLast = line.stations[line.stations.length - 1].km;
+      const handSpan = handLast - handFirst;
+
       // Update station km from generator only when the projection is
       // monotonic (validated above). Otherwise leave st.km at the hand-coded
       // value, but rescale it to fit within the polyline's total length so
@@ -830,6 +847,23 @@ window.RAIL_DATA = {
           const scale = gen.totalKm / span;
           for (const st of line.stations) {
             st.km = (st.km - first) * scale;
+          }
+        }
+      }
+
+      // Apply the same linear remap (hand-coded km → post-merge station km)
+      // to grades so they stay aligned with stations on the polyline. Uses
+      // first/last stations as anchor points; intermediate stations may not
+      // be exactly proportional but typical drift is < 1 km.
+      if (line.grades && handSpan > 0) {
+        const newFirst = line.stations[0].km;
+        const newLast = line.stations[line.stations.length - 1].km;
+        const newSpan = newLast - newFirst;
+        if (newSpan > 0 && Math.abs(newSpan - handSpan) > 1e-6) {
+          const scale = newSpan / handSpan;
+          for (const g of line.grades) {
+            g.from = (g.from - handFirst) * scale + newFirst;
+            g.to = (g.to - handFirst) * scale + newFirst;
           }
         }
       }

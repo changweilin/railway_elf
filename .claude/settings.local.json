@@ -40,7 +40,8 @@
       "Bash(git stash *)",
       "Bash(npx vite *)",
       "Bash(kill %1)",
-      "Bash(pkill -f \"vite.*5179\")"
+      "Bash(pkill -f \"vite.*5179\")",
+      "Bash(OFFLINE=1 node scripts/fetch-rail-shapes.mjs)"
     ]
   }
 }
