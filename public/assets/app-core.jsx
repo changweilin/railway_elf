@@ -353,22 +353,74 @@ function App() {
       setFlyTo({ lat, lng, ts: Date.now() });
     }, err => alert('定位失敗：' + err.message), { enableHighAccuracy: true });
   };
+  const FAV_LIMIT = 10;
+  const [favLimitPrompt, setFavLimitPrompt] = useState(null); // {entry} when full
+  // Auto-name a favorite from the nearest station across all visible rail lines.
+  // Falls back to a coord label when nothing is within snap range.
+  const autoNameFavorite = (loc) => {
+    let bestStation = null, bestDist = Infinity;
+    const lines = (RAIL_DATA[region] && RAIL_DATA[region].lines) || [];
+    for (const line of lines) {
+      for (const st of (line.stations || [])) {
+        const d = RailUtil.haversine(loc, st);
+        if (d < bestDist) { bestDist = d; bestStation = st; }
+      }
+    }
+    if (bestStation && bestDist <= 1.5) return `${bestStation.name}站`;
+    if (bestStation && bestDist <= 5)   return `${bestStation.name}附近`;
+    return `${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}`;
+  };
   const addFavorite = () => {
     if (!location) return;
     if (favorites.some(f => f.lat === location.lat && f.lng === location.lng)) return;
-    const entry = { ...location, id: Date.now() };
-    if (favorites.length >= 10) {
-      const ok = window.confirm('收藏已達上限 10 個。是否要替換最舊的收藏？');
-      if (!ok) return;
-      setFavorites([...favorites.slice(1), entry]);
+    const autoName = autoNameFavorite(location);
+    const entry = { lat: location.lat, lng: location.lng, name: autoName, id: Date.now() + Math.floor(Math.random() * 1000) };
+    if (favorites.length >= FAV_LIMIT) {
+      setFavLimitPrompt({ entry });
       return;
     }
     setFavorites([...favorites, entry]);
   };
   const removeFavorite = (id) => setFavorites(favorites.filter(f => f.id !== id));
   const pickFavorite = (f) => {
+    if (!f || typeof f.lat !== 'number' || typeof f.lng !== 'number') return;
     setLocation({ lat: f.lat, lng: f.lng, name: f.name });
     setFlyTo({ lat: f.lat, lng: f.lng, ts: Date.now() });
+  };
+  const replaceFavoriteWith = (replaceId) => {
+    if (!favLimitPrompt) return;
+    const { entry } = favLimitPrompt;
+    setFavorites(favorites.map(f => f.id === replaceId ? entry : f));
+    setFavLimitPrompt(null);
+  };
+  const cancelFavLimitPrompt = () => setFavLimitPrompt(null);
+  const copyFavoriteCoords = (f, btn) => {
+    const text = `${f.lat.toFixed(6)}, ${f.lng.toFixed(6)}`;
+    const flash = (ok) => {
+      if (!btn) return;
+      btn.classList.remove('copied', 'failed');
+      void btn.offsetWidth;
+      btn.classList.add(ok ? 'copied' : 'failed');
+      setTimeout(() => btn.classList.remove('copied', 'failed'), 1200);
+    };
+    const fallback = () => {
+      try {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        const ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        flash(ok);
+      } catch { flash(false); }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => flash(true), fallback);
+    } else {
+      fallback();
+    }
   };
 
   const handleQuickPick = (kind) => {
@@ -395,7 +447,7 @@ function App() {
         open: panelOpen, collapsed: panelCollapsed,
         onClose: () => setPanelOpen(false),
         region, location, setLocation, pickFromMap,
-        useGeolocation, favorites, addFavorite, removeFavorite, pickFavorite,
+        useGeolocation, favorites, addFavorite, removeFavorite, pickFavorite, copyFavoriteCoords,
         targetTime, setTargetTime, quickPick, handleQuickPick, setQuickPick,
         now, nearest, offRail, timeFocusTick,
         enabledCategories, toggleCategory,
@@ -432,6 +484,13 @@ function App() {
       train: selectedTrain, nearest, targetTime,
       onClose: () => setSelectedTrain(null),
       onFlyToTrain: (t) => { flyToTrain(t); setSelectedTrain(null); },
+    }),
+    favLimitPrompt && React.createElement(FavLimitModal, {
+      pending: favLimitPrompt.entry,
+      favorites,
+      onReplace: replaceFavoriteWith,
+      onCancel: cancelFavLimitPrompt,
+      limit: FAV_LIMIT,
     }),
   );
 }
@@ -477,7 +536,7 @@ function Toolbar({ region, switchRegion, onMenu, panelOpen, panelCollapsed, togg
 function Panel(props) {
   const {
     open, collapsed, onClose, region, location, setLocation, useGeolocation,
-    favorites, addFavorite, removeFavorite, pickFavorite,
+    favorites, addFavorite, removeFavorite, pickFavorite, copyFavoriteCoords,
     targetTime, setTargetTime, quickPick, handleQuickPick, setQuickPick,
     now, nearest, offRail, timeFocusTick,
     enabledCategories, toggleCategory,
@@ -654,12 +713,31 @@ function Panel(props) {
       ),
       React.createElement("div", { className: "fav-list" },
         favorites.map(f =>
-          React.createElement("div", { key: f.id, className: "fav-item", onClick: () => { pickFavorite(f); onClose && onClose(); } },
+          React.createElement("div", {
+            key: f.id,
+            className: "fav-item",
+            onClick: (e) => {
+              e.preventDefault();
+              pickFavorite(f);
+              if (onClose) setTimeout(onClose, 0);
+            },
+          },
             React.createElement("div", { className: "fav-icon" },
               React.createElement(Icon, { id: "me-waypoint", size: 14 })),
             React.createElement("div", { className: "fav-name" }, f.name),
             React.createElement("button", {
+              className: "fav-copy",
+              title: "複製座標",
+              "aria-label": "複製座標",
+              onClick: (e) => {
+                e.stopPropagation();
+                copyFavoriteCoords(f, e.currentTarget);
+              },
+            }, React.createElement(Icon, { id: "me-copy", size: 12 })),
+            React.createElement("button", {
               className: "fav-remove",
+              title: "刪除收藏",
+              "aria-label": "刪除收藏",
               onClick: (e) => { e.stopPropagation(); removeFavorite(f.id); },
             }, React.createElement(Icon, { id: "me-close", size: 12 })),
           )
@@ -870,5 +948,48 @@ function TimeSlider({ targetTime, setTargetTime, setQuickPick }) {
   );
 }
 
+// ============================================================
+// FAVORITE LIMIT MODAL
+// ============================================================
+function FavLimitModal({ pending, favorites, onReplace, onCancel, limit }) {
+  return React.createElement("div", { className: "fav-modal-backdrop", onClick: onCancel },
+    React.createElement("div", {
+      className: "fav-modal",
+      onClick: (e) => e.stopPropagation(),
+    },
+      React.createElement("div", { className: "fav-modal-header" },
+        React.createElement("div", { className: "fav-modal-title" }, `收藏已達上限 ${limit} 個`),
+        React.createElement("button", {
+          className: "fav-modal-close", onClick: onCancel, "aria-label": "關閉",
+        }, React.createElement(Icon, { id: "me-close", size: 16 })),
+      ),
+      React.createElement("div", { className: "fav-modal-body" },
+        React.createElement("div", { className: "fav-modal-hint" },
+          "請選擇要替換的收藏，將以新位置取代："),
+        React.createElement("div", { className: "fav-modal-pending" },
+          React.createElement(Icon, { id: "me-waypoint", size: 14 }),
+          React.createElement("span", null, pending && pending.name || "新收藏"),
+        ),
+        React.createElement("div", { className: "fav-modal-list" },
+          favorites.map(f =>
+            React.createElement("button", {
+              key: f.id,
+              className: "fav-modal-item",
+              onClick: () => onReplace(f.id),
+            },
+              React.createElement("div", { className: "fav-modal-item-name" }, f.name),
+              React.createElement("div", { className: "fav-modal-item-sub" },
+                `${f.lat.toFixed(4)}, ${f.lng.toFixed(4)}`),
+            )
+          )
+        ),
+      ),
+      React.createElement("div", { className: "fav-modal-footer" },
+        React.createElement("button", { className: "btn-soft", onClick: onCancel }, "取消"),
+      ),
+    )
+  );
+}
+
 // Export to window so other scripts can use them
-Object.assign(window, { App, Toolbar, Panel, SearchBox, TimeSlider, Icon, formatClock, formatCountdown, sameDayISO });
+Object.assign(window, { App, Toolbar, Panel, SearchBox, TimeSlider, Icon, FavLimitModal, formatClock, formatCountdown, sameDayISO });

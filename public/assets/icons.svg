@@ -27,6 +27,10 @@
   <symbol id="me-export" viewBox="0 0 24 24">
     <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" fill="currentColor"></path>
   </symbol>
+
+  <symbol id="me-copy" viewBox="0 0 24 24">
+    <path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z" fill="currentColor"></path>
+  </symbol>
   <symbol id="me-menu" viewBox="0 0 24 24">
     <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" fill="currentColor"></path>
   </symbol>
