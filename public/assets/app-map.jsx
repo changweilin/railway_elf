@@ -165,24 +165,32 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, visib
       const poly = hasShape ? line.shape : line.stations;
       const coords = poly.map(s => [s.lat, s.lng]);
       const layers = [];
-      // Continuous glow underneath, regardless of grade segmentation, so the
-      // line still reads as a single coloured spine.
-      layers.push(L.polyline(coords, { color: line.color, weight: 7, opacity: 0.18 }).addTo(map));
 
       if (showGrades) {
+        // Per-segment styling. The glow is split per segment too — drawing it
+        // continuously under the line would fill the dashes of underground
+        // sections and wash out the contrast between grades.
         const segs = RailUtil.gradeSegments(line);
+        // First pass: under-layers (glow / trench / halo), so the main line
+        // sits on top regardless of declaration order.
         segs.forEach(seg => {
-          if (seg.type === 'elevated') {
-            // Pale outer halo to suggest the track is lifted off the ground.
-            layers.push(L.polyline(seg.points, {
-              color: '#ffffff', weight: 7, opacity: 0.45,
-            }).addTo(map));
+          if (seg.type === 'ground') {
+            layers.push(L.polyline(seg.points, { color: line.color, weight: 7, opacity: 0.18 }).addTo(map));
+          } else if (seg.type === 'underground') {
+            // Dark "trench" so the dashed line above reads as recessed track.
+            layers.push(L.polyline(seg.points, { color: '#0f1117', weight: 6, opacity: 0.85 }).addTo(map));
+          } else if (seg.type === 'elevated') {
+            // White halo so the elevated track reads as lifted off ground.
+            layers.push(L.polyline(seg.points, { color: '#ffffff', weight: 9, opacity: 0.55 }).addTo(map));
           }
+        });
+        // Second pass: main coloured strokes.
+        segs.forEach(seg => {
           const style = seg.type === 'underground'
-            ? { color: line.color, weight: 3, opacity: 0.85, dashArray: '6,5' }
+            ? { color: line.color, weight: 3, opacity: 1, dashArray: '10,7' }
             : seg.type === 'elevated'
-              ? { color: line.color, weight: 4, opacity: 1 }
-              : { color: line.color, weight: 3, opacity: 0.9 };
+              ? { color: line.color, weight: 5, opacity: 1 }
+              : { color: line.color, weight: 3, opacity: 0.95 };
           const main = L.polyline(seg.points, style).addTo(map);
           if (seg.note) {
             const label = { ground: '平面', underground: '地下化', elevated: '高架化' }[seg.type] || seg.type;
@@ -191,6 +199,8 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, visib
           layers.push(main);
         });
       } else {
+        // Default rendering: continuous glow + single coloured spine.
+        layers.push(L.polyline(coords, { color: line.color, weight: 7, opacity: 0.18 }).addTo(map));
         layers.push(L.polyline(coords, { color: line.color, weight: 3, opacity: 0.9 }).addTo(map));
       }
 

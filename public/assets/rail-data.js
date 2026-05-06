@@ -14,9 +14,10 @@
 //   - Omitted ranges are implicitly "ground"; do not list ground segments.
 //   - `note` is optional, used for tooltips / debugging only.
 // Type values:
-//   "underground" — 鐵路地下化 (city underground projects, deep tunnels in urban core)
-//   "elevated"    — 鐵路高架化 (elevated viaduct sections)
-//   "ground"      — 平面 (default, not listed)
+//   "underground" — below grade level. Covers BOTH urban 鐵路地下化 and mountain
+//                   tunnels (隧道) — both render the same way (sunken/hidden).
+//   "elevated"    — 鐵路高架化 / viaduct (visibly raised above ground).
+//   "ground"      — 平面 / at-grade (default, not listed).
 
 window.RAIL_DATA = {
   taiwan: {
@@ -81,6 +82,16 @@ window.RAIL_DATA = {
           { name: "台南", lat: 22.9248, lng: 120.2853, km: 325.0 },
           { name: "左營", lat: 22.6870, lng: 120.3082, km: 345.0 },
         ],
+        // 台灣高鐵:全線約 73% 高架、18% 隧道、9% 路堤/平面。標出主要區段:
+        // 南港–板橋 與台鐵共構地下化、林口隧道、八卦山隧道。其餘整段以
+        // 高架為主(本身就是 HSR 的標準工法)。
+        grades: [
+          { from: 0,     to: 17.8,  type: "underground", note: "南港–板橋 共構地下化" },
+          { from: 17.8,  to: 25,    type: "underground", note: "林口隧道(約 7.4 km)" },
+          { from: 25,    to: 145,   type: "elevated",    note: "桃園–苗栗 高架(主體)" },
+          { from: 145,   to: 152.5, type: "underground", note: "八卦山隧道(約 7.4 km)" },
+          { from: 152.5, to: 350.7, type: "elevated",    note: "台中–左營 高架(主體)" },
+        ],
       },
       {
         id: "TRA-East",
@@ -105,6 +116,11 @@ window.RAIL_DATA = {
           { name: "玉里", lat: 23.3352, lng: 121.3132, km: 290.0 },
           { name: "台東", lat: 22.7930, lng: 121.1243, km: 374.0 },
         ],
+        // East Line shares the Taipei underground 隧道 with TRA-West between
+        // 樹林 and 南港. km values aligned to TDX-canonical positions.
+        grades: [
+          { from: 0,    to: 21.6, type: "underground", note: "樹林–南港 鐵路地下化" },
+        ],
       },
       {
         id: "TRA-South-Link",
@@ -126,6 +142,11 @@ window.RAIL_DATA = {
           { name: "知本", lat: 22.7060, lng: 121.0640, km: 85.7 },
           { name: "康樂", lat: 22.7619, lng: 121.1078, km: 92.7 },
           { name: "台東", lat: 22.7930, lng: 121.1243, km: 98.2 },
+        ],
+        // 南迴線:全線多段山岳隧道,下面只標最具代表性的中央隧道。
+        // 其餘短隧道未列(後續可細化)。
+        grades: [
+          { from: 14, to: 22, type: "underground", note: "中央隧道(約 8.07 km)" },
         ],
       },
       {
@@ -166,6 +187,11 @@ window.RAIL_DATA = {
           { name: "合興", lat: 24.7207, lng: 121.1675, km: 23.3 },
           { name: "富貴", lat: 24.7126, lng: 121.1810, km: 24.8 },
           { name: "內灣", lat: 24.7077, lng: 121.1866, km: 27.1 },
+        ],
+        // 內灣線:新竹–竹中 都會段 2011 年完工高架化。竹中以南為山區
+        // 平面/橋梁路段,未細標。
+        grades: [
+          { from: 0, to: 4.8, type: "elevated", note: "新竹–竹中 都會高架段" },
         ],
       },
       {
@@ -257,6 +283,14 @@ window.RAIL_DATA = {
           { name: "台北101/世貿", lat: 25.0334, lng: 121.5650, km: 29.5 },
           { name: "象山", lat: 25.0327, lng: 121.5705, km: 30.3 },
         ],
+        // 淡水信義線:北段(紅樹林~圓山)沿用舊台鐵淡水線高架,圓山以南
+        // 全段地下。關渡站本身是地下車站,夾在兩段高架之間。
+        grades: [
+          { from: 1.0,  to: 5.0,  type: "elevated",    note: "紅樹林–竹圍 高架" },
+          { from: 5.0,  to: 6.8,  type: "underground", note: "關渡 地下" },
+          { from: 6.8,  to: 18.0, type: "elevated",    note: "忠義–圓山 高架" },
+          { from: 19.5, to: 30.3, type: "underground", note: "民權西路–象山 地下" },
+        ],
       },
       {
         id: "TPE-Blue",
@@ -290,6 +324,12 @@ window.RAIL_DATA = {
           { name: "南港", lat: 25.0524, lng: 121.6071, km: 24.9 },
           { name: "南港展覽館", lat: 25.0556, lng: 121.6175, km: 25.9 },
         ],
+        // 板南線:頂埔地下站 → 永寧/土城 高架 → 海山以東全段地下化。
+        grades: [
+          { from: 0,   to: 0.8,  type: "underground", note: "頂埔 地下" },
+          { from: 0.8, to: 3.2,  type: "elevated",    note: "永寧–土城 高架" },
+          { from: 3.2, to: 25.9, type: "underground", note: "海山–南港展覽館 地下" },
+        ],
       },
       {
         id: "TPE-Green",
@@ -318,6 +358,13 @@ window.RAIL_DATA = {
           { name: "台北小巨蛋", lat: 25.0520, lng: 121.5512, km: 16.5 },
           { name: "南京三民", lat: 25.0517, lng: 121.5681, km: 18.3 },
           { name: "松山", lat: 25.0497, lng: 121.5774, km: 19.4 },
+        ],
+        // 松山新店線:新店為地下站,南段(新店區公所–公館)沿用舊路堤
+        // 高架,古亭以北全段地下化。
+        grades: [
+          { from: 0,   to: 0.5,  type: "underground", note: "新店 地下" },
+          { from: 0.5, to: 7.5,  type: "elevated",    note: "新店區公所–公館 高架" },
+          { from: 7.5, to: 19.4, type: "underground", note: "古亭–松山 地下" },
         ],
       },
       {
@@ -353,6 +400,13 @@ window.RAIL_DATA = {
           { name: "南港軟體園區", lat: 25.0596, lng: 121.6155, km: 23.0 },
           { name: "南港展覽館", lat: 25.0556, lng: 121.6175, km: 24.0 },
         ],
+        // 文湖線(中運量):大部分高架,僅松山機場–大直 短段地下化
+        // (穿越松山機場跑道)。
+        grades: [
+          { from: 0,    to: 11.5, type: "elevated",    note: "動物園–中山國中 高架" },
+          { from: 11.5, to: 14.0, type: "underground", note: "松山機場–大直 地下" },
+          { from: 14.0, to: 24.0, type: "elevated",    note: "劍南路–南港展覽館 高架" },
+        ],
       },
       {
         id: "TPE-Yellow",
@@ -379,6 +433,10 @@ window.RAIL_DATA = {
           { name: "徐匯中學", lat: 25.0817, lng: 121.4830, km: 16.4 },
           { name: "三民高中", lat: 25.0902, lng: 121.4799, km: 17.4 },
           { name: "蘆洲", lat: 25.0891, lng: 121.4654, km: 19.0 },
+        ],
+        // 中和新蘆線:全線地下化。
+        grades: [
+          { from: 0, to: 19.0, type: "underground", note: "南勢角–蘆洲 全段地下" },
         ],
       },
       {
@@ -410,6 +468,14 @@ window.RAIL_DATA = {
           { name: "桃園體育園區", lat: 25.0064, lng: 121.2257, km: 50.9 },
           { name: "興南", lat: 24.9933, lng: 121.2392, km: 52.5 },
           { name: "環北", lat: 24.9669, lng: 121.2256, km: 54.4 },
+        ],
+        // 桃園機場捷運:北端與台北車站共構地下,中段轉高架穿越平原,
+        // 接近機場端再次入地下,出機場後恢復高架至環北。
+        grades: [
+          { from: 0,    to: 9.4,  type: "underground", note: "台北車站–新北產業園區 地下" },
+          { from: 9.4,  to: 36,   type: "elevated",    note: "新北產業園區–航廈前 高架" },
+          { from: 36,   to: 41,   type: "underground", note: "機場第一/第二航廈 地下" },
+          { from: 41,   to: 54.4, type: "elevated",    note: "大園–環北 高架" },
         ],
       },
       {
@@ -445,6 +511,12 @@ window.RAIL_DATA = {
           { name: "高雄國際機場", lat: 22.5576, lng: 120.3402, km: 31.1 },
           { name: "小港", lat: 22.5650, lng: 120.3576, km: 32.7 },
         ],
+        // 高雄捷運紅線:北段延伸(南岡山–都會公園)為全高架;主線
+        // 楠梓加工區–小港 全段地下化。
+        grades: [
+          { from: 0,   to: 8.7,  type: "elevated",    note: "南岡山–都會公園 高架(北段延伸)" },
+          { from: 8.7, to: 32.7, type: "underground", note: "楠梓加工區–小港 地下" },
+        ],
       },
       {
         id: "KHH-Orange",
@@ -468,6 +540,10 @@ window.RAIL_DATA = {
           { name: "大東", lat: 22.6266, lng: 120.3681, km: 13.3 },
           { name: "鳳山國中", lat: 22.6196, lng: 120.3801, km: 15.0 },
           { name: "大寮", lat: 22.6055, lng: 120.3954, km: 17.2 },
+        ],
+        // 高雄捷運橘線:全段地下化。
+        grades: [
+          { from: 0, to: 17.2, type: "underground", note: "西子灣–大寮 全段地下" },
         ],
       },
       {
@@ -577,6 +653,15 @@ window.RAIL_DATA = {
           { name: "京都", lat: 34.9858, lng: 135.7588, km: 513.6 },
           { name: "新大阪", lat: 34.7335, lng: 135.5002, km: 552.6 },
         ],
+        // 東海道新幹線:全線約 73% 高架,18% 隧道,9% 路堤。下面只標兩個
+        // 主要長隧道(新丹那、日本坂);其餘短隧道未列。
+        grades: [
+          { from: 0,   to: 96,    type: "elevated",    note: "東京–小田原 高架(主體)" },
+          { from: 96,  to: 104,   type: "underground", note: "新丹那トンネル(約 8 km)" },
+          { from: 104, to: 190,   type: "elevated",    note: "熱海–静岡 高架/路堤" },
+          { from: 190, to: 192.5, type: "underground", note: "日本坂トンネル(約 2.2 km)" },
+          { from: 192.5, to: 552.6, type: "elevated",  note: "静岡–新大阪 高架(主體)" },
+        ],
       },
       {
         id: "JR-Yamanote",
@@ -601,6 +686,11 @@ window.RAIL_DATA = {
           { name: "有楽町", lat: 35.6749, lng: 139.7631, km: 31.0 },
           { name: "東京", lat: 35.6812, lng: 139.7671, km: 34.5 },
         ],
+        // 山手線:東京都心環線,大半路段為高架/路堤(東京-新橋的紅磚
+        // 高架橋自 1910 年沿用至今)。為簡化,整環視為 elevated。
+        grades: [
+          { from: 0, to: 34.5, type: "elevated", note: "山手環線 大部分高架/路堤" },
+        ],
       },
       {
         id: "JR-Chuo",
@@ -621,6 +711,12 @@ window.RAIL_DATA = {
           { name: "立川", lat: 35.6983, lng: 139.4140, km: 37.5 },
           { name: "八王子", lat: 35.6558, lng: 139.3390, km: 47.4 },
           { name: "高尾", lat: 35.6429, lng: 139.2869, km: 52.4 },
+        ],
+        // 中央線快速:東京-立川 為著名「中央線連續高架化」工程
+        // (三鷹-立川段 2010 年完工),東京-三鷹 早已高架。立川以西
+        // 為平面/路堤,未細標。
+        grades: [
+          { from: 0, to: 37.5, type: "elevated", note: "東京–立川 連續高架化" },
         ],
       },
     ],
