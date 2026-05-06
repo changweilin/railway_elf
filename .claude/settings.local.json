@@ -37,7 +37,10 @@
       "Bash(cp public/assets/app-core.jsx /tmp/app-core.js)",
       "Bash(cp public/assets/app-map.jsx /tmp/app-map.js)",
       "Bash(OFFLINE=1 node scripts/fetch-rail-shapes.mjs --skip-jp)",
-      "Bash(git stash *)"
+      "Bash(git stash *)",
+      "Bash(npx vite *)",
+      "Bash(kill %1)",
+      "Bash(pkill -f \"vite.*5179\")"
     ]
   }
 }

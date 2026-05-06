@@ -68,12 +68,13 @@ function buildTrainMarkerHtml(train) {
   </div>`;
 }
 
-function MapArea({ region, location, nearest, liveTrains, targetTime, now, visibleLines, mapLayer, setMapLayer, onMapClick, onLocate, flyTo, onTrainClick, onHudClick }) {
+function MapArea({ region, location, nearest, liveTrains, targetTime, now, visibleLines, mapLayer, setMapLayer, showGrades, onMapClick, onLocate, flyTo, onTrainClick, onHudClick }) {
   const [hudMode, setHudMode] = useStateM('predict'); // 'predict' | 'now'
   const mapRef = useRefM(null);
   const leafletRef = useRefM(null);
   const userMarkerRef = useRefM(null);
   const railLinesRef = useRefM({});
+  const prevShowGradesRef = useRefM(showGrades);
   const nearestMarkerRef = useRefM(null);
   const connectorRef = useRefM(null);
   const trainMarkersRef = useRefM({});
@@ -146,14 +147,53 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, visib
       }
     });
 
+    // Flush all line layers when the grades toggle flips so segmenting can be
+    // rebuilt from scratch. The incremental add-only path below would otherwise
+    // skip lines whose layer arrays already exist.
+    if (prevShowGradesRef.current !== showGrades) {
+      Object.keys(railLinesRef.current).forEach(id => {
+        railLinesRef.current[id].forEach(l => map.removeLayer(l));
+        delete railLinesRef.current[id];
+      });
+      prevShowGradesRef.current = showGrades;
+    }
+
     // Add layers for newly-visible lines
     lines.forEach(line => {
       if (railLinesRef.current[line.id]) return;
       const hasShape = line.shape && line.shape.length >= 2;
       const poly = hasShape ? line.shape : line.stations;
       const coords = poly.map(s => [s.lat, s.lng]);
-      const glow = L.polyline(coords, { color: line.color, weight: 7, opacity: 0.18 }).addTo(map);
-      const main = L.polyline(coords, { color: line.color, weight: 3, opacity: 0.9 }).addTo(map);
+      const layers = [];
+      // Continuous glow underneath, regardless of grade segmentation, so the
+      // line still reads as a single coloured spine.
+      layers.push(L.polyline(coords, { color: line.color, weight: 7, opacity: 0.18 }).addTo(map));
+
+      if (showGrades) {
+        const segs = RailUtil.gradeSegments(line);
+        segs.forEach(seg => {
+          if (seg.type === 'elevated') {
+            // Pale outer halo to suggest the track is lifted off the ground.
+            layers.push(L.polyline(seg.points, {
+              color: '#ffffff', weight: 7, opacity: 0.45,
+            }).addTo(map));
+          }
+          const style = seg.type === 'underground'
+            ? { color: line.color, weight: 3, opacity: 0.85, dashArray: '6,5' }
+            : seg.type === 'elevated'
+              ? { color: line.color, weight: 4, opacity: 1 }
+              : { color: line.color, weight: 3, opacity: 0.9 };
+          const main = L.polyline(seg.points, style).addTo(map);
+          if (seg.note) {
+            const label = { ground: '平面', underground: '地下化', elevated: '高架化' }[seg.type] || seg.type;
+            main.bindTooltip(`${line.name} · ${label} · ${seg.note}`, { sticky: true, className: 'station-tip' });
+          }
+          layers.push(main);
+        });
+      } else {
+        layers.push(L.polyline(coords, { color: line.color, weight: 3, opacity: 0.9 }).addTo(map));
+      }
+
       // When a real-world shape is present, station hand-coded lat/lng may drift
       // off the track polyline; snap dots to positionAtKm so they sit on the line.
       const stationDots = line.stations.map(s => {
@@ -164,9 +204,9 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, visib
         }).bindTooltip(s.name, { direction: 'top', offset: [0,-4], className: 'station-tip' })
          .addTo(map);
       });
-      railLinesRef.current[line.id] = [glow, main, ...stationDots];
+      railLinesRef.current[line.id] = [...layers, ...stationDots];
     });
-  }, [region, visibleLines]);
+  }, [region, visibleLines, showGrades]);
 
   // Fit bounds only when the user explicitly switches region after the first
   // paint. The initial framing is handled by the location effect below so the

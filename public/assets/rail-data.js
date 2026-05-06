@@ -1,6 +1,22 @@
 // Mock train line data — Taiwan (TRA/HSR) + Japan (JR major lines)
 // Each line has an array of stations with {name, lat, lng, km} (km = cumulative km from line origin)
 // Trains are generated dynamically from templates.
+//
+// Optional per-line `grades` field — annotates 路線地形 (construction type) by
+// km range. Anything not covered defaults to "ground" (平面/地面).
+//   grades: [
+//     { from: <km>, to: <km>, type: "ground" | "underground" | "elevated", note?: <string> },
+//     ...
+//   ]
+// Conventions:
+//   - `from` and `to` are cumulative km along the line, matching `station.km`.
+//   - Segments must be inside [0, totalKm], sorted by `from`, non-overlapping.
+//   - Omitted ranges are implicitly "ground"; do not list ground segments.
+//   - `note` is optional, used for tooltips / debugging only.
+// Type values:
+//   "underground" — 鐵路地下化 (city underground projects, deep tunnels in urban core)
+//   "elevated"    — 鐵路高架化 (elevated viaduct sections)
+//   "ground"      — 平面 (default, not listed)
 
 window.RAIL_DATA = {
   taiwan: {
@@ -30,6 +46,18 @@ window.RAIL_DATA = {
           { name: "嘉義", lat: 23.4797, lng: 120.4497, km: 288.3 },
           { name: "台南", lat: 22.9972, lng: 120.2111, km: 340.6 },
           { name: "高雄", lat: 22.6393, lng: 120.3020, km: 404.5 },
+        ],
+        // Approximate annotations of major 鐵路立體化 projects on the West
+        // Coast Line. km values are aligned to TDX-canonical station kms after
+        // shape merge (see rail-data.generated.js). Ranges are demo-grade
+        // (±0.5 km) — refine against 交通部 alignments when adding detail.
+        grades: [
+          { from: 13.7,  to: 19.7,  type: "elevated",    note: "汐止–南港 高架化" },
+          { from: 19.7,  to: 36.1,  type: "underground", note: "南港–松山–板橋 鐵路地下化" },
+          { from: 36.1,  to: 41.5,  type: "underground", note: "板橋–樹林 地下化延伸" },
+          { from: 179.5, to: 198.0, type: "elevated",    note: "台中鐵路高架化 (豐原–大慶)" },
+          { from: 225.2, to: 227.2, type: "elevated",    note: "員林車站高架" },
+          { from: 394.3, to: 406.6, type: "underground", note: "高雄鐵路地下化 (左營–鳳山)" },
         ],
       },
       {
@@ -1021,8 +1049,55 @@ window.RailUtil = (function(){
     return normalizeName(a) === normalizeName(b);
   }
 
+  // Split the line's polyline into contiguous segments tagged by grade type
+  // (ground / underground / elevated). Gaps in `line.grades` are filled with
+  // "ground". Lines without `grades` collapse to a single ground segment
+  // covering the entire line (so the renderer can call this unconditionally).
+  // Returns: [{ type, fromKm, toKm, points: [[lat,lng], ...], note? }, ...]
+  function gradeSegments(line) {
+    const poly = polylineFor(line);
+    if (!poly || poly.length < 2) return [];
+    const totalKm = poly[poly.length - 1].km;
+    const raw = (line.grades || []).slice().sort((a, b) => a.from - b.from);
+    const ranges = [];
+    let cur = 0;
+    for (const r of raw) {
+      if (r.from > cur + 1e-6) ranges.push({ from: cur, to: r.from, type: 'ground' });
+      const from = Math.max(r.from, cur);
+      const to = Math.min(r.to, totalKm);
+      if (to > from + 1e-6) ranges.push({ from, to, type: r.type, note: r.note });
+      cur = Math.max(cur, to);
+    }
+    if (cur < totalKm - 1e-6) ranges.push({ from: cur, to: totalKm, type: 'ground' });
+    if (ranges.length === 0) ranges.push({ from: 0, to: totalKm, type: 'ground' });
+
+    const interp = (i, k) => {
+      const A = poly[i], B = poly[i+1];
+      const span = B.km - A.km;
+      const t = span > 0 ? (k - A.km) / span : 0;
+      return [A.lat + (B.lat - A.lat) * t, A.lng + (B.lng - A.lng) * t];
+    };
+    return ranges.map(r => {
+      const lo = r.from, hi = r.to;
+      let iLo = 0;
+      for (let i = 0; i < poly.length - 1; i++) {
+        if (poly[i].km <= lo && poly[i+1].km >= lo) { iLo = i; break; }
+      }
+      let iHi = poly.length - 2;
+      for (let i = poly.length - 2; i >= 0; i--) {
+        if (poly[i].km <= hi && poly[i+1].km >= hi) { iHi = i; break; }
+      }
+      const pts = [interp(iLo, lo)];
+      for (let i = iLo + 1; i <= iHi; i++) {
+        if (poly[i].km > lo && poly[i].km < hi) pts.push([poly[i].lat, poly[i].lng]);
+      }
+      pts.push(interp(iHi, hi));
+      return { type: r.type, fromKm: lo, toKm: hi, points: pts, note: r.note };
+    });
+  }
+
   return { haversine, projectOnSegment, closestOnLine, positionAtKm,
-           shapeBetween, curvatureRadii,
+           shapeBetween, curvatureRadii, gradeSegments,
            kinematicProfile, kmAtTimeInProfile, timeAtKmInProfile,
            normalizeName, namesEqual };
 })();

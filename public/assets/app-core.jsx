@@ -58,6 +58,10 @@ function App() {
     } catch {}
     return RAIL_CATEGORIES.map(c => c.key);
   });
+  const [showGrades, setShowGrades] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('relf.grades') || 'false') === true; }
+    catch { return false; }
+  });
   const [selectedTrain, setSelectedTrain] = useState(null);
   const [sheetCollapsed, setSheetCollapsed] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);        // mobile drawer
@@ -85,6 +89,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem('relf.cats', JSON.stringify(enabledCategories));
   }, [enabledCategories]);
+
+  // Persist 立體化差異 toggle
+  useEffect(() => {
+    localStorage.setItem('relf.grades', JSON.stringify(showGrades));
+  }, [showGrades]);
 
   const toggleCategory = (cat) => {
     setEnabledCategories(prev => prev.includes(cat)
@@ -380,11 +389,13 @@ function App() {
         targetTime, setTargetTime, quickPick, handleQuickPick, setQuickPick,
         now, nearest, offRail, timeFocusTick,
         enabledCategories, toggleCategory,
+        showGrades, setShowGrades,
       }),
       React.createElement(MapArea, {
         region, location, nearest, liveTrains, targetTime, now,
         visibleLines,
         mapLayer, setMapLayer,
+        showGrades,
         onMapClick: pickFromMap,
         onLocate: useGeolocation,
         flyTo,
@@ -460,6 +471,7 @@ function Panel(props) {
     targetTime, setTargetTime, quickPick, handleQuickPick, setQuickPick,
     now, nearest, offRail, timeFocusTick,
     enabledCategories, toggleCategory,
+    showGrades, setShowGrades,
   } = props;
   // Ref to the time-control section so we can scroll & flash it when the map HUD is clicked.
   const timeSectionRef = useRef(null);
@@ -558,6 +570,55 @@ function Panel(props) {
             }, enabledCategories.includes(c.key) ? '✓' : ''),
             c.label,
           )
+        ),
+      ),
+      // 立體化差異 (ground / underground / elevated)
+      React.createElement("div", { className: "pill-group", style: { marginTop: 8 } },
+        React.createElement("button", {
+          className: "pill " + (showGrades ? 'active' : ''),
+          onClick: () => setShowGrades(v => !v),
+          "aria-pressed": !!showGrades,
+          title: "顯示路線地下化 / 高架化區段差異",
+        },
+          React.createElement("span", {
+            className: "pill-check",
+            style: {
+              width: 12, height: 12, borderRadius: 3,
+              border: '1px solid currentColor',
+              display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 10, lineHeight: 1, marginRight: 2,
+            },
+          }, showGrades ? '✓' : ''),
+          "顯示立體化差異",
+        ),
+      ),
+      showGrades && React.createElement("div", {
+        style: {
+          marginTop: 8, fontSize: 11, color: 'var(--me-text-muted)',
+          display: 'flex', flexDirection: 'column', gap: 4,
+        },
+      },
+        React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 6 } },
+          React.createElement("span", { style: { display: 'inline-block', width: 24, height: 2, background: 'currentColor', opacity: 0.9 } }),
+          "平面",
+        ),
+        React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 6 } },
+          React.createElement("span", {
+            style: {
+              display: 'inline-block', width: 24, height: 2,
+              backgroundImage: 'repeating-linear-gradient(to right, currentColor 0 6px, transparent 6px 11px)',
+            },
+          }),
+          "地下化(虛線)",
+        ),
+        React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 6 } },
+          React.createElement("span", {
+            style: {
+              display: 'inline-block', width: 24, height: 4,
+              background: 'currentColor', boxShadow: '0 0 0 2px rgba(255,255,255,0.45)',
+            },
+          }),
+          "高架化(白邊加粗)",
         ),
       ),
     ),
