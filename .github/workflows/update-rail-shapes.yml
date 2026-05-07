@@ -58,6 +58,24 @@ jobs:
             git diff --stat -- public/assets/rail-data.generated.js
           fi
 
+      # Ratchet rules (see scripts/check-line-shapes.mjs):
+      #   - station kms must stay strictly monotonic
+      #   - totalKm must not drop more than 5 % vs snapshot
+      #   - maxStationOffsetKm must not grow more than 0.5 km vs snapshot
+      # If this step fails, the upstream relation likely regressed (lost a
+      # sub-route, mis-stitched, etc.) — leave the PR un-opened so a human
+      # investigates instead of silently writing the regression into snapshot.
+      - name: Validate against shape ratchet
+        if: steps.diff.outputs.changed == 'true'
+        run: node scripts/check-line-shapes.mjs
+
+      # Ratchet passed → metrics are at-or-better than snapshot. Re-seed
+      # snapshot so future runs ratchet against the new floor (and so any
+      # genuine improvements show up as snapshot diffs in the PR).
+      - name: Refresh shape snapshot
+        if: steps.diff.outputs.changed == 'true'
+        run: node scripts/check-line-shapes.mjs --update
+
       - name: Open PR with refreshed shapes
         if: steps.diff.outputs.changed == 'true'
         uses: peter-evans/create-pull-request@v6
@@ -71,7 +89,10 @@ jobs:
             Triggered by: `${{ github.event_name }}`
             Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
-            Review the diff for unexpected line/station shifts before merging.
+            Shape ratchet passed (`scripts/check-line-shapes.mjs`); snapshot
+            re-seeded. Review the generated.js + snapshot diff for unexpected
+            line/station shifts before merging.
           add-paths: |
             public/assets/rail-data.generated.js
+            scripts/line-shape-snapshot.json
           delete-branch: true

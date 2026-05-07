@@ -6,6 +6,7 @@
 
 ## 進度更新（2026-05-07）
 
+- 已完成:資料更新 workflow 自動 commit snapshot(延伸候選 E)。`.github/workflows/update-rail-shapes.yml` 在 `Detect diff` 之後加兩個 conditional step(只在 `generated.js` 真的變了時才跑):先 `node scripts/check-line-shapes.mjs` 走 ratchet,若 fail 就讓 workflow fail、不開 PR(資料退化時不要把退化值寫回 snapshot);通過後 `node scripts/check-line-shapes.mjs --update` reseed。`add-paths` 加 `scripts/line-shape-snapshot.json`,讓 `peter-evans/create-pull-request@v6` 把 snapshot 與 `rail-data.generated.js` 一起放進 PR。本機驗證:`check:shapes` 對 23 條線通過(snapshot 2026-05-07T04:37 基準);`--update` 在指標未變時只動 `updatedAt`,但步驟只在 generated.js 已有 diff 時跑,所以不會造成假 PR。
 - 已完成：地圖上方「現在 / 預測」HUD tab 接到全局 `quickPick` / `handleQuickPick`，移除 `MapArea` 內部 local `hudMode`，切換 tab 即同步 `targetTime`，`liveTrains` useMemo 與 marker effect 立即重算。涉及 `public/assets/app-core.jsx`、`public/assets/app-map.jsx`，`npm run build` 已通過。
 - 已完成:失敗狀態 e2e 測試(延伸候選 D)。新增 `tests/failure-states.spec.mjs`,4 個 case 在 desktop + mobile project 都跑(8 passed):geolocation 拒絕(`addInitScript` 替 `navigator.geolocation` stub,點 panel 內「使用我的位置」→ 確認 `.notice-error` 文字含「已拒絕定位權限」,並驗 dismiss 後消失);Nominatim 失敗(`page.route` abort `**/nominatim.openstreetmap.org/**`,在 search input 打字 → 確認 `.search-error` 出現,清空後消失);Tile burst(同步 abort `cartocdn.com` + `tile.openstreetmap.org`,跳過 `waitForAppReady` 改只等 toolbar,連續 4 次 mouse-drag 觸發 ≥3 tileerror → 確認 `.notice-warn` 含「地圖圖磚載入失敗」);Off-rail empty state(geolocation stub 回 Pacific 24,130 → 確認 `.train-empty-title === '目前位置不在任何鐵道附近'` 且 sidebar `.nearest-empty-title` 同步)。`使用我的位置` 在 panel(`.btn-soft`)與 map FAB(`.map-fab`)有兩個同名 button,scope 改用 `.panel button:has-text(...)`。完整 `npm run test:smoke` 從 13 passed / 1 skip → 21 passed / 1 skip。
 - 已完成：CI 串接(延伸候選 A)。新增 `.github/workflows/ci.yml`,`pull_request` + `push:main` 觸發,單一 `verify` job 跑 setup-node@v4 (node 22 + npm cache)、`npm ci`、Playwright browser cache、`npx playwright install --with-deps chromium`、然後依序 `npm run build` → `check:timing` → `check:shapes` → `test:smoke`。失敗時用 `actions/upload-artifact@v4` 上傳 `playwright-report/` + `test-results/`(retention 7 天)。`playwright.config.js` 的 `retries` 改為 `process.env.CI ? 1 : 0`,讓 GH runner 上的 tile CDN 偶發 timeout 自動 retry(本機跑 1 次失敗 → 加 `CI=1` 重跑全綠 13 passed / 1 skip,正是這個機制要擋下的 flake)。新加 `concurrency` group 讓同 PR 多次推送會自動取消前一次。
@@ -125,7 +126,7 @@
 
 ## 延伸候選 (post-step-5)
 
-每項都標註目標、步驟、風險、估時與優先順序。A、D 已完成;剩下 B(ES module 改寫,範圍最大)、C(PWA / meta)、E(資料 workflow auto-snapshot)。
+每項都標註目標、步驟、風險、估時與優先順序。A、D、E 已完成;剩下 B(ES module 改寫,範圍最大)、C(PWA / meta)。
 
 ### A. [已完成] CI 串接 — 把 4 個檢查跑在 PR 上
 
@@ -185,16 +186,16 @@
 
 不在範圍:filter-too-tight(typeFilters / dirFilter 設緊)— 預設台北位置雙向都有 train,要可靠造出 0-match 需要事先固定資料 or mock 時間,複雜度高、收益低。如果之後有時間可以單獨補一條,但 D 的 4 個 case 已經把 step 4 的核心 UX 鎖住了。
 
-### E. 資料更新 workflow 自動 commit snapshot — [優先級低] [估時 1 hr]
+### E. [已完成] 資料更新 workflow 自動 commit snapshot
 
-目標:月更 GitHub Actions 跑完 `fetch-rail-shapes` 後,自動執行 `check:shapes`;若 ratchet 通過就一併 `--update` snapshot 並 commit 進 PR,review 時直接看 diff。
+實作:
 
-步驟:
+- `.github/workflows/update-rail-shapes.yml` 在 `Detect diff` 之後、`Open PR` 之前加兩個 conditional step(`if: steps.diff.outputs.changed == 'true'`):
+  1. **Validate against shape ratchet** — `node scripts/check-line-shapes.mjs`。失敗時 workflow fail,PR 不會被開,等人介入(這是設計目的:資料退化時 ratchet 把退化值擋在 snapshot 之外)。
+  2. **Refresh shape snapshot** — `node scripts/check-line-shapes.mjs --update`。只在 ratchet 通過後才 reseed,新地板就是這次的指標。
+- `add-paths` 加上 `scripts/line-shape-snapshot.json`,讓 `peter-evans/create-pull-request@v6` 把 snapshot 與 `rail-data.generated.js` 一起放進 PR,review 時直接看 diff。
+- PR body 加註「ratchet 通過 + snapshot 已 reseed」說明,reviewer 不必猜這次是新資料還是舊。
 
-1. `.github/workflows/update-rail-shapes.yml` 加 step:
-   - run `npm run check:shapes`(走 ratchet);若 fail → workflow fail,等人介入。
-   - run `npm run check:shapes -- --update`,讓 snapshot 跟著實際指標走。
-   - `git add scripts/line-shape-snapshot.json` 與 `public/assets/rail-data.generated.js` 一起 commit。
-2. PR review 時 snapshot 的 diff 就會一起出現。
+驗證:本機 `npm run check:shapes` 對當前 23 條線通過(snapshot 鎖在 2026-05-07);`npm run check:shapes -- --update` 在指標未變時只會改寫 `updatedAt` 時戳——但因為 step 只在 `generated.js` 已經有 diff 時才跑,snapshot 觸碰不會造成假 PR。
 
-風險:資料 *改善* 時應該放寬 snapshot 而不是 fail — 目前 ratchet 規則「只在變短 / offset 變大時 fail」已符合此語意,因此通過後 `--update` 是安全的。當資料退化時 ratchet 會在 update 之前先 fail,不會把退化值寫回 snapshot。
+風險與決策:資料 *改善* 時(totalKm 變長、maxOffset 變小)不會 fail,通過後 `--update` 把改善值寫進 snapshot 變成新地板,符合 ratchet 語意。資料 *退化* 時 ratchet 在 update 之前先 fail,不會把退化值寫回 snapshot。`check:shapes` 只用 node 內建 + 讀檔,不需 `npm ci`(workflow 本身也沒裝 deps)。

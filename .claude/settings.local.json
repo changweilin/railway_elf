@@ -48,7 +48,8 @@
       "Bash(git mv *)",
       "Bash(grep -o \"createRoot.\\\\{0,100\\\\}App\" dist/assets/index-DqVrEHW7.js)",
       "Bash(ps -W)",
-      "Bash(taskkill //F //IM node.exe //FI \"WINDOWTITLE eq vite*\")"
+      "Bash(taskkill //F //IM node.exe //FI \"WINDOWTITLE eq vite*\")",
+      "Bash(git checkout *)"
     ]
   }
 }
