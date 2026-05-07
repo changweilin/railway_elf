@@ -70,8 +70,8 @@ function buildTrainMarkerHtml(train) {
   </div>`;
 }
 
-function MapArea({ region, location, nearest, liveTrains, targetTime, now, visibleLines, mapLayer, setMapLayer, showGrades, onMapClick, onLocate, flyTo, onTrainClick, onHudClick }) {
-  const [hudMode, setHudMode] = useStateM('predict'); // 'predict' | 'now'
+function MapArea({ region, location, nearest, liveTrains, targetTime, now, quickPick, handleQuickPick, visibleLines, mapLayer, setMapLayer, showGrades, onMapClick, onLocate, flyTo, onTrainClick, onHudClick }) {
+  const hudMode = quickPick === 'now' ? 'now' : 'predict';
   const mapRef = useRefM(null);
   const leafletRef = useRefM(null);
   const userMarkerRef = useRefM(null);
@@ -342,13 +342,24 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, visib
             type: "button", role: "tab",
             className: "map-hud-tab " + (hudMode === 'now' ? 'active' : ''),
             "aria-selected": hudMode === 'now',
-            onClick: (e) => { e.stopPropagation(); setHudMode('now'); },
+            onClick: (e) => {
+              e.stopPropagation();
+              if (handleQuickPick) handleQuickPick('now');
+            },
           }, "現在"),
           React.createElement("button", {
             type: "button", role: "tab",
             className: "map-hud-tab " + (hudMode === 'predict' ? 'active' : ''),
             "aria-selected": hudMode === 'predict',
-            onClick: (e) => { e.stopPropagation(); setHudMode('predict'); },
+            onClick: (e) => {
+              e.stopPropagation();
+              // Switching from "now" → forecast: default to +30 min so the
+              // map immediately shows a different state. Already-forecast
+              // modes (30/60/custom) stay put. Open the panel either way so
+              // the user can fine-tune.
+              if (handleQuickPick && quickPick === 'now') handleQuickPick('30');
+              if (onHudClick) onHudClick();
+            },
           }, "預測"),
         ),
         React.createElement("button", {

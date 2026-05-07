@@ -1,16 +1,16 @@
 # Railway Elf 待辦清單
 
-更新日期：2026-05-06
+更新日期：2026-05-07
 
-這份文件只保留接下來還能實作的工作；已完成的檢查摘要、一次性建檔說明與過期資料問題不再放在 active todo 裡。
+這份文件只保留接下來還能實作或需要驗證的工作。
 
-## 已清理的舊項目
+## 進度更新（2026-05-07）
 
-- `doc/follow-up-plan.md` 建檔與可讀性檢查已完成，後續不再列為待辦。
-- `npm run build` 與 `npm run check:timing` 的舊執行結果只代表當時狀態，改為每次修改後的驗證步驟。
-- TRA-West 舊的 14 km gap 待查項目已被較新的 TDX/OSM 文件取代；目前 `scripts/TDX-SETUP.md` 記錄的是 WL detour 清理後的狀態。
-- TDX schema 變更、GitHub Actions 更新流程與 cache/fallback 策略已收斂到 `scripts/TDX-SETUP.md`，這裡不重複維護。
-- 「只新增 Markdown、不更動程式」等本次工作假設已過期，從待辦移除。
+- 已完成：地圖上方「現在 / 預測」HUD tab 接到全局 `quickPick` / `handleQuickPick`，移除 `MapArea` 內部 local `hudMode`，切換 tab 即同步 `targetTime`，`liveTrains` useMemo 與 marker effect 立即重算。涉及 `public/assets/app-core.jsx`、`public/assets/app-map.jsx`，`npm run build` 已通過。
+- 未開始：browser smoke test、Babel standalone 移除、Vite module build 搬遷、失敗狀態 UX、資料品質 guardrails。
+- 待驗證：工作區目前有未提交的 About Me 面板、樣式與 HUD time-sync 修改，涉及 `public/assets/app-core.jsx`、`public/assets/app-map.jsx` 與 `public/assets/styles.css`；需在瀏覽器實際切換 HUD tab、確認 marker 即時更新與既有互動沒有 regression 後再視為完成。
+
+---
 
 ## 現況重點
 
@@ -23,7 +23,7 @@
 
 ## 接下來可以做
 
-### 1. 補瀏覽器 smoke test
+### 1. [未開始] 補瀏覽器 smoke test
 
 目標：讓 production build 之外，也能驗證真實瀏覽器載入狀態。
 
@@ -39,7 +39,7 @@
 - 新增的 smoke test 指令通過。
 - 測試失敗時能指出 console/runtime 錯誤，而不是只顯示 build 成功。
 
-### 2. 先移除 Babel standalone runtime
+### 2. [未開始] 先移除 Babel standalone runtime
 
 目標：先降低 CDN/runtime 依賴，不急著一次搬完整個 React build。
 
@@ -54,7 +54,7 @@
 - `npm run check:timing` 通過。
 - 瀏覽器 smoke test 通過，且 console 沒有 Babel 或 script loading 相關錯誤。
 
-### 3. 讓前端程式進入真正的 build 驗證
+### 3. [未開始] 讓前端程式進入真正的 build 驗證
 
 目標：把「HTML build 成功但 runtime 壞掉」的落差補起來。
 
@@ -69,7 +69,7 @@
 - `npm run build` 會實際處理核心前端程式。
 - browser smoke test 與 timing check 都通過。
 
-### 4. 改善失敗狀態 UX
+### 4. [未開始] 改善失敗狀態 UX
 
 目標：第三方服務或瀏覽器 API 失敗時，使用者能理解並重試。
 
@@ -83,7 +83,7 @@
 - 常見失敗不再只靠 alert 或 console。
 - mobile 與 desktop 都能看到錯誤狀態，不遮住主要地圖互動。
 
-### 5. 收斂資料品質 guardrails
+### 5. [未開始] 收斂資料品質 guardrails
 
 目標：資料更新時能提早發現異常線形或站距變動。
 
@@ -103,20 +103,3 @@
 2. 再移除 Babel standalone，這是最小的 runtime 依賴瘦身。
 3. 接著把 React/Leaflet 搬進 Vite build，讓 build 開始真正檢查前端程式。
 4. 最後補 UX 失敗狀態與資料品質 guardrails。
-
-## TRA-Coast 海線 — 新增後待執行
-
-新增 `TRA-Coast` 海岸線後，需設定 TDX_CLIENT_ID / TDX_CLIENT_SECRET 並執行取形腳本，讓海線取得高解析度 TDX 真實線形；未執行前海線只渲染站點連線（直線段）。
-
-```sh
-TDX_CLIENT_ID=<your-id> TDX_CLIENT_SECRET=<your-secret> node scripts/fetch-rail-shapes.mjs --skip-jp
-```
-
-建立帳號請至 https://tdx.transportdata.tw/ （免費方案即可）。
-
-執行後預期 log：
-```
-[OUT] TRA-Coast: NNN → NN pts, total ~90 km, max station offset <500 m
-```
-
-偏移超過 500 m 表示 TDX "CL" 線形與手寫站點座標不符，需檢查站點 lat/lng。

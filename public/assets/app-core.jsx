@@ -455,6 +455,7 @@ function App() {
       }),
       React.createElement(MapArea, {
         region, location, nearest, liveTrains, targetTime, now,
+        quickPick, handleQuickPick,
         visibleLines,
         mapLayer, setMapLayer,
         showGrades,
@@ -852,7 +853,74 @@ function Panel(props) {
           )
         : React.createElement("div", { className: "nearest-empty" }, "請先選擇位置"),
     ),
+
+    // ABOUT ME
+    React.createElement("div", { className: "panel-section about-me" },
+      React.createElement("div", { className: "ps-header" },
+        React.createElement("div", { className: "ps-title" },
+          React.createElement(Icon, { id: "me-info", size: 16 }),
+          "About Me",
+        ),
+      ),
+      React.createElement("div", { className: "about-name" }, "Chang Wei Lin"),
+      React.createElement("blockquote", { className: "about-quote" },
+        React.createElement("div", { className: "about-quote-zh" }, "我愛星空至深，無懼黑夜。"),
+        React.createElement("div", { className: "about-quote-en" },
+          "We have loved the stars too fondly to fear the dark."),
+        React.createElement("cite", { className: "about-quote-cite" },
+          "— ",
+          React.createElement("span", { className: "about-quote-work" }, "The Old Astronomer"),
+          ", Sarah Williams"),
+      ),
+      React.createElement("div", { className: "about-links" },
+        [
+          { href: "https://github.com/changweilin", label: "GitHub", host: "github.com" },
+          { href: "https://www.linkedin.com/in/wei-lin-chang-ba38049a/", label: "LinkedIn", host: "linkedin.com" },
+          { href: "https://changweilin.github.io/demo_link/", label: "Portfolio", host: "changweilin.github.io" },
+        ].map(l =>
+          React.createElement("a", {
+            key: l.href,
+            className: "about-link",
+            href: l.href,
+            target: "_blank",
+            rel: "noopener noreferrer",
+            title: l.href,
+          },
+            React.createElement(AboutFavicon, { host: l.host, label: l.label }),
+            React.createElement("span", null, l.label),
+          )
+        ),
+      ),
+    ),
   );
+}
+
+// ============================================================
+// ABOUT FAVICON — try Google s2, fall back to DuckDuckGo, then letter
+// ============================================================
+function AboutFavicon({ host, label }) {
+  const sources = [
+    `https://www.google.com/s2/favicons?domain=${host}&sz=64`,
+    `https://icons.duckduckgo.com/ip3/${host}.ico`,
+  ];
+  const [idx, setIdx] = useState(0);
+  const [failed, setFailed] = useState(false);
+  if (failed) {
+    return React.createElement("span", {
+      className: "about-favicon about-favicon-fallback",
+      "aria-hidden": "true",
+    }, (label || host).charAt(0).toUpperCase());
+  }
+  return React.createElement("img", {
+    className: "about-favicon",
+    src: sources[idx],
+    alt: "",
+    width: 16, height: 16, loading: "lazy",
+    onError: () => {
+      if (idx < sources.length - 1) setIdx(idx + 1);
+      else setFailed(true);
+    },
+  });
 }
 
 // ============================================================

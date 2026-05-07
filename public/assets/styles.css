@@ -1362,3 +1362,80 @@ body.sheet-resizing .leaflet-container { pointer-events: none; }
 @media (max-width: 900px) {
   .map-fab-stack { top: 84px; left: 10px; bottom: auto; right: auto; }
 }
+
+/* ============== ABOUT ME ============== */
+.about-me .about-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--me-text-primary);
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+}
+.about-me .about-quote {
+  margin: 0 0 12px 0;
+  padding: 10px 12px;
+  background: var(--me-bg-tertiary);
+  border-left: 3px solid var(--me-accent-primary);
+  border-radius: var(--me-radius-sm);
+  font-style: italic;
+  color: var(--me-text-primary);
+}
+.about-me .about-quote-zh {
+  font-size: 13px;
+  line-height: 1.55;
+  margin-bottom: 4px;
+}
+.about-me .about-quote-en {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--me-text-secondary);
+  margin-bottom: 6px;
+}
+.about-me .about-quote-cite {
+  display: block;
+  font-style: normal;
+  font-size: 11px;
+  color: var(--me-text-muted);
+}
+.about-me .about-quote-work { font-style: italic; }
+.about-me .about-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.about-me .about-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--me-bg-tertiary);
+  border: 1px solid var(--me-border);
+  border-radius: var(--me-radius-sm);
+  color: var(--me-text-primary);
+  text-decoration: none;
+  font-size: 12px;
+  transition: var(--me-transition-fast);
+}
+.about-me .about-link:hover {
+  border-color: var(--me-accent-secondary);
+  color: var(--me-accent-secondary);
+  transform: translateY(-1px);
+}
+.about-me .about-favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.06);
+  flex-shrink: 0;
+}
+.about-me .about-favicon-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--me-text-primary);
+  background: var(--me-accent-primary);
+  letter-spacing: 0;
+}
