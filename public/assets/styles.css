@@ -124,6 +124,31 @@ body {
   text-transform: uppercase; letter-spacing: 0.04em;
 }
 .ps-title svg { color: var(--me-accent-primary); }
+.ps-count {
+  font-size: 11px; font-weight: 500;
+  color: var(--me-text-muted);
+  letter-spacing: 0;
+  text-transform: none;
+  margin-left: 2px;
+}
+.ps-header-toggle {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  margin: 0 0 12px;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+.ps-header-toggle:hover .ps-title { color: var(--me-accent-primary); }
+.ps-header-toggle:focus-visible {
+  outline: 2px solid var(--me-accent-primary);
+  outline-offset: 2px;
+  border-radius: var(--me-radius-sm);
+}
+.ps-header-toggle > svg { color: var(--me-text-muted); transition: transform 0.15s ease; }
 
 /* ============== SEARCH ============== */
 .search-wrap { position: relative; }

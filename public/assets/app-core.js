@@ -62,6 +62,10 @@ function App() {
     try { return JSON.parse(localStorage.getItem('relf.grades') || 'false') === true; }
     catch { return false; }
   });
+  const [favCollapsed, setFavCollapsed] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('relf.favsCollapsed') || 'false') === true; }
+    catch { return false; }
+  });
   const [selectedTrain, setSelectedTrain] = useState(null);
   const [sheetCollapsed, setSheetCollapsed] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);        // mobile drawer
@@ -125,6 +129,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem('relf.grades', JSON.stringify(showGrades));
   }, [showGrades]);
+
+  // Persist favorites collapse state
+  useEffect(() => {
+    localStorage.setItem('relf.favsCollapsed', JSON.stringify(favCollapsed));
+  }, [favCollapsed]);
 
   const toggleCategory = (cat) => {
     setEnabledCategories(prev => prev.includes(cat)
@@ -560,6 +569,7 @@ function App() {
         region, location, setLocation, pickFromMap,
         useGeolocation, favorites, addFavorite, removeFavorite, pickFavorite, copyFavoriteCoords,
         renameFavorite, favEditingId, setFavEditingId,
+        favCollapsed, setFavCollapsed,
         targetTime, setTargetTime, setCustomTarget, quickPick, handleQuickPick, setQuickPick,
         now, nearest, offRail, timeFocusTick,
         enabledCategories, toggleCategory,
@@ -681,6 +691,7 @@ function Panel(props) {
     open, collapsed, onClose, region, location, setLocation, useGeolocation,
     favorites, addFavorite, removeFavorite, pickFavorite, copyFavoriteCoords,
     renameFavorite, favEditingId, setFavEditingId,
+    favCollapsed, setFavCollapsed,
     targetTime, setTargetTime, setCustomTarget, quickPick, handleQuickPick, setQuickPick,
     now, nearest, offRail, timeFocusTick,
     enabledCategories, toggleCategory,
@@ -753,6 +764,45 @@ function Panel(props) {
         React.createElement("div", {
           style: { fontFamily: 'var(--me-font-mono)', fontSize: 11, color: 'var(--me-text-muted)' },
         }, `${location.lat.toFixed(4)}, ${location.lng.toFixed(4)}`),
+      ),
+    ),
+
+    // FAVORITES (above rail-type so it stays close to the "加入收藏" button)
+    favorites.length > 0 && React.createElement("div", { className: "panel-section" },
+      React.createElement("button", {
+        type: "button",
+        className: "ps-header ps-header-toggle",
+        onClick: () => setFavCollapsed && setFavCollapsed(v => !v),
+        "aria-expanded": !favCollapsed,
+        "aria-controls": "fav-list-region",
+      },
+        React.createElement("div", { className: "ps-title" },
+          React.createElement(Icon, { id: "me-alternatives", size: 16 }),
+          "我的收藏",
+          React.createElement("span", { className: "ps-count" }, `(${favorites.length})`),
+        ),
+        React.createElement(Icon, {
+          id: favCollapsed ? "me-chevron-down" : "me-chevron-up",
+          size: 16,
+        }),
+      ),
+      !favCollapsed && React.createElement("div", { id: "fav-list-region", className: "fav-list" },
+        favorites.map(f =>
+          React.createElement(FavItem, {
+            key: f.id,
+            fav: f,
+            editing: favEditingId === f.id,
+            onPick: () => { pickFavorite(f); if (onClose) setTimeout(onClose, 0); },
+            onCopy: (btn) => copyFavoriteCoords(f, btn),
+            onRemove: () => removeFavorite(f.id),
+            onStartEdit: () => setFavEditingId && setFavEditingId(f.id),
+            onCancelEdit: () => setFavEditingId && setFavEditingId(null),
+            onCommitEdit: (name) => {
+              renameFavorite && renameFavorite(f.id, name);
+              setFavEditingId && setFavEditingId(null);
+            },
+          })
+        )
       ),
     ),
 
@@ -839,34 +889,6 @@ function Panel(props) {
           }),
           "高架化(白色光暈)",
         ),
-      ),
-    ),
-
-    // FAVORITES
-    favorites.length > 0 && React.createElement("div", { className: "panel-section" },
-      React.createElement("div", { className: "ps-header" },
-        React.createElement("div", { className: "ps-title" },
-          React.createElement(Icon, { id: "me-alternatives", size: 16 }),
-          "我的收藏",
-        ),
-      ),
-      React.createElement("div", { className: "fav-list" },
-        favorites.map(f =>
-          React.createElement(FavItem, {
-            key: f.id,
-            fav: f,
-            editing: favEditingId === f.id,
-            onPick: () => { pickFavorite(f); if (onClose) setTimeout(onClose, 0); },
-            onCopy: (btn) => copyFavoriteCoords(f, btn),
-            onRemove: () => removeFavorite(f.id),
-            onStartEdit: () => setFavEditingId && setFavEditingId(f.id),
-            onCancelEdit: () => setFavEditingId && setFavEditingId(null),
-            onCommitEdit: (name) => {
-              renameFavorite && renameFavorite(f.id, name);
-              setFavEditingId && setFavEditingId(null);
-            },
-          })
-        )
       ),
     ),
 
