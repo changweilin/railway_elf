@@ -4,7 +4,7 @@ A static web app that predicts when the next train will pass a given point on
 Taiwan and Japan rail lines. Pick a line, drop a pin, and the map shows live
 animated trains plus a sheet listing each upcoming pass.
 
-- Frontend: React 18 (UMD) + Babel-standalone, no JSX build step.
+- Frontend: React 18 (UMD) loaded directly via classic scripts — no JSX, no build step for app code.
 - Map: Leaflet 1.9 with hand-tuned markers and gestures.
 - Data: hand-curated lines/stations/templates in `public/assets/rail-data.js`,
   merged with real polyline geometry generated into
@@ -51,10 +51,10 @@ the pipeline monthly and opens a PR if the shapes change.
 ## Repository layout
 
 ```
-index.html                       Entry HTML; loads Leaflet, React UMD, and the JSX modules.
+index.html                       Entry HTML; loads Leaflet, React UMD, and the app scripts.
 public/assets/
-  app-core.jsx                   App shell, state, panels, sheets.
-  app-map.jsx                    Leaflet integration, markers, gestures.
+  app-core.js                    App shell, state, panels, sheets.
+  app-map.js                     Leaflet integration, markers, gestures.
   rail-data.js                   Hand-curated lines / stations / train templates (RailUtil lives here too).
   rail-data.generated.js         Generated polylines + station-km tables (do not edit by hand).
   styles.css, tokens.css, icons.svg, logo-mark.svg
@@ -68,9 +68,10 @@ doc/                             Project notes.
 
 ## Tech notes
 
-- No bundler magic in the runtime path: `<script type="text/babel">` compiles
-  JSX in the browser. Keep components UMD-friendly — no ES module imports in
-  `app-core.jsx` / `app-map.jsx`.
+- No bundler magic in the runtime path: `app-core.js` / `app-map.js` are
+  loaded as classic scripts that share globals (`React`, `ReactDOM`, `L`,
+  `RAIL_DATA`, `RailUtil`). Keep them UMD-friendly — no ES module imports
+  and no JSX syntax (`React.createElement` only).
 - Geometry helpers (haversine, projection, position-at-km) live in `RailUtil`
   inside `public/assets/rail-data.js` and are mirrored on the build side in
   `scripts/fetch-rail-shapes.mjs`.

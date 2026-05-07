@@ -33,7 +33,7 @@ Group `trainTemplates` filtered to the line by `type`; report `interval` per typ
 
 ### Headway / interval distribution at a chip-snap point
 
-For a fixed user lat/lng, compute `nearest` exactly as `app-core.jsx` does, then the inter-arrival distribution at that snap point is approximately the line's combined template intervals (after merging up + down). The exact distribution comes from the synthesised `passTime` series — sort and diff.
+For a fixed user lat/lng, compute `nearest` exactly as `app-core.js` does, then the inter-arrival distribution at that snap point is approximately the line's combined template intervals (after merging up + down). The exact distribution comes from the synthesised `passTime` series — sort and diff.
 
 ## Workflow
 

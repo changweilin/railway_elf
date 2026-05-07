@@ -54,9 +54,9 @@ To estimate "coverage" of a region:
 
 For a fixed user `{ lat, lng }`:
 
-1. Snap to nearest line (replicate `app-core.jsx` candidate logic or call `RailUtil.closestOnLine` directly).
+1. Snap to nearest line (replicate `app-core.js` candidate logic or call `RailUtil.closestOnLine` directly).
 2. From `TrainGen.generate(region, date)`, filter trains whose line matches and whose stops bracket the snap km.
-3. Compute `passTime` per train (linear interp between bracketing stops, same formula as `app-core.jsx`'s trains memo).
+3. Compute `passTime` per train (linear interp between bracketing stops, same formula as `app-core.js`'s trains memo).
 4. Sort, diff to get inter-arrival; report mean, median, p90 in minutes, separately by direction.
 
 ## Reporting template

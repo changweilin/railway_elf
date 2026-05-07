@@ -44,7 +44,8 @@
       "Bash(OFFLINE=1 node scripts/fetch-rail-shapes.mjs)",
       "WebFetch(domain:localhost)",
       "PowerShell(Get-Content *)",
-      "Bash(npx playwright *)"
+      "Bash(npx playwright *)",
+      "Bash(git mv *)"
     ]
   }
 }

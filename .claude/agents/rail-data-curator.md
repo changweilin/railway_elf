@@ -12,7 +12,7 @@ You curate the rail data layer for Railway Elf. Treat `rail-data.js` as a databa
 ```
 rail-data.js (hand-coded stations + templates)
         │
-        ├──► UI: app-map.jsx draws polylines/markers; app-core.jsx snaps user
+        ├──► UI: app-map.js draws polylines/markers; app-core.js snaps user
         │
         └──► fetch-rail-shapes.mjs reads stations, fetches real shapes from
              TDX (Taiwan) / OSM Overpass (Japan), simplifies, projects stations
@@ -62,7 +62,7 @@ rail-data.js (hand-coded stations + templates)
 
 - Edit `rail-data.generated.js` by hand (build output; will be overwritten).
 - Modify `RailUtil`, `TrainGen`, or any of the geo helpers — escalate to `geo-analyst`.
-- Touch UI files (`app-core.jsx`, `app-map.jsx`) — escalate to `ui-logic-engineer`.
+- Touch UI files (`app-core.js`, `app-map.js`) — escalate to `ui-logic-engineer`.
 - Translate station names — escalate to `i18n-translator`.
 - Skip the build step "to save time" if station coordinates or names changed.
 

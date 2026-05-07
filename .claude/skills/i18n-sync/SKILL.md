@@ -9,7 +9,7 @@ description: Use when adding or editing user-facing strings, station names, trai
 
 | Layer | File | What |
 |---|---|---|
-| UI chrome (zh-TW) | `public/assets/app-core.jsx`, `public/assets/app-map.jsx` | Buttons, labels, tooltips, time formatters |
+| UI chrome (zh-TW) | `public/assets/app-core.js`, `public/assets/app-map.js` | Buttons, labels, tooltips, time formatters |
 | Region/line/station names | `public/assets/rail-data.js` | `name` (native), `nameEn`, `directions.up/down` |
 | Train type labels | `public/assets/rail-data.js` `trainTemplates[].type` / `.badge` | "自強", "のぞみ", etc. |
 | HTML | `index.html` | `<title>`, `<noscript>` |
@@ -42,4 +42,4 @@ description: Use when adding or editing user-facing strings, station names, trai
 
 ## When to escalate to a full i18n refactor
 
-If the user asks to support a new UI language (English UI, Japanese UI), this skill is no longer enough — flag that the current code inlines zh-TW strings throughout `app-core.jsx` and `app-map.jsx` and that a real i18n approach (e.g. a `t(key, locale)` lookup keyed off `region` or browser locale) is needed before bulk-translating.
+If the user asks to support a new UI language (English UI, Japanese UI), this skill is no longer enough — flag that the current code inlines zh-TW strings throughout `app-core.js` and `app-map.js` and that a real i18n approach (e.g. a `t(key, locale)` lookup keyed off `region` or browser locale) is needed before bulk-translating.

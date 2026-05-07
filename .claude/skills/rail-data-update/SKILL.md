@@ -8,7 +8,7 @@ description: Use when adding, removing, or editing rail lines, stations, or trai
 ## Mental model
 
 ```
-rail-data.js  ───┐                        ┌─→  app-map.jsx draws polylines/markers
+rail-data.js  ───┐                        ┌─→  app-map.js draws polylines/markers
                  │ (hand-coded stations,  │
                  │  train templates)      ├─→  TrainGen synthesises timetables
                  │                        │

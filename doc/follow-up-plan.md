@@ -8,7 +8,8 @@
 
 - 已完成：地圖上方「現在 / 預測」HUD tab 接到全局 `quickPick` / `handleQuickPick`，移除 `MapArea` 內部 local `hudMode`，切換 tab 即同步 `targetTime`，`liveTrains` useMemo 與 marker effect 立即重算。涉及 `public/assets/app-core.jsx`、`public/assets/app-map.jsx`，`npm run build` 已通過。
 - 已完成：補上 Playwright smoke test（`tests/smoke.spec.mjs` + `playwright.config.js`，`npm run test:smoke`），desktop 1280×800 與 iPhone 13 mobile emulation（皆走 chromium）共 11 passed / 1 skip。涵蓋 boot、TW/JP 切換、地圖點選、列車詳情開關、HUD tab 立即驅動 `targetTime`、mobile viewport 關鍵控制非遮擋；同時攔 pageerror / console.error / 同源 4xx，第三方 favicon / tile / unpkg 4xx 不視為失敗。新增 devDep `@playwright/test`、需要 `npx playwright install chromium`。
-- 未開始：Babel standalone 移除、Vite module build 搬遷、失敗狀態 UX、資料品質 guardrails。
+- 已完成：移除 Babel-standalone runtime。`index.html` 不再從 unpkg 載 `@babel/standalone`，三段 `type="text/babel"` 改成一般 `<script>`；`public/assets/app-core.jsx` / `app-map.jsx` 用 `git mv` 改名 `.js`(內容本來就無 JSX，只是 `React.createElement`)；同步更新 README、`.claude/skills/ui-events-review/SKILL.md`、`.claude/agents/ui-logic-engineer.md`、其它 .claude 文件中的路徑引用。`npm run build`、`npm run check:timing`、`npm run test:smoke` 全部通過。
+- 未開始：Vite module build 搬遷、失敗狀態 UX、資料品質 guardrails。
 - 待驗證：HUD time-sync 與 About Me 面板已 commit（`181124d`），smoke test 涵蓋 boot / 互動 / HUD 切換；剩下 About Me 面板的視覺微調仍建議在瀏覽器人工掃過一次。
 
 ---
@@ -43,20 +44,17 @@
 
 後續想擴的：geolocation 失敗的 UX 出來後加一條對應 case；Babel standalone 移除後檢查 console 仍乾淨。
 
-### 2. [未開始] 先移除 Babel standalone runtime
+### 2. [已完成] 先移除 Babel standalone runtime
 
-目標：先降低 CDN/runtime 依賴，不急著一次搬完整個 React build。
+實作：
 
-- 確認 `app-core.jsx` 與 `app-map.jsx` 沒有 JSX 語法，只保留可由現代瀏覽器直接執行的 JavaScript。
-- 將 `index.html` 中的 `type="text/babel"` script 改為一般 script 載入。
-- 移除 `@babel/standalone` CDN script。
-- 視需要把檔名從 `.jsx` 改成 `.js`，並同步更新 README 與引用路徑。
+- `index.html` 移除 `<script src="…@babel/standalone…">`、把三段 `type="text/babel" data-presets="env,react"` 改成一般 `<script>`。
+- `public/assets/app-core.jsx` → `app-core.js`、`app-map.jsx` → `app-map.js`(`git mv`，內容無 JSX)。改名後 vite preview 才能用正確的 `application/javascript` MIME serve。
+- README / `.claude/skills/ui-events-review/SKILL.md` / `.claude/agents/ui-logic-engineer.md` / 其它 `.claude/*` 引用全部從 `.jsx` 換成 `.js`，並把 Babel-standalone 的描述改成「plain classic scripts」。
 
-完成標準：
+驗證:
 
-- `npm run build` 通過。
-- `npm run check:timing` 通過。
-- 瀏覽器 smoke test 通過，且 console 沒有 Babel 或 script loading 相關錯誤。
+- `npm run build`、`npm run check:timing`、`npm run test:smoke` 全部通過,smoke test 沒有 Babel/ script loading 相關 console 錯誤。
 
 ### 3. [未開始] 讓前端程式進入真正的 build 驗證
 
@@ -104,6 +102,6 @@
 ## 建議順序
 
 1. ~~先做 browser smoke test~~（完成）。
-2. 移除 Babel standalone，這是最小的 runtime 依賴瘦身;每改一步都跑 `npm run test:smoke` 確認沒回歸。
+2. ~~移除 Babel standalone~~（完成）。
 3. 接著把 React/Leaflet 搬進 Vite build，讓 build 開始真正檢查前端程式。
 4. 最後補 UX 失敗狀態與資料品質 guardrails。

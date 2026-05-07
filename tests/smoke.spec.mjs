@@ -1,8 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 // Wires console / pageerror / unhandledrejection capture and returns a
-// getter for the accumulated errors. Babel-standalone emits a deprecation
-// warning at log level which we want to ignore; everything else is fatal.
+// getter for the accumulated errors.
 // Smoke test only cares about errors from our own origin and React/Leaflet
 // runtime issues. Third-party services (favicon proxies, map tile CDNs,
 // unpkg) can flake or return 4xx for individual edge cases without breaking
@@ -44,7 +43,7 @@ function captureErrors(page) {
 
 async function waitForAppReady(page) {
   // App renders inside #app via React.createRoot. Wait for the toolbar (first
-  // thing painted) so we know Babel finished compiling and React mounted.
+  // thing painted) so we know the React tree has mounted.
   await expect(page.locator('#app .toolbar')).toBeVisible();
   // Leaflet tiles are async — wait for at least one to load.
   await expect(page.locator('.leaflet-tile-loaded').first()).toBeVisible();
