@@ -7,8 +7,9 @@
 ## 進度更新（2026-05-07）
 
 - 已完成：地圖上方「現在 / 預測」HUD tab 接到全局 `quickPick` / `handleQuickPick`，移除 `MapArea` 內部 local `hudMode`，切換 tab 即同步 `targetTime`，`liveTrains` useMemo 與 marker effect 立即重算。涉及 `public/assets/app-core.jsx`、`public/assets/app-map.jsx`，`npm run build` 已通過。
-- 未開始：browser smoke test、Babel standalone 移除、Vite module build 搬遷、失敗狀態 UX、資料品質 guardrails。
-- 待驗證：工作區目前有未提交的 About Me 面板、樣式與 HUD time-sync 修改，涉及 `public/assets/app-core.jsx`、`public/assets/app-map.jsx` 與 `public/assets/styles.css`；需在瀏覽器實際切換 HUD tab、確認 marker 即時更新與既有互動沒有 regression 後再視為完成。
+- 已完成：補上 Playwright smoke test（`tests/smoke.spec.mjs` + `playwright.config.js`，`npm run test:smoke`），desktop 1280×800 與 iPhone 13 mobile emulation（皆走 chromium）共 11 passed / 1 skip。涵蓋 boot、TW/JP 切換、地圖點選、列車詳情開關、HUD tab 立即驅動 `targetTime`、mobile viewport 關鍵控制非遮擋；同時攔 pageerror / console.error / 同源 4xx，第三方 favicon / tile / unpkg 4xx 不視為失敗。新增 devDep `@playwright/test`、需要 `npx playwright install chromium`。
+- 未開始：Babel standalone 移除、Vite module build 搬遷、失敗狀態 UX、資料品質 guardrails。
+- 待驗證：HUD time-sync 與 About Me 面板已 commit（`181124d`），smoke test 涵蓋 boot / 互動 / HUD 切換；剩下 About Me 面板的視覺微調仍建議在瀏覽器人工掃過一次。
 
 ---
 
@@ -23,21 +24,24 @@
 
 ## 接下來可以做
 
-### 1. [未開始] 補瀏覽器 smoke test
+### 1. [已完成] 補瀏覽器 smoke test
 
-目標：讓 production build 之外，也能驗證真實瀏覽器載入狀態。
+實作：`tests/smoke.spec.mjs` + `playwright.config.js`，由 `npm run test:smoke` 觸發。webServer 自動啟 `npm run preview --port 4173 --strictPort`。
 
-- 新增瀏覽器測試腳本，啟動 Vite preview 或靜態 dist 後檢查首頁。
-- 捕捉 console error、page error 與 unhandled rejection。
-- 檢查 `#app` 已 render、Leaflet map container 非空白、地圖圖層有載入。
-- 驗證基本互動：台灣/日本切換、地圖點選、列車列表出現、列車詳情可開關。
-- 加一組 mobile viewport，確認側欄、底部 sheet、HUD 與地圖控制不互相遮擋。
+涵蓋：
 
-完成標準：
+- 同源 4xx / pageerror / console.error / unhandledrejection 攔截（第三方 favicon、tile CDN、unpkg 不視為失敗）。
+- `#app` non-empty、`.toolbar` 出現、`.leaflet-tile-loaded` 至少一張。
+- 台灣 / 日本 region 切換、地圖中心點點選後 train list 顯示卡片或 empty state、列車詳情 modal 開關。
+- HUD「現在 / 預測」tab 點擊立即驅動 `targetTime`：點預測後 `.map-hud-clock-time` 文字必須改變，再切回「現在」aria-selected 正確。
+- iPhone 13 mobile emulation（chromium）下，`.toolbar`、`#map`、`.map-hud-clock`、`.train-list` 都在 viewport 內。
 
-- `npm run build` 通過。
-- 新增的 smoke test 指令通過。
-- 測試失敗時能指出 console/runtime 錯誤，而不是只顯示 build 成功。
+跑法：
+
+- `npm run test:smoke`（會自動 reuseExistingServer 或 spawn preview）。
+- CI 上需 `npx playwright install chromium`。
+
+後續想擴的：geolocation 失敗的 UX 出來後加一條對應 case；Babel standalone 移除後檢查 console 仍乾淨。
 
 ### 2. [未開始] 先移除 Babel standalone runtime
 
@@ -99,7 +103,7 @@
 
 ## 建議順序
 
-1. 先做 browser smoke test，替後續 runtime 調整建立安全網。
-2. 再移除 Babel standalone，這是最小的 runtime 依賴瘦身。
+1. ~~先做 browser smoke test~~（完成）。
+2. 移除 Babel standalone，這是最小的 runtime 依賴瘦身;每改一步都跑 `npm run test:smoke` 確認沒回歸。
 3. 接著把 React/Leaflet 搬進 Vite build，讓 build 開始真正檢查前端程式。
 4. 最後補 UX 失敗狀態與資料品質 guardrails。

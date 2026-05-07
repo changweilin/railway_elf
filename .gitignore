@@ -2,6 +2,11 @@ node_modules/
 dist/
 .vite/
 
+# Playwright smoke test artefacts
+test-results/
+playwright-report/
+playwright/.cache/
+
 # Build / runtime artifacts that should not be committed
 .ai_working
 
