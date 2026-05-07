@@ -78,6 +78,9 @@ function App() {
   // Remember the last user-picked custom time so toggling 現在/+30/+1小時 → 自訂
   // restores what they had, rather than snapping to whatever targetTime got overwritten with.
   const customTimeRef = useRef(null);
+  // Remember the last forecast mode ('30' | '60' | 'custom') so toggling
+  // 現在 → 預測 from the HUD restores whichever predict bucket the user last used.
+  const [lastPredictPick, setLastPredictPick] = useState('30');
   const [timeFocusTick, setTimeFocusTick] = useState(0); // bump to scroll/focus the panel's time control
 
   // App-level transient notice — replaces the previous alert() flow for
@@ -600,6 +603,7 @@ function App() {
 
   const handleQuickPick = (kind) => {
     setQuickPick(kind);
+    if (kind !== 'now') setLastPredictPick(kind);
     const d = new Date();
     if (kind === 'now') setTargetTime(d);
     else if (kind === '30') setTargetTime(new Date(d.getTime() + 30*60000));
@@ -615,6 +619,7 @@ function App() {
     customTimeRef.current = d;
     setTargetTime(d);
     setQuickPick('custom');
+    setLastPredictPick('custom');
   };
 
   return React.createElement(React.Fragment, null,
@@ -644,7 +649,7 @@ function App() {
       }),
       React.createElement(MapArea, {
         region, location, nearest, liveTrains, targetTime, now,
-        quickPick, handleQuickPick,
+        quickPick, handleQuickPick, lastPredictPick,
         visibleLines,
         mapLayer, setMapLayer,
         showGrades,

@@ -70,7 +70,7 @@ function buildTrainMarkerHtml(train) {
   </div>`;
 }
 
-function MapArea({ region, location, nearest, liveTrains, targetTime, now, quickPick, handleQuickPick, visibleLines, mapLayer, setMapLayer, showGrades, onMapClick, onLocate, flyTo, onTrainClick, onHudClick, pushNotice }) {
+function MapArea({ region, location, nearest, liveTrains, targetTime, now, quickPick, handleQuickPick, lastPredictPick, visibleLines, mapLayer, setMapLayer, showGrades, onMapClick, onLocate, flyTo, onTrainClick, onHudClick, pushNotice }) {
   const hudMode = quickPick === 'now' ? 'now' : 'predict';
   const mapRef = useRefM(null);
   const leafletRef = useRefM(null);
@@ -377,11 +377,13 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
             "aria-selected": hudMode === 'predict',
             onClick: (e) => {
               e.stopPropagation();
-              // Switching from "now" → forecast: default to +30 min so the
-              // map immediately shows a different state. Already-forecast
-              // modes (30/60/custom) stay put. Open the panel either way so
-              // the user can fine-tune.
-              if (handleQuickPick && quickPick === 'now') handleQuickPick('30');
+              // Switching from "now" → forecast: restore the bucket the user
+              // last used (+30 / +1 小時 / 自訂), defaulting to +30 on first
+              // toggle. Already-forecast modes stay put. Open the panel either
+              // way so the user can fine-tune.
+              if (handleQuickPick && quickPick === 'now') {
+                handleQuickPick(lastPredictPick || '30');
+              }
               if (onHudClick) onHudClick();
             },
           }, "預測"),

@@ -1349,11 +1349,28 @@ body.sheet-resizing .leaflet-container { pointer-events: none; }
 }
 .nl-icon { font-size: 13px; }
 
-/* Panel collapse (desktop) */
+/* Panel collapse (desktop) — push the map/sheet right while open, collapse the
+   column to 0 while hidden so map-area expands smoothly. */
 @media (min-width: 901px) {
-  .main.panel-hidden .panel {
-    transform: translateX(-100%);
+  .main {
+    grid-template-columns: var(--me-panel-width) 1fr;
+    transition: grid-template-columns var(--me-transition-smooth);
+  }
+  .main.panel-hidden {
+    grid-template-columns: 0 1fr;
+  }
+  .panel {
+    position: relative;
+    top: auto; bottom: auto; left: auto;
+    width: 100%;
+    z-index: auto;
     box-shadow: none;
+    transform: none;
+    transition: none;
+  }
+  .main.panel-hidden .panel {
+    overflow: hidden;
+    border-right: none;
   }
 }
 
