@@ -50,7 +50,8 @@
       "Bash(ps -W)",
       "Bash(taskkill //F //IM node.exe //FI \"WINDOWTITLE eq vite*\")",
       "Bash(git checkout *)",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(git remote *)"
     ]
   }
 }

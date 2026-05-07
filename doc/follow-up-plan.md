@@ -6,6 +6,7 @@
 
 ## 進度更新（2026-05-07）
 
+- 已完成:PWA / meta(延伸候選 C,不含 SW)。新增 `public/favicon.svg`(方形圓角、teal→blue 漸層底、黑色列車剪影,跟 logo-mark 的水滴形分開做,小尺寸與深色 tab bar 下都清楚)+ `public/manifest.webmanifest`(start_url/scope `./` 兼容 Vite base、display standalone、theme/bg #0f1117、icon SVG `purpose: "any maskable"`)。`index.html` head 補:description、theme-color、icon link、manifest link、OG 六個(type/site_name/title/description/url/locale,url 絕對指 https://changweilin.github.io/railway_elf/)、Twitter summary card 三個。`npm run build`:dist/ 多了 favicon.svg + manifest.webmanifest(public pass-through),index.html 從 2.38 kB → 3.23 kB;`npm run test:smoke` 21 passed / 1 skipped。刻意不做:apple-touch-icon.png(180×180)、og-image.png(1200×630)— 環境沒有可靠 raster 工具,iOS 主畫面會 fallback 到截圖、社群預覽會 fallback 到純文字 summary card,等之後有設計檔再補。SW / 離線也沒做(每月資料更新與 SW cache 的互動要單獨設計)。
 - 已完成:ES module 改寫(延伸候選 B)。把 `rail-data.{,generated.}js` / `app-core.js` / `app-map.js` 從 `public/assets/` `git mv` 進 `src/`(原本在 public/ 下,Vite 只當靜態檔不 transform);全部從 `window.X = ...` / `Object.assign(window, ...)` 改 `export const`;rail-data.generated.js 的 emit 模板改 `export const RAIL_SHAPES`;`scripts/fetch-rail-shapes.mjs` 的 OUT_PATH 與 `loadStationsFromRailData()` 的字面量 regex 跟著改。`app-core.js` ↔ `app-map.js` 是故意的 ESM circular import — React component body / handler 內 lazy reference 沒問題,top-level read 才會 undefined。`src/main.js` 改成完整 entry(`createRoot(...).render(React.createElement(App))`),刪掉 `public/assets/render.js`,`index.html` 只剩一個 `<script type="module" src="/src/main.js">`。check 腳本改用 top-level `await import("../src/rail-data.js")` 取代 vm.runInContext + window-shim。`npm run build` 從 28 modules / 292 kB / gzip 89 kB → 32 modules / 528 kB / gzip 173 kB(主要是 RAIL_SHAPES 字面量 ~280 kB 進入 main bundle,後續可用 manualChunks 拆),其它 3 個 check 通過、`test:smoke` 21 passed / 1 skipped。文件同步全部從「UMD / classic scripts」改「Vite ESM bundle / import-export」,範例 `eval(readFileSync(...))` 改 `await import(...)`,路徑 `public/assets/...` 改 `src/...`。
 - 已完成:資料更新 workflow 自動 commit snapshot(延伸候選 E)。`.github/workflows/update-rail-shapes.yml` 在 `Detect diff` 之後加兩個 conditional step(只在 `generated.js` 真的變了時才跑):先 `node scripts/check-line-shapes.mjs` 走 ratchet,若 fail 就讓 workflow fail、不開 PR(資料退化時不要把退化值寫回 snapshot);通過後 `node scripts/check-line-shapes.mjs --update` reseed。`add-paths` 加 `scripts/line-shape-snapshot.json`,讓 `peter-evans/create-pull-request@v6` 把 snapshot 與 `rail-data.generated.js` 一起放進 PR。本機驗證:`check:shapes` 對 23 條線通過(snapshot 2026-05-07T04:37 基準);`--update` 在指標未變時只動 `updatedAt`,但步驟只在 generated.js 已有 diff 時跑,所以不會造成假 PR。
 - 已完成：地圖上方「現在 / 預測」HUD tab 接到全局 `quickPick` / `handleQuickPick`，移除 `MapArea` 內部 local `hudMode`，切換 tab 即同步 `targetTime`，`liveTrains` useMemo 與 marker effect 立即重算。涉及 `public/assets/app-core.jsx`、`public/assets/app-map.jsx`，`npm run build` 已通過。
@@ -127,7 +128,9 @@
 
 ## 延伸候選 (post-step-5)
 
-每項都標註目標、步驟、風險、估時與優先順序。A、B、D、E 已完成;剩下 C(PWA / meta)。
+每項都標註目標、步驟、風險、估時與優先順序。A、B、C、D、E 已完成。
+
+主清單與延伸候選都已收斂完。
 
 ### A. [已完成] CI 串接 — 把 4 個檢查跑在 PR 上
 
@@ -161,18 +164,26 @@
 
 風險證實:circular import 在實務上沒有問題——React component bodies 與 event handlers 是 lazy reference,等到呼叫時兩個 module 都已經完整 evaluate 完。如果未來在 module top level 直接讀取 `MapArea` 或 `Icon`(例如做成常數陣列)就會撞 `undefined`,要拆成 lazy getter 或拆檔。
 
-### C. PWA / meta(favicon、OG、manifest) — [優先級中] [估時 1.5–4 hr]
+### C. [已完成] PWA / meta(favicon、OG、manifest)
 
-目標:首頁第一印象、社群分享預覽、PWA 可安裝。
+實作:
 
-步驟:
+- 新增 `public/favicon.svg`:獨立的 64×64 圖標(teal→blue 漸層底,黑色列車剪影),為了在小尺寸與深色 tab bar 下都清楚可辨,改成方形圓角(rx=14)而不是 logo-mark 的水滴形;與 `public/assets/logo-mark.svg`(品牌主視覺)分開,品牌 logo 保持自由形狀。
+- 新增 `public/manifest.webmanifest`:`name`/`short_name` = "Railway Elf"、`description`、`start_url: "./"`、`scope: "./"`(兼容 Vite `base: './'` 部署到 sub-path 的設定)、`display: standalone`、`orientation: portrait`、`background_color`/`theme_color: #0f1117`(與深色 UI 一致)、`lang: zh-TW`、icon 指向 `favicon.svg`(`purpose: "any maskable"`)。
+- `index.html` head 加:`<meta name="description">`、`<meta name="theme-color" content="#0f1117">`、`<link rel="icon" type="image/svg+xml" href="./favicon.svg">`、`<link rel="manifest" href="./manifest.webmanifest">`、OG 五個(type=website、site_name、title、description、url=`https://changweilin.github.io/railway_elf/`、locale=zh_TW)、Twitter card 三個(card=summary、title、description)。url 採絕對(scrapers 需要),其餘資源走相對 base。
 
-1. 加 `public/favicon.svg`(從 `logo-mark.svg` 衍生)+ `public/apple-touch-icon.png`(180×180)。
-2. `index.html`:`<link rel="icon">`、`<link rel="apple-touch-icon">`、`<meta name="theme-color">`、OG/Twitter meta(`og:title|og:description|og:image|og:url|twitter:card`)。
-3. 新增 `public/manifest.webmanifest`(name、short_name、icons、display: standalone、background_color、theme_color)+ `<link rel="manifest">`。
-4. (optional)Vite PWA plugin → service worker、可離線安裝;這項把 scope 拉大,可分階段。
+驗證:
 
-風險:OG image 需要 1200×630 PNG;PWA SW 與每月資料更新的 cache 互動要小心,SW 不能擋更新。不含 SW 約 1.5 hr,含 SW + offline 4 hr。
+- `npm run build`:32 modules 跟之前一樣,新加的 `dist/favicon.svg`、`dist/manifest.webmanifest` 由 Vite public/ pass-through 自動帶過去,index.html bundle 從 2.38 kB → 3.23 kB(+0.85 kB / +0.32 kB gzip)。
+- `npm run test:smoke`:21 passed / 1 skipped(沒有 favicon 404 或 manifest parse error)。
+
+刻意不做的:
+
+- **apple-touch-icon.png**(180×180):iOS 18+ 仍偏好 PNG,SVG 不被「加到主畫面」採用。要靠工具(sharp / inkscape / Figma export)生 PNG,目前環境沒有可靠的 raster pipeline。沒做的後果:iOS 加到主畫面時用 viewport 截圖當圖標,會糊但不會壞。
+- **og:image**(1200×630 PNG):同上,沒可靠工具生圖。少了 og:image 的 Twitter card 會 fallback 成純文字 summary card(仍可用),Facebook / LINE 抓不到預覽圖時會 fallback 到網域 favicon。
+- **Service Worker / 離線**:把 scope 拉大很多,而且每月資料更新跟 SW cache 的互動需要單獨設計(SW 不能擋更新)。如果未來要做,推薦走 `vite-plugin-pwa` 而不是手寫 SW。
+
+後續可選:用設計工具生 `public/apple-touch-icon.png`(180×180)+ `public/og-image.png`(1200×630),然後在 `index.html` 加兩個 link / meta tag。
 
 ### D. [已完成] 失敗狀態 e2e 測試 — Playwright 覆蓋 step 4 NoticeStack
 

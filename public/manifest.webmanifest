@@ -1,0 +1,20 @@
+{
+  "name": "Railway Elf",
+  "short_name": "Railway Elf",
+  "description": "Predict when the next train will pass any point on Taiwan and Japan rail lines.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f1117",
+  "theme_color": "#0f1117",
+  "lang": "zh-TW",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
