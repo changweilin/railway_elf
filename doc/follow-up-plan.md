@@ -7,7 +7,8 @@
 ## 進度更新（2026-05-07）
 
 - 已完成：地圖上方「現在 / 預測」HUD tab 接到全局 `quickPick` / `handleQuickPick`，移除 `MapArea` 內部 local `hudMode`，切換 tab 即同步 `targetTime`，`liveTrains` useMemo 與 marker effect 立即重算。涉及 `public/assets/app-core.jsx`、`public/assets/app-map.jsx`，`npm run build` 已通過。
-- 已完成：補上 Playwright smoke test（`tests/smoke.spec.mjs` + `playwright.config.js`，`npm run test:smoke`），desktop 1280×800 與 iPhone 13 mobile emulation（皆走 chromium）共 11 passed / 1 skip。涵蓋 boot、TW/JP 切換、地圖點選、列車詳情開關、HUD tab 立即驅動 `targetTime`、mobile viewport 關鍵控制非遮擋；同時攔 pageerror / console.error / 同源 4xx，第三方 favicon / tile / unpkg 4xx 不視為失敗。新增 devDep `@playwright/test`、需要 `npx playwright install chromium`。
+- 已完成：CI 串接(延伸候選 A)。新增 `.github/workflows/ci.yml`,`pull_request` + `push:main` 觸發,單一 `verify` job 跑 setup-node@v4 (node 22 + npm cache)、`npm ci`、Playwright browser cache、`npx playwright install --with-deps chromium`、然後依序 `npm run build` → `check:timing` → `check:shapes` → `test:smoke`。失敗時用 `actions/upload-artifact@v4` 上傳 `playwright-report/` + `test-results/`(retention 7 天)。`playwright.config.js` 的 `retries` 改為 `process.env.CI ? 1 : 0`,讓 GH runner 上的 tile CDN 偶發 timeout 自動 retry(本機跑 1 次失敗 → 加 `CI=1` 重跑全綠 13 passed / 1 skip,正是這個機制要擋下的 flake)。新加 `concurrency` group 讓同 PR 多次推送會自動取消前一次。
+- 已完成:補上 Playwright smoke test（`tests/smoke.spec.mjs` + `playwright.config.js`，`npm run test:smoke`），desktop 1280×800 與 iPhone 13 mobile emulation（皆走 chromium）共 11 passed / 1 skip。涵蓋 boot、TW/JP 切換、地圖點選、列車詳情開關、HUD tab 立即驅動 `targetTime`、mobile viewport 關鍵控制非遮擋；同時攔 pageerror / console.error / 同源 4xx，第三方 favicon / tile / unpkg 4xx 不視為失敗。新增 devDep `@playwright/test`、需要 `npx playwright install chromium`。
 - 已完成：移除 Babel-standalone runtime。`index.html` 不再從 unpkg 載 `@babel/standalone`，三段 `type="text/babel"` 改成一般 `<script>`；`public/assets/app-core.jsx` / `app-map.jsx` 用 `git mv` 改名 `.js`(內容本來就無 JSX，只是 `React.createElement`)；同步更新 README、`.claude/skills/ui-events-review/SKILL.md`、`.claude/agents/ui-logic-engineer.md`、其它 .claude 文件中的路徑引用。`npm run build`、`npm run check:timing`、`npm run test:smoke` 全部通過。
 - 已完成：把 React / ReactDOM / Leaflet 從 unpkg 改成 npm dependencies 並進入 Vite bundle。新增 `src/main.js`(import React/ReactDOM/Leaflet + `leaflet/dist/leaflet.css`,在 window 上 expose);`index.html` 拿掉 unpkg `<link>`/`<script>`,所有腳本改成 `<script type="module">`,源順序 main.js → rail-data.generated.js → rail-data.js → app-core.js → app-map.js → render.js。`render.js` 是新拉出來的最後一段(ReactDOM.createRoot().render()),放在 `public/assets/` 讓 Vite 不要 hoist 進 main bundle。`npm run build` 現在會處理 28 modules、輸出 `dist/assets/index-*.js`(292 kB / gzip 89 kB)+ `dist/assets/index-*.css`(15 kB),三個檢查全部通過。
 - 已完成:改善失敗狀態 UX。新增 App-level NoticeStack(top-center 浮動 banner,自動 ttl + 手動關閉 + dedupe);`useGeolocation` 把 `alert()` 換成 NoticeStack(error code 1/2/3 各自有對應文字);MapArea tile error 監聽 burst (≥3 in 4 s) 才推一次 `tile-error` notice;SearchBox Nominatim 失敗改成下拉內 inline error。三個 empty state(未選位置 / 離鐵道太遠 / 沒列車匹配)統一由 `renderEmptyState` 產生,標題+細節格式一致,filter 太緊時還會建議放寬。CSS 加 `.notice-stack/.notice-{error,warn,info}/.search-error/.train-empty-{title,detail}/.nearest-empty-{title,detail}`。
@@ -123,21 +124,19 @@
 
 ## 延伸候選 (post-step-5)
 
-每項都標註目標、步驟、風險、估時與優先順序。當前建議從 A 起做,理由是 step 5 的 ratchet 必須在 CI 跑才有 PR-level guardrail。
+每項都標註目標、步驟、風險、估時與優先順序。A 已完成;接下來建議的順序視優先級而定 — D(失敗狀態 e2e)能再加固既有測試覆蓋率,B(ES module 改寫)範圍最大但回報明顯,C / E 較獨立可隨時做。
 
-### A. CI 串接 — 把 4 個檢查跑在 PR 上 — [優先級高] [估時 1–2 hr]
+### A. [已完成] CI 串接 — 把 4 個檢查跑在 PR 上
 
-目標:`npm run build` / `check:timing` / `check:shapes` / `test:smoke` 在每個 PR 自動跑,讓 step 5 的 ratchet 真正攔得到資料退化。
+實作:
 
-步驟:
+- `.github/workflows/ci.yml`,trigger `pull_request` + `push:main`,加 `concurrency` group(同 ref 後續 push 會 cancel-in-progress)。
+- 單一 `verify` job:`actions/checkout@v4` → `actions/setup-node@v4`(node 22 + `cache: npm`)→ `npm ci` → `actions/cache@v4` 對 `~/.cache/ms-playwright` 快取(key 看 `package-lock.json`)→ `npx playwright install --with-deps chromium` → 依序跑 `npm run build` → `check:timing` → `check:shapes` → `test:smoke`。
+- 任一步失敗 job fail。最後一步 `if: failure()` 用 `actions/upload-artifact@v4` 收 `playwright-report/` + `test-results/`,retention 7 天、`if-no-files-found: ignore`。
+- `playwright.config.js` 的 `retries` 改為 `process.env.CI ? 1 : 0`。本機驗證:第一次跑因 OSM/CARTO tile CDN 慢,desktop boot + mobile region toggle 都在 `.leaflet-tile-loaded` 等到 30 s timeout;`CI=1` 重跑(觸發 retries=1)13 passed / 1 skipped,正是 retry 要擋下的 flake。
+- 4 個 check 都不需要 TDX cred(rail-data.generated.js 已 commit),CI 不必設 secrets。
 
-1. 新增 `.github/workflows/ci.yml`,trigger:`pull_request` + `push: main`。
-2. setup-node@20、`npm ci`、`npx playwright install --with-deps chromium`。
-3. 依序 run 4 個 npm script,任一失敗讓 job fail。
-4. `actions/upload-artifact` 失敗時上傳 `playwright-report/` + `test-results/`。
-5. (optional)cache `~/.npm` 與 `~/.cache/ms-playwright` 加速。
-
-風險:Playwright 在 GH runner 偶爾 flaky,先設 retries: 1。CI runner 沒有 TDX cred 但 4 個 check 不需要 (rail-data 已 commit)。
+驗證:本機 `npm run build` / `check:timing` / `check:shapes` / `CI=1 npm run test:smoke` 全綠。實際 GitHub runner 表現待第一個 PR 跑出來才知道,如果 flake 仍嚴重再考慮 retries=2 或拆 job。
 
 ### B. ES module 改寫 — 拿掉 `window.X` globals — [優先級中] [估時 0.5–1 工作天]
 
