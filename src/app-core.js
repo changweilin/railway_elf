@@ -795,9 +795,16 @@ function Panel(props) {
       setTimeout(() => { try { dateInput.focus({ preventScroll: true }); } catch { dateInput.focus(); } }, 250);
     }
   }, [timeFocusTick]);
-  // Swipe-left to close (mobile)
+  // Swipe-left to close (mobile). Skip when the touch starts on a control
+  // that owns its own horizontal drag (range sliders, custom sliders, or
+  // anything tagged data-no-swipe) — otherwise dragging the thumb leftward
+  // closes the panel mid-gesture.
   const touchRef = useRef({ x: 0, y: 0, active: false });
   const onTouchStart = (e) => {
+    if (e.target.closest && e.target.closest('input[type="range"], [role="slider"], [data-no-swipe]')) {
+      touchRef.current.active = false;
+      return;
+    }
     const t = e.touches[0];
     touchRef.current = { x: t.clientX, y: t.clientY, active: true };
   };
@@ -806,7 +813,9 @@ function Panel(props) {
     const t = e.touches[0];
     const dx = t.clientX - touchRef.current.x;
     const dy = t.clientY - touchRef.current.y;
-    if (dx < -60 && Math.abs(dx) > Math.abs(dy)) {
+    // Require a stronger horizontal commitment so a slightly diagonal slider
+    // drag isn't mis-read as a panel swipe.
+    if (dx < -60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
       touchRef.current.active = false;
       onClose && onClose();
     }
