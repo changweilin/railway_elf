@@ -144,13 +144,13 @@ function App() {
   // Default GPS: try geolocation once
   useEffect(() => {
     const defaults = {
-      taiwan: { lat: 25.0478, lng: 121.5170, name: '台北車站' },
-      japan:  { lat: 35.6812, lng: 139.7671, name: '東京駅' },
+      taiwan: { lat: 25.0478, lng: 121.5170 },
+      japan:  { lat: 35.6812, lng: 139.7671 },
     };
-    if (!location) setLocation(defaults[region]);
+    if (!location) setLocationAuto(defaults[region]);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(pos => {
-        setLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude, name: '目前位置' });
+        setLocationAuto({ lat: pos.coords.latitude, lng: pos.coords.longitude });
       }, () => {}, { timeout: 5000, maximumAge: 300000 });
     }
     // eslint-disable-next-line
@@ -160,10 +160,10 @@ function App() {
   const switchRegion = (r) => {
     setRegion(r);
     const defaults = {
-      taiwan: { lat: 25.0478, lng: 121.5170, name: '台北車站' },
-      japan:  { lat: 35.6812, lng: 139.7671, name: '東京駅' },
+      taiwan: { lat: 25.0478, lng: 121.5170 },
+      japan:  { lat: 35.6812, lng: 139.7671 },
     };
-    setLocation(defaults[r]);
+    setLocationAuto(defaults[r]);
     setTypeFilters([]);
   };
 
@@ -365,7 +365,7 @@ function App() {
   // ============= HANDLERS =============
   const [flyTo, setFlyTo] = useState(null); // {lat, lng, ts} — triggers map flyTo
   const pickFromMap = (latlng) => {
-    setLocation({ lat: latlng.lat, lng: latlng.lng, name: `${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)}` });
+    setLocationAuto({ lat: latlng.lat, lng: latlng.lng });
   };
   // Fly the map to a train's best-known position. Map markers carry livePos
   // directly; sheet entries do not, so we look up the matching live train by
@@ -392,7 +392,7 @@ function App() {
     }
     navigator.geolocation.getCurrentPosition(pos => {
       const lat = pos.coords.latitude, lng = pos.coords.longitude;
-      setLocation({ lat, lng, name: '目前位置' });
+      setLocationAuto({ lat, lng });
       setFlyTo({ lat, lng, ts: Date.now() });
     }, err => {
       // Map common GeolocationPositionError codes to short, actionable text.
@@ -527,6 +527,32 @@ function App() {
       setFavorites(prev => prev.map(f =>
         (f.id === id && f.auto) ? { ...f, name } : f));
     } catch { /* network failure: keep placeholder */ }
+  };
+
+  // Same naming pipeline as favorites, applied to the "current location" pin:
+  // 1) instant local rail-data lookup (autoNameFavorite), 2) async Nominatim
+  // refine (pickPoiName). A monotonically-increasing stamp protects against a
+  // newer location committing while an older refine is still in flight.
+  const locStampRef = useRef(0);
+  const refineLocationNameAsync = async (lat, lng, stamp) => {
+    const lang = region === 'japan' ? 'ja,zh-TW,en' : 'zh-TW,ja,en';
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&extratags=1&namedetails=1&accept-language=${lang}`;
+    try {
+      const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      if (!r.ok) return;
+      const j = await r.json();
+      const name = pickPoiName(j);
+      if (!name) return;
+      if (locStampRef.current !== stamp) return;
+      setLocation(prev => (prev && prev.lat === lat && prev.lng === lng) ? { ...prev, name } : prev);
+    } catch { /* network failure: keep quick name */ }
+  };
+  const setLocationAuto = (loc) => {
+    if (!loc || typeof loc.lat !== 'number' || typeof loc.lng !== 'number') return;
+    const stamp = ++locStampRef.current;
+    const { name, locked } = autoNameFavorite(loc);
+    setLocation({ lat: loc.lat, lng: loc.lng, name });
+    if (!locked) refineLocationNameAsync(loc.lat, loc.lng, stamp);
   };
   const addFavorite = () => {
     if (!location) return;
