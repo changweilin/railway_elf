@@ -7,3 +7,9 @@ import "leaflet/dist/leaflet.css";
 import { App } from "./app-core.js";
 
 createRoot(document.getElementById("app")).render(React.createElement(App));
+
+if (import.meta.env.PROD && "serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
