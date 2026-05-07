@@ -67,6 +67,9 @@ function App() {
   const [panelOpen, setPanelOpen] = useState(false);        // mobile drawer
   const [panelCollapsed, setPanelCollapsed] = useState(false); // desktop collapse
   const [quickPick, setQuickPick] = useState('now');     // 'now' | '30' | '60' | 'custom'
+  // Remember the last user-picked custom time so toggling 現在/+30/+1小時 → 自訂
+  // restores what they had, rather than snapping to whatever targetTime got overwritten with.
+  const customTimeRef = useRef(null);
   const [timeFocusTick, setTimeFocusTick] = useState(0); // bump to scroll/focus the panel's time control
 
   // App-level transient notice — replaces the previous alert() flow for
@@ -526,6 +529,17 @@ function App() {
     if (kind === 'now') setTargetTime(d);
     else if (kind === '30') setTargetTime(new Date(d.getTime() + 30*60000));
     else if (kind === '60') setTargetTime(new Date(d.getTime() + 60*60000));
+    else if (kind === 'custom' && customTimeRef.current) {
+      setTargetTime(new Date(customTimeRef.current));
+    }
+  };
+
+  // Used by the date/time inputs and the slider — keeps the remembered
+  // custom time in sync with whatever the user just picked.
+  const setCustomTarget = (d) => {
+    customTimeRef.current = d;
+    setTargetTime(d);
+    setQuickPick('custom');
   };
 
   return React.createElement(React.Fragment, null,
@@ -546,7 +560,7 @@ function App() {
         region, location, setLocation, pickFromMap,
         useGeolocation, favorites, addFavorite, removeFavorite, pickFavorite, copyFavoriteCoords,
         renameFavorite, favEditingId, setFavEditingId,
-        targetTime, setTargetTime, quickPick, handleQuickPick, setQuickPick,
+        targetTime, setTargetTime, setCustomTarget, quickPick, handleQuickPick, setQuickPick,
         now, nearest, offRail, timeFocusTick,
         enabledCategories, toggleCategory,
         showGrades, setShowGrades,
@@ -667,7 +681,7 @@ function Panel(props) {
     open, collapsed, onClose, region, location, setLocation, useGeolocation,
     favorites, addFavorite, removeFavorite, pickFavorite, copyFavoriteCoords,
     renameFavorite, favEditingId, setFavEditingId,
-    targetTime, setTargetTime, quickPick, handleQuickPick, setQuickPick,
+    targetTime, setTargetTime, setCustomTarget, quickPick, handleQuickPick, setQuickPick,
     now, nearest, offRail, timeFocusTick,
     enabledCategories, toggleCategory,
     showGrades, setShowGrades,
@@ -884,7 +898,7 @@ function Panel(props) {
             onChange: (e) => {
               const [y,m,d] = e.target.value.split('-').map(Number);
               const nd = new Date(targetTime); nd.setFullYear(y, m-1, d);
-              setTargetTime(nd); setQuickPick('custom');
+              setCustomTarget(nd);
             },
           }),
         ),
@@ -896,7 +910,7 @@ function Panel(props) {
             onChange: (e) => {
               const [h,m] = e.target.value.split(':').map(Number);
               const nd = new Date(targetTime); nd.setHours(h, m, 0, 0);
-              setTargetTime(nd); setQuickPick('custom');
+              setCustomTarget(nd);
             },
           }),
         ),
@@ -910,7 +924,7 @@ function Panel(props) {
           }, label)
         ),
       ),
-      React.createElement(TimeSlider, { targetTime, setTargetTime, setQuickPick }),
+      React.createElement(TimeSlider, { targetTime, setCustomTarget }),
     ),
 
     // NEAREST RAIL
@@ -1114,7 +1128,7 @@ function SearchBox({ onSelect }) {
 // ============================================================
 // TIME SLIDER — hour-of-day for the target time
 // ============================================================
-function TimeSlider({ targetTime, setTargetTime, setQuickPick }) {
+function TimeSlider({ targetTime, setCustomTarget }) {
   const totalMin = targetTime.getHours() * 60 + targetTime.getMinutes();
   const pct = (totalMin / (24 * 60)) * 100;
   return React.createElement("div", { className: "time-slider" },
@@ -1128,7 +1142,7 @@ function TimeSlider({ targetTime, setTargetTime, setQuickPick }) {
         const v = parseInt(e.target.value, 10);
         const nd = new Date(targetTime);
         nd.setHours(Math.floor(v/60), v % 60, 0, 0);
-        setTargetTime(nd); setQuickPick('custom');
+        setCustomTarget(nd);
       },
     }),
     React.createElement("div", { className: "time-slider-ticks" },
