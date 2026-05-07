@@ -393,8 +393,10 @@ function App() {
   };
   const FAV_LIMIT = 10;
   const [favLimitPrompt, setFavLimitPrompt] = useState(null); // {entry} when full
-  // Auto-name a favorite from the nearest station across all visible rail lines.
-  // Falls back to a coord label when nothing is within snap range.
+  const [favEditingId, setFavEditingId] = useState(null);
+  // Initial auto-name from local rail-data only. Nominatim reverse runs async
+  // afterwards (see refineFavoriteNameAsync) and overwrites the placeholder
+  // unless the user has manually renamed it (entry.auto === false).
   const autoNameFavorite = (loc) => {
     let bestStation = null, bestDist = Infinity;
     const lines = (RAIL_DATA[region] && RAIL_DATA[region].lines) || [];
@@ -404,22 +406,78 @@ function App() {
         if (d < bestDist) { bestDist = d; bestStation = st; }
       }
     }
-    if (bestStation && bestDist <= 1.5) return `${bestStation.name}站`;
-    if (bestStation && bestDist <= 5)   return `${bestStation.name}附近`;
-    return `${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}`;
+    if (bestStation && bestDist <= 1.5) return { name: `${bestStation.name}站`, locked: true };
+    return { name: `${loc.lat.toFixed(4)}, ${loc.lng.toFixed(4)}`, locked: false };
+  };
+  // Map a Nominatim /reverse response to a name following the priority order
+  // 車站 → 景點 → 地標 → 建築 → 商家 → 道路 → 村里. Returns null if no usable
+  // field is present.
+  const pickPoiName = (j) => {
+    if (!j) return null;
+    const cls = j.class, type = j.type;
+    const nd = j.namedetails || {};
+    const name = nd.name || nd['name:zh'] || nd['name:zh-Hant'] || nd['name:ja'] || j.name;
+    const addr = j.address || {};
+    if (cls === 'railway' && /station|halt|tram_stop|subway_entrance/.test(type || '')) {
+      if (name) return /[站駅]$/.test(name) ? name : `${name}站`;
+    }
+    if (cls === 'tourism' || (cls === 'leisure' && /park|garden|nature_reserve/.test(type || ''))) {
+      if (name) return name;
+    }
+    if (cls === 'historic' || cls === 'man_made') {
+      if (name) return name;
+    }
+    if (cls === 'building') {
+      if (name) return name;
+    }
+    if (cls === 'shop' || cls === 'amenity' || cls === 'office' || cls === 'craft') {
+      if (name) return name;
+      if (addr.shop) return addr.shop;
+      if (addr.amenity) return addr.amenity;
+    }
+    if (cls === 'highway' || addr.road) {
+      return name || addr.road || null;
+    }
+    const village = addr.village || addr.neighbourhood || addr.suburb || addr.hamlet
+      || addr.quarter || addr.city_district || addr.town;
+    if (village) return village;
+    return name || null;
+  };
+  const refineFavoriteNameAsync = async (id, lat, lng) => {
+    const lang = region === 'japan' ? 'ja,zh-TW,en' : 'zh-TW,ja,en';
+    const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&extratags=1&namedetails=1&accept-language=${lang}`;
+    try {
+      const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      if (!r.ok) return;
+      const j = await r.json();
+      const name = pickPoiName(j);
+      if (!name) return;
+      setFavorites(prev => prev.map(f =>
+        (f.id === id && f.auto) ? { ...f, name } : f));
+    } catch { /* network failure: keep placeholder */ }
   };
   const addFavorite = () => {
     if (!location) return;
     if (favorites.some(f => f.lat === location.lat && f.lng === location.lng)) return;
-    const autoName = autoNameFavorite(location);
-    const entry = { lat: location.lat, lng: location.lng, name: autoName, id: Date.now() + Math.floor(Math.random() * 1000) };
+    const { name, locked } = autoNameFavorite(location);
+    const entry = {
+      lat: location.lat, lng: location.lng, name,
+      auto: !locked, // user-rename / async-refine only when the placeholder is generic
+      id: Date.now() + Math.floor(Math.random() * 1000),
+    };
     if (favorites.length >= FAV_LIMIT) {
       setFavLimitPrompt({ entry });
       return;
     }
     setFavorites([...favorites, entry]);
+    if (!locked) refineFavoriteNameAsync(entry.id, entry.lat, entry.lng);
   };
   const removeFavorite = (id) => setFavorites(favorites.filter(f => f.id !== id));
+  const renameFavorite = (id, name) => {
+    const trimmed = (name || '').trim();
+    if (!trimmed) return;
+    setFavorites(prev => prev.map(f => f.id === id ? { ...f, name: trimmed, auto: false } : f));
+  };
   const pickFavorite = (f) => {
     if (!f || typeof f.lat !== 'number' || typeof f.lng !== 'number') return;
     setLocation({ lat: f.lat, lng: f.lng, name: f.name });
@@ -430,6 +488,7 @@ function App() {
     const { entry } = favLimitPrompt;
     setFavorites(favorites.map(f => f.id === replaceId ? entry : f));
     setFavLimitPrompt(null);
+    if (entry.auto) refineFavoriteNameAsync(entry.id, entry.lat, entry.lng);
   };
   const cancelFavLimitPrompt = () => setFavLimitPrompt(null);
   const copyFavoriteCoords = (f, btn) => {
@@ -486,6 +545,7 @@ function App() {
         onClose: () => setPanelOpen(false),
         region, location, setLocation, pickFromMap,
         useGeolocation, favorites, addFavorite, removeFavorite, pickFavorite, copyFavoriteCoords,
+        renameFavorite, favEditingId, setFavEditingId,
         targetTime, setTargetTime, quickPick, handleQuickPick, setQuickPick,
         now, nearest, offRail, timeFocusTick,
         enabledCategories, toggleCategory,
@@ -606,6 +666,7 @@ function Panel(props) {
   const {
     open, collapsed, onClose, region, location, setLocation, useGeolocation,
     favorites, addFavorite, removeFavorite, pickFavorite, copyFavoriteCoords,
+    renameFavorite, favEditingId, setFavEditingId,
     targetTime, setTargetTime, quickPick, handleQuickPick, setQuickPick,
     now, nearest, offRail, timeFocusTick,
     enabledCategories, toggleCategory,
@@ -777,34 +838,20 @@ function Panel(props) {
       ),
       React.createElement("div", { className: "fav-list" },
         favorites.map(f =>
-          React.createElement("div", {
+          React.createElement(FavItem, {
             key: f.id,
-            className: "fav-item",
-            onClick: (e) => {
-              e.preventDefault();
-              pickFavorite(f);
-              if (onClose) setTimeout(onClose, 0);
+            fav: f,
+            editing: favEditingId === f.id,
+            onPick: () => { pickFavorite(f); if (onClose) setTimeout(onClose, 0); },
+            onCopy: (btn) => copyFavoriteCoords(f, btn),
+            onRemove: () => removeFavorite(f.id),
+            onStartEdit: () => setFavEditingId && setFavEditingId(f.id),
+            onCancelEdit: () => setFavEditingId && setFavEditingId(null),
+            onCommitEdit: (name) => {
+              renameFavorite && renameFavorite(f.id, name);
+              setFavEditingId && setFavEditingId(null);
             },
-          },
-            React.createElement("div", { className: "fav-icon" },
-              React.createElement(Icon, { id: "me-waypoint", size: 14 })),
-            React.createElement("div", { className: "fav-name" }, f.name),
-            React.createElement("button", {
-              className: "fav-copy",
-              title: "複製座標",
-              "aria-label": "複製座標",
-              onClick: (e) => {
-                e.stopPropagation();
-                copyFavoriteCoords(f, e.currentTarget);
-              },
-            }, React.createElement(Icon, { id: "me-copy", size: 12 })),
-            React.createElement("button", {
-              className: "fav-remove",
-              title: "刪除收藏",
-              "aria-label": "刪除收藏",
-              onClick: (e) => { e.stopPropagation(); removeFavorite(f.id); },
-            }, React.createElement(Icon, { id: "me-close", size: 12 })),
-          )
+          })
         )
       ),
     ),
@@ -1091,6 +1138,65 @@ function TimeSlider({ targetTime, setTargetTime, setQuickPick }) {
 }
 
 // ============================================================
+// FAVORITE ITEM — shows the favorite, with copy / rename / delete actions.
+// In edit mode the name is replaced by an inline <input>; Enter commits and
+// Escape / blur cancels.
+// ============================================================
+function FavItem({ fav, editing, onPick, onCopy, onRemove, onStartEdit, onCancelEdit, onCommitEdit }) {
+  const [draft, setDraft] = useState(fav.name);
+  const inputRef = useRef(null);
+  useEffect(() => {
+    if (editing) {
+      setDraft(fav.name);
+      const el = inputRef.current;
+      if (el) { el.focus(); el.select(); }
+    }
+  }, [editing, fav.name]);
+  const commit = () => onCommitEdit(draft);
+  return React.createElement("div", {
+    className: "fav-item" + (editing ? " editing" : ""),
+    onClick: (e) => { if (editing) return; e.preventDefault(); onPick(); },
+  },
+    React.createElement("div", { className: "fav-icon" },
+      React.createElement(Icon, { id: "me-waypoint", size: 14 })),
+    editing
+      ? React.createElement("input", {
+          className: "fav-name-input",
+          ref: inputRef,
+          value: draft,
+          onChange: (e) => setDraft(e.target.value),
+          onClick: (e) => e.stopPropagation(),
+          onKeyDown: (e) => {
+            if (e.key === 'Enter') { e.preventDefault(); commit(); }
+            else if (e.key === 'Escape') { e.preventDefault(); onCancelEdit(); }
+          },
+          onBlur: () => commit(),
+          maxLength: 40,
+          "aria-label": "收藏名稱",
+        })
+      : React.createElement("div", { className: "fav-name" }, fav.name),
+    React.createElement("button", {
+      className: "fav-edit",
+      title: editing ? "完成" : "重新命名",
+      "aria-label": editing ? "完成" : "重新命名",
+      onClick: (e) => { e.stopPropagation(); editing ? commit() : onStartEdit(); },
+    }, React.createElement(Icon, { id: editing ? "me-fit" : "me-edit", size: 12 })),
+    React.createElement("button", {
+      className: "fav-copy",
+      title: "複製座標",
+      "aria-label": "複製座標",
+      onClick: (e) => { e.stopPropagation(); onCopy(e.currentTarget); },
+    }, React.createElement(Icon, { id: "me-copy", size: 12 })),
+    React.createElement("button", {
+      className: "fav-remove",
+      title: "刪除收藏",
+      "aria-label": "刪除收藏",
+      onClick: (e) => { e.stopPropagation(); onRemove(); },
+    }, React.createElement(Icon, { id: "me-close", size: 12 })),
+  );
+}
+
+// ============================================================
 // FAVORITE LIMIT MODAL
 // ============================================================
 function FavLimitModal({ pending, favorites, onReplace, onCancel, limit }) {
@@ -1134,4 +1240,4 @@ function FavLimitModal({ pending, favorites, onReplace, onCancel, limit }) {
 }
 
 // Export to window so other scripts can use them
-Object.assign(window, { App, Toolbar, Panel, SearchBox, TimeSlider, Icon, FavLimitModal, formatClock, formatCountdown, sameDayISO });
+Object.assign(window, { App, Toolbar, Panel, SearchBox, TimeSlider, Icon, FavItem, FavLimitModal, formatClock, formatCountdown, sameDayISO });

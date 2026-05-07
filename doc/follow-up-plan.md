@@ -119,9 +119,82 @@
 4. ~~改善失敗狀態 UX~~（完成）。
 5. ~~資料品質 guardrails~~（完成)。
 
-主清單已全部完成。延伸候選工作:
+主清單已全部完成。
 
-- `app-core.js` / `app-map.js` / `rail-data.js` 改寫成真正 ES module。
-- 換 React production build 縮減 bundle。
-- 將 `check:shapes` / `check:timing` 串進 GitHub Actions(資料更新 workflow + 一般 PR CI)。
-- 用 `_redirects` / `manifest` 補 favicon、社群分享 meta、PWA。
+## 延伸候選 (post-step-5)
+
+每項都標註目標、步驟、風險、估時與優先順序。當前建議從 A 起做,理由是 step 5 的 ratchet 必須在 CI 跑才有 PR-level guardrail。
+
+### A. CI 串接 — 把 4 個檢查跑在 PR 上 — [優先級高] [估時 1–2 hr]
+
+目標:`npm run build` / `check:timing` / `check:shapes` / `test:smoke` 在每個 PR 自動跑,讓 step 5 的 ratchet 真正攔得到資料退化。
+
+步驟:
+
+1. 新增 `.github/workflows/ci.yml`,trigger:`pull_request` + `push: main`。
+2. setup-node@20、`npm ci`、`npx playwright install --with-deps chromium`。
+3. 依序 run 4 個 npm script,任一失敗讓 job fail。
+4. `actions/upload-artifact` 失敗時上傳 `playwright-report/` + `test-results/`。
+5. (optional)cache `~/.npm` 與 `~/.cache/ms-playwright` 加速。
+
+風險:Playwright 在 GH runner 偶爾 flaky,先設 retries: 1。CI runner 沒有 TDX cred 但 4 個 check 不需要 (rail-data 已 commit)。
+
+### B. ES module 改寫 — 拿掉 `window.X` globals — [優先級中] [估時 0.5–1 工作天]
+
+目標:`app-core.js` / `app-map.js` / `rail-data.js` / `rail-data.generated.js` / `render.js` 全改 import/export,讓整套 code 真正進 Vite bundle,後續 TS / tree-shake / code-split 才有意義。
+
+步驟:
+
+1. `rail-data.generated.js`:emit 模板改成 `export const RAIL_SHAPES = {...}`;`scripts/fetch-rail-shapes.mjs` 的 `emit()` 跟著改。
+2. `rail-data.js`:`import { RAIL_SHAPES } from './rail-data.generated.js'`、`export const RAIL_DATA, RailUtil, TrainGen`(目前是 `window.X = ...`)。
+3. `app-core.js`:`import React, { useState, … } from 'react'`、`import { RAIL_DATA, RailUtil, TrainGen } from './rail-data.js'`,把 `Object.assign(window, {App, …})` 改成 `export {App, …}`。
+4. `app-map.js` 同樣處理,`import L from 'leaflet'`、`import { App, MapArea, … } from './app-core.js'`(或拆檔)。
+5. `render.js` 改 `import { createRoot } from 'react-dom/client'; import { App } from './app-core.js'`;`src/main.js` 直接 import 全部後 render,`index.html` 只剩一個 `<script type="module" src="/src/main.js">`。
+6. `scripts/check-train-timing.mjs` / `check-line-shapes.mjs`:目前用 `vm.runInContext` + window globals,改用動態 `import()` 或乾脆改寫成 ESM。
+
+風險 / 未知:
+
+- check 腳本的 sandbox 重寫是最大不確定因素(Node ESM bare specifier、JSON import 等)。
+- `app-core.js` 1.1k 行,要決定維持單檔 export 還是拆成 `<App>`、`<Panel>`、`<SearchBox>` 等多檔。
+
+### C. PWA / meta(favicon、OG、manifest) — [優先級中] [估時 1.5–4 hr]
+
+目標:首頁第一印象、社群分享預覽、PWA 可安裝。
+
+步驟:
+
+1. 加 `public/favicon.svg`(從 `logo-mark.svg` 衍生)+ `public/apple-touch-icon.png`(180×180)。
+2. `index.html`:`<link rel="icon">`、`<link rel="apple-touch-icon">`、`<meta name="theme-color">`、OG/Twitter meta(`og:title|og:description|og:image|og:url|twitter:card`)。
+3. 新增 `public/manifest.webmanifest`(name、short_name、icons、display: standalone、background_color、theme_color)+ `<link rel="manifest">`。
+4. (optional)Vite PWA plugin → service worker、可離線安裝;這項把 scope 拉大,可分階段。
+
+風險:OG image 需要 1200×630 PNG;PWA SW 與每月資料更新的 cache 互動要小心,SW 不能擋更新。不含 SW 約 1.5 hr,含 SW + offline 4 hr。
+
+### D. 失敗狀態 e2e 測試 — Playwright 覆蓋 step 4 NoticeStack — [優先級中] [估時 2–3 hr]
+
+目標:step 4 的 UI 真的會出現,重構時不會被默默拿掉。
+
+步驟:
+
+1. `tests/failure-states.spec.mjs`:
+   - **Geolocation 拒絕**:`addInitScript` 把 `navigator.geolocation.getCurrentPosition` 替成 errorCallback(code 1),點 GPS FAB → 確認 `.notice-error` 文字符合。
+   - **Nominatim 失敗**:`page.route('**/nominatim.openstreetmap.org/**', r => r.abort())`,在 SearchBox 打字 → 確認 `.search-error` 出現。
+   - **Tile burst**:`page.route('**/cartocdn.com/**', r => r.abort())`、再 pan 地圖讓多張 tile 重新請求 → 確認 `tile-error` notice 在 4 s 內冒出。
+   - **Empty states**:把 location 設到太平洋中央 → 確認 `train-empty-title === '目前位置不在任何鐵道附近'`;再把 dirFilter / typeFilters 設緊 → 確認改成「此篩選下沒有列車」。
+2. 跑在 `npm run test:smoke` 一起,或獨立 spec。
+
+風險:tile burst 條件(≥3 in 4 s)在 abort 攔截下要確認 chromium 真的會 retry 多次;Geolocation API 在 headless mock 比較 finicky,可能需要 `addInitScript` 而非 `context.grantPermissions` 才能精準觸發 errorCallback。
+
+### E. 資料更新 workflow 自動 commit snapshot — [優先級低] [估時 1 hr]
+
+目標:月更 GitHub Actions 跑完 `fetch-rail-shapes` 後,自動執行 `check:shapes`;若 ratchet 通過就一併 `--update` snapshot 並 commit 進 PR,review 時直接看 diff。
+
+步驟:
+
+1. `.github/workflows/update-rail-shapes.yml` 加 step:
+   - run `npm run check:shapes`(走 ratchet);若 fail → workflow fail,等人介入。
+   - run `npm run check:shapes -- --update`,讓 snapshot 跟著實際指標走。
+   - `git add scripts/line-shape-snapshot.json` 與 `public/assets/rail-data.generated.js` 一起 commit。
+2. PR review 時 snapshot 的 diff 就會一起出現。
+
+風險:資料 *改善* 時應該放寬 snapshot 而不是 fail — 目前 ratchet 規則「只在變短 / offset 變大時 fail」已符合此語意,因此通過後 `--update` 是安全的。當資料退化時 ratchet 會在 update 之前先 fail,不會把退化值寫回 snapshot。
