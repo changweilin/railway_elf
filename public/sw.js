@@ -25,10 +25,12 @@ const SHELL = [
 const HASHED_ASSET_RE = /\/assets\/.+-[A-Za-z0-9_-]{6,}\.(?:js|css|png|jpe?g|svg|webp|woff2?)$/;
 
 self.addEventListener("install", (event) => {
+  // Pre-cache only. Do NOT skipWaiting unconditionally — we want updates to
+  // wait for explicit user opt-in via the in-app "新版已可用" notice. The
+  // page posts {type: "SKIP_WAITING"} when the user clicks reload.
   event.waitUntil((async () => {
     const cache = await caches.open(PRECACHE);
     await cache.addAll(SHELL);
-    await self.skipWaiting();
   })());
 });
 
@@ -40,8 +42,18 @@ self.addEventListener("activate", (event) => {
         .filter((k) => k !== PRECACHE && k !== RUNTIME)
         .map((k) => caches.delete(k)),
     );
+    // clients.claim takes effect on first install (no prior SW). On updates,
+    // the page is already controlled, so claim is a no-op there. The page
+    // listens for controllerchange and reloads only when it triggered the
+    // skipWaiting itself, so first-install claim does not cause a reload.
     await self.clients.claim();
   })());
+});
+
+self.addEventListener("message", (event) => {
+  if (event.data && event.data.type === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener("fetch", (event) => {

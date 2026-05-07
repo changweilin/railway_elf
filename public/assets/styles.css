@@ -1682,3 +1682,16 @@ body.sheet-resizing .leaflet-container { pointer-events: none; }
   transition: var(--me-transition-fast);
 }
 .notice-dismiss:hover { color: var(--me-text-primary); background: rgba(255,255,255,0.06); }
+.notice-action {
+  flex: none;
+  background: rgba(96,165,250,0.15);
+  border: 1px solid rgba(96,165,250,0.45);
+  color: var(--me-text-primary);
+  cursor: pointer;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  transition: var(--me-transition-fast);
+}
+.notice-action:hover { background: rgba(96,165,250,0.28); }

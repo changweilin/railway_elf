@@ -9,6 +9,44 @@ import { MapArea, TrainSheet, TrainModal } from "./app-map.js";
 // "off-rail" and produce no train list. Tuned for handheld use; revisit when
 // zoom-aware tolerances are added.
 const MAX_SNAP_DIST_KM = 2;
+
+// Per-region Nominatim accept-language preference. The first language is the
+// primary local language; later ones provide fallbacks for places that lack a
+// native-language name tag.
+const REGION_NOMINATIM_LANG = {
+  taiwan:    'zh-TW,ja,en',
+  japan:     'ja,zh-TW,en',
+  korea:     'ko,en,ja,zh-TW',
+  hongkong:  'zh-HK,zh-TW,en',
+  china:     'zh-CN,zh-TW,en',
+  singapore: 'en,zh-CN,ms,ta',
+  malaysia:  'ms,en,zh-CN',
+  thailand:  'th,en',
+  vietnam:   'vi,en',
+};
+
+// Per-region preference for OSM `name:<lang>` tags returned in Nominatim's
+// `namedetails`. Tried in order; first hit wins. `name` and `j.name` are
+// appended downstream as final fallbacks.
+const REGION_NAME_TAG_PREFS = {
+  taiwan:    ['name:zh-Hant', 'name:zh', 'name:ja', 'name:en'],
+  japan:     ['name:ja', 'name:zh-Hant', 'name:zh', 'name:en'],
+  korea:     ['name:ko', 'name:en', 'name:ja', 'name:zh-Hant'],
+  hongkong:  ['name:zh-Hant', 'name:zh', 'name:en'],
+  china:     ['name:zh', 'name:zh-Hant', 'name:en'],
+  singapore: ['name:en', 'name:zh', 'name:ms', 'name:ta'],
+  malaysia:  ['name:ms', 'name:en', 'name:zh'],
+  thailand:  ['name:th', 'name:en'],
+  vietnam:   ['name:vi', 'name:en'],
+};
+
+function pickRegionName(nd, region, fallbackName) {
+  const prefs = REGION_NAME_TAG_PREFS[region] || REGION_NAME_TAG_PREFS.taiwan;
+  for (const tag of prefs) {
+    if (nd[tag]) return nd[tag];
+  }
+  return nd.name || fallbackName || null;
+}
 // A line counts as a candidate (selectable in the chip row) if it is within
 // MAX_SNAP_DIST_KM of the user AND within this much of the closest line.
 const CANDIDATE_GRACE_KM = 1.0;
@@ -96,10 +134,11 @@ function App() {
     const level = opts.level || 'error';
     const ttlMs = opts.ttlMs ?? 5000;
     const dedupeKey = opts.key || text;
+    const action = opts.action || null;
     setNotices(prev => {
       if (prev.some(n => n.key === dedupeKey)) return prev;
       const id = ++noticeIdRef.current;
-      return [...prev, { id, key: dedupeKey, level, text, ttlMs }];
+      return [...prev, { id, key: dedupeKey, level, text, ttlMs, action }];
     });
   }, []);
   const dismissNotice = useCallback((id) => {
@@ -119,6 +158,25 @@ function App() {
     const t = setInterval(() => setNow(new Date()), 30000);
     return () => clearInterval(t);
   }, []);
+
+  // Service-worker update prompt. main.js dispatches sw:update-ready when a
+  // new SW has finished installing and is waiting; the user opts in by
+  // clicking the action, which dispatches sw:apply-update back to main.js.
+  useEffect(() => {
+    const onReady = () => {
+      pushNotice('新版已可用,點「重新載入」套用最新內容。', {
+        level: 'info',
+        ttlMs: 0,
+        key: 'sw-update-ready',
+        action: {
+          label: '重新載入',
+          onClick: () => window.dispatchEvent(new Event('sw:apply-update')),
+        },
+      });
+    };
+    window.addEventListener('sw:update-ready', onReady);
+    return () => window.removeEventListener('sw:update-ready', onReady);
+  }, [pushNotice]);
 
   // If quickPick is 'now', keep targetTime in sync with now
   useEffect(() => {
@@ -159,8 +217,15 @@ function App() {
   // Default GPS: try geolocation once
   useEffect(() => {
     const defaults = {
-      taiwan: { lat: 25.0478, lng: 121.5170 },
-      japan:  { lat: 35.6812, lng: 139.7671 },
+      taiwan:    { lat: 25.0478, lng: 121.5170 },
+      japan:     { lat: 35.6812, lng: 139.7671 },
+      korea:     { lat: 37.5547, lng: 126.9706 },
+      hongkong:  { lat: 22.2812, lng: 114.1582 },
+      china:     { lat: 39.9042, lng: 116.4074 },
+      singapore: { lat: 1.3521,  lng: 103.8198 },
+      malaysia:  { lat: 3.1390,  lng: 101.6869 },
+      thailand:  { lat: 13.7563, lng: 100.5018 },
+      vietnam:   { lat: 10.8231, lng: 106.6297 },
     };
     if (!location) setLocationAuto(defaults[region]);
     if (navigator.geolocation) {
@@ -175,8 +240,15 @@ function App() {
   const switchRegion = (r) => {
     setRegion(r);
     const defaults = {
-      taiwan: { lat: 25.0478, lng: 121.5170 },
-      japan:  { lat: 35.6812, lng: 139.7671 },
+      taiwan:    { lat: 25.0478, lng: 121.5170 },
+      japan:     { lat: 35.6812, lng: 139.7671 },
+      korea:     { lat: 37.5547, lng: 126.9706 },
+      hongkong:  { lat: 22.2812, lng: 114.1582 },
+      china:     { lat: 39.9042, lng: 116.4074 },
+      singapore: { lat: 1.3521,  lng: 103.8198 },
+      malaysia:  { lat: 3.1390,  lng: 101.6869 },
+      thailand:  { lat: 13.7563, lng: 100.5018 },
+      vietnam:   { lat: 10.8231, lng: 106.6297 },
     };
     setLocationAuto(defaults[r]);
     setTypeFilters([]);
@@ -443,7 +515,7 @@ function App() {
     if (!j) return null;
     const cls = j.class, type = j.type;
     const nd = j.namedetails || {};
-    const name = nd.name || nd['name:zh'] || nd['name:zh-Hant'] || nd['name:ja'] || j.name;
+    const name = pickRegionName(nd, region, j.name);
     const addr = j.address || {};
     if (cls === 'railway' && /station|halt|tram_stop|subway_entrance/.test(type || '')) {
       if (name) return /[站駅]$/.test(name) ? name : `${name}站`;
@@ -477,9 +549,7 @@ function App() {
     if (!j) return null;
     const cls = j.class, type = j.type;
     const nd = j.namedetails || {};
-    const langName = (region === 'japan')
-      ? (nd['name:ja'] || nd['name:zh-Hant'] || nd['name:zh'] || nd.name || j.name)
-      : (nd['name:zh-Hant'] || nd['name:zh'] || nd['name:ja'] || nd.name || j.name);
+    const langName = pickRegionName(nd, region, j.name);
     const addr = j.address || {};
     const place = addr.suburb || addr.neighbourhood || addr.village || addr.quarter
       || addr.city_district || addr.town || addr.hamlet || null;
@@ -502,7 +572,7 @@ function App() {
     return langName || null;
   };
   const refineFavoriteNameAsync = async (id, lat, lng, detailed) => {
-    const lang = region === 'japan' ? 'ja,zh-TW,en' : 'zh-TW,ja,en';
+    const lang = REGION_NOMINATIM_LANG[region] || 'zh-TW,ja,en';
     const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&extratags=1&namedetails=1&accept-language=${lang}`;
     try {
       const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
@@ -521,7 +591,7 @@ function App() {
   // newer location committing while an older refine is still in flight.
   const locStampRef = useRef(0);
   const refineLocationNameAsync = async (lat, lng, stamp) => {
-    const lang = region === 'japan' ? 'ja,zh-TW,en' : 'zh-TW,ja,en';
+    const lang = REGION_NOMINATIM_LANG[region] || 'zh-TW,ja,en';
     const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&extratags=1&namedetails=1&accept-language=${lang}`;
     try {
       const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
@@ -713,6 +783,10 @@ function NoticeStack({ notices, onDismiss }) {
           size: 14,
         }),
         React.createElement("span", { className: "notice-text" }, n.text),
+        n.action && React.createElement("button", {
+          className: "notice-action",
+          onClick: () => { try { n.action.onClick(); } finally { onDismiss(n.id); } },
+        }, n.action.label),
         React.createElement("button", {
           className: "notice-dismiss",
           onClick: () => onDismiss(n.id),
@@ -727,7 +801,17 @@ function NoticeStack({ notices, onDismiss }) {
 // TOOLBAR
 // ============================================================
 function Toolbar({ region, switchRegion, onMenu, panelOpen, panelCollapsed, togglePanel }) {
-  const regions = [['taiwan','🇹🇼 台灣 Taiwan'], ['japan','🇯🇵 日本 Japan']];
+  const regions = [
+    ['taiwan',    '🇹🇼 台灣 Taiwan'],
+    ['japan',     '🇯🇵 日本 Japan'],
+    ['korea',     '🇰🇷 한국 Korea'],
+    ['hongkong',  '🇭🇰 香港 Hong Kong'],
+    ['china',     '🇨🇳 中國 China'],
+    ['singapore', '🇸🇬 新加坡 Singapore'],
+    ['malaysia',  '🇲🇾 馬來西亞 Malaysia'],
+    ['thailand',  '🇹🇭 泰國 Thailand'],
+    ['vietnam',   '🇻🇳 越南 Vietnam'],
+  ];
   return React.createElement("header", { className: "toolbar" },
     React.createElement("button", {
       className: "tb-tool tb-menu-btn" + (panelOpen ? " active" : ""),

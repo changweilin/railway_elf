@@ -10,6 +10,37 @@ createRoot(document.getElementById("app")).render(React.createElement(App));
 
 if (import.meta.env.PROD && "serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(() => {});
+    navigator.serviceWorker.register("./sw.js").then((reg) => {
+      let userTriggeredReload = false;
+
+      const notifyIfWaiting = () => {
+        if (reg.waiting && navigator.serviceWorker.controller) {
+          window.dispatchEvent(new Event("sw:update-ready"));
+        }
+      };
+
+      notifyIfWaiting();
+
+      reg.addEventListener("updatefound", () => {
+        const incoming = reg.installing;
+        if (!incoming) return;
+        incoming.addEventListener("statechange", () => {
+          if (incoming.state === "installed" && navigator.serviceWorker.controller) {
+            window.dispatchEvent(new Event("sw:update-ready"));
+          }
+        });
+      });
+
+      window.addEventListener("sw:apply-update", () => {
+        if (!reg.waiting) return;
+        userTriggeredReload = true;
+        reg.waiting.postMessage({ type: "SKIP_WAITING" });
+      });
+
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        if (!userTriggeredReload) return;
+        window.location.reload();
+      });
+    }).catch(() => {});
   });
 }
