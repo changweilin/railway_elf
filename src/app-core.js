@@ -801,7 +801,7 @@ function Panel(props) {
   // closes the panel mid-gesture.
   const touchRef = useRef({ x: 0, y: 0, active: false });
   const onTouchStart = (e) => {
-    if (e.target.closest && e.target.closest('input[type="range"], [role="slider"], [data-no-swipe]')) {
+    if (e.target.closest && e.target.closest('input, textarea, [contenteditable="true"], [role="slider"], [data-no-swipe]')) {
       touchRef.current.active = false;
       return;
     }
