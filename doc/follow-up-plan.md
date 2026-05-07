@@ -7,6 +7,7 @@
 ## 進度更新（2026-05-07）
 
 - 已完成：地圖上方「現在 / 預測」HUD tab 接到全局 `quickPick` / `handleQuickPick`，移除 `MapArea` 內部 local `hudMode`，切換 tab 即同步 `targetTime`，`liveTrains` useMemo 與 marker effect 立即重算。涉及 `public/assets/app-core.jsx`、`public/assets/app-map.jsx`，`npm run build` 已通過。
+- 已完成:失敗狀態 e2e 測試(延伸候選 D)。新增 `tests/failure-states.spec.mjs`,4 個 case 在 desktop + mobile project 都跑(8 passed):geolocation 拒絕(`addInitScript` 替 `navigator.geolocation` stub,點 panel 內「使用我的位置」→ 確認 `.notice-error` 文字含「已拒絕定位權限」,並驗 dismiss 後消失);Nominatim 失敗(`page.route` abort `**/nominatim.openstreetmap.org/**`,在 search input 打字 → 確認 `.search-error` 出現,清空後消失);Tile burst(同步 abort `cartocdn.com` + `tile.openstreetmap.org`,跳過 `waitForAppReady` 改只等 toolbar,連續 4 次 mouse-drag 觸發 ≥3 tileerror → 確認 `.notice-warn` 含「地圖圖磚載入失敗」);Off-rail empty state(geolocation stub 回 Pacific 24,130 → 確認 `.train-empty-title === '目前位置不在任何鐵道附近'` 且 sidebar `.nearest-empty-title` 同步)。`使用我的位置` 在 panel(`.btn-soft`)與 map FAB(`.map-fab`)有兩個同名 button,scope 改用 `.panel button:has-text(...)`。完整 `npm run test:smoke` 從 13 passed / 1 skip → 21 passed / 1 skip。
 - 已完成：CI 串接(延伸候選 A)。新增 `.github/workflows/ci.yml`,`pull_request` + `push:main` 觸發,單一 `verify` job 跑 setup-node@v4 (node 22 + npm cache)、`npm ci`、Playwright browser cache、`npx playwright install --with-deps chromium`、然後依序 `npm run build` → `check:timing` → `check:shapes` → `test:smoke`。失敗時用 `actions/upload-artifact@v4` 上傳 `playwright-report/` + `test-results/`(retention 7 天)。`playwright.config.js` 的 `retries` 改為 `process.env.CI ? 1 : 0`,讓 GH runner 上的 tile CDN 偶發 timeout 自動 retry(本機跑 1 次失敗 → 加 `CI=1` 重跑全綠 13 passed / 1 skip,正是這個機制要擋下的 flake)。新加 `concurrency` group 讓同 PR 多次推送會自動取消前一次。
 - 已完成:補上 Playwright smoke test（`tests/smoke.spec.mjs` + `playwright.config.js`，`npm run test:smoke`），desktop 1280×800 與 iPhone 13 mobile emulation（皆走 chromium）共 11 passed / 1 skip。涵蓋 boot、TW/JP 切換、地圖點選、列車詳情開關、HUD tab 立即驅動 `targetTime`、mobile viewport 關鍵控制非遮擋；同時攔 pageerror / console.error / 同源 4xx，第三方 favicon / tile / unpkg 4xx 不視為失敗。新增 devDep `@playwright/test`、需要 `npx playwright install chromium`。
 - 已完成：移除 Babel-standalone runtime。`index.html` 不再從 unpkg 載 `@babel/standalone`，三段 `type="text/babel"` 改成一般 `<script>`；`public/assets/app-core.jsx` / `app-map.jsx` 用 `git mv` 改名 `.js`(內容本來就無 JSX，只是 `React.createElement`)；同步更新 README、`.claude/skills/ui-events-review/SKILL.md`、`.claude/agents/ui-logic-engineer.md`、其它 .claude 文件中的路徑引用。`npm run build`、`npm run check:timing`、`npm run test:smoke` 全部通過。
@@ -124,7 +125,7 @@
 
 ## 延伸候選 (post-step-5)
 
-每項都標註目標、步驟、風險、估時與優先順序。A 已完成;接下來建議的順序視優先級而定 — D(失敗狀態 e2e)能再加固既有測試覆蓋率,B(ES module 改寫)範圍最大但回報明顯,C / E 較獨立可隨時做。
+每項都標註目標、步驟、風險、估時與優先順序。A、D 已完成;剩下 B(ES module 改寫,範圍最大)、C(PWA / meta)、E(資料 workflow auto-snapshot)。
 
 ### A. [已完成] CI 串接 — 把 4 個檢查跑在 PR 上
 
@@ -169,20 +170,20 @@
 
 風險:OG image 需要 1200×630 PNG;PWA SW 與每月資料更新的 cache 互動要小心,SW 不能擋更新。不含 SW 約 1.5 hr,含 SW + offline 4 hr。
 
-### D. 失敗狀態 e2e 測試 — Playwright 覆蓋 step 4 NoticeStack — [優先級中] [估時 2–3 hr]
+### D. [已完成] 失敗狀態 e2e 測試 — Playwright 覆蓋 step 4 NoticeStack
 
-目標:step 4 的 UI 真的會出現,重構時不會被默默拿掉。
+實作:
 
-步驟:
+- `tests/failure-states.spec.mjs`,4 個 test 在 desktop + mobile 兩個 project 都跑(8 passed)。
+- Helpers:`waitForToolbar`(輕量 ready check,不依賴 `.leaflet-tile-loaded` — tile burst 會故意全擋);`waitForAppReady`(完整版,有 tile);`openPanelIfNeeded`(檢查 `.tb-menu-btn` 有沒有展開 panel,只在 mobile 有用);`installGeolocationStub({ kind, code | lat,lng })`(`addInitScript` 替 `navigator.geolocation`,在頁面腳本之前注入)。
+- Case 1 — Geolocation 拒絕:stub 回 `code: 1`,點 panel 內「使用我的位置」(注意 panel 與地圖 FAB 共用同一 accessible name,要 scope `.panel button:has-text(...)`),驗 `.notice-error` 含「已拒絕定位權限」,並按 `.notice-dismiss` 後 count 變 0。
+- Case 2 — Nominatim 失敗:`page.route('**/nominatim.openstreetmap.org/**', r => r.abort())`,search input 填字觸發 400ms debounce,驗 `.search-error` 出現且含「搜尋暫時無法使用」,按 `.search-clear` 後 count 變 0。
+- Case 3 — Tile burst:同時 abort `**/*.basemaps.cartocdn.com/**`、`**/cartocdn.com/**`、`**/*.tile.openstreetmap.org/**`(各種 tile 來源都擋掉),跳過 `waitForAppReady` 改只等 toolbar(否則會 hang),連 4 次 mouse drag pan 地圖逼出新的 tile request,驗 `.notice-warn` 含「地圖圖磚載入失敗」。
+- Case 4 — Off-rail:stub 回 Pacific Ocean 24, 130,點「使用我的位置」,驗 `.train-empty-title === '目前位置不在任何鐵道附近'`、`.train-empty-detail` 含「km」、sidebar 的 `.nearest-empty-title` 同步。
 
-1. `tests/failure-states.spec.mjs`:
-   - **Geolocation 拒絕**:`addInitScript` 把 `navigator.geolocation.getCurrentPosition` 替成 errorCallback(code 1),點 GPS FAB → 確認 `.notice-error` 文字符合。
-   - **Nominatim 失敗**:`page.route('**/nominatim.openstreetmap.org/**', r => r.abort())`,在 SearchBox 打字 → 確認 `.search-error` 出現。
-   - **Tile burst**:`page.route('**/cartocdn.com/**', r => r.abort())`、再 pan 地圖讓多張 tile 重新請求 → 確認 `tile-error` notice 在 4 s 內冒出。
-   - **Empty states**:把 location 設到太平洋中央 → 確認 `train-empty-title === '目前位置不在任何鐵道附近'`;再把 dirFilter / typeFilters 設緊 → 確認改成「此篩選下沒有列車」。
-2. 跑在 `npm run test:smoke` 一起,或獨立 spec。
+風險證實:tile burst 在 abort 攔截下確實會 fire ≥3 tileerror(初始 viewport + 第一個 pan 就破門檻),`addInitScript` 路線可靠(`Object.defineProperty(navigator, 'geolocation', {...})` 用 configurable: true 即可)。`grantPermissions` 走不通是因為要的是 `error` callback 而不是缺權限。
 
-風險:tile burst 條件(≥3 in 4 s)在 abort 攔截下要確認 chromium 真的會 retry 多次;Geolocation API 在 headless mock 比較 finicky,可能需要 `addInitScript` 而非 `context.grantPermissions` 才能精準觸發 errorCallback。
+不在範圍:filter-too-tight(typeFilters / dirFilter 設緊)— 預設台北位置雙向都有 train,要可靠造出 0-match 需要事先固定資料 or mock 時間,複雜度高、收益低。如果之後有時間可以單獨補一條,但 D 的 4 個 case 已經把 step 4 的核心 UX 鎖住了。
 
 ### E. 資料更新 workflow 自動 commit snapshot — [優先級低] [估時 1 hr]
 
