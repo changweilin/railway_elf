@@ -66,6 +66,10 @@ function App() {
     try { return JSON.parse(localStorage.getItem('relf.favsCollapsed') || 'false') === true; }
     catch { return false; }
   });
+  const [useDetailedNaming, setUseDetailedNaming] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('relf.detailedNaming') || 'false') === true; }
+    catch { return false; }
+  });
   const [selectedTrain, setSelectedTrain] = useState(null);
   const [sheetCollapsed, setSheetCollapsed] = useState(false);
   const [panelOpen, setPanelOpen] = useState(false);        // mobile drawer
@@ -134,6 +138,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem('relf.favsCollapsed', JSON.stringify(favCollapsed));
   }, [favCollapsed]);
+
+  // Persist detailed-naming toggle
+  useEffect(() => {
+    localStorage.setItem('relf.detailedNaming', JSON.stringify(useDetailedNaming));
+  }, [useDetailedNaming]);
 
   const toggleCategory = (cat) => {
     setEnabledCategories(prev => prev.includes(cat)
@@ -486,43 +495,14 @@ function App() {
     if (place) return place;
     return langName || null;
   };
-  const [bulkNamingFavs, setBulkNamingFavs] = useState(false);
-  const detailNameAllFavorites = async () => {
-    if (bulkNamingFavs) return;
-    if (!favorites.length) return;
-    setBulkNamingFavs(true);
-    const lang = region === 'japan' ? 'ja,zh-TW,en' : 'zh-TW,ja,en';
-    // Snapshot so we don't loop over a moving array while we await.
-    const targets = favorites.filter(f => f.auto !== false);
-    try {
-      for (const f of targets) {
-        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${f.lat}&lon=${f.lng}&zoom=18&extratags=1&namedetails=1&accept-language=${lang}`;
-        try {
-          const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
-          if (r.ok) {
-            const j = await r.json();
-            const name = pickDetailedName(j);
-            if (name) {
-              setFavorites(prev => prev.map(x =>
-                (x.id === f.id && x.auto !== false) ? { ...x, name } : x));
-            }
-          }
-        } catch { /* network error: skip this one */ }
-        // Nominatim usage policy: max 1 req/sec.
-        await new Promise(res => setTimeout(res, 1100));
-      }
-    } finally {
-      setBulkNamingFavs(false);
-    }
-  };
-  const refineFavoriteNameAsync = async (id, lat, lng) => {
+  const refineFavoriteNameAsync = async (id, lat, lng, detailed) => {
     const lang = region === 'japan' ? 'ja,zh-TW,en' : 'zh-TW,ja,en';
     const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&extratags=1&namedetails=1&accept-language=${lang}`;
     try {
       const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
       if (!r.ok) return;
       const j = await r.json();
-      const name = pickPoiName(j);
+      const name = (detailed ? pickDetailedName(j) : pickPoiName(j));
       if (!name) return;
       setFavorites(prev => prev.map(f =>
         (f.id === id && f.auto) ? { ...f, name } : f));
@@ -568,7 +548,7 @@ function App() {
       return;
     }
     setFavorites([...favorites, entry]);
-    if (!locked) refineFavoriteNameAsync(entry.id, entry.lat, entry.lng);
+    if (!locked) refineFavoriteNameAsync(entry.id, entry.lat, entry.lng, useDetailedNaming);
   };
   const removeFavorite = (id) => setFavorites(favorites.filter(f => f.id !== id));
   const renameFavorite = (id, name) => {
@@ -586,7 +566,7 @@ function App() {
     const { entry } = favLimitPrompt;
     setFavorites(favorites.map(f => f.id === replaceId ? entry : f));
     setFavLimitPrompt(null);
-    if (entry.auto) refineFavoriteNameAsync(entry.id, entry.lat, entry.lng);
+    if (entry.auto) refineFavoriteNameAsync(entry.id, entry.lat, entry.lng, useDetailedNaming);
   };
   const cancelFavLimitPrompt = () => setFavLimitPrompt(null);
   const copyFavoriteCoords = (f, btn) => {
@@ -656,7 +636,7 @@ function App() {
         useGeolocation, favorites, addFavorite, removeFavorite, pickFavorite, copyFavoriteCoords,
         renameFavorite, favEditingId, setFavEditingId,
         favCollapsed, setFavCollapsed,
-        detailNameAllFavorites, bulkNamingFavs,
+        useDetailedNaming, setUseDetailedNaming,
         targetTime, setTargetTime, setCustomTarget, quickPick, handleQuickPick, setQuickPick,
         now, nearest, offRail, timeFocusTick,
         enabledCategories, toggleCategory,
@@ -779,7 +759,7 @@ function Panel(props) {
     favorites, addFavorite, removeFavorite, pickFavorite, copyFavoriteCoords,
     renameFavorite, favEditingId, setFavEditingId,
     favCollapsed, setFavCollapsed,
-    detailNameAllFavorites, bulkNamingFavs,
+    useDetailedNaming, setUseDetailedNaming,
     targetTime, setTargetTime, setCustomTarget, quickPick, handleQuickPick, setQuickPick,
     now, nearest, offRail, timeFocusTick,
     enabledCategories, toggleCategory,
@@ -878,13 +858,16 @@ function Panel(props) {
         React.createElement("div", { className: "fav-actions" },
           React.createElement("button", {
             type: "button",
-            className: "fav-bulk-rename" + (bulkNamingFavs ? " loading" : ""),
-            onClick: () => detailNameAllFavorites && detailNameAllFavorites(),
-            disabled: bulkNamingFavs,
-            title: "依車站/景點/地標/建築/商家/道路/鄉鎮村里順序重新命名（僅自動命名項目）",
+            role: "switch",
+            "aria-checked": !!useDetailedNaming,
+            className: "fav-detailed-switch" + (useDetailedNaming ? " on" : ""),
+            onClick: () => setUseDetailedNaming && setUseDetailedNaming(v => !v),
+            title: "開啟後，新加入的收藏會依車站/景點/地標/建築/商家/道路/鄉鎮村里順序命名",
           },
-            React.createElement(Icon, { id: "me-replan", size: 12 }),
-            bulkNamingFavs ? "命名中…" : "詳細命名",
+            React.createElement("span", { className: "fav-detailed-track" },
+              React.createElement("span", { className: "fav-detailed-thumb" }),
+            ),
+            React.createElement("span", { className: "fav-detailed-label" }, "詳細命名"),
           ),
         ),
         React.createElement("div", { className: "fav-list" },
