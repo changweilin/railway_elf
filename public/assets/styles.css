@@ -194,6 +194,13 @@ body {
   color: var(--me-text-muted);
   font-size: 12px;
 }
+.search-error {
+  padding: 12px;
+  text-align: left;
+  color: var(--me-warning, #fbbf24);
+  font-size: 12px;
+  line-height: 1.5;
+}
 
 .search-actions { display: flex; gap: 8px; margin-top: 8px; }
 .btn-soft {
@@ -406,6 +413,17 @@ body {
   padding: 14px; text-align: center;
   font-size: 12px; color: var(--me-text-muted);
 }
+.nearest-empty-title {
+  color: var(--me-text-primary);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.nearest-empty-detail {
+  font-size: 11px;
+  color: var(--me-text-muted);
+  line-height: 1.5;
+}
 
 /* ============== FILTER PILLS ============== */
 .pill-group {
@@ -426,6 +444,29 @@ body {
   background: rgba(110,231,183,0.12);
   color: var(--me-accent-primary);
   border-color: rgba(110,231,183,0.3);
+}
+
+.rail-type-section .pill {
+  padding: 6px 11px;
+  font-size: var(--me-sm-size);
+  font-weight: 500;
+  line-height: var(--me-body-lh);
+}
+
+.rail-type-section .pill-check {
+  font-size: var(--me-xxs-size) !important;
+}
+
+.rail-grade-legend {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--me-text-secondary);
+  font-family: var(--me-font-sans);
+  font-size: var(--me-sm-size);
+  font-weight: 500;
+  line-height: var(--me-body-lh);
 }
 .pill-dot {
   width: 6px; height: 6px; border-radius: 50%;
@@ -997,6 +1038,19 @@ body.sheet-resizing .leaflet-container { pointer-events: none; }
   font-size: 13px;
 }
 .train-empty svg { opacity: 0.4; margin-bottom: 10px; }
+.train-empty-title {
+  color: var(--me-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.train-empty-detail {
+  font-size: 12px;
+  color: var(--me-text-muted);
+  line-height: 1.5;
+  max-width: 320px;
+  margin: 0 auto;
+}
 
 /* ============== TRAIN DETAIL MODAL ============== */
 .modal-backdrop {
@@ -1439,3 +1493,59 @@ body.sheet-resizing .leaflet-container { pointer-events: none; }
   background: var(--me-accent-primary);
   letter-spacing: 0;
 }
+
+/* ============== NOTICE STACK ============== */
+/* Top-centre transient banners — geolocation/tile/search failures.
+   Sits above the toolbar but below modals. Each notice carries its own
+   level-coloured accent. */
+.notice-stack {
+  position: fixed;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1300;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  width: min(560px, calc(100vw - 24px));
+}
+.notice {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.4;
+  border-radius: var(--me-radius-md);
+  background: rgba(22,24,34,0.96);
+  border: 1px solid var(--me-border);
+  box-shadow: var(--me-shadow-lg);
+  color: var(--me-text-primary);
+  backdrop-filter: blur(8px);
+}
+.notice-text { flex: 1; min-width: 0; }
+.notice-error {
+  border-color: rgba(239,68,68,0.45);
+  box-shadow: 0 4px 16px rgba(239,68,68,0.20);
+}
+.notice-error svg:first-of-type { color: #ef4444; }
+.notice-warn {
+  border-color: rgba(251,191,36,0.45);
+  box-shadow: 0 4px 16px rgba(251,191,36,0.20);
+}
+.notice-warn svg:first-of-type { color: var(--me-warning, #fbbf24); }
+.notice-info svg:first-of-type { color: var(--me-info, #60a5fa); }
+.notice-dismiss {
+  background: transparent;
+  border: none;
+  color: var(--me-text-muted);
+  cursor: pointer;
+  padding: 2px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 4px;
+  transition: var(--me-transition-fast);
+}
+.notice-dismiss:hover { color: var(--me-text-primary); background: rgba(255,255,255,0.06); }

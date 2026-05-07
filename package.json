@@ -11,6 +11,7 @@
     "build:rail-data:tw": "node --env-file-if-exists=.env scripts/fetch-rail-shapes.mjs --skip-jp",
     "build:rail-data:jp": "node scripts/fetch-rail-shapes.mjs --skip-tw",
     "check:timing": "node scripts/check-train-timing.mjs",
+    "check:shapes": "node scripts/check-line-shapes.mjs",
     "test:smoke": "playwright test"
   },
   "devDependencies": {

@@ -70,7 +70,7 @@ function buildTrainMarkerHtml(train) {
   </div>`;
 }
 
-function MapArea({ region, location, nearest, liveTrains, targetTime, now, quickPick, handleQuickPick, visibleLines, mapLayer, setMapLayer, showGrades, onMapClick, onLocate, flyTo, onTrainClick, onHudClick }) {
+function MapArea({ region, location, nearest, liveTrains, targetTime, now, quickPick, handleQuickPick, visibleLines, mapLayer, setMapLayer, showGrades, onMapClick, onLocate, flyTo, onTrainClick, onHudClick, pushNotice }) {
   const hudMode = quickPick === 'now' ? 'now' : 'predict';
   const mapRef = useRefM(null);
   const leafletRef = useRefM(null);
@@ -127,10 +127,34 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
         attr: 'Tiles &copy; Esri',
       },
     }[mapLayer];
-    tileLayerRef.current = L.tileLayer(tiles.url, {
+    const layer = L.tileLayer(tiles.url, {
       attribution: tiles.attr, maxZoom: 19,
     }).addTo(map);
-  }, [mapLayer]);
+    // Tile error reporting: count failures within a short window so a single
+    // CDN hiccup or one missing zoom-19 tile does not spam the user. Only
+    // surface a notice once we hit a real burst (≥ 3 failures inside 4 s),
+    // and dedupe via the 'tile-error' notice key.
+    let burstCount = 0;
+    let burstTimer = null;
+    const onTileError = () => {
+      burstCount++;
+      if (burstTimer == null) {
+        burstTimer = setTimeout(() => {
+          if (burstCount >= 3 && pushNotice) {
+            pushNotice('部分地圖圖磚載入失敗,可能是網路不穩或圖磚服務暫時不可用。', { level: 'warn', key: 'tile-error', ttlMs: 6000 });
+          }
+          burstCount = 0;
+          burstTimer = null;
+        }, 4000);
+      }
+    };
+    layer.on('tileerror', onTileError);
+    tileLayerRef.current = layer;
+    return () => {
+      if (burstTimer != null) clearTimeout(burstTimer);
+      layer.off('tileerror', onTileError);
+    };
+  }, [mapLayer, pushNotice]);
 
   // Draw rail lines when region or visibleLines change.
   // Adds layers for newly-visible lines and removes layers for filtered-out
@@ -397,6 +421,41 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
 // ============================================================
 // TRAIN SHEET (bottom)
 // ============================================================
+// EMPTY-STATE RENDERER — single source of truth for "why is the train list
+// blank right now". Three flavours, ranked by specificity:
+//   1. no location yet               → ask user to pick one
+//   2. off-rail (location set, but   → tell them how far the closest line is
+//      no candidate line in range)
+//   3. filters too tight             → suggest loosening direction / type
+//   4. genuinely nothing within ±30m → show a quiet "no trains" message
+// All flavours share the .train-empty container so layout is identical.
+function renderEmptyState({ nearest, offRail, dirFilter, typeFilters }) {
+  let iconId = 'me-clock';
+  let title = '沒有符合的列車';
+  let detail = null;
+  if (!nearest && !offRail) {
+    iconId = 'me-locate';
+    title = '尚未選擇位置';
+    detail = '可以使用上方搜尋、按定位按鈕,或在地圖上直接點選一個位置。';
+  } else if (offRail) {
+    iconId = 'me-locate';
+    title = '目前位置不在任何鐵道附近';
+    detail = `最近的「${offRail.lineName}」距離 ${offRail.dist.toFixed(1)} km,可以再放大地圖、或挑一個更靠近鐵道的位置。`;
+  } else if (dirFilter !== 'all' || (typeFilters && typeFilters.length > 0)) {
+    iconId = 'me-clock';
+    title = '此篩選下沒有列車';
+    detail = '可以放寬方向或車種篩選,或調整預測時間試試。';
+  } else {
+    detail = '附近 ±30 分鐘內目前沒有列車經過,可以試著調整預測時間。';
+  }
+  return React.createElement("div", { className: "train-empty" },
+    React.createElement(Icon, { id: iconId, size: 32 }),
+    React.createElement("div", { className: "train-empty-title" }, title),
+    detail && React.createElement("div", { className: "train-empty-detail" }, detail),
+  );
+}
+
+// ============================================================
 function TrainSheet({ collapsed, onToggle, nearest, offRail, candidates, activeLineId, setActiveLineId, trains, totalCount, liveTrainCount, dirFilter, setDirFilter, typeFilters, setTypeFilters, availableTypes, targetTime, onSelect }) {
   const toggleType = (t) => {
     setTypeFilters(typeFilters.includes(t)
@@ -595,12 +654,7 @@ function TrainSheet({ collapsed, onToggle, nearest, offRail, candidates, activeL
       ),
       React.createElement("div", { className: "train-list" },
         trains.length === 0
-          ? React.createElement("div", { className: "train-empty" },
-              React.createElement(Icon, { id: offRail ? "me-locate" : "me-clock", size: 32 }),
-              React.createElement("div", null,
-                offRail
-                  ? `目前位置不在任何鐵道附近（最近的「${offRail.lineName}」距離 ${offRail.dist.toFixed(1)} km）`
-                  : "沒有符合的列車"))
+          ? renderEmptyState({ nearest, offRail, dirFilter, typeFilters })
           : trains.slice(0, 40).map(t =>
               React.createElement(TrainCard, {
                 key: t.id, train: t, targetTime, onSelect: () => onSelect(t),

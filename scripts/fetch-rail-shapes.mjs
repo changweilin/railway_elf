@@ -413,6 +413,11 @@ async function withRetry(label, fn, { attempts = 4, baseMs = 1500 } = {}) {
   throw lastErr;
 }
 
+// Track per-source provenance so we can log a summary at the end of the run.
+// Three buckets: 'fresh' = just-fetched, 'cache-offline' = OFFLINE=1 hit cache,
+// 'cache-fallback' = network failed and we served stale cache.
+const sourceProvenance = { fresh: [], 'cache-offline': [], 'cache-fallback': [] };
+
 // Fetch JSON with retry + disk cache fallback. Cache is keyed on `cacheKey`.
 // On network failure after all retries, returns the cached value if present.
 // Pass `retryOpts: { attempts: 1 }` for fetchers that already do their own
@@ -421,7 +426,8 @@ async function fetchJsonCached(cacheKey, label, fetcher, retryOpts) {
   if (process.env.OFFLINE === "1") {
     const cached = readCache(cacheKey);
     if (cached) {
-      console.log(`[cache] ${label}: using cached (OFFLINE=1)`);
+      console.log(`[CACHE] ${label}: using cached copy (OFFLINE=1)`);
+      sourceProvenance['cache-offline'].push(label);
       return cached;
     }
     throw new Error(`OFFLINE=1 but no cache for ${label}`);
@@ -429,14 +435,36 @@ async function fetchJsonCached(cacheKey, label, fetcher, retryOpts) {
   try {
     const fresh = await withRetry(label, fetcher, retryOpts);
     writeCache(cacheKey, fresh);
+    console.log(`[FRESH] ${label}: fetched live data, cache updated`);
+    sourceProvenance.fresh.push(label);
     return fresh;
   } catch (e) {
     const cached = readCache(cacheKey);
     if (cached) {
-      console.warn(`[cache] ${label}: network failed (${e.message}) — using cached copy`);
+      console.warn(`[CACHE] ${label}: network failed (${e.message}) — falling back to cached copy`);
+      sourceProvenance['cache-fallback'].push(label);
       return cached;
     }
     throw e;
+  }
+}
+
+// Print a one-glance summary of which upstream sources came from the network
+// vs. the on-disk cache. Useful for spotting "this PR rebuilt everything from
+// stale cache" before merging.
+function logProvenanceSummary() {
+  const fresh = sourceProvenance.fresh.length;
+  const offline = sourceProvenance['cache-offline'].length;
+  const fallback = sourceProvenance['cache-fallback'].length;
+  const total = fresh + offline + fallback;
+  if (total === 0) return;
+  console.log(`\n[SOURCE SUMMARY] ${fresh} fresh · ${offline} cache (OFFLINE) · ${fallback} cache (fallback)`);
+  if (fallback > 0) {
+    console.warn(`  ⚠ ${fallback} source(s) served from STALE cache (network failure):`);
+    for (const label of sourceProvenance['cache-fallback']) console.warn(`    - ${label}`);
+  }
+  if (offline > 0) {
+    console.log(`  · ${offline} source(s) served from cache because OFFLINE=1`);
   }
 }
 
@@ -1144,6 +1172,7 @@ async function main() {
 
   const result = buildOutput(rawShapes, stationsByLineId);
   emit(result);
+  logProvenanceSummary();
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

@@ -69,6 +69,34 @@ function App() {
   const [quickPick, setQuickPick] = useState('now');     // 'now' | '30' | '60' | 'custom'
   const [timeFocusTick, setTimeFocusTick] = useState(0); // bump to scroll/focus the panel's time control
 
+  // App-level transient notice — replaces the previous alert() flow for
+  // geolocation/tile/search failures. Shape: { id, level: 'error'|'warn'|'info', text, ttlMs }.
+  // The UI (NoticeStack) handles auto-dismiss + manual close. Keeps a small
+  // queue so a tile-error storm collapses into a single bubble.
+  const [notices, setNotices] = useState([]);
+  const noticeIdRef = useRef(0);
+  const pushNotice = useCallback((text, opts = {}) => {
+    const level = opts.level || 'error';
+    const ttlMs = opts.ttlMs ?? 5000;
+    const dedupeKey = opts.key || text;
+    setNotices(prev => {
+      if (prev.some(n => n.key === dedupeKey)) return prev;
+      const id = ++noticeIdRef.current;
+      return [...prev, { id, key: dedupeKey, level, text, ttlMs }];
+    });
+  }, []);
+  const dismissNotice = useCallback((id) => {
+    setNotices(prev => prev.filter(n => n.id !== id));
+  }, []);
+  // Auto-dismiss after ttl
+  useEffect(() => {
+    if (notices.length === 0) return;
+    const timers = notices
+      .filter(n => n.ttlMs && n.ttlMs > 0)
+      .map(n => setTimeout(() => dismissNotice(n.id), n.ttlMs));
+    return () => timers.forEach(clearTimeout);
+  }, [notices, dismissNotice]);
+
   // Tick the "now" clock every 30s so countdowns stay fresh
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 30000);
@@ -346,12 +374,22 @@ function App() {
     if (pos) setFlyTo({ lat: pos.lat, lng: pos.lng, ts: Date.now() });
   }, [liveTrains, nearest]);
   const useGeolocation = () => {
-    if (!navigator.geolocation) { alert('瀏覽器不支援定位'); return; }
+    if (!navigator.geolocation) {
+      pushNotice('瀏覽器不支援定位功能,請改用搜尋或在地圖上點選位置。', { level: 'warn', key: 'geo-unsupported' });
+      return;
+    }
     navigator.geolocation.getCurrentPosition(pos => {
       const lat = pos.coords.latitude, lng = pos.coords.longitude;
       setLocation({ lat, lng, name: '目前位置' });
       setFlyTo({ lat, lng, ts: Date.now() });
-    }, err => alert('定位失敗：' + err.message), { enableHighAccuracy: true });
+    }, err => {
+      // Map common GeolocationPositionError codes to short, actionable text.
+      let msg = '定位失敗,請改用搜尋或在地圖上點選位置。';
+      if (err && err.code === 1) msg = '已拒絕定位權限,請改用搜尋或在地圖上點選位置。';
+      else if (err && err.code === 2) msg = '無法取得目前位置(可能無 GPS / 網路訊號)。';
+      else if (err && err.code === 3) msg = '定位逾時,請稍後再試。';
+      pushNotice(msg, { level: 'error', key: 'geo-failed' });
+    }, { enableHighAccuracy: true });
   };
   const FAV_LIMIT = 10;
   const [favLimitPrompt, setFavLimitPrompt] = useState(null); // {entry} when full
@@ -463,6 +501,7 @@ function App() {
         onLocate: useGeolocation,
         flyTo,
         onTrainClick: setSelectedTrain,
+        pushNotice,
         onHudClick: () => {
           // Open the sidebar (mobile) or unhide it (desktop), then focus its time control.
           setPanelCollapsed(false);
@@ -493,6 +532,35 @@ function App() {
       onCancel: cancelFavLimitPrompt,
       limit: FAV_LIMIT,
     }),
+    React.createElement(NoticeStack, { notices, onDismiss: dismissNotice }),
+  );
+}
+
+// ============================================================
+// NOTICE STACK — transient banners for failure / info messages
+// (geolocation, tile errors, etc.). Placed at top-center of the
+// viewport above the map so it does not push layout when shown.
+// ============================================================
+function NoticeStack({ notices, onDismiss }) {
+  if (!notices || notices.length === 0) return null;
+  return React.createElement("div", { className: "notice-stack", role: "status", "aria-live": "polite" },
+    notices.map(n =>
+      React.createElement("div", {
+        key: n.id,
+        className: "notice notice-" + (n.level || 'info'),
+      },
+        React.createElement(Icon, {
+          id: n.level === 'error' ? "me-close" : (n.level === 'warn' ? "me-locate" : "me-info"),
+          size: 14,
+        }),
+        React.createElement("span", { className: "notice-text" }, n.text),
+        React.createElement("button", {
+          className: "notice-dismiss",
+          onClick: () => onDismiss(n.id),
+          "aria-label": "關閉提示",
+        }, React.createElement(Icon, { id: "me-close", size: 12 })),
+      )
+    )
   );
 }
 
@@ -614,7 +682,7 @@ function Panel(props) {
     ),
 
     // CATEGORY FILTERS
-    React.createElement("div", { className: "panel-section" },
+    React.createElement("div", { className: "panel-section rail-type-section" },
       React.createElement("div", { className: "ps-header" },
         React.createElement("div", { className: "ps-title" },
           React.createElement(Icon, { id: "me-route", size: 16 }),
@@ -662,12 +730,7 @@ function Panel(props) {
           "顯示立體化差異",
         ),
       ),
-      showGrades && React.createElement("div", {
-        style: {
-          marginTop: 8, fontSize: 11, color: 'var(--me-text-muted)',
-          display: 'flex', flexDirection: 'column', gap: 6,
-        },
-      },
+      showGrades && React.createElement("div", { className: "rail-grade-legend" },
         React.createElement("div", { style: { display: 'flex', alignItems: 'center', gap: 8 } },
           React.createElement("span", { style: { display: 'inline-block', width: 28, height: 3, background: 'currentColor', opacity: 0.95 } }),
           "平面",
@@ -846,12 +909,16 @@ function Panel(props) {
         ),
       ) : offRail
         ? React.createElement("div", { className: "nearest-empty" },
-            React.createElement("div", { style: { color: 'var(--me-text-primary)', marginBottom: 4 } },
+            React.createElement("div", { className: "nearest-empty-title" },
               "目前位置不在任何鐵道附近"),
-            React.createElement("div", { style: { fontSize: 11, color: 'var(--me-text-muted)' } },
-              `最近的「${offRail.lineName}」距離 ${offRail.dist.toFixed(1)} km`),
+            React.createElement("div", { className: "nearest-empty-detail" },
+              `最近的「${offRail.lineName}」距離 ${offRail.dist.toFixed(1)} km。可以挑一個更靠近鐵道的位置。`),
           )
-        : React.createElement("div", { className: "nearest-empty" }, "請先選擇位置"),
+        : React.createElement("div", { className: "nearest-empty" },
+            React.createElement("div", { className: "nearest-empty-title" }, "尚未選擇位置"),
+            React.createElement("div", { className: "nearest-empty-detail" },
+              "可以使用上方搜尋、按定位按鈕,或在地圖上直接點選一個位置。"),
+          ),
     ),
 
     // ABOUT ME
@@ -930,21 +997,26 @@ function SearchBox({ onSelect }) {
   const [q, setQ] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [errorText, setErrorText] = useState(null);
   const [open, setOpen] = useState(false);
   const debounceRef = useRef(null);
 
   useEffect(() => {
     clearTimeout(debounceRef.current);
-    if (!q.trim() || q.length < 2) { setResults([]); return; }
+    if (!q.trim() || q.length < 2) { setResults([]); setErrorText(null); return; }
     debounceRef.current = setTimeout(async () => {
       setLoading(true);
+      setErrorText(null);
       try {
         const url = `https://nominatim.openstreetmap.org/search?format=json&limit=6&accept-language=zh-TW,ja,en&q=${encodeURIComponent(q)}`;
         const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+        if (!r.ok) throw new Error(`Nominatim ${r.status}`);
         const data = await r.json();
         setResults(data);
+        if (data.length === 0) setErrorText(null);
       } catch (e) {
         setResults([]);
+        setErrorText('搜尋暫時無法使用,請稍後再試,或在地圖上直接點選位置。');
       } finally { setLoading(false); }
     }, 400);
     return () => clearTimeout(debounceRef.current);
@@ -971,21 +1043,23 @@ function SearchBox({ onSelect }) {
       onFocus: () => setOpen(true),
       onBlur: () => setTimeout(() => setOpen(false), 200),
     }),
-    q && React.createElement("button", { className: "search-clear", onClick: () => { setQ(''); setResults([]); } },
+    q && React.createElement("button", { className: "search-clear", onClick: () => { setQ(''); setResults([]); setErrorText(null); } },
       React.createElement(Icon, { id: "me-close", size: 12 })),
-    open && (loading || results.length > 0) && React.createElement("div", { className: "search-results" },
+    open && (loading || results.length > 0 || errorText) && React.createElement("div", { className: "search-results" },
       loading
         ? React.createElement("div", { className: "search-loading" }, "搜尋中…")
-        : results.map(r => React.createElement("div", {
-            key: r.place_id, className: "search-item", onMouseDown: () => choose(r),
-          },
-            React.createElement("div", { className: "search-item-icon" },
-              React.createElement(Icon, { id: "me-waypoint", size: 14 })),
-            React.createElement("div", { className: "search-item-main" },
-              React.createElement("div", { className: "search-item-name" }, r.display_name.split(',')[0]),
-              React.createElement("div", { className: "search-item-sub" }, r.display_name.split(',').slice(1).join(',').trim()),
-            ),
-          )),
+        : errorText
+          ? React.createElement("div", { className: "search-error" }, errorText)
+          : results.map(r => React.createElement("div", {
+              key: r.place_id, className: "search-item", onMouseDown: () => choose(r),
+            },
+              React.createElement("div", { className: "search-item-icon" },
+                React.createElement(Icon, { id: "me-waypoint", size: 14 })),
+              React.createElement("div", { className: "search-item-main" },
+                React.createElement("div", { className: "search-item-name" }, r.display_name.split(',')[0]),
+                React.createElement("div", { className: "search-item-sub" }, r.display_name.split(',').slice(1).join(',').trim()),
+              ),
+            )),
     ),
   );
 }
