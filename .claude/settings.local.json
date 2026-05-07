@@ -45,7 +45,8 @@
       "WebFetch(domain:localhost)",
       "PowerShell(Get-Content *)",
       "Bash(npx playwright *)",
-      "Bash(git mv *)"
+      "Bash(git mv *)",
+      "Bash(grep -o \"createRoot.\\\\{0,100\\\\}App\" dist/assets/index-DqVrEHW7.js)"
     ]
   }
 }

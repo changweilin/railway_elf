@@ -9,7 +9,8 @@
 - 已完成：地圖上方「現在 / 預測」HUD tab 接到全局 `quickPick` / `handleQuickPick`，移除 `MapArea` 內部 local `hudMode`，切換 tab 即同步 `targetTime`，`liveTrains` useMemo 與 marker effect 立即重算。涉及 `public/assets/app-core.jsx`、`public/assets/app-map.jsx`，`npm run build` 已通過。
 - 已完成：補上 Playwright smoke test（`tests/smoke.spec.mjs` + `playwright.config.js`，`npm run test:smoke`），desktop 1280×800 與 iPhone 13 mobile emulation（皆走 chromium）共 11 passed / 1 skip。涵蓋 boot、TW/JP 切換、地圖點選、列車詳情開關、HUD tab 立即驅動 `targetTime`、mobile viewport 關鍵控制非遮擋；同時攔 pageerror / console.error / 同源 4xx，第三方 favicon / tile / unpkg 4xx 不視為失敗。新增 devDep `@playwright/test`、需要 `npx playwright install chromium`。
 - 已完成：移除 Babel-standalone runtime。`index.html` 不再從 unpkg 載 `@babel/standalone`，三段 `type="text/babel"` 改成一般 `<script>`；`public/assets/app-core.jsx` / `app-map.jsx` 用 `git mv` 改名 `.js`(內容本來就無 JSX，只是 `React.createElement`)；同步更新 README、`.claude/skills/ui-events-review/SKILL.md`、`.claude/agents/ui-logic-engineer.md`、其它 .claude 文件中的路徑引用。`npm run build`、`npm run check:timing`、`npm run test:smoke` 全部通過。
-- 未開始：Vite module build 搬遷、失敗狀態 UX、資料品質 guardrails。
+- 已完成：把 React / ReactDOM / Leaflet 從 unpkg 改成 npm dependencies 並進入 Vite bundle。新增 `src/main.js`(import React/ReactDOM/Leaflet + `leaflet/dist/leaflet.css`,在 window 上 expose);`index.html` 拿掉 unpkg `<link>`/`<script>`,所有腳本改成 `<script type="module">`,源順序 main.js → rail-data.generated.js → rail-data.js → app-core.js → app-map.js → render.js。`render.js` 是新拉出來的最後一段(ReactDOM.createRoot().render()),放在 `public/assets/` 讓 Vite 不要 hoist 進 main bundle。`npm run build` 現在會處理 28 modules、輸出 `dist/assets/index-*.js`(292 kB / gzip 89 kB)+ `dist/assets/index-*.css`(15 kB),三個檢查全部通過。
+- 未開始：失敗狀態 UX、資料品質 guardrails。
 - 待驗證：HUD time-sync 與 About Me 面板已 commit（`181124d`），smoke test 涵蓋 boot / 互動 / HUD 切換；剩下 About Me 面板的視覺微調仍建議在瀏覽器人工掃過一次。
 
 ---
@@ -56,20 +57,25 @@
 
 - `npm run build`、`npm run check:timing`、`npm run test:smoke` 全部通過,smoke test 沒有 Babel/ script loading 相關 console 錯誤。
 
-### 3. [未開始] 讓前端程式進入真正的 build 驗證
+### 3. [已完成] 讓前端程式進入真正的 build 驗證
 
-目標：把「HTML build 成功但 runtime 壞掉」的落差補起來。
+實作:
 
-- 評估將 React、ReactDOM、Leaflet 改為 npm dependencies。
-- 建立 Vite module entry，讓核心前端程式由 Vite 解析、打包與檢查。
-- 保留現有全域資料介面與 UI 行為，先做等價搬遷。
-- 搬遷後再評估是否拆分 app/map/data helper 模組。
+- `npm install react@18.3.1 react-dom@18.3.1 leaflet@1.9.4` 改為 runtime deps。
+- 新增 `src/main.js` 作為 Vite entry,import React / ReactDOM (`react-dom/client`) / L / `leaflet/dist/leaflet.css`,然後 `window.React = …` / `window.ReactDOM = …` / `window.L = …` 讓既有 classic-style 腳本繼續用 bare reference。
+- `index.html` 拿掉 unpkg 4 個 tag,所有腳本改成 `<script type="module">`,順序固定為 main.js → rail-data.generated.js → rail-data.js → app-core.js → app-map.js → render.js。
+- 把原本 inline 的 `ReactDOM.createRoot(...).render(...)` 抽成 `public/assets/render.js`。放在 `public/` 是為了避免 Vite 把它跟 `src/main.js` 合併、導致 render 在 app 腳本前執行(實際踩過一次)。
 
-完成標準：
+驗證:
 
-- app 不再依賴 unpkg React/ReactDOM/Leaflet。
-- `npm run build` 會實際處理核心前端程式。
-- browser smoke test 與 timing check 都通過。
+- `npm run build`:28 modules transformed,輸出 `dist/assets/index-<hash>.js`(292 kB / gzip 89 kB)、`dist/assets/index-<hash>.css`(15 kB / gzip 6 kB)、HTML 2.7 kB。
+- `npm run check:timing` 通過。
+- `npm run test:smoke` 通過(11 passed / 1 skipped),包含 boot、TW/JP 切換、地圖點選、modal 開關、HUD tab 立即驅動 `targetTime`、mobile viewport 不遮擋。
+
+待做(後續可獨立進行):
+
+- 把 `app-core.js` / `app-map.js` / `rail-data.js` 改寫為真正的 ES module(import/export 取代 `window.X` globals);現在的 stop-gap 仍仰賴 globals。
+- 評估換成 React 18 production build(目前 dev build,bundle size 可降一半)。
 
 ### 4. [未開始] 改善失敗狀態 UX
 
@@ -103,5 +109,5 @@
 
 1. ~~先做 browser smoke test~~（完成）。
 2. ~~移除 Babel standalone~~（完成）。
-3. 接著把 React/Leaflet 搬進 Vite build，讓 build 開始真正檢查前端程式。
-4. 最後補 UX 失敗狀態與資料品質 guardrails。
+3. ~~把 React/Leaflet 搬進 Vite build~~（完成）。
+4. 接下來補 UX 失敗狀態與資料品質 guardrails(剩 step 4 與 step 5)。

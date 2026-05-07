@@ -4,7 +4,7 @@ A static web app that predicts when the next train will pass a given point on
 Taiwan and Japan rail lines. Pick a line, drop a pin, and the map shows live
 animated trains plus a sheet listing each upcoming pass.
 
-- Frontend: React 18 (UMD) loaded directly via classic scripts — no JSX, no build step for app code.
+- Frontend: React 18 + Leaflet 1.9, bundled by Vite from npm dependencies. The app code itself is plain `React.createElement` (no JSX) and shares globals across files via `window.X` assignments.
 - Map: Leaflet 1.9 with hand-tuned markers and gestures.
 - Data: hand-curated lines/stations/templates in `public/assets/rail-data.js`,
   merged with real polyline geometry generated into
@@ -51,12 +51,15 @@ the pipeline monthly and opens a PR if the shapes change.
 ## Repository layout
 
 ```
-index.html                       Entry HTML; loads Leaflet, React UMD, and the app scripts.
+index.html                       Entry HTML; references the Vite bundle and the public app scripts in load order.
+src/
+  main.js                        Vite entry. Imports React, ReactDOM, Leaflet, leaflet.css; exposes them on window.
 public/assets/
   app-core.js                    App shell, state, panels, sheets.
   app-map.js                     Leaflet integration, markers, gestures.
   rail-data.js                   Hand-curated lines / stations / train templates (RailUtil lives here too).
   rail-data.generated.js         Generated polylines + station-km tables (do not edit by hand).
+  render.js                      Final ReactDOM.createRoot call; loaded last so the app globals are populated.
   styles.css, tokens.css, icons.svg, logo-mark.svg
   train-icons/                   Top-down PNG icons + train-icon-map.json (see its own README).
 scripts/
@@ -68,10 +71,18 @@ doc/                             Project notes.
 
 ## Tech notes
 
-- No bundler magic in the runtime path: `app-core.js` / `app-map.js` are
-  loaded as classic scripts that share globals (`React`, `ReactDOM`, `L`,
-  `RAIL_DATA`, `RailUtil`). Keep them UMD-friendly — no ES module imports
-  and no JSX syntax (`React.createElement` only).
+- React, ReactDOM, and Leaflet come from npm via `src/main.js`, which is a
+  Vite module entry. Vite bundles them into a hashed `dist/assets/index-*.js`
+  and the bundled main.js attaches them to `window` for the legacy classic
+  scripts to consume.
+- `app-core.js` / `app-map.js` are still loaded as `<script type="module">`
+  but are kept in `public/assets/` so Vite copies them through unchanged.
+  They share globals (`React`, `ReactDOM`, `L`, `RAIL_DATA`, `RailUtil`,
+  `App`, `MapArea`, …) via `window.X` writes; cross-script references
+  resolve through the global object even in module scope.
+- Keep them UMD-friendly — no ES module imports inside the app scripts and
+  no JSX syntax (`React.createElement` only). `render.js` is the final
+  script in load order and triggers `ReactDOM.createRoot(...).render(...)`.
 - Geometry helpers (haversine, projection, position-at-km) live in `RailUtil`
   inside `public/assets/rail-data.js` and are mirrored on the build side in
   `scripts/fetch-rail-shapes.mjs`.

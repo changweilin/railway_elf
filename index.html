@@ -5,16 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Railway Elf · 列車經過預測</title>
 
-<!-- Leaflet -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="anonymous" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="anonymous"></script>
-
-<!-- React (UMD) -->
-<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
-<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
-
 <link rel="stylesheet" href="/assets/styles.css?v=19" />
 
 <style>
@@ -72,15 +62,11 @@
     </svg>
   </template>
 
-  <script src="/assets/rail-data.generated.js"></script>
-  <script src="/assets/rail-data.js"></script>
-
-  <script src="/assets/app-core.js"></script>
-  <script src="/assets/app-map.js"></script>
-
-  <script>
-    const root = ReactDOM.createRoot(document.getElementById('app'));
-    root.render(React.createElement(App));
-  </script>
+  <script type="module" src="/src/main.js"></script>
+  <script type="module" src="/assets/rail-data.generated.js"></script>
+  <script type="module" src="/assets/rail-data.js"></script>
+  <script type="module" src="/assets/app-core.js"></script>
+  <script type="module" src="/assets/app-map.js"></script>
+  <script type="module" src="/assets/render.js"></script>
 </body>
 </html>
