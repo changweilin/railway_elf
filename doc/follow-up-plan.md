@@ -4,24 +4,7 @@
 
 ## 目前結論
 
-主線待辦已完成，沒有尚未完成的必要項目。
-
-目前剩下的是可選優化與工作區整理，不是阻擋上線或繼續開發的 active blocker。
-
-## 已完成
-
-- Browser smoke test：`tests/smoke.spec.mjs`、`playwright.config.js`、`npm run test:smoke`。
-- 失敗狀態 e2e：geolocation 拒絕、Nominatim 失敗、tile burst、off-rail empty state。
-- CI：`.github/workflows/ci.yml` 串起 build、timing、shape、smoke checks。
-- Babel standalone 移除：runtime 不再依賴 `@babel/standalone`。
-- React / ReactDOM / Leaflet 改為 npm dependencies，並由 Vite bundle。
-- ES module 改寫：核心資料與 UI code 已搬進 `src/`，由 `import` / `export` 進入 Vite module graph。
-- 失敗狀態 UX：NoticeStack、search inline error、統一 empty state。
-- 資料品質 guardrails：`scripts/check-line-shapes.mjs`、`scripts/line-shape-snapshot.json`、`npm run check:shapes`。
-- 資料更新 workflow：shape diff 後先跑 ratchet，再更新 snapshot 並開 PR。
-- PWA / meta：favicon、manifest、description、theme-color、OG、Twitter summary card。
-- TRA-Coast 海線真實線形已更新。
-- 第二頁/第二段字體已統一：`rail-type-section` 使用既有 typography tokens。
+沒有尚未完成的必要項目；目前只保留可選優化與工作區整理。
 
 ## 未完成
 
@@ -42,6 +25,8 @@
 
 ## 建議下一步
 
-1. 不需要再做功能性待辦清理。
-2. 若準備提交，先處理或忽略 `node_modules/.vite/deps/_metadata.json` 這個本機快取異動。
-3. 若要繼續優化，優先做 bundle size 拆分，其次補 PWA raster 圖像。
+1. 清理提交狀態：處理或忽略 `node_modules/.vite/deps/_metadata.json` 這個本機快取異動，避免開發產物混進 commit。
+2. Bundle size 拆分：將 `rail-data.generated.js` 從 main bundle 拆成獨立 chunk 或 dynamic import，降低初始載入成本。
+3. 補 PWA / 社群圖像：新增 `apple-touch-icon.png` 與 `og-image.png`，改善 iOS 主畫面與社群分享預覽。
+4. 部署前檢查：發布前跑完整驗證，包含 `npm run build`、`npm run check:timing`、`npm run check:shapes`、`npm run test:smoke`。
+5. 後續資料改善：若 OSM 未來有更乾淨的 Tokaido-Shinkansen relation，再替換資料來源並更新 snapshot。
