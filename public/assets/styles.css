@@ -521,7 +521,58 @@ body {
   display: inline-flex; align-items: center; justify-content: center;
   font-size: 14px;
 }
-.fav-name { flex: 1; font-size: 13px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.fav-name {
+  flex: 1; min-width: 0;
+  font-size: 13px;
+  overflow: hidden;
+  white-space: nowrap;
+  position: relative;
+}
+.fav-name-track { display: inline-block; will-change: transform; }
+.fav-name-overflow {
+  -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
+          mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent 100%);
+}
+.fav-item:hover .fav-name-overflow .fav-name-track,
+.fav-item:focus-within .fav-name-overflow .fav-name-track {
+  animation: fav-name-marquee 9s linear infinite;
+}
+@keyframes fav-name-marquee {
+  0%, 12%   { transform: translateX(0); }
+  88%, 100% { transform: translateX(calc(-1 * var(--fav-scroll, 0px))); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fav-item:hover .fav-name-overflow .fav-name-track,
+  .fav-item:focus-within .fav-name-overflow .fav-name-track {
+    animation: none;
+  }
+}
+.fav-actions {
+  display: flex; justify-content: flex-end;
+  margin-bottom: 8px;
+}
+.fav-bulk-rename {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 8px;
+  font-size: 11px;
+  background: var(--me-bg-tertiary);
+  color: var(--me-text-muted);
+  border: 1px solid var(--me-border);
+  border-radius: var(--me-radius-sm);
+  cursor: pointer;
+  transition: var(--me-transition-fast);
+}
+.fav-bulk-rename:hover:not(:disabled) {
+  color: var(--me-accent-primary);
+  border-color: var(--me-border-hover);
+  background: var(--me-bg-glass-hover);
+}
+.fav-bulk-rename:disabled { cursor: progress; opacity: 0.7; }
+.fav-bulk-rename.loading svg { animation: fav-bulk-spin 1.2s linear infinite; }
+@keyframes fav-bulk-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
 .fav-remove {
   width: 24px; height: 24px; border-radius: 4px;
   background: transparent; border: none; cursor: pointer;

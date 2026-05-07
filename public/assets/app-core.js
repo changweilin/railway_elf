@@ -455,6 +455,66 @@ function App() {
     if (village) return village;
     return name || null;
   };
+  // Aggressive variant of pickPoiName for the bulk "詳細命名" action.
+  // Applies the priority 車站 → 景點 → 地標 → 建築 → 商家+地名 → 道路 → 鄉鎮村里
+  // and concatenates a place suffix for shops so they aren't ambiguous.
+  const pickDetailedName = (j) => {
+    if (!j) return null;
+    const cls = j.class, type = j.type;
+    const nd = j.namedetails || {};
+    const langName = (region === 'japan')
+      ? (nd['name:ja'] || nd['name:zh-Hant'] || nd['name:zh'] || nd.name || j.name)
+      : (nd['name:zh-Hant'] || nd['name:zh'] || nd['name:ja'] || nd.name || j.name);
+    const addr = j.address || {};
+    const place = addr.suburb || addr.neighbourhood || addr.village || addr.quarter
+      || addr.city_district || addr.town || addr.hamlet || null;
+    if (cls === 'railway' && /station|halt|tram_stop|subway_entrance/.test(type || '')) {
+      if (langName) return /[站駅]$/.test(langName) ? langName : `${langName}站`;
+    }
+    if (cls === 'tourism' || (cls === 'leisure' && /park|garden|nature_reserve|stadium/.test(type || ''))) {
+      if (langName) return langName;
+    }
+    if (cls === 'historic' || cls === 'man_made') {
+      if (langName) return langName;
+    }
+    if (cls === 'building' && langName) return langName;
+    if (cls === 'shop' || cls === 'amenity' || cls === 'office' || cls === 'craft') {
+      const shopName = langName || addr.shop || addr.amenity || null;
+      if (shopName) return place ? `${shopName}・${place}` : shopName;
+    }
+    if (addr.road) return langName && langName !== addr.road ? `${langName}（${addr.road}）` : addr.road;
+    if (place) return place;
+    return langName || null;
+  };
+  const [bulkNamingFavs, setBulkNamingFavs] = useState(false);
+  const detailNameAllFavorites = async () => {
+    if (bulkNamingFavs) return;
+    if (!favorites.length) return;
+    setBulkNamingFavs(true);
+    const lang = region === 'japan' ? 'ja,zh-TW,en' : 'zh-TW,ja,en';
+    // Snapshot so we don't loop over a moving array while we await.
+    const targets = favorites.filter(f => f.auto !== false);
+    try {
+      for (const f of targets) {
+        const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${f.lat}&lon=${f.lng}&zoom=18&extratags=1&namedetails=1&accept-language=${lang}`;
+        try {
+          const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+          if (r.ok) {
+            const j = await r.json();
+            const name = pickDetailedName(j);
+            if (name) {
+              setFavorites(prev => prev.map(x =>
+                (x.id === f.id && x.auto !== false) ? { ...x, name } : x));
+            }
+          }
+        } catch { /* network error: skip this one */ }
+        // Nominatim usage policy: max 1 req/sec.
+        await new Promise(res => setTimeout(res, 1100));
+      }
+    } finally {
+      setBulkNamingFavs(false);
+    }
+  };
   const refineFavoriteNameAsync = async (id, lat, lng) => {
     const lang = region === 'japan' ? 'ja,zh-TW,en' : 'zh-TW,ja,en';
     const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&extratags=1&namedetails=1&accept-language=${lang}`;
@@ -570,6 +630,7 @@ function App() {
         useGeolocation, favorites, addFavorite, removeFavorite, pickFavorite, copyFavoriteCoords,
         renameFavorite, favEditingId, setFavEditingId,
         favCollapsed, setFavCollapsed,
+        detailNameAllFavorites, bulkNamingFavs,
         targetTime, setTargetTime, setCustomTarget, quickPick, handleQuickPick, setQuickPick,
         now, nearest, offRail, timeFocusTick,
         enabledCategories, toggleCategory,
@@ -692,6 +753,7 @@ function Panel(props) {
     favorites, addFavorite, removeFavorite, pickFavorite, copyFavoriteCoords,
     renameFavorite, favEditingId, setFavEditingId,
     favCollapsed, setFavCollapsed,
+    detailNameAllFavorites, bulkNamingFavs,
     targetTime, setTargetTime, setCustomTarget, quickPick, handleQuickPick, setQuickPick,
     now, nearest, offRail, timeFocusTick,
     enabledCategories, toggleCategory,
@@ -786,23 +848,37 @@ function Panel(props) {
           size: 16,
         }),
       ),
-      !favCollapsed && React.createElement("div", { id: "fav-list-region", className: "fav-list" },
-        favorites.map(f =>
-          React.createElement(FavItem, {
-            key: f.id,
-            fav: f,
-            editing: favEditingId === f.id,
-            onPick: () => { pickFavorite(f); if (onClose) setTimeout(onClose, 0); },
-            onCopy: (btn) => copyFavoriteCoords(f, btn),
-            onRemove: () => removeFavorite(f.id),
-            onStartEdit: () => setFavEditingId && setFavEditingId(f.id),
-            onCancelEdit: () => setFavEditingId && setFavEditingId(null),
-            onCommitEdit: (name) => {
-              renameFavorite && renameFavorite(f.id, name);
-              setFavEditingId && setFavEditingId(null);
-            },
-          })
-        )
+      !favCollapsed && React.createElement("div", { id: "fav-list-region" },
+        React.createElement("div", { className: "fav-actions" },
+          React.createElement("button", {
+            type: "button",
+            className: "fav-bulk-rename" + (bulkNamingFavs ? " loading" : ""),
+            onClick: () => detailNameAllFavorites && detailNameAllFavorites(),
+            disabled: bulkNamingFavs,
+            title: "依車站/景點/地標/建築/商家/道路/鄉鎮村里順序重新命名（僅自動命名項目）",
+          },
+            React.createElement(Icon, { id: "me-replan", size: 12 }),
+            bulkNamingFavs ? "命名中…" : "詳細命名",
+          ),
+        ),
+        React.createElement("div", { className: "fav-list" },
+          favorites.map(f =>
+            React.createElement(FavItem, {
+              key: f.id,
+              fav: f,
+              editing: favEditingId === f.id,
+              onPick: () => { pickFavorite(f); if (onClose) setTimeout(onClose, 0); },
+              onCopy: (btn) => copyFavoriteCoords(f, btn),
+              onRemove: () => removeFavorite(f.id),
+              onStartEdit: () => setFavEditingId && setFavEditingId(f.id),
+              onCancelEdit: () => setFavEditingId && setFavEditingId(null),
+              onCommitEdit: (name) => {
+                renameFavorite && renameFavorite(f.id, name);
+                setFavEditingId && setFavEditingId(null);
+              },
+            })
+          )
+        ),
       ),
     ),
 
@@ -1173,6 +1249,40 @@ function TimeSlider({ targetTime, setCustomTarget }) {
   );
 }
 
+// Long names get faded out + marquee on hover. Detection is via scrollWidth
+// vs clientWidth — re-measured on name/layout change via ResizeObserver.
+function FavName({ name }) {
+  const wrapRef = useRef(null);
+  const trackRef = useRef(null);
+  const [overflow, setOverflow] = useState(false);
+  const [scrollPx, setScrollPx] = useState(0);
+  useEffect(() => {
+    const w = wrapRef.current, t = trackRef.current;
+    if (!w || !t) return;
+    const measure = () => {
+      const diff = t.scrollWidth - w.clientWidth;
+      setOverflow(diff > 2);
+      setScrollPx(Math.max(0, diff));
+    };
+    measure();
+    if (typeof ResizeObserver !== 'undefined') {
+      const ro = new ResizeObserver(measure);
+      ro.observe(w); ro.observe(t);
+      return () => ro.disconnect();
+    }
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [name]);
+  return React.createElement("div", {
+    ref: wrapRef,
+    className: "fav-name" + (overflow ? " fav-name-overflow" : ""),
+    style: overflow ? { '--fav-scroll': scrollPx + 'px' } : null,
+    title: name,
+  },
+    React.createElement("span", { ref: trackRef, className: "fav-name-track" }, name),
+  );
+}
+
 // ============================================================
 // FAVORITE ITEM — shows the favorite, with copy / rename / delete actions.
 // In edit mode the name is replaced by an inline <input>; Enter commits and
@@ -1210,7 +1320,7 @@ function FavItem({ fav, editing, onPick, onCopy, onRemove, onStartEdit, onCancel
           maxLength: 40,
           "aria-label": "收藏名稱",
         })
-      : React.createElement("div", { className: "fav-name" }, fav.name),
+      : React.createElement(FavName, { name: fav.name }),
     React.createElement("button", {
       className: "fav-edit",
       title: editing ? "完成" : "重新命名",
