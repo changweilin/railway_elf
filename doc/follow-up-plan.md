@@ -6,6 +6,7 @@
 
 ## 進度更新（2026-05-07）
 
+- 已完成:ES module 改寫(延伸候選 B)。把 `rail-data.{,generated.}js` / `app-core.js` / `app-map.js` 從 `public/assets/` `git mv` 進 `src/`(原本在 public/ 下,Vite 只當靜態檔不 transform);全部從 `window.X = ...` / `Object.assign(window, ...)` 改 `export const`;rail-data.generated.js 的 emit 模板改 `export const RAIL_SHAPES`;`scripts/fetch-rail-shapes.mjs` 的 OUT_PATH 與 `loadStationsFromRailData()` 的字面量 regex 跟著改。`app-core.js` ↔ `app-map.js` 是故意的 ESM circular import — React component body / handler 內 lazy reference 沒問題,top-level read 才會 undefined。`src/main.js` 改成完整 entry(`createRoot(...).render(React.createElement(App))`),刪掉 `public/assets/render.js`,`index.html` 只剩一個 `<script type="module" src="/src/main.js">`。check 腳本改用 top-level `await import("../src/rail-data.js")` 取代 vm.runInContext + window-shim。`npm run build` 從 28 modules / 292 kB / gzip 89 kB → 32 modules / 528 kB / gzip 173 kB(主要是 RAIL_SHAPES 字面量 ~280 kB 進入 main bundle,後續可用 manualChunks 拆),其它 3 個 check 通過、`test:smoke` 21 passed / 1 skipped。文件同步全部從「UMD / classic scripts」改「Vite ESM bundle / import-export」,範例 `eval(readFileSync(...))` 改 `await import(...)`,路徑 `public/assets/...` 改 `src/...`。
 - 已完成:資料更新 workflow 自動 commit snapshot(延伸候選 E)。`.github/workflows/update-rail-shapes.yml` 在 `Detect diff` 之後加兩個 conditional step(只在 `generated.js` 真的變了時才跑):先 `node scripts/check-line-shapes.mjs` 走 ratchet,若 fail 就讓 workflow fail、不開 PR(資料退化時不要把退化值寫回 snapshot);通過後 `node scripts/check-line-shapes.mjs --update` reseed。`add-paths` 加 `scripts/line-shape-snapshot.json`,讓 `peter-evans/create-pull-request@v6` 把 snapshot 與 `rail-data.generated.js` 一起放進 PR。本機驗證:`check:shapes` 對 23 條線通過(snapshot 2026-05-07T04:37 基準);`--update` 在指標未變時只動 `updatedAt`,但步驟只在 generated.js 已有 diff 時跑,所以不會造成假 PR。
 - 已完成：地圖上方「現在 / 預測」HUD tab 接到全局 `quickPick` / `handleQuickPick`，移除 `MapArea` 內部 local `hudMode`，切換 tab 即同步 `targetTime`，`liveTrains` useMemo 與 marker effect 立即重算。涉及 `public/assets/app-core.jsx`、`public/assets/app-map.jsx`，`npm run build` 已通過。
 - 已完成:失敗狀態 e2e 測試(延伸候選 D)。新增 `tests/failure-states.spec.mjs`,4 個 case 在 desktop + mobile project 都跑(8 passed):geolocation 拒絕(`addInitScript` 替 `navigator.geolocation` stub,點 panel 內「使用我的位置」→ 確認 `.notice-error` 文字含「已拒絕定位權限」,並驗 dismiss 後消失);Nominatim 失敗(`page.route` abort `**/nominatim.openstreetmap.org/**`,在 search input 打字 → 確認 `.search-error` 出現,清空後消失);Tile burst(同步 abort `cartocdn.com` + `tile.openstreetmap.org`,跳過 `waitForAppReady` 改只等 toolbar,連續 4 次 mouse-drag 觸發 ≥3 tileerror → 確認 `.notice-warn` 含「地圖圖磚載入失敗」);Off-rail empty state(geolocation stub 回 Pacific 24,130 → 確認 `.train-empty-title === '目前位置不在任何鐵道附近'` 且 sidebar `.nearest-empty-title` 同步)。`使用我的位置` 在 panel(`.btn-soft`)與 map FAB(`.map-fab`)有兩個同名 button,scope 改用 `.panel button:has-text(...)`。完整 `npm run test:smoke` 從 13 passed / 1 skip → 21 passed / 1 skip。
@@ -21,8 +22,8 @@
 ## 現況重點
 
 - App 是靜態 Vite 專案,入口為 `index.html`,base `./` 可放 sub-path。
-- React 18 / ReactDOM / Leaflet 已改成 npm dep 並由 Vite bundle(`src/main.js` entry,exposes 在 `window`)。`app-core.js` / `app-map.js` / `rail-data.js` / `rail-data.generated.js` / `render.js` 仍是 `<script type="module">` 走 globals(下一步可考慮改 ES module)。
-- `npm run build` 真的會處理 28 modules,輸出 hashed JS / CSS。
+- React 18 / ReactDOM / Leaflet 已改成 npm dep 並由 Vite bundle(`src/main.js` entry)。`app-core.js` / `app-map.js` / `rail-data.js` / `rail-data.generated.js` 全都搬進 `src/` 並走 ES module import / export(2026-05-07 完成 B),`index.html` 只剩一個 `<script type="module" src="/src/main.js">`。`app-core.js` ↔ `app-map.js` 是故意的 circular import,僅在 component body 內 lazy reference。
+- `npm run build` 真的會處理 32 modules,輸出 hashed JS(528 kB / gzip 173 kB)/ CSS。
 - `npm run check:timing` 驗列車生成;`npm run check:shapes` 驗 line shape 對 snapshot 的 ratchet。
 - `npm run test:smoke` 跑 Playwright 對 dist preview,涵蓋 boot / 互動 / HUD / mobile viewport(11 passed / 1 skipped)。
 - 失敗 UX 走 NoticeStack(geolocation / tile burst)+ inline error(search)+ 統一 empty state。
@@ -78,7 +79,7 @@
 
 待做(後續可獨立進行):
 
-- 把 `app-core.js` / `app-map.js` / `rail-data.js` 改寫為真正的 ES module(import/export 取代 `window.X` globals);現在的 stop-gap 仍仰賴 globals。
+- ~~把 `app-core.js` / `app-map.js` / `rail-data.js` 改寫為真正的 ES module(import/export 取代 `window.X` globals)~~(2026-05-07 完成,見延伸候選 B)。
 - 評估換成 React 18 production build(目前 dev build,bundle size 可降一半)。
 
 ### 4. [已完成] 改善失敗狀態 UX
@@ -126,7 +127,7 @@
 
 ## 延伸候選 (post-step-5)
 
-每項都標註目標、步驟、風險、估時與優先順序。A、D、E 已完成;剩下 B(ES module 改寫,範圍最大)、C(PWA / meta)。
+每項都標註目標、步驟、風險、估時與優先順序。A、B、D、E 已完成;剩下 C(PWA / meta)。
 
 ### A. [已完成] CI 串接 — 把 4 個檢查跑在 PR 上
 
@@ -140,23 +141,25 @@
 
 驗證:本機 `npm run build` / `check:timing` / `check:shapes` / `CI=1 npm run test:smoke` 全綠。實際 GitHub runner 表現待第一個 PR 跑出來才知道,如果 flake 仍嚴重再考慮 retries=2 或拆 job。
 
-### B. ES module 改寫 — 拿掉 `window.X` globals — [優先級中] [估時 0.5–1 工作天]
+### B. [已完成] ES module 改寫 — 拿掉 `window.X` globals
 
-目標:`app-core.js` / `app-map.js` / `rail-data.js` / `rail-data.generated.js` / `render.js` 全改 import/export,讓整套 code 真正進 Vite bundle,後續 TS / tree-shake / code-split 才有意義。
+實作:
 
-步驟:
+- `scripts/fetch-rail-shapes.mjs` 的 `emit()` 從 `window.RAIL_SHAPES = ...` 改成 `export const RAIL_SHAPES = ...`;OUT_PATH 從 `public/assets/rail-data.generated.js` 改成 `src/rail-data.generated.js`;`loadStationsFromRailData()` 改抓 `export const RAIL_DATA = (...)` 字面量(原本是 `window.RAIL_DATA = (...)`)。
+- 把 `rail-data.js` / `rail-data.generated.js` / `app-core.js` / `app-map.js` 從 `public/assets/` 用 `git mv` 搬到 `src/`(這是讓它們真正進 Vite bundle 的關鍵——public/ 下的檔案 Vite 是當靜態檔 serve,不會 transform)。
+- `src/rail-data.js` 從 `window.RAIL_DATA = ...` / `window.RailUtil = ...` / `window.TrainGen = ...` 改成 `export const`,並 `import { RAIL_SHAPES } from "./rail-data.generated.js"`;mergeShapes IIFE 內的 `window.RAIL_SHAPES` / `window.RAIL_DATA` 全改成 module-local 識別字。
+- `src/app-core.js`:`import React, { useState, useEffect, useMemo, useRef, useCallback } from "react"`;`import { RAIL_DATA, RailUtil, TrainGen } from "./rail-data.js"`;`import { MapArea, TrainSheet, TrainModal } from "./app-map.js"`(deliberate circular import,只在 component body / handler 引用所以安全);`Object.assign(window, {...})` 改 `export { App, Toolbar, ... }`。
+- `src/app-map.js`:`import React, { useState as useStateM, ... } from "react"`(維持 M-suffix 不撞名)、`import L from "leaflet"`、`import { RAIL_DATA, RailUtil } from "./rail-data.js"`、`import { Icon, formatClock, formatCountdown, sameDayISO } from "./app-core.js"`;`if (!window.L) return` 改 `if (!L) return`;export 從 window-assign 改 ESM。
+- `src/main.js` 簡化成完整 entry:import React、createRoot、leaflet.css、`{ App }` from `./app-core.js`,然後 `createRoot(...).render(React.createElement(App))`。原本的 `public/assets/render.js` 刪掉。`index.html` 只剩 `<script type="module" src="/src/main.js">` 一個 tag。
+- `scripts/check-train-timing.mjs` / `check-line-shapes.mjs`:從 `vm.runInContext` + window-shim 改成 top-level `await import("../src/rail-data.js")`,因為 .mjs 預設就是 ESM,所有 ratchet / 計算邏輯不變。
+- 文件同步:README、`.claude/skills/{ui-events-review,rail-data-update,geo-math-verify,market-insight}/SKILL.md`、`.claude/agents/{ui-logic-engineer,geo-analyst,market-analyst,rail-data-curator,i18n-translator}.md`、`scripts/TDX-SETUP.md` 全部把舊路徑 `public/assets/...` 換成 `src/...`,把「UMD / classic scripts / `window.X` globals」描述換成「Vite ESM bundle / import-export / 故意的 circular import」,把示範用的 `eval(readFileSync(...))` 換成 `await import(...)`。
 
-1. `rail-data.generated.js`:emit 模板改成 `export const RAIL_SHAPES = {...}`;`scripts/fetch-rail-shapes.mjs` 的 `emit()` 跟著改。
-2. `rail-data.js`:`import { RAIL_SHAPES } from './rail-data.generated.js'`、`export const RAIL_DATA, RailUtil, TrainGen`(目前是 `window.X = ...`)。
-3. `app-core.js`:`import React, { useState, … } from 'react'`、`import { RAIL_DATA, RailUtil, TrainGen } from './rail-data.js'`,把 `Object.assign(window, {App, …})` 改成 `export {App, …}`。
-4. `app-map.js` 同樣處理,`import L from 'leaflet'`、`import { App, MapArea, … } from './app-core.js'`(或拆檔)。
-5. `render.js` 改 `import { createRoot } from 'react-dom/client'; import { App } from './app-core.js'`;`src/main.js` 直接 import 全部後 render,`index.html` 只剩一個 `<script type="module" src="/src/main.js">`。
-6. `scripts/check-train-timing.mjs` / `check-line-shapes.mjs`:目前用 `vm.runInContext` + window globals,改用動態 `import()` 或乾脆改寫成 ESM。
+驗證:
 
-風險 / 未知:
+- `npm run build`:32 modules transformed(原本 28 個,因為 4 個 source file 進了 module graph),輸出 `dist/assets/index-*.js` 528 kB / gzip 173 kB(原本 292 kB / 89 kB),CSS 不變。bundle 變大主要是 rail-data.generated.js 那 ~280 kB 的 RAIL_SHAPES literal 現在被 inline 進 main bundle;以前它在 public/ 是另一個 module fetch。後續若要 code-split 可用 `manualChunks`。
+- `npm run check:timing`、`npm run check:shapes`、`npm run test:smoke`(21 passed / 1 skipped)全綠。
 
-- check 腳本的 sandbox 重寫是最大不確定因素(Node ESM bare specifier、JSON import 等)。
-- `app-core.js` 1.1k 行,要決定維持單檔 export 還是拆成 `<App>`、`<Panel>`、`<SearchBox>` 等多檔。
+風險證實:circular import 在實務上沒有問題——React component bodies 與 event handlers 是 lazy reference,等到呼叫時兩個 module 都已經完整 evaluate 完。如果未來在 module top level 直接讀取 `MapArea` 或 `Icon`(例如做成常數陣列)就會撞 `undefined`,要拆成 lazy getter 或拆檔。
 
 ### C. PWA / meta(favicon、OG、manifest) — [優先級中] [估時 1.5–4 hr]
 

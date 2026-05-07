@@ -9,9 +9,9 @@ description: Use when adding or editing user-facing strings, station names, trai
 
 | Layer | File | What |
 |---|---|---|
-| UI chrome (zh-TW) | `public/assets/app-core.js`, `public/assets/app-map.js` | Buttons, labels, tooltips, time formatters |
-| Region/line/station names | `public/assets/rail-data.js` | `name` (native), `nameEn`, `directions.up/down` |
-| Train type labels | `public/assets/rail-data.js` `trainTemplates[].type` / `.badge` | "自強", "のぞみ", etc. |
+| UI chrome (zh-TW) | `src/app-core.js`, `src/app-map.js` | Buttons, labels, tooltips, time formatters |
+| Region/line/station names | `src/rail-data.js` | `name` (native), `nameEn`, `directions.up/down` |
+| Train type labels | `src/rail-data.js` `trainTemplates[].type` / `.badge` | "自強", "のぞみ", etc. |
 | HTML | `index.html` | `<title>`, `<noscript>` |
 
 ## Conventions (verified by reading the code)
@@ -37,7 +37,7 @@ description: Use when adding or editing user-facing strings, station names, trai
 - [ ] Every new station has `name` AND `nameEn`.
 - [ ] Every new line has `directions.up` AND `directions.down`.
 - [ ] No mixed scripts inside one `name` field (e.g. don't write `"東京 Tokyo"` — split into `name` / `nameEn`).
-- [ ] If station names changed: re-ran `npm run build:rail-data` and committed `public/assets/rail-data.generated.js`.
+- [ ] If station names changed: re-ran `npm run build:rail-data` and committed `src/rail-data.generated.js`.
 - [ ] zh-TW UI strings still parse — any apostrophe or backtick inside JSX `React.createElement("…", {…}, "string")` is escaped.
 
 ## When to escalate to a full i18n refactor

@@ -1,6 +1,6 @@
 // Fetch real railway line geometry from TDX (Taiwan) and OSM Overpass (Japan),
 // simplify, re-project our hand-coded stations onto the real shape, and emit
-// public/assets/rail-data.generated.js.
+// src/rail-data.generated.js.
 //
 // Usage:
 //   TDX_CLIENT_ID=xxx TDX_CLIENT_SECRET=yyy node scripts/fetch-rail-shapes.mjs
@@ -17,7 +17,7 @@
 //               Useful for re-running the build step without internet.
 //
 // Output:
-//   public/assets/rail-data.generated.js — sets window.RAIL_SHAPES = { [lineId]: { shape, stationKms } }
+//   src/rail-data.generated.js — exports RAIL_SHAPES = { [lineId]: { shape, stationKms } }
 //
 // Get a TDX account at https://tdx.transportdata.tw/ (free tier is fine).
 
@@ -28,7 +28,7 @@ import { createHash } from "node:crypto";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
-const OUT_PATH = resolve(ROOT, "public/assets/rail-data.generated.js");
+const OUT_PATH = resolve(ROOT, "src/rail-data.generated.js");
 const CACHE_DIR = resolve(__dirname, ".cache");
 
 const args = new Set(process.argv.slice(2));
@@ -40,7 +40,7 @@ const REFRESH_CACHE = args.has("--refresh-cache");
 
 // ---------------------------------------------------------------------------
 // CONFIG: which internal line ids map to which upstream sources.
-// Internal ids must match those in public/assets/rail-data.js.
+// Internal ids must match those in src/rail-data.js.
 // ---------------------------------------------------------------------------
 
 // TDX TRA LineID reference (subset):
@@ -1016,13 +1016,14 @@ async function fetchOsmShapes(stationsByLineId) {
 // MAIN
 // ---------------------------------------------------------------------------
 
-// Read existing RAIL_DATA from rail-data.js by Function-evaluating its window assignment.
-// This lets us re-project station coords without manually mirroring the data here.
+// Read existing RAIL_DATA from src/rail-data.js by extracting its export
+// literal and Function-evaluating it. This lets us re-project station coords
+// without manually mirroring the data here.
 function loadStationsFromRailData() {
-  const src = readFileSync(resolve(ROOT, "public/assets/rail-data.js"), "utf8");
-  // Extract just the RAIL_DATA literal: window.RAIL_DATA = { ... };
-  const m = src.match(/window\.RAIL_DATA\s*=\s*(\{[\s\S]*?\n\});/);
-  if (!m) throw new Error("Could not locate window.RAIL_DATA in rail-data.js");
+  const src = readFileSync(resolve(ROOT, "src/rail-data.js"), "utf8");
+  // Extract just the RAIL_DATA literal: export const RAIL_DATA = { ... };
+  const m = src.match(/export\s+const\s+RAIL_DATA\s*=\s*(\{[\s\S]*?\n\});/);
+  if (!m) throw new Error("Could not locate `export const RAIL_DATA` in rail-data.js");
   // eslint-disable-next-line no-new-func
   const RAIL_DATA = new Function(`return (${m[1]});`)();
   const stationsByLineId = {};
@@ -1148,7 +1149,7 @@ function emit(result) {
   const body = PRETTY
     ? JSON.stringify(result, null, 2)
     : JSON.stringify(result);
-  writeFileSync(OUT_PATH, `${header}window.RAIL_SHAPES = ${body};\n`, "utf8");
+  writeFileSync(OUT_PATH, `${header}export const RAIL_SHAPES = ${body};\n`, "utf8");
   console.log(`[OUT] wrote ${OUT_PATH}`);
 }
 

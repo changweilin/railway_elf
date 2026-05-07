@@ -1,6 +1,9 @@
-"use strict";
 // Main app component
-const { useState, useEffect, useMemo, useRef, useCallback } = React;
+import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { RAIL_DATA, RailUtil, TrainGen } from "./rail-data.js";
+// Circular import (app-map → app-core too); safe because both sides reference
+// the imported symbols only at call time inside React component bodies.
+import { MapArea, TrainSheet, TrainModal } from "./app-map.js";
 
 // Snap tolerance: locations farther than this from any rail line are treated as
 // "off-rail" and produce no train list. Tuned for handheld use; revisit when
@@ -1399,5 +1402,4 @@ function FavLimitModal({ pending, favorites, onReplace, onCancel, limit }) {
   );
 }
 
-// Export to window so other scripts can use them
-Object.assign(window, { App, Toolbar, Panel, SearchBox, TimeSlider, Icon, FavItem, FavLimitModal, formatClock, formatCountdown, sameDayISO });
+export { App, Toolbar, Panel, SearchBox, TimeSlider, Icon, FavItem, FavLimitModal, formatClock, formatCountdown, sameDayISO };

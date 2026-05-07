@@ -1,6 +1,6 @@
 ---
 name: geo-math-verify
-description: Use when modifying any geometric / numerical code in this project — `RailUtil` (haversine, projectOnSegment, closestOnLine, positionAtKm) in `public/assets/rail-data.js`, or the geo helpers in `scripts/fetch-rail-shapes.mjs` (perpDistKm, simplify, cumulativeKm, stationKmOnShape, stitchPolylines, parseWkt). Also use when investigating "wrong distance" / "snapped to wrong line" / "stations off by N km" bugs.
+description: Use when modifying any geometric / numerical code in this project — `RailUtil` (haversine, projectOnSegment, closestOnLine, positionAtKm) in `src/rail-data.js`, or the geo helpers in `scripts/fetch-rail-shapes.mjs` (perpDistKm, simplify, cumulativeKm, stationKmOnShape, stitchPolylines, parseWkt). Also use when investigating "wrong distance" / "snapped to wrong line" / "stations off by N km" bugs.
 ---
 
 # Railway Elf · Geo Math Verification
@@ -28,13 +28,8 @@ description: Use when modifying any geometric / numerical code in this project �
 ## Quick verification recipe
 
 ```bash
-node -e "
-  const { readFileSync } = require('fs');
-  const src = readFileSync('public/assets/rail-data.js', 'utf8');
-  // Strip the leading 'window.' assignments and run inside a fake window.
-  const window = {}; const w = window;
-  eval(src.replace(/^/, ''));  // sets window.RAIL_DATA, window.RAIL_SHAPES (if generated loaded), RailUtil, TrainGen
-  const { RailUtil, RAIL_DATA } = window;
+node --input-type=module -e "
+  const { RailUtil, RAIL_DATA } = await import('./src/rail-data.js');
   // Sanity: distance Taipei→Kaohsiung along TRA West.
   const tw = RAIL_DATA.taiwan.lines.find(l => l.id === 'TRA-West');
   const taipei = tw.stations.find(s => s.name === '台北');

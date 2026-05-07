@@ -1,6 +1,15 @@
-"use strict";
 // Map component — Leaflet integration
-const { useState: useStateM, useEffect: useEffectM, useRef: useRefM, useMemo: useMemoM } = React;
+import React, {
+  useState as useStateM,
+  useEffect as useEffectM,
+  useRef as useRefM,
+  useMemo as useMemoM,
+} from "react";
+import L from "leaflet";
+import { RAIL_DATA, RailUtil } from "./rail-data.js";
+// Circular: app-core imports from us too. Safe because all references happen
+// inside component bodies / event callbacks, not at module init.
+import { Icon, formatClock, formatCountdown, sameDayISO } from "./app-core.js";
 
 // Top-down PNG icons keyed by exact `train.type`. Mirrors
 // public/assets/train-icons/train-icon-map.json — keep them in sync. All PNGs
@@ -89,7 +98,7 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
 
   // Init Leaflet once
   useEffectM(() => {
-    if (!window.L) return;
+    if (!L) return;
     if (leafletRef.current) return;
     const initCenter = location ? [location.lat, location.lng] : RAIL_DATA[region].center;
     const initZoom = location ? 13 : RAIL_DATA[region].zoom;
@@ -952,4 +961,4 @@ function TrainModal({ train, nearest, targetTime, onClose, onFlyToTrain }) {
   );
 }
 
-Object.assign(window, { MapArea, TrainSheet, TrainCard, TrainModal });
+export { MapArea, TrainSheet, TrainCard, TrainModal };

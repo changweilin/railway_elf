@@ -1,7 +1,7 @@
 # TDX / OSM 資料來源設定
 
 `scripts/fetch-rail-shapes.mjs` 會從 TDX（台灣）與 OSM Overpass（日本）抓真實鐵道線形，
-產生靜態檔 `public/assets/rail-data.generated.js`。
+產生靜態檔 `src/rail-data.generated.js`。
 
 - 終端使用者：**不需要**任何帳號，網頁是純靜態。
 - 只有要更新線形時才在本機跑這支腳本。
@@ -65,7 +65,7 @@ npm run build:rail-data:jp
 > ```
 
 ### 6. 確認結果
-跑完後 `public/assets/rail-data.generated.js` 應包含 `TRA-West`、`TRA-East`、`THSR`
+跑完後 `src/rail-data.generated.js` 應包含 `TRA-West`、`TRA-East`、`THSR`
 三個 entry。重新整理網頁，台灣線會變成貼著真實路線的彎曲形狀。
 
 ---

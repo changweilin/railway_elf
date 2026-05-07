@@ -1,6 +1,6 @@
 ---
 name: rail-data-update
-description: Use when adding, removing, or editing rail lines, stations, or train templates in `public/assets/rail-data.js`, or when adjusting the upstream shape sources in `scripts/fetch-rail-shapes.mjs`. This skill encodes the data invariants that keep rail-data.js, rail-data.generated.js, and the map renderer mutually consistent.
+description: Use when adding, removing, or editing rail lines, stations, or train templates in `src/rail-data.js`, or when adjusting the upstream shape sources in `scripts/fetch-rail-shapes.mjs`. This skill encodes the data invariants that keep rail-data.js, rail-data.generated.js, and the map renderer mutually consistent.
 ---
 
 # Railway Elf · Rail Data Update
@@ -18,7 +18,7 @@ fetch-rail-shapes.mjs                     ├─→  RailUtil.closestOnLine snap
    re-projects stations onto shape →      │
                  ↓                        │
 rail-data.generated.js  ──────────────────┘
-   (window.RAIL_SHAPES = { lineId: { shape, totalKm, stationKms } })
+   (export const RAIL_SHAPES = { lineId: { shape, totalKm, stationKms } })
 ```
 
 `rail-data.js` then merges `RAIL_SHAPES` into each line: `line.shape` (hi-res polyline with cumulative km) is set, and each station's `km` is **overwritten** with the projected value. The drawing layer prefers `line.shape` when present and falls back to `stations` otherwise.
@@ -37,13 +37,13 @@ rail-data.generated.js  ──────────────────�
 
 ## Workflow
 
-1. **Read** `public/assets/rail-data.js` end-to-end before editing — the merge function `mergeShapes` and the helpers `RailUtil` / `TrainGen` rely on exact field shapes.
+1. **Read** `src/rail-data.js` end-to-end before editing — the merge function `mergeShapes` and the helpers `RailUtil` / `TrainGen` rely on exact field shapes.
 2. **Edit `rail-data.js`** for the canonical data (stations, line metadata, train templates).
 3. If you add a line that should have a real-world shape:
    - For Taiwan: add the line `id` to `TDX_LINE_MAP` in `scripts/fetch-rail-shapes.mjs` with one or more TDX `LineID`s (see the comment block listing 1001/1002/.../1008).
    - For Japan: add to `OSM_LINE_MAP` with a verified Overpass relation id (a `route` relation, not `route_master`).
 4. **Run** `npm run build:rail-data` (requires `TDX_CLIENT_ID` / `TDX_CLIENT_SECRET` env for Taiwan; OSM is unauthenticated). Use `--skip-tw` or `--skip-jp` to iterate on one side.
-5. **Verify** the generated file: `public/assets/rail-data.generated.js` should now include your line id in `window.RAIL_SHAPES`. Open the app (`npm run dev`) and confirm the line draws as a smooth polyline rather than the station-to-station zigzag fallback.
+5. **Verify** the generated file: `src/rail-data.generated.js` should now include your line id in the exported `RAIL_SHAPES` object. Open the app (`npm run dev`) and confirm the line draws as a smooth polyline rather than the station-to-station zigzag fallback.
 6. **Commit** both files together — a stale `rail-data.generated.js` will silently disagree with `rail-data.js` (different `km` values, missing stations).
 
 ## Common pitfalls

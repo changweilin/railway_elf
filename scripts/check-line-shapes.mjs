@@ -25,10 +25,8 @@
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
-import vm from "node:vm";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = resolve(__dirname, "..");
 const SNAPSHOT_PATH = resolve(__dirname, "line-shape-snapshot.json");
 
 const args = new Set(process.argv.slice(2));
@@ -40,18 +38,11 @@ const LENGTH_DROP_PCT = 0.05;        // allow up to 5% shorter
 const OFFSET_SLACK_KM = 0.5;         // allow station offset to grow by 0.5 km
 
 // ---------------------------------------------------------------------------
-// Load merged rail data the same way the timing check does.
+// rail-data.js is an ES module post-migration; dynamic-import it directly.
 
-const sandbox = { console };
-sandbox.window = sandbox;
-sandbox.globalThis = sandbox;
-vm.createContext(sandbox);
-vm.runInContext(readFileSync(resolve(ROOT, "public/assets/rail-data.generated.js"), "utf8"), sandbox);
-vm.runInContext(readFileSync(resolve(ROOT, "public/assets/rail-data.js"), "utf8"), sandbox);
-
-const { RAIL_DATA, RailUtil } = sandbox;
+const { RAIL_DATA, RailUtil } = await import("../src/rail-data.js");
 if (!RAIL_DATA || !RailUtil) {
-  console.error("Bootstrap failed — RAIL_DATA / RailUtil not on window");
+  console.error("Import failed — RAIL_DATA / RailUtil missing from rail-data.js");
   process.exit(1);
 }
 

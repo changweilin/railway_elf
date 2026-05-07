@@ -43,11 +43,7 @@ For a fixed user lat/lng, compute `nearest` exactly as `app-core.js` does, then 
 
 ```js
 // scratch/<descriptive-name>.mjs — keep these out of git
-import { readFileSync } from 'node:fs';
-const window = {};
-eval(readFileSync('public/assets/rail-data.generated.js', 'utf8'));
-eval(readFileSync('public/assets/rail-data.js', 'utf8'));
-const { RAIL_DATA, RailUtil, TrainGen } = window;
+import { RAIL_DATA, RailUtil, TrainGen } from '../src/rail-data.js';
 // … your aggregation here
 ```
 

@@ -10,31 +10,13 @@
 //
 // Then prints one full sample timetable per representative train type.
 
-import { readFileSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { dirname, resolve } from "node:path";
-import vm from "node:vm";
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = resolve(__dirname, "..");
-
-// Bootstrap: the browser scripts assume `window` is the global, so they read
-// `RAIL_DATA` (without `window.` prefix) inside helpers. Make the vm sandbox
-// be its own window so `window.X = ...` and bare `X` resolve to the same slot.
-const sandbox = { console };
-sandbox.window = sandbox;
-sandbox.globalThis = sandbox;
-vm.createContext(sandbox);
-
-const generated = readFileSync(resolve(ROOT, "public/assets/rail-data.generated.js"), "utf8");
-const railData = readFileSync(resolve(ROOT, "public/assets/rail-data.js"), "utf8");
-vm.runInContext(generated, sandbox);
-vm.runInContext(railData, sandbox);
-
-const { RAIL_DATA, RailUtil, TrainGen } = sandbox;
+// rail-data.js is an ES module that imports from its sibling generated file;
+// we just dynamic-import it directly. No vm sandbox / window-shim needed since
+// the migration to import/export.
+const { RAIL_DATA, RailUtil, TrainGen } = await import("../src/rail-data.js");
 
 if (!RAIL_DATA || !RailUtil || !TrainGen) {
-  console.error("Bootstrap failed — RAIL_DATA / RailUtil / TrainGen not on window");
+  console.error("Import failed — RAIL_DATA / RailUtil / TrainGen missing from rail-data.js");
   process.exit(1);
 }
 

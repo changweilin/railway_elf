@@ -1,15 +1,15 @@
 ---
 name: ui-events-review
-description: Use when adding, modifying, or reviewing React state, event handlers, Leaflet side-effects, gestures (swipe / drag-to-resize), or panel/sheet/modal interactions in `public/assets/app-core.js` and `public/assets/app-map.js`. The app uses React 18 UMD loaded as plain classic scripts — no JSX, no Babel — plus Leaflet directly. Review with that constraint in mind.
+description: Use when adding, modifying, or reviewing React state, event handlers, Leaflet side-effects, gestures (swipe / drag-to-resize), or panel/sheet/modal interactions in `src/app-core.js` and `src/app-map.js`. The app uses React 18 + Leaflet bundled by Vite as ES modules — no JSX, no Babel, just `React.createElement`. Review with that constraint in mind.
 ---
 
 # Railway Elf · UI Events & State Review
 
 ## Architecture facts (do not regress)
 
-- **No build step for the React code.** `index.html` loads React/ReactDOM UMD and the app scripts as plain `<script>` tags (no `type="text/babel"`, no Babel-standalone). Everything is `React.createElement(...)` — there is no JSX compilation. New components must follow the same calling convention.
-- **Hooks are aliased**: `app-core.js` does `const { useState, useEffect, useMemo, useRef, useCallback } = React;` and `app-map.js` does the same with `M`-suffixed names to avoid identifier collisions across the separately-loaded scripts. Keep that pattern.
-- **Globals via `Object.assign(window, { ... })`** at the bottom of each script is how cross-file references work — these scripts are not modules. Adding a new top-level component means exporting it the same way.
+- **Vite builds the React code, but there is no JSX.** `index.html` loads `<script type="module" src="/src/main.js">`; `main.js` imports `App` from `./app-core.js`, which imports React + rail-data and (via circular import) the map components. Everything is `React.createElement(...)` — no JSX compilation. New components must follow the same calling convention.
+- **Hooks are aliased**: `app-core.js` does `import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';` and `app-map.js` aliases them with `M`-suffixed names (`useStateM`, etc.) to keep the long-standing identifier separation across the two files. Keep that pattern when adding code there.
+- **Cross-file references go through `import` / `export`** — no more `Object.assign(window, ...)`. Add a new top-level component by exporting it from its file and importing it where used. The two component files (`app-core.js` ↔ `app-map.js`) form a deliberate ES-module circular import; only call-time references (inside component bodies / handlers) are safe — top-level identifier reads will see `undefined`.
 - **Leaflet lives in refs**, not state: `mapRef`, `leafletRef`, `userMarkerRef`, `railLinesRef`, `nearestMarkerRef`, `connectorRef`, `trainMarkersRef`, `tileLayerRef`. State changes drive `useEffect`s that mutate the map imperatively. Never put a `L.Map` or `L.Layer` into `useState` — it will deep-compare on every render and thrash.
 
 ## State graph (App in app-core.js)

@@ -30,11 +30,7 @@ You **cannot** answer demand, revenue, on-time performance, or rolling-stock uti
 
 ```js
 // scratch/<descriptive-name>.mjs (do not commit)
-import { readFileSync } from 'node:fs';
-const window = {};
-eval(readFileSync('public/assets/rail-data.generated.js', 'utf8'));
-eval(readFileSync('public/assets/rail-data.js', 'utf8'));
-const { RAIL_DATA, RailUtil, TrainGen } = window;
+import { RAIL_DATA, RailUtil, TrainGen } from '../src/rail-data.js';
 // … your aggregation
 ```
 

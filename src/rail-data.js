@@ -28,7 +28,9 @@
 //   "elevated"    — 鐵路高架化 / viaduct (visibly raised above ground).
 //   "ground"      — 平面 / at-grade (default, not listed).
 
-window.RAIL_DATA = {
+import { RAIL_SHAPES } from "./rail-data.generated.js";
+
+export const RAIL_DATA = {
   taiwan: {
     label: "台灣 Taiwan",
     center: [24.5, 121.0],
@@ -786,9 +788,9 @@ window.RAIL_DATA = {
 // fall back to the station-to-station polyline as before.
 // ========================================================
 (function mergeShapes(){
-  const shapes = window.RAIL_SHAPES;
+  const shapes = RAIL_SHAPES;
   if (!shapes) return;
-  for (const region of Object.values(window.RAIL_DATA)) {
+  for (const region of Object.values(RAIL_DATA)) {
     for (const line of region.lines) {
       const gen = shapes[line.id];
       if (!gen || !gen.shape || gen.shape.length < 2) continue;
@@ -908,7 +910,7 @@ window.RAIL_DATA = {
 // ========================================================
 // GEO HELPERS
 // ========================================================
-window.RailUtil = (function(){
+export const RailUtil = (function(){
   const R = 6371; // km
   const toRad = d => d * Math.PI / 180;
 
@@ -1270,7 +1272,7 @@ window.RailUtil = (function(){
 // TRAIN GENERATOR — given a reference time (Date), generate the list of trains
 // running on a given day. Each train has stops[{stationIdx, time}].
 // ========================================================
-window.TrainGen = (function(){
+export const TrainGen = (function(){
   // Hash for deterministic train numbers
   function hash(str) {
     let h = 0;

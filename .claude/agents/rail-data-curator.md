@@ -1,6 +1,6 @@
 ---
 name: rail-data-curator
-description: Specialist for editing `public/assets/rail-data.js` (lines, stations, train templates) and `scripts/fetch-rail-shapes.mjs` (TDX/OSM source mapping). Use when the user wants to add or modify a rail line, station list, train template, or upstream shape source. Coordinates the multi-file invariants between hand-coded data and the generated shape file. Does not modify UI code or geo math.
+description: Specialist for editing `src/rail-data.js` (lines, stations, train templates) and `scripts/fetch-rail-shapes.mjs` (TDX/OSM source mapping). Use when the user wants to add or modify a rail line, station list, train template, or upstream shape source. Coordinates the multi-file invariants between hand-coded data and the generated shape file. Does not modify UI code or geo math.
 tools: Read, Grep, Glob, Edit, Write, Bash
 model: sonnet
 ---
@@ -40,7 +40,7 @@ rail-data.js (hand-coded stations + templates)
 
 ## Workflow
 
-1. **Read first.** Always read `public/assets/rail-data.js` end-to-end and the relevant section of `scripts/fetch-rail-shapes.mjs` before editing.
+1. **Read first.** Always read `src/rail-data.js` end-to-end and the relevant section of `scripts/fetch-rail-shapes.mjs` before editing.
 2. **Plan the diff** — list every file touched. Typical shapes:
    - Adding a line with real geometry: edit `rail-data.js` (line + stations + templates), edit `fetch-rail-shapes.mjs` (`TDX_LINE_MAP` or `OSM_LINE_MAP`), then run the build.
    - Adding stations to an existing line: edit `rail-data.js` only, then run the build (station km will be re-projected).
