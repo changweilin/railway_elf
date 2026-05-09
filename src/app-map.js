@@ -65,6 +65,15 @@ const VIEWPORT_DEBOUNCE_MS = 120;
 const STATION_DOT_MIN_ZOOM = 10;
 const TRAIN_DETAIL_MIN_ZOOM = 12;
 
+function trainMarkerDensityForZoom(zoom) {
+  if (zoom == null) return { maxMarkers: 120, minGapPx: 24, screenPadPx: 48 };
+  if (zoom >= 15) return { maxMarkers: 220, minGapPx: 16, screenPadPx: 64 };
+  if (zoom >= 13) return { maxMarkers: 160, minGapPx: 20, screenPadPx: 56 };
+  if (zoom >= 12) return { maxMarkers: 130, minGapPx: 24, screenPadPx: 56 };
+  if (zoom >= 11) return { maxMarkers: 110, minGapPx: 28, screenPadPx: 48 };
+  return { maxMarkers: 80, minGapPx: 34, screenPadPx: 40 };
+}
+
 function getBufferedViewport(map) {
   const bounds = map.getBounds().pad(MAP_VIEWPORT_BUFFER_RATIO);
   return {
@@ -155,6 +164,91 @@ function buildTrainMarkerHtml(train, showDetails = true) {
     <div class="train-icon" style="width:${size}px;height:${size}px;left:${-half}px;top:${-half}px">${inner}</div>
     <div class="train-marker-label" style="top:${labelTop}px">${train.badge} ${train.number}</div>
   </div>`;
+}
+
+function trainKindPriority(train) {
+  const entry = TRAIN_ICON_MAP[train.type];
+  switch (entry && entry.kind) {
+    case 'shinkansen': return 30;
+    case 'express': return 18;
+    case 'limited': return 14;
+    case 'heritage': return 10;
+    case 'commuter': return 6;
+    case 'metro': return 4;
+    case 'lrt': return 3;
+    default: return 0;
+  }
+}
+
+function shouldKeepTrainPoint(point, size, padPx) {
+  return point.x >= -padPx && point.x <= size.x + padPx &&
+    point.y >= -padPx && point.y <= size.y + padPx;
+}
+
+function filterLiveTrainsForMap(liveTrains, map, viewport, location) {
+  if (!liveTrains || liveTrains.length === 0) return [];
+  const zoom = viewport ? viewport.zoom : map.getZoom();
+  const density = trainMarkerDensityForZoom(zoom);
+  const size = map.getSize();
+  const center = map.getCenter();
+  const focus = location || { lat: center.lat, lng: center.lng };
+
+  const candidates = [];
+  for (let i = 0; i < liveTrains.length; i++) {
+    const train = liveTrains[i];
+    if (!train.livePos) continue;
+    const point = map.latLngToContainerPoint([train.livePos.lat, train.livePos.lng]);
+    if (!shouldKeepTrainPoint(point, size, density.screenPadPx)) continue;
+    const focusDist = RailUtil.haversine(focus, train.livePos);
+    const centerDist = RailUtil.haversine({ lat: center.lat, lng: center.lng }, train.livePos);
+    const score =
+      focusDist * 100 +
+      centerDist * 12 -
+      trainKindPriority(train) -
+      (train.phase === 'dwelling' ? 8 : 0);
+    candidates.push({ train, point, score, order: i });
+  }
+  if (candidates.length <= 1) return candidates.map(c => c.train);
+
+  candidates.sort((a, b) => (a.score - b.score) || (a.order - b.order));
+
+  const accepted = [];
+  const cells = new Map();
+  const cellSize = density.minGapPx;
+  const minGapSq = density.minGapPx * density.minGapPx;
+
+  const cellKey = (x, y) => `${x}:${y}`;
+  const hasCollision = (candidate) => {
+    const cx = Math.floor(candidate.point.x / cellSize);
+    const cy = Math.floor(candidate.point.y / cellSize);
+    for (let dx = -1; dx <= 1; dx++) {
+      for (let dy = -1; dy <= 1; dy++) {
+        const bucket = cells.get(cellKey(cx + dx, cy + dy));
+        if (!bucket) continue;
+        for (const other of bucket) {
+          const px = candidate.point.x - other.point.x;
+          const py = candidate.point.y - other.point.y;
+          if (px * px + py * py < minGapSq) return true;
+        }
+      }
+    }
+    return false;
+  };
+
+  for (const candidate of candidates) {
+    if (accepted.length >= density.maxMarkers) break;
+    if (hasCollision(candidate)) continue;
+    accepted.push(candidate);
+    const cx = Math.floor(candidate.point.x / cellSize);
+    const cy = Math.floor(candidate.point.y / cellSize);
+    const key = cellKey(cx, cy);
+    const bucket = cells.get(key);
+    if (bucket) bucket.push(candidate);
+    else cells.set(key, [candidate]);
+  }
+
+  accepted.sort((a, b) => a.order - b.order);
+  return accepted.map(c => c.train);
 }
 
 function MapArea({ region, location, nearest, liveTrains, targetTime, now, quickPick, handleQuickPick, lastPredictPick, visibleLines, mapLayer, setMapLayer, showGrades, onMapClick, onLocate, flyTo, onTrainClick, onHudClick, pushNotice, onViewportChange }) {
@@ -431,15 +525,16 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
     if (!map) return;
     const viewport = viewportRef.current || getBufferedViewport(map);
     const showTrainDetails = !viewport || viewport.zoom >= TRAIN_DETAIL_MIN_ZOOM;
+    const visibleTrains = filterLiveTrainsForMap(liveTrains, map, viewport, location);
     // Remove those not present
-    const currentIds = new Set(liveTrains.map(t => t.id));
+    const currentIds = new Set(visibleTrains.map(t => t.id));
     Object.keys(trainMarkersRef.current).forEach(id => {
       if (!currentIds.has(id)) {
         trainMarkersRef.current[id].remove();
         delete trainMarkersRef.current[id];
       }
     });
-    liveTrains.forEach(train => {
+    visibleTrains.forEach(train => {
       const heading = (typeof train.heading === 'number' && isFinite(train.heading)) ? train.heading : 0;
       const dwelling = train.phase === 'dwelling';
       const existing = trainMarkersRef.current[train.id];
@@ -465,7 +560,7 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
         trainMarkersRef.current[train.id] = m;
       }
     });
-  }, [liveTrains, onTrainClick, viewportTick]);
+  }, [liveTrains, location && location.lat, location && location.lng, onTrainClick, viewportTick]);
 
   // Centre on the user's location whenever it changes. On first paint, also
   // bump the zoom up so the user lands on a usable street-level view instead
