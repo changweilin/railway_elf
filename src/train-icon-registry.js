@@ -1,0 +1,129 @@
+// Train icon registry shared by the map and validation scripts.
+// Paths are relative to the document URL so the app works under `/` and under
+// the GitHub Pages project sub-path.
+export const TRAIN_ICON_REGISTRY = {
+  typeFallbacks: {
+    '自強':     { icon: 'assets/train-icons/tze-chiang.png',         kind: 'express' },
+    '莒光':     { icon: 'assets/train-icons/chu-kuang.png',          kind: 'limited' },
+    '區間':     { icon: 'assets/train-icons/local-emu.png',          kind: 'commuter' },
+    '高鐵':     { icon: 'assets/train-icons/thsr-700t.png',          kind: 'shinkansen' },
+    '太魯閣':   { icon: 'assets/train-icons/taroko.png',             kind: 'express' },
+    '普悠瑪':   { icon: 'assets/train-icons/puyuma.png',             kind: 'express' },
+    '阿里山號': { icon: 'assets/train-icons/alishan-express.png',    kind: 'heritage' },
+    '捷運':     { icon: 'assets/train-icons/metro.png',              kind: 'metro' },
+    '普通車':   { icon: 'assets/train-icons/tymetro-commuter.png',   kind: 'commuter' },
+    '直達車':   { icon: 'assets/train-icons/tymetro-express.png',    kind: 'express' },
+    '輕軌':     { icon: 'assets/train-icons/lrt.png',                kind: 'lrt' },
+    'のぞみ':   { icon: 'assets/train-icons/shinkansen-nozomi.png',  kind: 'shinkansen' },
+    'ひかり':   { icon: 'assets/train-icons/shinkansen-hikari.png',  kind: 'shinkansen' },
+    'こだま':   { icon: 'assets/train-icons/shinkansen-kodama.png',  kind: 'shinkansen' },
+    '山手線':   { icon: 'assets/train-icons/yamanote.png',           kind: 'commuter' },
+    '快速':     { icon: 'assets/train-icons/chuo-rapid.png',         kind: 'express' },
+    '特別快速': { icon: 'assets/train-icons/chuo-special-rapid.png', kind: 'express' },
+  },
+
+  lineOverrides: {
+    'taiwan|TRA-Coast|區間快': { icon: 'assets/train-icons/taiwan-tra-coast-semi-express.png', kind: 'express' },
+
+    'japan|Tokyo-Metro-Ginza|銀座線': { icon: 'assets/train-icons/japan-tokyo-metro-ginza-ginza-line.png', kind: 'metro' },
+    'japan|Tokyo-Metro-Marunouchi|丸ノ内線': { icon: 'assets/train-icons/japan-tokyo-metro-marunouchi-marunouchi-line.png', kind: 'metro' },
+    'japan|JR-Keihin-Tohoku|各駅停車': { icon: 'assets/train-icons/japan-jr-keihin-tohoku-local.png', kind: 'commuter' },
+    'japan|JR-Sobu-Local|各駅停車': { icon: 'assets/train-icons/japan-jr-sobu-local-local.png', kind: 'commuter' },
+    'japan|Tokyu-Toyoko|各停': { icon: 'assets/train-icons/japan-tokyu-toyoko-local.png', kind: 'commuter' },
+    'japan|Tokyu-Toyoko|急行': { icon: 'assets/train-icons/japan-tokyu-toyoko-express.png', kind: 'express' },
+    'japan|Tokyu-Toyoko|特急': { icon: 'assets/train-icons/japan-tokyu-toyoko-limited-express.png', kind: 'express' },
+    'japan|JR-Osaka-Loop|普通': { icon: 'assets/train-icons/japan-jr-osaka-loop-local.png', kind: 'commuter' },
+    'japan|JR-Osaka-Loop|大和路快速': { icon: 'assets/train-icons/japan-jr-osaka-loop-yamatoji-rapid.png', kind: 'express' },
+    'japan|Osaka-Metro-Midosuji|御堂筋線': { icon: 'assets/train-icons/japan-osaka-metro-midosuji-midosuji-line.png', kind: 'metro' },
+    'japan|Hankyu-Kobe|普通': { icon: 'assets/train-icons/japan-hankyu-kobe-local.png', kind: 'commuter' },
+    'japan|Hankyu-Kobe|通勤特急': { icon: 'assets/train-icons/japan-hankyu-kobe-commuter-limited-express.png', kind: 'express' },
+    'japan|Hankyu-Kobe|特急': { icon: 'assets/train-icons/japan-hankyu-kobe-limited-express.png', kind: 'express' },
+    'japan|Sanyo-Shinkansen|みずほ': { icon: 'assets/train-icons/japan-sanyo-shinkansen-mizuho.png', kind: 'shinkansen' },
+    'japan|Sanyo-Shinkansen|さくら': { icon: 'assets/train-icons/japan-sanyo-shinkansen-sakura.png', kind: 'shinkansen' },
+
+    'korea|Seoul-Metro-1|급행': { icon: 'assets/train-icons/korea-seoul-metro-1-express.png', kind: 'express' },
+    'korea|Seoul-Metro-1|완행': { icon: 'assets/train-icons/korea-seoul-metro-1-local.png', kind: 'commuter' },
+    'korea|Seoul-Metro-2|순환': { icon: 'assets/train-icons/korea-seoul-metro-2-loop.png', kind: 'metro' },
+    'korea|KTX-Gyeongbu|KTX': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx.png', kind: 'shinkansen' },
+    'korea|KTX-Gyeongbu|KTX-산천': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png', kind: 'shinkansen' },
+    'korea|Busan-Metro-1|1호선': { icon: 'assets/train-icons/korea-busan-metro-1-line-1.png', kind: 'metro' },
+
+    'hongkong|MTR-Tsuen-Wan|荃灣綫': { icon: 'assets/train-icons/hongkong-mtr-tsuen-wan-tsuen-wan-line.png', kind: 'metro' },
+    'hongkong|MTR-Island|港島綫': { icon: 'assets/train-icons/hongkong-mtr-island-island-line.png', kind: 'metro' },
+    'hongkong|MTR-East-Rail|東鐵綫': { icon: 'assets/train-icons/hongkong-mtr-east-rail-east-rail-line.png', kind: 'commuter' },
+    'hongkong|MTR-Airport-Express|機場快綫': { icon: 'assets/train-icons/hongkong-mtr-airport-express-airport-express.png', kind: 'express' },
+
+    'china|Beijing-Shanghai-HSR|復興號': { icon: 'assets/train-icons/china-beijing-shanghai-hsr-fuxing.png', kind: 'shinkansen' },
+    'china|Beijing-Shanghai-HSR|和諧號': { icon: 'assets/train-icons/china-beijing-shanghai-hsr-hexie.png', kind: 'shinkansen' },
+    'china|Beijing-Guangzhou-HSR|復興號': { icon: 'assets/train-icons/china-beijing-guangzhou-hsr-fuxing.png', kind: 'shinkansen' },
+    'china|Beijing-Guangzhou-HSR|和諧號': { icon: 'assets/train-icons/china-beijing-guangzhou-hsr-hexie.png', kind: 'shinkansen' },
+    'china|Shanghai-Kunming-HSR|復興號': { icon: 'assets/train-icons/china-shanghai-kunming-hsr-fuxing.png', kind: 'shinkansen' },
+    'china|Shanghai-Kunming-HSR|和諧號': { icon: 'assets/train-icons/china-shanghai-kunming-hsr-hexie.png', kind: 'shinkansen' },
+    'china|Beijing-Subway-1|1號線': { icon: 'assets/train-icons/china-beijing-subway-1-line-1.png', kind: 'metro' },
+    'china|Beijing-Subway-2|2號線': { icon: 'assets/train-icons/china-beijing-subway-2-line-2.png', kind: 'metro' },
+    'china|Shanghai-Metro-1|1號線': { icon: 'assets/train-icons/china-shanghai-metro-1-line-1.png', kind: 'metro' },
+    'china|Shanghai-Metro-2|2號線': { icon: 'assets/train-icons/china-shanghai-metro-2-line-2.png', kind: 'metro' },
+
+    'singapore|SG-MRT-North-South|NSL': { icon: 'assets/train-icons/singapore-sg-mrt-north-south-nsl.png', kind: 'metro' },
+    'singapore|SG-MRT-East-West|EWL': { icon: 'assets/train-icons/singapore-sg-mrt-east-west-ewl.png', kind: 'metro' },
+    'singapore|SG-MRT-Circle|CCL': { icon: 'assets/train-icons/singapore-sg-mrt-circle-ccl.png', kind: 'metro' },
+
+    'malaysia|KL-Kelana-Jaya|LRT': { icon: 'assets/train-icons/malaysia-kl-kelana-jaya-lrt.png', kind: 'metro' },
+    'malaysia|KL-MRT-Kajang|MRT': { icon: 'assets/train-icons/malaysia-kl-mrt-kajang-mrt.png', kind: 'metro' },
+
+    'thailand|BKK-BTS-Sukhumvit|BTS': { icon: 'assets/train-icons/thailand-bkk-bts-sukhumvit-bts.png', kind: 'metro' },
+    'thailand|BKK-MRT-Blue|MRT': { icon: 'assets/train-icons/thailand-bkk-mrt-blue-mrt.png', kind: 'metro' },
+    'thailand|BKK-Airport-Rail|ARL': { icon: 'assets/train-icons/thailand-bkk-airport-rail-arl.png', kind: 'express' },
+
+    'vietnam|HCMC-Metro-1|Metro 1': { icon: 'assets/train-icons/vietnam-hcmc-metro-1-metro-1.png', kind: 'metro' },
+    'vietnam|Hanoi-Metro-2A|Metro 2A': { icon: 'assets/train-icons/vietnam-hanoi-metro-2a-metro-2a.png', kind: 'metro' },
+  },
+};
+
+export const TRAIN_ICON_KIND_SIZE = {
+  shinkansen: 44,
+  express:    38,
+  limited:    36,
+  commuter:   36,
+  metro:      32,
+  lrt:        28,
+  heritage:   28,
+};
+
+export function trainIconKey(train, region) {
+  const lineId = train && train.line && train.line.id;
+  return lineId && train && train.type ? `${region}|${lineId}|${train.type}` : null;
+}
+
+export function resolveTrainIcon(train, region) {
+  const lineKey = trainIconKey(train, region);
+  const entry =
+    (lineKey && TRAIN_ICON_REGISTRY.lineOverrides[lineKey]) ||
+    (train && TRAIN_ICON_REGISTRY.typeFallbacks[train.type]);
+  return entry ? { src: entry.icon, kind: entry.kind } : null;
+}
+
+export function preloadTrainIcons() {
+  if (typeof Image === 'undefined') return;
+  const srcs = new Set();
+  Object.values(TRAIN_ICON_REGISTRY.typeFallbacks).forEach(entry => srcs.add(entry.icon));
+  Object.values(TRAIN_ICON_REGISTRY.lineOverrides).forEach(entry => srcs.add(entry.icon));
+  srcs.forEach(src => {
+    const img = new Image();
+    img.src = src;
+  });
+}
+
+export function trainKindPriority(train, region) {
+  const entry = resolveTrainIcon(train, region);
+  switch (entry && entry.kind) {
+    case 'shinkansen': return 30;
+    case 'express': return 18;
+    case 'limited': return 14;
+    case 'heritage': return 10;
+    case 'commuter': return 6;
+    case 'metro': return 4;
+    case 'lrt': return 3;
+    default: return 0;
+  }
+}

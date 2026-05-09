@@ -7,58 +7,19 @@ import React, {
 } from "react";
 import L from "leaflet";
 import { RAIL_DATA, RailUtil } from "./rail-data.js";
+import {
+  TRAIN_ICON_KIND_SIZE,
+  preloadTrainIcons,
+  resolveTrainIcon,
+  trainKindPriority,
+} from "./train-icon-registry.js";
 // Circular: app-core imports from us too. Safe because all references happen
 // inside component bodies / event callbacks, not at module init.
 import { Icon, formatClock, formatCountdown, sameDayISO } from "./app-core.js";
 
-// Top-down PNG icons keyed by exact `train.type`. Mirrors
-// public/assets/train-icons/train-icon-map.json — keep them in sync. All PNGs
-// are 256×256 with the nose pointing up in image space; rotating the <img> by
-// the compass heading aligns the nose with travel direction.
-// Paths are relative to the document URL so the app works under both `/` (dev)
-// and a project sub-path like `/railway_elf/` (GitHub Pages).
-const TRAIN_ICON_MAP = {
-  '自強':       { src: 'assets/train-icons/tze-chiang.png',          kind: 'express' },
-  '莒光':       { src: 'assets/train-icons/chu-kuang.png',           kind: 'limited' },
-  '區間':       { src: 'assets/train-icons/local-emu.png',           kind: 'commuter' },
-  '高鐵':       { src: 'assets/train-icons/thsr-700t.png',           kind: 'shinkansen' },
-  '太魯閣':     { src: 'assets/train-icons/taroko.png',              kind: 'express' },
-  '普悠瑪':     { src: 'assets/train-icons/puyuma.png',              kind: 'express' },
-  '阿里山號':   { src: 'assets/train-icons/alishan-express.png',     kind: 'heritage' },
-  '捷運':       { src: 'assets/train-icons/metro.png',               kind: 'metro' },
-  '普通車':     { src: 'assets/train-icons/tymetro-commuter.png',    kind: 'commuter' },
-  '直達車':     { src: 'assets/train-icons/tymetro-express.png',     kind: 'express' },
-  '輕軌':       { src: 'assets/train-icons/lrt.png',                 kind: 'lrt' },
-  'のぞみ':     { src: 'assets/train-icons/shinkansen-nozomi.png',   kind: 'shinkansen' },
-  'ひかり':     { src: 'assets/train-icons/shinkansen-hikari.png',   kind: 'shinkansen' },
-  'こだま':     { src: 'assets/train-icons/shinkansen-kodama.png',   kind: 'shinkansen' },
-  '山手線':     { src: 'assets/train-icons/yamanote.png',            kind: 'commuter' },
-  '快速':       { src: 'assets/train-icons/chuo-rapid.png',          kind: 'express' },
-  '特別快速':   { src: 'assets/train-icons/chuo-special-rapid.png',  kind: 'express' },
-};
-
-// Display size per kind (PNG canvases are square, so width === height).
-// Real-world size hierarchy: shinkansen > express > commuter ≈ limited >
-// metro > lrt ≈ heritage.
-const TRAIN_ICON_KIND_SIZE = {
-  shinkansen: 44,
-  express:    38,
-  limited:    36,
-  commuter:   36,
-  metro:      32,
-  lrt:        28,
-  heritage:   28,
-};
-
 // Warm the browser cache on script load so the first marker render finds the
 // PNG already decoded — otherwise the icon pops in a frame later.
-(function preloadTrainIcons() {
-  if (typeof Image === 'undefined') return;
-  Object.values(TRAIN_ICON_MAP).forEach(({ src }) => {
-    const img = new Image();
-    img.src = src;
-  });
-})();
+preloadTrainIcons();
 
 const MAP_VIEWPORT_BUFFER_RATIO = 0.35;
 const VIEWPORT_DEBOUNCE_MS = 120;
@@ -146,12 +107,12 @@ function slicePolylineToViewport(polyline, viewport) {
   return segments;
 }
 
-function buildTrainMarkerHtml(train, showDetails = true) {
+function buildTrainMarkerHtml(train, region, showDetails = true) {
   const heading = (typeof train.heading === 'number' && isFinite(train.heading)) ? train.heading : 0;
   const dimmed = train.phase === 'dwelling' ? ' dwelling' : '';
   const dirCls = train.direction === 'up' ? ' northbound' : ' southbound';
   const detailCls = showDetails ? '' : ' labels-hidden';
-  const entry = TRAIN_ICON_MAP[train.type];
+  const entry = resolveTrainIcon(train, region);
   const size = (entry && TRAIN_ICON_KIND_SIZE[entry.kind]) || 34;
   const half = size / 2;
   const labelTop = half + 4;
@@ -166,26 +127,12 @@ function buildTrainMarkerHtml(train, showDetails = true) {
   </div>`;
 }
 
-function trainKindPriority(train) {
-  const entry = TRAIN_ICON_MAP[train.type];
-  switch (entry && entry.kind) {
-    case 'shinkansen': return 30;
-    case 'express': return 18;
-    case 'limited': return 14;
-    case 'heritage': return 10;
-    case 'commuter': return 6;
-    case 'metro': return 4;
-    case 'lrt': return 3;
-    default: return 0;
-  }
-}
-
 function shouldKeepTrainPoint(point, size, padPx) {
   return point.x >= -padPx && point.x <= size.x + padPx &&
     point.y >= -padPx && point.y <= size.y + padPx;
 }
 
-function filterLiveTrainsForMap(liveTrains, map, viewport, location) {
+function filterLiveTrainsForMap(liveTrains, map, viewport, location, region) {
   if (!liveTrains || liveTrains.length === 0) return [];
   const zoom = viewport ? viewport.zoom : map.getZoom();
   const density = trainMarkerDensityForZoom(zoom);
@@ -204,7 +151,7 @@ function filterLiveTrainsForMap(liveTrains, map, viewport, location) {
     const score =
       focusDist * 100 +
       centerDist * 12 -
-      trainKindPriority(train) -
+      trainKindPriority(train, region) -
       (train.phase === 'dwelling' ? 8 : 0);
     candidates.push({ train, point, score, order: i });
   }
@@ -525,7 +472,7 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
     if (!map) return;
     const viewport = viewportRef.current || getBufferedViewport(map);
     const showTrainDetails = !viewport || viewport.zoom >= TRAIN_DETAIL_MIN_ZOOM;
-    const visibleTrains = filterLiveTrainsForMap(liveTrains, map, viewport, location);
+    const visibleTrains = filterLiveTrainsForMap(liveTrains, map, viewport, location, region);
     // Remove those not present
     const currentIds = new Set(visibleTrains.map(t => t.id));
     Object.keys(trainMarkersRef.current).forEach(id => {
@@ -551,7 +498,7 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
         }
       } else {
         const icon = L.divIcon({
-          className: '', html: buildTrainMarkerHtml(train, showTrainDetails),
+          className: '', html: buildTrainMarkerHtml(train, region, showTrainDetails),
           iconSize: [1,1], iconAnchor: [0, 0],
         });
         const m = L.marker([train.livePos.lat, train.livePos.lng], { icon, zIndexOffset: 500 })
@@ -560,7 +507,7 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
         trainMarkersRef.current[train.id] = m;
       }
     });
-  }, [liveTrains, location && location.lat, location && location.lng, onTrainClick, viewportTick]);
+  }, [liveTrains, region, location && location.lat, location && location.lng, onTrainClick, viewportTick]);
 
   // Centre on the user's location whenever it changes. On first paint, also
   // bump the zoom up so the user lands on a usable street-level view instead

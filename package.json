@@ -10,6 +10,8 @@
     "build:rail-data": "node --env-file-if-exists=.env scripts/fetch-rail-shapes.mjs && node scripts/split-rail-shapes.mjs",
     "build:rail-data:tw": "node --env-file-if-exists=.env scripts/fetch-rail-shapes.mjs --skip-jp && node scripts/split-rail-shapes.mjs",
     "build:rail-data:jp": "node scripts/fetch-rail-shapes.mjs --skip-tw && node scripts/split-rail-shapes.mjs",
+    "build:train-icons": "node scripts/build-train-icons.mjs",
+    "check:train-icons": "node scripts/check-train-icons.mjs",
     "check:timing": "node scripts/check-train-timing.mjs",
     "check:shapes": "node scripts/check-line-shapes.mjs",
     "build:pwa-images": "node scripts/build-pwa-images.mjs",
