@@ -2218,6 +2218,15 @@ export const RAIL_DATA = {
         continue; // shape + stations done; skip the stationKms path below
       }
 
+      if (gen.stationCoords) {
+        for (const st of line.stations) {
+          const coord = gen.stationCoords[st.name];
+          if (!coord) continue;
+          st.lat = coord[0];
+          st.lng = coord[1];
+        }
+      }
+
       // Validate the projected station kms before applying. Multi-segment or
       // loop shapes (e.g. Tokaido stitched across multiple relations, Yamanote
       // loop without a canonical anchor) can produce non-monotonic projected
@@ -2232,8 +2241,9 @@ export const RAIL_DATA = {
         let prev = -Infinity;
         for (let i = 0; i < line.stations.length; i++) {
           const st = line.stations[i];
+          const isLoopStart = isLoopLine && i === 0 && gen.totalKm != null;
           const isLoopBack = isLoopLine && i === line.stations.length - 1 && gen.totalKm != null;
-          const k = isLoopBack ? gen.totalKm : gen.stationKms[st.name];
+          const k = isLoopStart ? 0 : (isLoopBack ? gen.totalKm : gen.stationKms[st.name]);
           if (k == null) continue;
           if (k < prev || (k === prev && (i === 0 || line.stations[i-1].name !== st.name))) {
             useGenStationKms = false;
@@ -2262,8 +2272,9 @@ export const RAIL_DATA = {
           line.stations[0].name === line.stations[line.stations.length - 1].name;
         for (let i = 0; i < line.stations.length; i++) {
           const st = line.stations[i];
+          const isLoopStart = isLoopLine && i === 0 && gen.totalKm != null;
           const isLoopBack = isLoopLine && i === line.stations.length - 1 && gen.totalKm != null;
-          const k = isLoopBack ? gen.totalKm : gen.stationKms[st.name];
+          const k = isLoopStart ? 0 : (isLoopBack ? gen.totalKm : gen.stationKms[st.name]);
           if (k != null) st.km = k;
         }
       } else if (gen.totalKm != null && line.stations.length >= 2) {

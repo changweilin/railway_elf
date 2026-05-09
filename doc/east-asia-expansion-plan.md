@@ -9,7 +9,7 @@
 ## 整體進度
 
 - **Phase A（手寫站表 + 車種）：完成 34/34 條（100%）** — `npm run check:timing` & `npm run test:smoke` & `npm run build` 全通過
-- **Phase B（OSM relation 對接）：34/34 條完成（100%）** — 批次 1–11 已補 OSM relation 並回灌真實軌道形狀；本輪沒有保留 0 km fallback。中國 HSR 與部分都市線仍有站表座標粗略造成的高 offset，列為後續資料改善。
+- **Phase B（OSM relation 對接）：34/34 條完成（100%）** — 批次 1–11 已補 OSM relation 並回灌真實軌道形狀；本輪沒有保留 0 km fallback。2026-05-09 高誤差複查後，補上 relation stop member 對站與 generated stationCoords 吸附，57 條線 runtime maxOffset 全部壓到 1.0 km 內。
 
 ## 類型分類
 
@@ -244,9 +244,10 @@
 - **HSR 類**（東海道、山陽、京滬、京廣、滬昆、KTX）：OSM relation 易包含上下行＋折返線，可能需 `corridor` 重建（參考 Tokaido 既有作法）。
 - **多 region 切換 UI**：地區數從 2 → 9，要看 `src/app-core.js` 的 region selector 是否仍適合（例如改下拉式或分組）。
 - **i18n**：新增日文／韓文／中文簡體／泰文／越南文站名後，要走 `i18n-sync` skill 對齊 zh-TW UI 字串。
-- **站點座標品質**：本輪沒有 0 km fallback；中國 HSR、上海地鐵、KL、曼谷與越南部分站表仍有座標粗略造成的 maxOffset 偏高，列入後續資料改善。
+- **站點座標品質**：本輪沒有 0 km fallback；中國 HSR、TYMRT、Alishan、台鐵支線與高捷紅/輕軌等粗略站點座標已用 generated OSM shape 做 1 km 門檻吸附。`TPE-Brown`、`KHH-Orange`、`Busan-Metro-1`、`Beijing-Subway-1`、`Shanghai-Metro-1/2`、`KL-Kelana-Jaya`、`BKK-BTS-Sukhumvit`、`BKK-MRT-Blue`、`HCMC-Metro-1`、`Hanoi-Metro-2A` 已直接採用 OSM relation stop/platform node 對站。
+- **本輪高誤差修正**：`JR-Yamanote` 改用 corridor + loop 起點修正，總長由錯誤的約 56 km 回到約 34.3 km；`KHH-LRT` 改為目前站表列出的 13 站區段（約 7.1 km）；`KHH-Orange`、`Shanghai-Metro-1`、`BKK-BTS-Sukhumvit` 以 stop nodes 移除舊端點外伸/拼接外伸造成的偏移；`Busan-Metro-1` 補 `동대신` 投影 override 並採 stop nodes，避免後段站點 km 被推遲。
 - **build 時間**：批次 6/7 的中國高鐵與都會地鐵已大幅增加 generated shape 與 snapshot 體量，後續若再擴張需持續監控 `scripts/.cache/` 大小與 build 時間。
 
 ## 執行順序
 
-2026-05-09 已依批次 1 → 11 完成 Phase B 形狀回灌與 snapshot 更新。後續工作以資料品質改善為主，不再需要長期排程或重跑本輪循環。
+2026-05-09 已依批次 1 → 11 完成 Phase B 形狀回灌與 snapshot 更新；同日完成高誤差複查、OSM stop member 對站、snapshot 二次精修更新。後續只剩可選的官方站點座標 / 官方營業里程交叉校驗，不再需要長期排程或重跑本輪循環。

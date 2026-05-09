@@ -36,6 +36,13 @@ const args = new Set(process.argv.slice(2));
 const SKIP_TW = args.has("--skip-tw");
 const SKIP_JP = args.has("--skip-jp");
 const PRETTY = args.has("--pretty");
+
+const LINE_OUTPUT_OPTIONS = {
+  "THSR": { snapStationCoordsOverKm: 1.0 },
+  "TRA-Pingxi": { snapStationCoordsOverKm: 1.0 },
+  "TRA-Neiwan": { snapStationCoordsOverKm: 1.0 },
+  "TRA-Jiji": { snapStationCoordsOverKm: 1.0 },
+};
 const NO_CACHE = args.has("--no-cache");
 const REFRESH_CACHE = args.has("--refresh-cache");
 const ONLY_LINES = new Set(
@@ -113,7 +120,13 @@ const OSM_LINE_MAP = {
     relationIds: [5263977],
     corridor: { corridorKm: 0.7, binKm: 0.15, parallelKm: 0.08 },
   },
-  "JR-Yamanote":        { name: "Yamanote Line (Outer)", relationIds: [1972920], loopAnchor: { lat: 35.6812, lng: 139.7671 } }, // 外回り 環狀,以東京站切開
+  "JR-Yamanote": {
+    name: "Yamanote Line (Outer)",
+    relationIds: [1972920],
+    loopAnchor: { lat: 35.6812, lng: 139.7671 },
+    corridor: { corridorKm: 2.0, sampleKm: 0.05 },
+    orderStationKms: true,
+  }, // 外回り 環狀,以東京站切開
   "JR-Chuo":            { name: "Chūō Line Rapid (down)", relationIds: [10363876] }, // 下り (Tokyo→west)
   "Sanyo-Shinkansen": {
     name: "Sanyō Shinkansen",
@@ -127,7 +140,11 @@ const OSM_LINE_MAP = {
 
   // JR Keihin-Tōhoku (大宮↔横浜) + 根岸線 (横浜↔大船) 合併運轉。
   // OSM 各為獨立 relation,串接後即覆蓋我們的 大宮↔大船 站表。
-  "JR-Keihin-Tohoku":   { name: "JR Keihin-Tōhoku + Negishi (大宮→大船)", relationIds: [5195691, 10257299] }, // 京浜東北南行 + 根岸下り
+  "JR-Keihin-Tohoku": {
+    name: "JR Keihin-Tōhoku + Negishi (大宮→大船)",
+    relationIds: [5195691, 10257299],
+    snapStationCoordsOverKm: 1.0,
+  }, // 京浜東北南行 + 根岸下り
 
   // JR 中央・総武緩行線 (Local) — 三鷹↔千葉。10312043 gives the cleanest
   // station-order projection after fixing the Chiba-end station coordinates.
@@ -149,7 +166,11 @@ const OSM_LINE_MAP = {
   "Osaka-Metro-Midosuji": { name: "Osaka Metro Midōsuji (箕面萱野→中百舌鳥)", relationIds: [2411153] },
 
   // 阪急電鉄神戸本線 (大阪梅田→神戸三宮)。
-  "Hankyu-Kobe":        { name: "Hankyū Kōbe Line (梅田→三宮)", relationIds: [11966252] },
+  "Hankyu-Kobe": {
+    name: "Hankyū Kōbe Line (梅田→三宮)",
+    relationIds: [11966252],
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // Taiwan Metro / LRT — single-direction sub-routes (NOT route_masters).
   // Using a master would pull both directional sub-routes whose tracks may be
@@ -158,17 +179,49 @@ const OSM_LINE_MAP = {
   "TPE-Red":      { name: "Tamsui-Xinyi (S)",  relationIds: [5378981] }, // 南向 淡水→象山
   "TPE-Blue":     { name: "Bannan",            relationIds: [199038]  }, // 南港→土城
   "TPE-Green":    { name: "Songshan-Xindian",  relationIds: [4250357] }, // 順向
-  "TPE-Brown":    { name: "Wenhu",             relationIds: [447449]  }, // 順向
+  "TPE-Brown": {
+    name: "Wenhu",
+    relationIds: [447449],
+    orderStationKms: true,
+    stationStops: { reverse: true },
+  }, // 順向
   // 中和新蘆 is a Y-junction; 4250354 (蘆洲 順向) covers 蘆洲→南勢角 (matches our chain).
   "TPE-Yellow":   { name: "Zhonghe-Xinlu (蘆洲)", relationIds: [4250354] },
-  "TYMRT":        { name: "Taoyuan Airport MRT", relationIds: [8487062] }, // 台北→環北
-  "KHH-Red":      { name: "KRTC Red",          relationIds: [4174828] }, // 小港→岡山
-  "KHH-Orange":   { name: "KRTC Orange",       relationIds: [4174827] }, // 哈瑪星→大寮
+  "TYMRT": {
+    name: "Taoyuan Airport MRT",
+    relationIds: [8487062],
+    corridor: { corridorKm: 3.0, sampleKm: 0.08 },
+    orderStationKms: true,
+    snapStationCoordsOverKm: 1.0,
+  }, // 台北→環北
+  "KHH-Red": {
+    name: "KRTC Red",
+    relationIds: [4174828],
+    corridor: { corridorKm: 1.0, sampleKm: 0.05 },
+    snapStationCoordsOverKm: 1.0,
+  }, // 小港→岡山
+  "KHH-Orange": {
+    name: "KRTC Orange",
+    relationIds: [4174827],
+    orderStationKms: true,
+    stationStops: {},
+  }, // 哈瑪星→大寮
   // KHH circular LRT — closed loop. Anchor at 籬仔內 (first station in our chain).
-  "KHH-LRT":      { name: "KRTC Circular LRT", relationIds: [6826886], loopAnchor: { lat: 22.5985, lng: 120.3134 } }, // 順行
+  "KHH-LRT": {
+    name: "KRTC Circular LRT",
+    relationIds: [6826886],
+    loopAnchor: { lat: 22.5985, lng: 120.3134 },
+    corridor: { corridorKm: 1.0, sampleKm: 0.05 },
+    orderStationKms: true,
+    snapStationCoordsOverKm: 1.0,
+  }, // 順行
   "Tamsui-LRT":   { name: "Danhai LRT (上行)",  relationIds: [9154523] }, // 紅樹林→崁頂
   // Alishan main line (嘉義→阿里山). Mountain spurs (神木/沼平/祝山) are separate relations.
-  "Alishan-Forest": { name: "Alishan Forest Railway", relationIds: [5570989] },
+  "Alishan-Forest": {
+    name: "Alishan Forest Railway",
+    relationIds: [5570989],
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // Korea.
   "Seoul-Metro-1": {
@@ -182,7 +235,14 @@ const OSM_LINE_MAP = {
     relationIds: [11214334],
     corridor: { corridorKm: 6.0, sampleKm: 0.3 },
   },
-  "Busan-Metro-1": { name: "Busan Metro Line 1 (Dadaepo Beach→Nopo)", relationIds: [8255697] },
+  "Busan-Metro-1": {
+    name: "Busan Metro Line 1 (Dadaepo Beach→Nopo)",
+    relationIds: [8255697],
+    corridor: { corridorKm: 1.5, sampleKm: 0.05 },
+    orderStationKms: true,
+    stationStops: {},
+    stationKmOverrides: { "동대신": 21.2 },
+  },
 
   // Hong Kong MTR.
   "MTR-Tsuen-Wan":       { name: "MTR Tsuen Wan Line (Central→Tsuen Wan)", relationIds: [9736530] },
@@ -196,21 +256,26 @@ const OSM_LINE_MAP = {
     name: "Jinghu High-speed Line",
     relationIds: [356778],
     corridor: { corridorKm: 12.0, sampleKm: 1.0 },
+    snapStationCoordsOverKm: 1.0,
   },
   "Beijing-Guangzhou-HSR": {
     name: "Jinggang High-speed Line (clipped to Beijing West→Guangzhou South)",
     relationIds: [5473433, 12265072],
     corridor: { corridorKm: 14.0, sampleKm: 1.2 },
+    snapStationCoordsOverKm: 1.0,
   },
   "Shanghai-Kunming-HSR": {
     name: "Shanghai-Kunming High-speed Railway",
     relationIds: [10627959],
     corridor: { corridorKm: 14.0, sampleKm: 1.2 },
+    snapStationCoordsOverKm: 1.5,
   },
   "Beijing-Subway-1": {
     name: "Beijing Subway Line 1 / Batong (Gucheng→Universal Resort)",
     relationIds: [1667140],
     corridor: { corridorKm: 3.0, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationStops: {},
   },
   "Beijing-Subway-2": {
     name: "Beijing Subway Line 2 clockwise",
@@ -221,10 +286,14 @@ const OSM_LINE_MAP = {
   "Shanghai-Metro-1": {
     name: "Shanghai Metro Line 1 (Fujin Road→Xinzhuang)",
     relationIds: [199200],
+    orderStationKms: true,
+    stationStops: {},
   },
   "Shanghai-Metro-2": {
     name: "Shanghai Metro Line 2 (Panxiang Road→Pudong Airport)",
     relationIds: [5611326],
+    orderStationKms: true,
+    stationStops: { offset: 1 },
   },
 
   // Singapore MRT.
@@ -233,17 +302,49 @@ const OSM_LINE_MAP = {
   "SG-MRT-Circle":      { name: "MRT Circle Line (Dhoby Ghaut→HarbourFront)", relationIds: [7981669] },
 
   // Kuala Lumpur.
-  "KL-Kelana-Jaya": { name: "Kelana Jaya Line (Putra Heights→Gombak)", relationIds: [8000438] },
-  "KL-MRT-Kajang":  { name: "Kajang Line (Kwasa Damansara→Kajang)", relationIds: [5690837] },
+  "KL-Kelana-Jaya": {
+    name: "Kelana Jaya Line (Putra Heights→Gombak)",
+    relationIds: [8000438],
+    corridor: { corridorKm: 1.5, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationStops: {},
+  },
+  "KL-MRT-Kajang":  {
+    name: "Kajang Line (Kwasa Damansara→Kajang)",
+    relationIds: [5690837],
+    corridor: { corridorKm: 2.0, sampleKm: 0.08 },
+    orderStationKms: true,
+    snapStationCoordsOverKm: 1.5,
+  },
 
   // Bangkok.
-  "BKK-BTS-Sukhumvit": { name: "BTS Sukhumvit Line (Khu Khot→Kheha)", relationIds: [444651] },
-  "BKK-MRT-Blue":      { name: "MRT Blue Line (Tha Phra→Lak Song)", relationIds: [444659] },
+  "BKK-BTS-Sukhumvit": {
+    name: "BTS Sukhumvit Line (Khu Khot→Kheha)",
+    relationIds: [444651],
+    orderStationKms: true,
+    stationStops: {},
+  },
+  "BKK-MRT-Blue": {
+    name: "MRT Blue Line (Tha Phra→Lak Song)",
+    relationIds: [444659],
+    orderStationKms: true,
+    stationStops: {},
+  },
   "BKK-Airport-Rail":  { name: "Airport Rail Link (Phaya Thai→Suvarnabhumi)", relationIds: [2148241] },
 
   // Vietnam.
-  "HCMC-Metro-1":   { name: "HCMC Metro Line 1 (Ben Thanh→Suoi Tien)", relationIds: [11919223] },
-  "Hanoi-Metro-2A": { name: "Hanoi Metro Line 2A (Cat Linh→Yen Nghia)", relationIds: [9684066] },
+  "HCMC-Metro-1": {
+    name: "HCMC Metro Line 1 (Ben Thanh→Suoi Tien)",
+    relationIds: [11919223],
+    orderStationKms: true,
+    stationStops: {},
+  },
+  "Hanoi-Metro-2A": {
+    name: "Hanoi Metro Line 2A (Cat Linh→Yen Nghia)",
+    relationIds: [9684066],
+    orderStationKms: true,
+    stationStops: {},
+  },
 };
 
 // Simplification tolerance (km). 0.005 = 5 m. Bigger = smaller file, more loss.
@@ -333,15 +434,39 @@ function cumulativeKm(points) {
   return out;
 }
 
+function positionOnShapeAtKm(shape, shapeKm, targetKm) {
+  if (targetKm <= 0) return shape[0];
+  const totalKm = shapeKm[shapeKm.length - 1] ?? 0;
+  if (targetKm >= totalKm) return shape[shape.length - 1];
+  for (let i = 0; i < shape.length - 1; i++) {
+    if (shapeKm[i + 1] < targetKm) continue;
+    const span = shapeKm[i + 1] - shapeKm[i];
+    const t = span > 0 ? (targetKm - shapeKm[i]) / span : 0;
+    return {
+      lat: shape[i].lat + t * (shape[i + 1].lat - shape[i].lat),
+      lng: shape[i].lng + t * (shape[i + 1].lng - shape[i].lng),
+    };
+  }
+  return shape[shape.length - 1];
+}
+
 // Project a station onto the polyline; returns the cumulative km of the closest point.
-function stationKmOnShape(station, shape, shapeKm) {
+// `minKm` is used while deriving stationKms so repeated nearby geometry does not
+// pull a later station backward on the route.
+function stationKmOnShape(station, shape, shapeKm, minKm = -Infinity) {
   let bestDist = Infinity, bestKm = 0;
   for (let i = 0; i < shape.length - 1; i++) {
     const p = projectOnSegment(station, shape[i], shape[i + 1]);
+    const km = shapeKm[i] + p.t * (shapeKm[i + 1] - shapeKm[i]);
+    if (km + 1e-6 < minKm) continue;
     if (p.dist < bestDist) {
       bestDist = p.dist;
-      bestKm = shapeKm[i] + p.t * (shapeKm[i + 1] - shapeKm[i]);
+      bestKm = km;
     }
+  }
+  if (bestDist === Infinity) {
+    const p = positionOnShapeAtKm(shape, shapeKm, minKm);
+    return { km: minKm, dist: haversine(station, p) };
   }
   return { km: bestKm, dist: bestDist };
 }
@@ -536,6 +661,7 @@ async function withRetry(label, fn, { attempts = 4, baseMs = 1500 } = {}) {
 // Three buckets: 'fresh' = just-fetched, 'cache-offline' = OFFLINE=1 hit cache,
 // 'cache-fallback' = network failed and we served stale cache.
 const sourceProvenance = { fresh: [], 'cache-offline': [], 'cache-fallback': [] };
+const osmStationCoordsByLineId = {};
 
 // Fetch JSON with retry + disk cache fallback. Cache is keyed on `cacheKey`.
 // On network failure after all retries, returns the cached value if present.
@@ -950,6 +1076,36 @@ async function fetchOsmShape(internalId, cfg, stations) {
     else if (el.type === "relation") relations.push(el);
   }
 
+  if (cfg.stationStops && stations && stations.length > 0) {
+    const { reverse = false, offset = 0 } = cfg.stationStops;
+    const relationIds = new Set(cfg.relationIds.map(Number));
+    let stopMembers = [];
+    for (const rel of relations) {
+      if (!relationIds.has(Number(rel.id))) continue;
+      const members = rel.members
+        .filter(m => m.type === "node" && /stop|station|platform/.test(m.role || ""))
+        .map(m => nodes.get(m.ref))
+        .filter(Boolean);
+      if (members.length > stopMembers.length) stopMembers = members;
+    }
+    if (reverse) stopMembers = stopMembers.slice().reverse();
+    const stationCoords = {};
+    for (let i = 0; i < stations.length; i++) {
+      const stop = stopMembers[i + offset];
+      if (!stop) continue;
+      stationCoords[stations[i].name] = [
+        Number(stop.lat.toFixed(6)),
+        Number(stop.lng.toFixed(6)),
+      ];
+    }
+    if (Object.keys(stationCoords).length > 0) {
+      osmStationCoordsByLineId[internalId] = stationCoords;
+      console.log(
+        `[OSM] ${internalId}: mapped ${Object.keys(stationCoords).length}/${stations.length} station coords from relation stops`
+      );
+    }
+  }
+
   // Deduplicate ways by ID across relations. Overpass `out body;>>;` echoes the
   // queried relation back in the recurse output, so a route relation often
   // appears twice — without dedup, every way member gets pushed into polys
@@ -1165,7 +1321,15 @@ function buildOutput(rawShapes, stationsByLineId) {
     const isInScope = TDX_FULL_STATION_LINES.has(lineId);
     const tdxStations = isInScope ? (tdxStationsByInternalId[lineId] || null) : null;
     // stations used for direction probe and stuck-prefix/suffix anchoring
+    const cfg = { ...(LINE_OUTPUT_OPTIONS[lineId] || {}), ...(OSM_LINE_MAP[lineId] || {}) };
     const stations = tdxStations || stationsByLineId[lineId] || [];
+    const stopStationCoords = osmStationCoordsByLineId[lineId] || null;
+    const projectionStations = stopStationCoords
+      ? stations.map(s => {
+          const coord = stopStationCoords[s.name];
+          return coord ? { ...s, lat: coord[0], lng: coord[1] } : s;
+        })
+      : stations;
 
     // Polyline direction may not match the station order in rail-data.js
     // (e.g. TDX returns the West Trunk parameterised 桃園→Keelung while
@@ -1173,16 +1337,16 @@ function buildOutput(rawShapes, stationsByLineId) {
     // counter-clockwise while stations go clockwise). Reverse the polyline if
     // the second station projects farther along it than the second-to-last
     // (works for both linear and loop lines).
-    if (stations.length >= 4) {
-      const probeA = stationKmOnShape(stations[1], simplified, shapeKm).km;
-      const probeB = stationKmOnShape(stations[stations.length - 2], simplified, shapeKm).km;
+    if (projectionStations.length >= 4) {
+      const probeA = stationKmOnShape(projectionStations[1], simplified, shapeKm).km;
+      const probeB = stationKmOnShape(projectionStations[projectionStations.length - 2], simplified, shapeKm).km;
       if (probeA > probeB) {
         simplified = simplified.slice().reverse();
         shapeKm = cumulativeKm(simplified);
       }
-    } else if (stations.length >= 2) {
-      const first = stationKmOnShape(stations[0], simplified, shapeKm).km;
-      const last = stationKmOnShape(stations[stations.length - 1], simplified, shapeKm).km;
+    } else if (projectionStations.length >= 2) {
+      const first = stationKmOnShape(projectionStations[0], simplified, shapeKm).km;
+      const last = stationKmOnShape(projectionStations[projectionStations.length - 1], simplified, shapeKm).km;
       if (first > last) {
         simplified = simplified.slice().reverse();
         shapeKm = cumulativeKm(simplified);
@@ -1199,9 +1363,9 @@ function buildOutput(rawShapes, stationsByLineId) {
     const STUCK_DIST_KM = 0.5;
     {
       const stuckPrefix = [];
-      for (let i = 0; i < stations.length; i++) {
-        const probe = stationKmOnShape(stations[i], simplified, shapeKm);
-        if (probe.km < 1e-6 && probe.dist > STUCK_DIST_KM) stuckPrefix.push(stations[i]);
+      for (let i = 0; i < projectionStations.length; i++) {
+        const probe = stationKmOnShape(projectionStations[i], simplified, shapeKm);
+        if (probe.km < 1e-6 && probe.dist > STUCK_DIST_KM) stuckPrefix.push(projectionStations[i]);
         else break;
       }
       if (stuckPrefix.length) {
@@ -1212,9 +1376,9 @@ function buildOutput(rawShapes, stationsByLineId) {
     {
       const stuckSuffix = [];
       const totalK = shapeKm[shapeKm.length - 1];
-      for (let i = stations.length - 1; i >= 0; i--) {
-        const probe = stationKmOnShape(stations[i], simplified, shapeKm);
-        if (probe.km > totalK - 1e-6 && probe.dist > STUCK_DIST_KM) stuckSuffix.unshift(stations[i]);
+      for (let i = projectionStations.length - 1; i >= 0; i--) {
+        const probe = stationKmOnShape(projectionStations[i], simplified, shapeKm);
+        if (probe.km > totalK - 1e-6 && probe.dist > STUCK_DIST_KM) stuckSuffix.unshift(projectionStations[i]);
         else break;
       }
       if (stuckSuffix.length) {
@@ -1223,12 +1387,50 @@ function buildOutput(rawShapes, stationsByLineId) {
       }
     }
 
+    const orderStationKms = cfg.orderStationKms === true;
+    const snapStationCoordsOverKm = cfg.snapStationCoordsOverKm ?? Infinity;
     const stationKms = {};
+    const stationCoords = { ...(stopStationCoords || {}) };
     let maxStationDist = 0;
-    for (const st of stations) {
-      const { km, dist } = stationKmOnShape(st, simplified, shapeKm);
+    let snappedStationCount = 0;
+    const stopStationCount = stopStationCoords ? Object.keys(stopStationCoords).length : 0;
+    let minStationKm = -Infinity;
+    const totalKm = shapeKm[shapeKm.length - 1];
+    const isLoopLine = projectionStations.length >= 3 && projectionStations[0].name === projectionStations[projectionStations.length - 1].name;
+    for (let i = 0; i < projectionStations.length; i++) {
+      const st = projectionStations[i];
+      const isLoopStart = isLoopLine && i === 0;
+      const isLoopEnd = isLoopLine && i === projectionStations.length - 1;
+      const overrideKm = cfg.stationKmOverrides?.[st.name];
+      let km;
+      let dist;
+      if (overrideKm != null) {
+        km = overrideKm;
+        dist = haversine(st, positionOnShapeAtKm(simplified, shapeKm, km));
+      } else if (orderStationKms && isLoopStart) {
+        km = 0;
+        dist = haversine(st, simplified[0]);
+      } else if (orderStationKms && isLoopEnd) {
+        km = totalKm;
+        dist = haversine(st, simplified[simplified.length - 1]);
+      } else {
+        const projected = stationKmOnShape(
+          st,
+          simplified,
+          shapeKm,
+          orderStationKms ? minStationKm : -Infinity,
+        );
+        km = projected.km;
+        dist = projected.dist;
+      }
       stationKms[st.name] = Number(km.toFixed(3));
+      if (!stationCoords[st.name] && dist > snapStationCoordsOverKm) {
+        const p = positionOnShapeAtKm(simplified, shapeKm, km);
+        stationCoords[st.name] = [Number(p.lat.toFixed(6)), Number(p.lng.toFixed(6))];
+        snappedStationCount++;
+      }
       if (dist > maxStationDist) maxStationDist = dist;
+      if (orderStationKms) minStationKm = km + 0.001;
     }
 
     const entry = {
@@ -1236,6 +1438,7 @@ function buildOutput(rawShapes, stationsByLineId) {
       totalKm: Number(shapeKm[shapeKm.length - 1].toFixed(3)),
       stationKms,
     };
+    if (Object.keys(stationCoords).length > 0) entry.stationCoords = stationCoords;
 
     // For in-scope lines, also emit the full projected station list so that
     // mergeShapes() in rail-data.js can replace the hand-coded stub array.
@@ -1256,6 +1459,8 @@ function buildOutput(rawShapes, stationsByLineId) {
     console.log(
       `[OUT] ${lineId}: ${rawShape.length} → ${simplified.length} pts, ` +
       `total ${entry.totalKm} km, max station offset ${(maxStationDist * 1000).toFixed(0)} m` +
+      (stopStationCount > 0 ? `, ${stopStationCount} stop coords` : "") +
+      (snappedStationCount > 0 ? `, snapped ${snappedStationCount} station coords` : "") +
       (entry.stations ? `, ${entry.stations.length} TDX stations` : "")
     );
   }
