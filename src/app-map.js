@@ -63,6 +63,7 @@ const TRAIN_ICON_KIND_SIZE = {
 const MAP_VIEWPORT_BUFFER_RATIO = 0.35;
 const VIEWPORT_DEBOUNCE_MS = 120;
 const STATION_DOT_MIN_ZOOM = 10;
+const TRAIN_DETAIL_MIN_ZOOM = 12;
 
 function getBufferedViewport(map) {
   const bounds = map.getBounds().pad(MAP_VIEWPORT_BUFFER_RATIO);
@@ -136,10 +137,11 @@ function slicePolylineToViewport(polyline, viewport) {
   return segments;
 }
 
-function buildTrainMarkerHtml(train) {
+function buildTrainMarkerHtml(train, showDetails = true) {
   const heading = (typeof train.heading === 'number' && isFinite(train.heading)) ? train.heading : 0;
   const dimmed = train.phase === 'dwelling' ? ' dwelling' : '';
   const dirCls = train.direction === 'up' ? ' northbound' : ' southbound';
+  const detailCls = showDetails ? '' : ' labels-hidden';
   const entry = TRAIN_ICON_MAP[train.type];
   const size = (entry && TRAIN_ICON_KIND_SIZE[entry.kind]) || 34;
   const half = size / 2;
@@ -149,7 +151,7 @@ function buildTrainMarkerHtml(train) {
     // Fallback for any future type missing from the map: a coloured dot so the
     // train still appears, with badge colour as the visual cue.
     : `<div class="train-icon-fallback" style="background:${train.badgeColor}"></div>`;
-  return `<div class="train-marker-v2${dirCls}${dimmed}" style="--col:${train.badgeColor};--rot:${heading.toFixed(1)}deg">
+  return `<div class="train-marker-v2${dirCls}${dimmed}${detailCls}" style="--col:${train.badgeColor};--rot:${heading.toFixed(1)}deg">
     <div class="train-icon" style="width:${size}px;height:${size}px;left:${-half}px;top:${-half}px">${inner}</div>
     <div class="train-marker-label" style="top:${labelTop}px">${train.badge} ${train.number}</div>
   </div>`;
@@ -427,6 +429,8 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
   useEffectM(() => {
     const map = leafletRef.current;
     if (!map) return;
+    const viewport = viewportRef.current || getBufferedViewport(map);
+    const showTrainDetails = !viewport || viewport.zoom >= TRAIN_DETAIL_MIN_ZOOM;
     // Remove those not present
     const currentIds = new Set(liveTrains.map(t => t.id));
     Object.keys(trainMarkersRef.current).forEach(id => {
@@ -448,10 +452,11 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
         if (wrapper) {
           wrapper.style.setProperty('--rot', heading.toFixed(1) + 'deg');
           wrapper.classList.toggle('dwelling', dwelling);
+          wrapper.classList.toggle('labels-hidden', !showTrainDetails);
         }
       } else {
         const icon = L.divIcon({
-          className: '', html: buildTrainMarkerHtml(train),
+          className: '', html: buildTrainMarkerHtml(train, showTrainDetails),
           iconSize: [1,1], iconAnchor: [0, 0],
         });
         const m = L.marker([train.livePos.lat, train.livePos.lng], { icon, zIndexOffset: 500 })
@@ -460,7 +465,7 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
         trainMarkersRef.current[train.id] = m;
       }
     });
-  }, [liveTrains, onTrainClick]);
+  }, [liveTrains, onTrainClick, viewportTick]);
 
   // Centre on the user's location whenever it changes. On first paint, also
   // bump the zoom up so the user lands on a usable street-level view instead

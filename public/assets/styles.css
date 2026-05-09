@@ -828,6 +828,12 @@ body {
   color: var(--col, var(--me-text-primary));
   white-space: nowrap;
   letter-spacing: 0.02em;
+  transition: opacity var(--me-transition-fast), visibility var(--me-transition-fast);
+}
+.train-marker-v2.labels-hidden .train-marker-label {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
 }
 .train-marker-v2.dwelling .train-icon { opacity: 0.7; }
 
