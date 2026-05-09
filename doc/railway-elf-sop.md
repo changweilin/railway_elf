@@ -21,7 +21,7 @@
 4. 先驗證 station-to-station fallback 可運作。
 5. 建立或更新真實軌道來源設定，產生 generated rail shapes。
 6. 執行「鐵道路線站點與真實世界偏差分析與校正流程」。
-7. 補齊列車圖示 registry 與 PNG。
+7. 補齊列車圖示 registry；先沿用同國家既有同型號圖示，沒有可沿用資產時才產生新 PNG。
 8. 跑發布前檢查。
 9. 記錄新來源、已知偏差、校正方式與 snapshot 更新原因。
 
@@ -362,14 +362,22 @@ npm.cmd run check:timing
 
    若新增了 train template 但還沒補圖，這個檢查會列出 unresolved key。
 
-2. 在 `src/train-icon-registry.js` 補 registry：
+2. 先檢查同國家是否已有可沿用的同型號列車圖示：
+
+   - 在 `src/train-icon-registry.js` 搜尋同一個 `region` 的 `lineOverrides`，確認是否已有相同車型、車系、營運者或足夠接近的代表塗裝。
+   - 同步檢查 `public/assets/train-icons/<region>-*.png` 與 `train-icons-contact-sheet.png`，避免 registry 尚未覆蓋但資產已存在。
+   - 若可沿用，新增目標 `${region}|${lineId}|${trainType}` 的 `lineOverrides`，讓 `icon` 指向既有 PNG；不要為了同型號重複新增 PNG 或 `VISUALS` recipe。
+   - 若同國家沒有該型號，或既有圖示會造成車型/塗裝誤認，才進入新圖示生成流程。
+
+3. 在 `src/train-icon-registry.js` 補 registry：
 
    - 同一個 `train.type` 跨國或跨線可能代表不同車型時，放在 `lineOverrides`。
    - 確定可跨線共用的泛用車種才放在 `typeFallbacks`。
    - `lineOverrides` key 使用 `${region}|${lineId}|${trainType}`。
-   - `icon` path 使用 `assets/train-icons/<region>-<line-id-lowercase>-<service-slug>.png`。
+   - 若沿用既有同國家同型號資產，`icon` path 指向既有 PNG。
+   - 若需要新圖示，`icon` path 使用 `assets/train-icons/<region>-<line-id-lowercase>-<service-slug>.png`。
 
-3. 選擇 `kind`：
+4. 選擇 `kind`：
 
    - `shinkansen`: 高鐵、新幹線、KTX、中國高鐵。
    - `express`: 機場快線、快速、急行、特急、通勤特急。
@@ -378,14 +386,14 @@ npm.cmd run check:timing
    - `lrt`: 真正輕軌。
    - `heritage`: 阿里山或其他保存/觀光鐵道風格。
 
-4. 在 `scripts/build-train-icons.mjs` 的 `VISUALS` 補同一個 key 的簡化視覺 recipe：
+5. 只有在沒有可沿用資產時，才在 `scripts/build-train-icons.mjs` 的 `VISUALS` 補同一個 key 的簡化視覺 recipe：
 
    - `shape`: `shinkansen`、`express`、`commuter`、`metro`、`classic`。
    - `body`: 車體主色。
    - `accent` / `accent2` / `band`: 路線色、服務色或代表塗裝色。
    - 原則是把照片或實車參考濃縮成 24 px 仍能辨識的俯視符號，不追求照片細節。
 
-5. 產生圖示與 contact sheet：
+6. 若新增或修改了 `VISUALS` recipe，產生圖示與 contact sheet：
 
    ```powershell
    npm.cmd run build:train-icons
@@ -397,14 +405,15 @@ npm.cmd run check:timing
    - `public/assets/train-icons/train-icon-map.json`
    - `public/assets/train-icons/train-icons-contact-sheet.png`
 
-6. 視覺 QA：
+7. 視覺 QA：
 
    - 打開 `public/assets/train-icons/train-icons-contact-sheet.png`。
    - 檢查 256 / 64 / 32 / 24 px 都可辨識。
    - 確認背景透明、沒有文字、沒有商標、沒有殘留色塊。
+   - 確認同國家沿用的圖示確實是同型號或可接受的同車系代表圖，不只是同服務名稱。
    - 確認同名但不同國家/路線的列車沒有共用錯圖。
 
-7. 跑檢查：
+8. 跑檢查：
 
    ```powershell
    npm.cmd run check:train-icons
@@ -414,7 +423,8 @@ npm.cmd run check:timing
 
 - 所有 `RAIL_DATA[region].trainTemplates` 都能 resolve 到 PNG 或明確允許 fallback。
 - `check:train-icons` 通過。
-- `train-icons-contact-sheet.png` 已更新且人工檢查通過。
+- 若新增或重生 PNG，`train-icons-contact-sheet.png` 已更新且人工檢查通過。
+- 若沿用既有 PNG，registry 指向的既有資產已在 contact sheet 中確認可辨識，且沒有重複生成同型號圖示。
 - `src/app-map.js` 沒有重新引入 type-only lookup。
 
 ## 發布前檢查

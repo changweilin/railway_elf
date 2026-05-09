@@ -25,6 +25,11 @@ const MAP_VIEWPORT_BUFFER_RATIO = 0.35;
 const VIEWPORT_DEBOUNCE_MS = 120;
 const STATION_DOT_MIN_ZOOM = 10;
 const TRAIN_DETAIL_MIN_ZOOM = 12;
+const MAP_BASE_LAYER_OPTIONS = [
+  { key: 'streets', label: '街道', icon: 'me-layer-streets' },
+  { key: 'terrain', label: '地形', icon: 'me-layer-topo' },
+  { key: 'satellite', label: '衛星', icon: 'me-layer-satellite' },
+];
 
 function trainMarkerDensityForZoom(zoom) {
   if (zoom == null) return { maxMarkers: 120, minGapPx: 24, screenPadPx: 48 };
@@ -198,7 +203,7 @@ function filterLiveTrainsForMap(liveTrains, map, viewport, location, region) {
   return accepted.map(c => c.train);
 }
 
-function MapArea({ region, location, nearest, liveTrains, targetTime, now, quickPick, handleQuickPick, lastPredictPick, visibleLines, mapLayer, setMapLayer, showGrades, onMapClick, onLocate, flyTo, onTrainClick, onHudClick, pushNotice, onViewportChange }) {
+function MapArea({ region, location, nearest, liveTrains, targetTime, now, quickPick, handleQuickPick, lastPredictPick, visibleLines, mapLayer, theme, mapBaseLayer = 'streets', setMapBaseLayer, showGrades, onMapClick, onLocate, flyTo, onTrainClick, onHudClick, pushNotice, onViewportChange }) {
   const hudMode = quickPick === 'now' ? 'now' : 'predict';
   const mapRef = useRefM(null);
   const leafletRef = useRefM(null);
@@ -264,27 +269,33 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
     // eslint-disable-next-line
   }, []);
 
-  // Tile layer — change when mapLayer changes
+  // Tile layer: base type is user-selectable; light/dark follows app theme.
   useEffectM(() => {
     const map = leafletRef.current;
     if (!map) return;
     if (tileLayerRef.current) map.removeLayer(tileLayerRef.current);
-    const tiles = {
-      dark: {
-        url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-        attr: '&copy; OpenStreetMap &copy; CARTO',
-      },
-      light: {
-        url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-        attr: '&copy; OpenStreetMap &copy; CARTO',
+
+    const streetTiles = {
+      url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+      attr: '&copy; OpenStreetMap &copy; CARTO',
+    };
+    const tileOptions = {
+      streets: streetTiles,
+      terrain: {
+        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
+        attr: 'Tiles &copy; Esri',
       },
       satellite: {
         url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
         attr: 'Tiles &copy; Esri',
       },
-    }[mapLayer];
-    const layer = L.tileLayer(tiles.url, {
-      attribution: tiles.attr, maxZoom: 19,
+    };
+    const tiles = tileOptions[mapBaseLayer] || null;
+    const resolvedTiles = tiles || streetTiles;
+    const layer = L.tileLayer(resolvedTiles.url, {
+      attribution: resolvedTiles.attr,
+      className: `map-tiles map-tiles-${mapLayer} map-tiles-${mapBaseLayer} map-tiles-${mapBaseLayer}-${mapLayer}`,
+      maxZoom: 19,
     }).addTo(map);
     // Tile error reporting: count failures within a short window so a single
     // CDN hiccup or one missing zoom-19 tile does not spam the user. Only
@@ -309,8 +320,9 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
     return () => {
       if (burstTimer != null) clearTimeout(burstTimer);
       layer.off('tileerror', onTileError);
+      layer.remove();
     };
-  }, [mapLayer, pushNotice]);
+  }, [mapBaseLayer, mapLayer, pushNotice]);
 
   // Draw rail lines around the current viewport. The viewport includes a
   // buffer so panning does not reveal empty track while the next slice loads.
@@ -325,7 +337,8 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
     const visibleIds = new Set(lines.map(l => l.id));
     const showStations = !viewport || viewport.zoom >= STATION_DOT_MIN_ZOOM;
     const detailBucket = RailUtil.renderBucketForZoom(viewport && viewport.zoom);
-    const renderMode = `${showGrades ? 'grades' : 'plain'}:${showStations ? 'stations' : 'lines-only'}:${detailBucket}`;
+    const renderMode = `${mapLayer}:${showGrades ? 'grades' : 'plain'}:${showStations ? 'stations' : 'lines-only'}:${detailBucket}`;
+    const stationFillColor = mapLayer === 'light' ? '#ffffff' : '#0f1117';
 
     const removeLineLayers = (id) => {
       const entry = railLinesRef.current[id];
@@ -410,7 +423,7 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
             const pos = hasShape ? RailUtil.positionAtKm(line, s.km) : { lat: s.lat, lng: s.lng };
             if (viewport && !RailUtil.pointInBounds(pos, viewport)) return [];
             return [L.circleMarker([pos.lat, pos.lng], {
-              radius: 3, color: line.color, fillColor: '#0f1117',
+              radius: 3, color: line.color, fillColor: stationFillColor,
               fillOpacity: 1, weight: 2,
             }).bindTooltip(s.name, { direction: 'top', offset: [0,-4], className: 'station-tip' })
              .addTo(map)];
@@ -418,7 +431,7 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
         : [];
       railLinesRef.current[line.id] = { layers: [...layers, ...stationDots] };
     });
-  }, [region, visibleLines, showGrades, viewportTick]);
+  }, [region, visibleLines, mapLayer, showGrades, viewportTick]);
 
   // Fit bounds only when the user explicitly switches region after the first
   // paint. The initial framing is handled by the location effect below so the
@@ -575,13 +588,24 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
         ),
       ),
     ),
-    React.createElement("div", { className: "layer-switch" },
-      [['dark','深色'], ['light','淺色'], ['satellite','衛星']].map(([k,label]) =>
+    React.createElement("div", {
+      className: "map-layer-switch",
+      role: "group",
+      "aria-label": "底圖圖層",
+    },
+      MAP_BASE_LAYER_OPTIONS.map(opt =>
         React.createElement("button", {
-          key: k,
-          className: "layer-btn " + (mapLayer === k ? "active" : ""),
-          onClick: () => setMapLayer(k),
-        }, label)
+          key: opt.key,
+          type: "button",
+          className: "map-layer-btn " + (mapBaseLayer === opt.key ? "active" : ""),
+          onClick: () => setMapBaseLayer && setMapBaseLayer(opt.key),
+          title: opt.label,
+          "aria-label": opt.label,
+          "aria-pressed": mapBaseLayer === opt.key,
+        },
+          React.createElement(Icon, { id: opt.icon, size: 13 }),
+          React.createElement("span", { className: "map-layer-label" }, opt.label),
+        )
       ),
     ),
     React.createElement("div", { className: "map-fab-stack" },

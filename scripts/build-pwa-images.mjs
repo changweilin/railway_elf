@@ -18,14 +18,14 @@ async function readSvg(rel) {
   return readFile(resolve(PUBLIC, rel), "utf8");
 }
 
-async function renderPng({ html, width, height, outPath, browser }) {
+async function renderPng({ html, width, height, outPath, browser, omitBackground = false }) {
   const ctx = await browser.newContext({
     viewport: { width, height },
     deviceScaleFactor: 1,
   });
   const page = await ctx.newPage();
   await page.setContent(html, { waitUntil: "load" });
-  const buf = await page.screenshot({ type: "png", omitBackground: false });
+  const buf = await page.screenshot({ type: "png", omitBackground });
   await writeFile(outPath, buf);
   await ctx.close();
   console.log(`wrote ${outPath} (${width}x${height})`);
@@ -33,7 +33,7 @@ async function renderPng({ html, width, height, outPath, browser }) {
 
 const ICON_HTML = (svg) => `<!doctype html>
 <html><head><meta charset="utf-8"><style>
-  html,body{margin:0;padding:0;background:#0f1117;width:100%;height:100%;}
+  html,body{margin:0;padding:0;background:transparent;width:100%;height:100%;}
   .wrap{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;}
   .wrap svg{width:100%;height:100%;display:block;}
 </style></head>
@@ -81,18 +81,20 @@ const OG_HTML = (svg) => `<!doctype html>
 </body></html>`;
 
 async function main() {
-  const favicon = await readSvg("favicon.svg");
+  const icon = await readSvg("assets/logo-mark-light.svg");
+  const ogMark = await readSvg("assets/logo-mark-dark.svg");
   const browser = await chromium.launch();
   try {
     await renderPng({
-      html: ICON_HTML(favicon),
+      html: ICON_HTML(icon),
       width: 180,
       height: 180,
       outPath: resolve(PUBLIC, "apple-touch-icon.png"),
       browser,
+      omitBackground: true,
     });
     await renderPng({
-      html: OG_HTML(favicon),
+      html: OG_HTML(ogMark),
       width: 1200,
       height: 630,
       outPath: resolve(PUBLIC, "og-image.png"),

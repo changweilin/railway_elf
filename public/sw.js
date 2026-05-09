@@ -10,7 +10,7 @@
 // caches get cleaned up on activate. Hashed bundle filenames already
 // invalidate themselves, so most deploys do NOT require a version bump.
 
-const VERSION = "v1";
+const VERSION = "v2";
 const PRECACHE = `railway-elf-precache-${VERSION}`;
 const RUNTIME = `railway-elf-runtime-${VERSION}`;
 
@@ -20,6 +20,9 @@ const SHELL = [
   "./manifest.webmanifest",
   "./favicon.svg",
   "./apple-touch-icon.png",
+  "./assets/logo-mark.svg",
+  "./assets/logo-mark-light.svg",
+  "./assets/logo-mark-dark.svg",
 ];
 
 const HASHED_ASSET_RE = /\/assets\/.+-[A-Za-z0-9_-]{6,}\.(?:js|css|png|jpe?g|svg|webp|woff2?)$/;

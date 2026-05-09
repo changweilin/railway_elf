@@ -8,6 +8,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap');
 
 :root {
+  color-scheme: dark;
   /* ==============================
      COLOR — Surfaces (dark theme)
      ============================== */
@@ -16,6 +17,18 @@
   --me-bg-tertiary:  #1e2030;  /* inputs, stat cards, chips */
   --me-bg-glass:        rgba(22, 24, 34, 0.85);
   --me-bg-glass-hover:  rgba(30, 32, 48, 0.90);
+  --me-color-scheme: dark;
+  --me-map-bg: #0a0d14;
+  --me-tooltip-bg: rgba(22, 24, 34, 0.94);
+  --me-tooltip-border: rgba(255, 255, 255, 0.08);
+  --me-tooltip-text: #e8eaf0;
+  --me-on-accent: #0b1220;
+  --me-tab-surface: rgba(0, 0, 0, 0.25);
+  --me-hover-wash: rgba(255, 255, 255, 0.06);
+  --me-backdrop: rgba(0, 0, 0, 0.60);
+  --me-pin-fill: #ffffff;
+  --me-pin-border: #ffffff;
+  --me-station-fill: #0f1117;
 
   /* ==============================
      COLOR — Text
@@ -139,6 +152,57 @@
   --me-temp-size: 32px;  --me-temp-weight: 700;
 }
 
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --me-bg-primary:   #f6f8fb;
+  --me-bg-secondary: #ffffff;
+  --me-bg-tertiary:  #eef3f8;
+  --me-bg-glass:        rgba(255, 255, 255, 0.88);
+  --me-bg-glass-hover:  rgba(241, 246, 252, 0.96);
+  --me-color-scheme: light;
+  --me-map-bg: #dbe4ef;
+  --me-tooltip-bg: rgba(255, 255, 255, 0.96);
+  --me-tooltip-border: rgba(15, 23, 42, 0.14);
+  --me-tooltip-text: #172033;
+  --me-on-accent: #ffffff;
+  --me-tab-surface: rgba(15, 23, 42, 0.06);
+  --me-hover-wash: rgba(15, 23, 42, 0.06);
+  --me-backdrop: rgba(15, 23, 42, 0.38);
+  --me-pin-fill: #ffffff;
+  --me-pin-border: #ffffff;
+  --me-station-fill: #ffffff;
+
+  --me-text-primary:   #172033;
+  --me-text-secondary: #536176;
+  --me-text-muted:     #7b8798;
+
+  --me-accent-primary:   #047857;
+  --me-accent-secondary: #1d4ed8;
+  --me-accent-gradient: linear-gradient(135deg, #047857 0%, #1d4ed8 100%);
+  --me-accent-gradient-subtle: linear-gradient(135deg,
+      rgba(4,120,87,0.12) 0%,
+      rgba(29,78,216,0.12) 100%);
+
+  --me-success: #047857;
+  --me-info:    #1d4ed8;
+  --me-warning: #b45309;
+  --me-danger:  #dc2626;
+
+  --me-alt-0: #047857;
+  --me-alt-1: #1d4ed8;
+  --me-alt-2: #d97706;
+  --me-alt-3: #dc2626;
+
+  --me-border:       rgba(15, 23, 42, 0.10);
+  --me-border-hover: rgba(15, 23, 42, 0.18);
+
+  --me-shadow-sm:   0 2px 8px  rgba(15,23,42,0.10);
+  --me-shadow-md:   0 4px 16px rgba(15,23,42,0.14);
+  --me-shadow-lg:   0 10px 30px rgba(15,23,42,0.18);
+  --me-shadow-glow: 0 0   20px rgba(29,78,216,0.12);
+}
+
 /* ==========================================================
    Semantic element styles
    ========================================================== */
@@ -148,6 +212,7 @@ body.me-root {
   line-height: var(--me-body-lh);
   color: var(--me-text-primary);
   background: var(--me-bg-primary);
+  color-scheme: var(--me-color-scheme);
   -webkit-font-smoothing: antialiased;
 }
 

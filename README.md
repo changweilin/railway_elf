@@ -59,7 +59,7 @@ src/
   rail-data.js                   Hand-curated lines / stations / train templates (RailUtil lives here too).
   rail-data.generated.js         Generated polylines + station-km tables (do not edit by hand).
 public/assets/
-  styles.css, tokens.css, icons.svg, logo-mark.svg
+  styles.css, tokens.css, icons.svg, logo-mark.svg, logo-mark-light.svg, logo-mark-dark.svg
   train-icons/                   Top-down PNG icons + train-icon-map.json (see its own README).
 scripts/
   fetch-rail-shapes.mjs          TDX + OSM Overpass fetcher / stitcher / simplifier.

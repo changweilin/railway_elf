@@ -58,6 +58,31 @@ const RAIL_CATEGORIES = [
   { key: 'LRT',   label: '輕軌' },
 ];
 
+const THEME_STORAGE_KEY = 'relf.theme';
+const MAP_BASE_LAYER_STORAGE_KEY = 'relf.mapBaseLayer';
+const MAP_BASE_LAYER_KEYS = new Set(['streets', 'terrain', 'satellite']);
+
+function getInitialTheme() {
+  try {
+    const saved = localStorage.getItem(THEME_STORAGE_KEY);
+    if (saved === 'dark' || saved === 'light') return saved;
+  } catch {}
+  try {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+      return 'light';
+    }
+  } catch {}
+  return 'dark';
+}
+
+function getInitialMapBaseLayer() {
+  try {
+    const saved = localStorage.getItem(MAP_BASE_LAYER_STORAGE_KEY);
+    if (MAP_BASE_LAYER_KEYS.has(saved)) return saved;
+  } catch {}
+  return 'streets';
+}
+
 const Icon = ({ id, size = 18 }) =>
   React.createElement("svg", { width: size, height: size, "aria-hidden": true },
     React.createElement("use", { href: `assets/icons.svg#${id}` }));
@@ -91,7 +116,8 @@ function App() {
   const [favorites, setFavorites] = useState(() => {
     try { return JSON.parse(localStorage.getItem('relf.favs') || '[]'); } catch { return []; }
   });
-  const [mapLayer, setMapLayer] = useState('dark');
+  const [theme, setTheme] = useState(getInitialTheme);
+  const [mapBaseLayer, setMapBaseLayer] = useState(getInitialMapBaseLayer);
   const [dirFilter, setDirFilter] = useState('all');     // 'all' | 'up' | 'down'
   const [typeFilters, setTypeFilters] = useState([]);    // array of type strings
   const [enabledCategories, setEnabledCategories] = useState(() => {
@@ -179,6 +205,21 @@ function App() {
     const t = setInterval(() => setNow(new Date()), 30000);
     return () => clearInterval(t);
   }, []);
+
+  // Keep CSS variables, browser chrome, and the map base layer on the same
+  // light/dark source of truth.
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    document.documentElement.style.colorScheme = theme;
+    if (document.body) document.body.dataset.theme = theme;
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f1117' : '#f6f8fb');
+    try { localStorage.setItem(THEME_STORAGE_KEY, theme); } catch {}
+  }, [theme]);
+
+  useEffect(() => {
+    try { localStorage.setItem(MAP_BASE_LAYER_STORAGE_KEY, mapBaseLayer); } catch {}
+  }, [mapBaseLayer]);
 
   // Service-worker update prompt. main.js dispatches sw:update-ready when a
   // new SW has finished installing and is waiting; the user opts in by
@@ -728,6 +769,8 @@ function App() {
       onMenu: () => setPanelOpen(!panelOpen),
       panelOpen,
       panelCollapsed, togglePanel: () => setPanelCollapsed(!panelCollapsed),
+      theme,
+      toggleTheme: () => setTheme(t => t === 'dark' ? 'light' : 'dark'),
     }),
     React.createElement("div", { className: "main " + (panelCollapsed ? "panel-hidden" : "") },
       React.createElement("div", {
@@ -751,7 +794,10 @@ function App() {
         region, location, nearest, liveTrains, targetTime, now,
         quickPick, handleQuickPick, lastPredictPick,
         visibleLines,
-        mapLayer, setMapLayer,
+        mapLayer: theme === 'dark' ? 'dark' : 'light',
+        theme,
+        mapBaseLayer,
+        setMapBaseLayer,
         showGrades,
         onMapClick: pickFromMap,
         onLocate: useGeolocation,
@@ -828,7 +874,7 @@ function NoticeStack({ notices, onDismiss }) {
 // ============================================================
 // TOOLBAR
 // ============================================================
-function Toolbar({ region, switchRegion, onMenu, panelOpen, panelCollapsed, togglePanel }) {
+function Toolbar({ region, switchRegion, onMenu, panelOpen, panelCollapsed, togglePanel, theme, toggleTheme }) {
   const regions = [
     ['taiwan',    '🇹🇼 台灣 Taiwan'],
     ['japan',     '🇯🇵 日本 Japan'],
@@ -850,7 +896,10 @@ function Toolbar({ region, switchRegion, onMenu, panelOpen, panelCollapsed, togg
       onClick: togglePanel, title: panelCollapsed ? "展開側欄" : "收起側欄",
     }, React.createElement(Icon, { id: panelCollapsed ? "me-chevron-down" : "me-chevron-up", size: 20 })),
     React.createElement("div", { className: "tb-logo" },
-      React.createElement("img", { src: "assets/logo-mark.svg", alt: "" }),
+      React.createElement("img", {
+        src: theme === 'light' ? "assets/logo-mark-light.svg" : "assets/logo-mark-dark.svg",
+        alt: "",
+      }),
       React.createElement("div", null,
         React.createElement("div", { className: "tb-logo-title" }, "Railway Elf"),
         React.createElement("div", { className: "tb-logo-sub" }, "列車經過預測"),
@@ -865,6 +914,14 @@ function Toolbar({ region, switchRegion, onMenu, panelOpen, panelCollapsed, togg
       React.createElement(Icon, { id: "me-chevron-down", size: 16 }),
     ),
     React.createElement("div", { className: "tb-spacer" }),
+    React.createElement("button", {
+      className: "tb-tool theme-toggle",
+      type: "button",
+      onClick: toggleTheme,
+      title: theme === 'dark' ? "Switch to light mode" : "Switch to dark mode",
+      "aria-label": theme === 'dark' ? "Switch to light mode" : "Switch to dark mode",
+      "aria-pressed": theme === 'dark',
+    }, React.createElement(Icon, { id: theme === 'dark' ? "me-moon" : "me-sun", size: 20 })),
     React.createElement("button", { className: "tb-tool", title: "說明" },
       React.createElement(Icon, { id: "me-info", size: 20 })),
   );
@@ -1098,7 +1155,7 @@ function Panel(props) {
             style: {
               display: 'inline-block', width: 28, height: 5,
               background: 'currentColor',
-              boxShadow: '0 0 0 2px rgba(255,255,255,0.55)',
+              boxShadow: '0 0 0 2px var(--me-tooltip-border)',
             },
           }),
           "高架化(白色光暈)",
