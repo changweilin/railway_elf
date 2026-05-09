@@ -33,6 +33,9 @@ async function waitForAppReady(page) {
   await expect(page.locator('#app .toolbar')).toBeVisible();
   await expect(page.locator('#map.leaflet-container')).toBeVisible();
   await expect(page.locator('.leaflet-tile-loaded').first()).toBeVisible();
+  const timeInput = page.locator('input[type="time"]').first();
+  await timeInput.fill('12:00');
+  await expect(timeInput).toHaveValue('12:00');
   await expect.poll(async () => page.locator('.train-marker-v2').count(), {
     timeout: 10_000,
   }).toBeGreaterThan(0);
@@ -127,6 +130,18 @@ async function zoomOutUntilLabelsHidden(page) {
   return collectMarkerMetrics(page);
 }
 
+async function waitForIconSpacing(page, minGapPx) {
+  let lastMetrics = null;
+  await expect.poll(async () => {
+    lastMetrics = await collectMarkerMetrics(page);
+    if (lastMetrics.visibleIconCount <= 1 || lastMetrics.minIconDistance == null) return -1;
+    return lastMetrics.minIconDistance;
+  }, {
+    timeout: 8_000,
+  }).toBeGreaterThanOrEqual(minGapPx);
+  return lastMetrics || collectMarkerMetrics(page);
+}
+
 async function waitForLabelsVisible(page) {
   await expect.poll(async () => (await collectMarkerMetrics(page)).visibleLabelCount, {
     timeout: 8_000,
@@ -152,7 +167,10 @@ test.describe('map marker density', () => {
       expect(taiwanZoom13.minIconDistance).toBeGreaterThanOrEqual(19.5);
     }
 
-    const taiwanZoom11 = await zoomOutUntilLabelsHidden(page);
+    let taiwanZoom11 = await zoomOutUntilLabelsHidden(page);
+    if (taiwanZoom11.visibleIconCount > 1) {
+      taiwanZoom11 = await waitForIconSpacing(page, 27.5);
+    }
     expect(taiwanZoom11.markerCount).toBeGreaterThan(0);
     expect(taiwanZoom11.markerCount).toBeLessThanOrEqual(110);
     expect(taiwanZoom11.hiddenMarkerCount).toBe(taiwanZoom11.markerCount);

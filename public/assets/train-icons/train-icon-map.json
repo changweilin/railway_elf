@@ -146,6 +146,10 @@
       "icon": "assets/train-icons/korea-seoul-metro-2-loop.png",
       "kind": "metro"
     },
+    "korea|AREX|AREX": {
+      "icon": "assets/train-icons/korea-arex-arex.png",
+      "kind": "express"
+    },
     "korea|KTX-Gyeongbu|KTX": {
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx.png",
       "kind": "shinkansen"

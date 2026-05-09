@@ -230,6 +230,12 @@ const OSM_LINE_MAP = {
     corridor: { corridorKm: 1.2, sampleKm: 0.08 },
   },
   "Seoul-Metro-2": { name: "Seoul Subway Line 2 Outer Circle", relationIds: [2404374], loopAnchor: { lat: 37.5645, lng: 126.9776 } },
+  "AREX": {
+    name: "Airport Railroad Express All-stop (Seoul Station→Incheon Int'l Airport Terminal 2)",
+    relationIds: [7919000],
+    orderStationKms: true,
+    stationStops: {},
+  },
   "KTX-Gyeongbu": {
     name: "KTX Gyeongbu Line / Gyeongbu HSL (Seoul→Busan)",
     relationIds: [11214334],

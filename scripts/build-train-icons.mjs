@@ -35,6 +35,7 @@ const VISUALS = {
   "korea|Seoul-Metro-1|급행": { shape: "commuter", body: "#f8fafc", accent: "#1d4ed8", accent2: "#0c4ca3" },
   "korea|Seoul-Metro-1|완행": { shape: "commuter", body: "#f8fafc", accent: "#0052a4", accent2: "#60a5fa" },
   "korea|Seoul-Metro-2|순환": { shape: "metro", body: "#f8fafc", accent: "#00a84d", band: "#00a84d" },
+  "korea|AREX|AREX": { shape: "express", body: "#f8fafc", accent: "#0079ac", accent2: "#f97316" },
   "korea|KTX-Gyeongbu|KTX": { shape: "shinkansen", body: "#f8fafc", accent: "#0c4ca3", accent2: "#dc2626" },
   "korea|KTX-Gyeongbu|KTX-산천": { shape: "shinkansen", body: "#f8fafc", accent: "#dc2626", accent2: "#0c4ca3" },
   "korea|Busan-Metro-1|1호선": { shape: "metro", body: "#f8fafc", accent: "#f06a00", band: "#f06a00" },

@@ -1,6 +1,6 @@
 # 大東亞路網擴張計畫
 
-更新日期：2026-05-09
+更新日期：2026-05-10
 
 台灣側已涵蓋 21 條線（TRA 全幹線＋4 條支線、阿里山林鐵、THSR、北捷 5 線、機捷、高捷紅/橘、高雄輕軌、淡海輕軌），`follow-up-plan.md` 已標示「沒有尚未完成的必要項目」。本文件定義整個大東亞區域的擴張批次與每條線的執行步驟。
 
@@ -11,6 +11,7 @@
 - **Phase A（手寫站表 + 車種）：完成 34/34 條（100%）** — `npm run check:timing` & `npm run test:smoke` & `npm run build` 全通過
 - **Phase B（OSM relation 對接）：34/34 條完成（100%）** — 批次 1–11 已補 OSM relation 並回灌真實軌道形狀；本輪沒有保留 0 km fallback。2026-05-09 高誤差複查後，補上 relation stop member 對站與 generated stationCoords 吸附，57 條線 runtime maxOffset 全部壓到 1.0 km 內。
 - **完整覆蓋 backlog（日本 / 南韓）：已建立規劃事項** — 覆蓋尚未加入的鐵道類型與候選線群；此區塊是後續大型擴張，不列入已完成的 34 條 Phase A/B 統計。
+- **Backlog seed（南韓 Airport）：AREX 已完成代表線** — `AREX` 已補手寫站表、all-stop train template、OSM relation `7919000`、line-aware train icon；可作為後續金海機場相關線或其他機場線的 SOP 範例。
 
 ## 類型分類
 
@@ -153,7 +154,7 @@
 | □ backlog | Intercity | 一般列車與優等在來線 | ITX-새마을、ITX-마음、누리로、무궁화호、ITX-청춘；京釜、湖南、中央、太白、嶺東、京春等 | OSM + KORAIL | 先補固定停站、班距穩定的主幹 |
 | □ backlog | Commuter / Metro | 首都圈廣域電鐵與地鐵未覆蓋線 | Seoul Metro 3–9、AREX、Shinbundang、Suin-Bundang、Gyeongui-Jungang、Gyeongchun、Gyeonggang、Seohae、Incheon 1/2 等 | OSM + operator data | 多線共線與直通複雜，需逐線確認 `directions` 與停站型 |
 | □ backlog | Metro | 非首都圈都市地鐵 | Busan 2–4、Daegu 1–2、Daejeon 1、Gwangju 1 | OSM | 與既有 Busan 1 組成第二批城市捷運 |
-| □ backlog | Airport | 機場聯絡鐵道 | AREX 일반 / 직통、金海機場相關城市鐵道銜接 | OSM | 可先做 AREX，資料結構與香港 / 曼谷機場線相近 |
+| ◐ seed | Airport | 機場聯絡鐵道 | AREX 일반（☑ A ☑ B）；AREX 직통 與金海機場相關城市鐵道銜接待後續 | OSM | AREX all-stop 已作為南韓機場線代表線；直通列車需等 skip-stop template 支援後再建 |
 | □ backlog | LRT / AGT | 輕量捷運與無人自動運轉線 | Ui LRT、Sillim Line、Uijeongbu U Line、Yongin EverLine、Gimpo Goldline、Busan-Gimhae LRT、Incheon 2 等 | OSM + operator data | 需新增 low-capacity / driverless icon variants |
 | □ backlog | Monorail | 都市單軌 | Daegu Line 3；觀光型單軌另案評估 | OSM + Daegu operator data | 大邱 3 號線是最適合作為韓國單軌首例的候選 |
 | □ backlog | Tram | 現代路面電車 / tram 計畫 | Daejeon Line 2 等營運後納入；既有未營運計畫先不建資料 | OSM + 市府資料 | 未開業線只列規劃，不進 `RAIL_DATA` |
@@ -165,7 +166,7 @@ Backlog 執行原則：
 
 1. 每個新類型先做一條「代表線」驗證 icon、速度 profile、站距投影與 snap 行為，再擴成整個城市或營運者。
 2. 日本優先順序建議：剩餘新幹線 → 機場線 → 東京 / 大阪地下鐵補齊 → 大手民鐵 → Tram / Monorail / AGT → Regional / Heritage。
-3. 南韓優先順序建議：SRT / KTX 其餘走廊 → AREX → 首都圈 3–9 與廣域線 → Busan / Daegu / Daejeon / Gwangju → LRT / Monorail → Regional / Heritage。
+3. 南韓優先順序建議：SRT / KTX 其餘走廊 → 首都圈 3–9 與廣域線 → Busan / Daegu / Daejeon / Gwangju → LRT / Monorail → Regional / Heritage；AREX all-stop 已完成首條 Airport seed。
 4. Freight、鋼索、季節性觀光線若沒有穩定 passenger pass prediction 模型，先做地圖圖層規劃，不阻塞客運功能。
 
 ## 批次 5 — 香港：MTR（4 條）
@@ -240,7 +241,7 @@ Backlog 執行原則：
 
 ## 分類統計
 
-已完成的批次 1–11 合計 **34 條線**，分布如下；不含既有日本 3 條線（東海道新幹線、山手線、中央線）與上方新增的日本 / 南韓完整覆蓋 backlog。
+已完成的批次 1–11 合計 **34 條線**，分布如下；不含既有日本 3 條線（東海道新幹線、山手線、中央線）與上方新增的日本 / 南韓完整覆蓋 backlog。另有 backlog seed：南韓 `AREX` 1 條 Airport 線已完成 A/B。
 
 | 類型 | 條數 | 線名摘要 |
 |---|---|---|

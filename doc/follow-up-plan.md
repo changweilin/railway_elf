@@ -1,10 +1,10 @@
 # Railway Elf 進度報告
 
-更新日期：2026-05-09
+更新日期：2026-05-10
 
 ## 目前結論
 
-沒有尚未完成的必要項目；大東亞擴張 Phase B 已完成 34/34 條 OSM 形狀回灌，snapshot 已更新到 57 條線。高誤差複查後，57 條線 runtime maxOffset 全部壓到 1.0 km 內，沒有 0 km fallback 或需阻塞上線的資料缺口。日本 / 南韓「完整類型覆蓋」已作為可選大型 backlog 加入 `doc/east-asia-expansion-plan.md`，不列入目前完成率。
+沒有尚未完成的必要項目；大東亞擴張 Phase B 已完成 34/34 條 OSM 形狀回灌，snapshot 已更新到 57 條線。高誤差複查後，57 條線 runtime maxOffset 全部壓到 1.0 km 內，沒有 0 km fallback 或需阻塞上線的資料缺口。日本 / 南韓「完整類型覆蓋」已作為可選大型 backlog 加入 `doc/east-asia-expansion-plan.md`，不列入目前完成率；其中南韓 Airport 類已完成第一條代表線 `AREX`。
 
 ## 本次完成
 
@@ -18,6 +18,7 @@
 - 資料修正：修正 JR-Sobu-Local 千葉端站點座標，並在 `kinematicProfile` 補上兩節點短站距的中點，避免短距離站間 inverse timing 誤報。
 - 高誤差複查：修正 `JR-Yamanote` loop/corridor 造成的 56 km 錯長度、`KHH-LRT` 全環線誤套到 13 站區段、`Busan-Metro-1` 後段投影漂移；中國 HSR、TYMRT、Alishan、台鐵支線與高捷紅/輕軌的高偏移已用 generated OSM shape 吸附修正。
 - OSM stop member 對站：`TPE-Brown`、`KHH-Orange`、`Busan-Metro-1`、`Beijing-Subway-1`、`Shanghai-Metro-1/2`、`KL-Kelana-Jaya`、`BKK-BTS-Sukhumvit`、`BKK-MRT-Blue`、`HCMC-Metro-1`、`Hanoi-Metro-2A` 改用 relation stop/platform node 回填 stationCoords；上海 1/2、胡志明 1、河內 2A 與曼谷 BTS 主要站點已降到公尺級偏移。
+- 南韓 Airport seed：新增 `AREX` all-stop（서울역 ⇄ 인천공항2터미널）14 站、1 個 train template、OSM relation `7919000`、line-aware AREX 圖示，並在 `doc/east-asia-expansion-plan.md` 清理 Airport backlog 狀態。
 
 ## 未完成
 
@@ -27,10 +28,10 @@
 
 - Tokaido-Shinkansen：若 OSM 未來有更乾淨 relation，可替換 corridor reconstruction 並更新 snapshot（依賴上游資料,目前無動作可做）。
 - 若要再往工程級精度推進，可優先精修目前 maxOffset 約 0.75–1.0 km 的路線（如 `Beijing-Shanghai-HSR`、`Beijing-Guangzhou-HSR`、`JR-Keihin-Tohoku`、`KHH-Red`、`Tamsui-LRT`、`JR-Osaka-Loop`、`Tokyu-Toyoko`、`Seoul-Metro-1`、`TPE-Yellow`、`TYMRT`），用官方站點座標或更乾淨的 OSM station node 逐站替換。
-- 日本 / 南韓完整覆蓋：依 `doc/east-asia-expansion-plan.md` 的 backlog，未來可從剩餘新幹線 / SRT-KTX 走廊、機場線、東京 / 首都圈地鐵、Tram / Monorail / LRT 等類型各挑一條代表線先做。
+- 日本 / 南韓完整覆蓋：依 `doc/east-asia-expansion-plan.md` 的 backlog，未來可從剩餘新幹線 / SRT-KTX 走廊、東京 / 首都圈地鐵、Tram / Monorail / LRT 等類型各挑一條代表線先做；南韓 Airport 類已有 `AREX` all-stop seed，直通列車待 skip-stop template 支援後再補。
 
 ## 建議下一步
 
 1. 後續資料改善：只做可選精修，優先處理 maxOffset 約 0.75–1.0 km 的路線與官方營業里程交叉校驗。
 2. 若 OSM 未來有更乾淨的 Tokaido-Shinkansen relation，再替換資料來源並更新 snapshot。
-3. 若要啟動下一輪資料擴張，先從日本 / 南韓完整覆蓋 backlog 選一個類型與一條代表線，補 icon / speed profile / shape pipeline 後再批量展開。
+3. 若要啟動下一輪資料擴張，先從日本 / 南韓完整覆蓋 backlog 選一個尚未 seed 的類型與一條代表線，補 icon / speed profile / shape pipeline 後再批量展開。
