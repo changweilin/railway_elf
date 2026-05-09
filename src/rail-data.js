@@ -776,24 +776,24 @@ export const RAIL_DATA = {
         // 直通東海道新幹線、博多以南直通九州新幹線(本表只覆蓋山陽自身)。
         stations: [
           { name: "新大阪",   lat: 34.7335, lng: 135.5002, km: 0,    dwellSec: 90 },
-          { name: "新神戸",   lat: 34.7064, lng: 135.1958, km: 32.7 },
-          { name: "西明石",   lat: 34.6646, lng: 134.9646, km: 53.2 },
-          { name: "姫路",     lat: 34.8369, lng: 134.6911, km: 86.8 },
-          { name: "相生",     lat: 34.8027, lng: 134.4622, km: 105.9 },
-          { name: "岡山",     lat: 34.6664, lng: 133.9192, km: 164.8, dwellSec: 60 },
-          { name: "新倉敷",   lat: 34.5780, lng: 133.7167, km: 187.3 },
-          { name: "福山",     lat: 34.4889, lng: 133.3622, km: 217.8 },
-          { name: "新尾道",   lat: 34.4467, lng: 133.1717, km: 235.1 },
-          { name: "三原",     lat: 34.3997, lng: 133.0789, km: 245.8 },
-          { name: "東広島",   lat: 34.4283, lng: 132.7406, km: 280.7 },
-          { name: "広島",     lat: 34.3978, lng: 132.4753, km: 309.8, dwellSec: 60 },
-          { name: "新岩国",   lat: 34.1614, lng: 132.0433, km: 348.4 },
-          { name: "徳山",     lat: 34.0556, lng: 131.8056, km: 391.0 },
-          { name: "新山口",   lat: 34.0947, lng: 131.3978, km: 432.6 },
-          { name: "厚狭",     lat: 34.0633, lng: 131.0958, km: 465.6 },
-          { name: "新下関",   lat: 33.9836, lng: 130.9750, km: 490.1 },
-          { name: "小倉",     lat: 33.8869, lng: 130.8825, km: 509.5, dwellSec: 60 },
-          { name: "博多",     lat: 33.5897, lng: 130.4206, km: 553.7, dwellSec: 90 },
+          { name: "新神戸",   lat: 34.7065, lng: 135.1956, km: 32.7 },
+          { name: "西明石",   lat: 34.6669, lng: 134.9604, km: 53.2 },
+          { name: "姫路",     lat: 34.8264, lng: 134.6908, km: 86.8 },
+          { name: "相生",     lat: 34.8183, lng: 134.4740, km: 105.9 },
+          { name: "岡山",     lat: 34.6668, lng: 133.9183, km: 164.8, dwellSec: 60 },
+          { name: "新倉敷",   lat: 34.5653, lng: 133.6785, km: 187.3 },
+          { name: "福山",     lat: 34.4893, lng: 133.3619, km: 217.8 },
+          { name: "新尾道",   lat: 34.4301, lng: 133.1903, km: 235.1 },
+          { name: "三原",     lat: 34.4008, lng: 133.0833, km: 245.8 },
+          { name: "東広島",   lat: 34.3889, lng: 132.7589, km: 280.7 },
+          { name: "広島",     lat: 34.3985, lng: 132.4754, km: 309.8, dwellSec: 60 },
+          { name: "新岩国",   lat: 34.1646, lng: 132.1495, km: 348.4 },
+          { name: "徳山",     lat: 34.0511, lng: 131.8021, km: 391.0 },
+          { name: "新山口",   lat: 34.0931, lng: 131.3970, km: 432.6 },
+          { name: "厚狭",     lat: 34.0534, lng: 131.1598, km: 465.6 },
+          { name: "新下関",   lat: 34.0082, lng: 130.9493, km: 490.1 },
+          { name: "小倉",     lat: 33.8868, lng: 130.8825, km: 509.5, dwellSec: 60 },
+          { name: "博多",     lat: 33.5900, lng: 130.4204, km: 553.7, dwellSec: 90 },
         ],
         // 山陽新幹線:約半數路段為山岳トンネル(六甲・関門・新神戸前後等
         // 多處長隧道)。下面只標兩處代表性區段,其餘隧道與高架未細列。
@@ -975,14 +975,14 @@ export const RAIL_DATA = {
           { name: "下総中山",   lat: 35.7080, lng: 139.9494, km: 39.1 },
           { name: "西船橋",     lat: 35.7039, lng: 139.9684, km: 40.6 },
           { name: "船橋",       lat: 35.7019, lng: 139.9856, km: 42.6, dwellSec: 30 },
-          { name: "東船橋",     lat: 35.7065, lng: 140.0050, km: 44.3 },
-          { name: "津田沼",     lat: 35.6948, lng: 140.0246, km: 46.1 },
-          { name: "幕張本郷",   lat: 35.6824, lng: 140.0469, km: 48.1 },
-          { name: "幕張",       lat: 35.6629, lng: 140.0635, km: 49.8 },
-          { name: "新検見川",   lat: 35.6606, lng: 140.0867, km: 51.3 },
-          { name: "稲毛",       lat: 35.6383, lng: 140.1115, km: 53.6 },
-          { name: "西千葉",     lat: 35.6260, lng: 140.1252, km: 55.0 },
-          { name: "千葉",       lat: 35.6135, lng: 140.1126, km: 60.2, dwellSec: 30 },
+          { name: "東船橋",     lat: 35.6998, lng: 140.0043, km: 44.3 },
+          { name: "津田沼",     lat: 35.6914, lng: 140.0202, km: 46.1 },
+          { name: "幕張本郷",   lat: 35.6727, lng: 140.0423, km: 48.1 },
+          { name: "幕張",       lat: 35.6593, lng: 140.0580, km: 49.8 },
+          { name: "新検見川",   lat: 35.6518, lng: 140.0731, km: 51.3 },
+          { name: "稲毛",       lat: 35.6371, lng: 140.0926, km: 53.6 },
+          { name: "西千葉",     lat: 35.6227, lng: 140.1031, km: 55.0 },
+          { name: "千葉",       lat: 35.6137, lng: 140.1125, km: 60.2, dwellSec: 30 },
         ],
       },
       {
@@ -2492,6 +2492,18 @@ export const RailUtil = (function(){
   // rest (v=0 at first/last node) and respects vCruise + curvature limits +
   // accel/decel feasibility from a forward/backward sweep.
   function kinematicProfile(points, vCruise, accel, decel, aLat) {
+    if (points.length === 2 && points[1].x > points[0].x) {
+      const a = points[0], b = points[1];
+      points = [
+        a,
+        {
+          lat: (a.lat + b.lat) / 2,
+          lng: (a.lng + b.lng) / 2,
+          x: (a.x + b.x) / 2,
+        },
+        b,
+      ];
+    }
     const N = points.length;
     if (N < 2 || !(points[N-1].x - points[0].x > 0)) {
       const x0 = N > 0 ? points[0].x : 0;

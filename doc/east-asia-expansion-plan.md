@@ -1,6 +1,6 @@
 # 大東亞路網擴張計畫
 
-更新日期：2026-05-07
+更新日期：2026-05-09
 
 台灣側已涵蓋 21 條線（TRA 全幹線＋4 條支線、阿里山林鐵、THSR、北捷 5 線、機捷、高捷紅/橘、高雄輕軌、淡海輕軌），`follow-up-plan.md` 已標示「沒有尚未完成的必要項目」。本文件定義整個大東亞區域的擴張批次與每條線的執行步驟。
 
@@ -9,7 +9,7 @@
 ## 整體進度
 
 - **Phase A（手寫站表 + 車種）：完成 34/34 條（100%）** — `npm run check:timing` & `npm run test:smoke` & `npm run build` 全通過
-- **Phase B（OSM relation 對接）：尚未開始 0/34 條** — 需個別查詢 Overpass relation ID，下一階段執行
+- **Phase B（OSM relation 對接）：34/34 條完成（100%）** — 批次 1–11 已補 OSM relation 並回灌真實軌道形狀；本輪沒有保留 0 km fallback。中國 HSR 與部分都市線仍有站表座標粗略造成的高 offset，列為後續資料改善。
 
 ## 類型分類
 
@@ -74,25 +74,25 @@
 
 | 狀態 | 類型 | 資料源 | id | 線名 | 起終點 | 全長 |
 |---|---|---|---|---|---|---|
-| ☑ A ☐ B | Metro | OSM | `Tokyo-Metro-Ginza` | 東京メトロ銀座線 | 浅草 ⇄ 渋谷 | 14.3 km / 19 站 |
-| ☑ A ☐ B | Metro | OSM | `Tokyo-Metro-Marunouchi` | 東京メトロ丸ノ内線 | 池袋 ⇄ 荻窪 | 24.2 km / 25 站 |
-| ☑ A ☐ B | Commuter | OSM | `JR-Keihin-Tohoku` | 京浜東北線 | 大宮 ⇄ 大船 | 81.2 km / 46 站 |
-| ☑ A ☐ B | Commuter | OSM | `JR-Sobu-Local` | 総武線（各駅停車） | 三鷹 ⇄ 千葉 | 60.2 km / 39 站 |
-| ☑ A ☐ B | Commuter | OSM | `Tokyu-Toyoko` | 東急東横線 | 渋谷 ⇄ 横浜 | 24.2 km / 21 站 |
+| ☑ A ☑ B | Metro | OSM | `Tokyo-Metro-Ginza` | 東京メトロ銀座線 | 浅草 ⇄ 渋谷 | 14.3 km / 19 站 |
+| ☑ A ☑ B | Metro | OSM | `Tokyo-Metro-Marunouchi` | 東京メトロ丸ノ内線 | 池袋 ⇄ 荻窪 | 24.2 km / 25 站 |
+| ☑ A ☑ B | Commuter | OSM | `JR-Keihin-Tohoku` | 京浜東北線 | 大宮 ⇄ 大船 | 81.2 km / 46 站 |
+| ☑ A ☑ B | Commuter | OSM | `JR-Sobu-Local` | 総武線（各駅停車） | 三鷹 ⇄ 千葉 | 60.2 km / 39 站 |
+| ☑ A ☑ B | Commuter | OSM | `Tokyu-Toyoko` | 東急東横線 | 渋谷 ⇄ 横浜 | 24.2 km / 21 站 |
 
 ## 批次 2 — 日本：大阪圈（3 條）
 
 | 狀態 | 類型 | 資料源 | id | 線名 | 起終點 | 全長 |
 |---|---|---|---|---|---|---|
-| ☑ A ☐ B | Loop | OSM | `JR-Osaka-Loop` | 大阪環状線 | 環狀（錨點：大阪） | 21.7 km / 19 站 + 閉環 |
-| ☑ A ☐ B | Metro | OSM | `Osaka-Metro-Midosuji` | 大阪メトロ御堂筋線 | 江坂 ⇄ なかもず | 24.5 km / 20 站 |
-| ☑ A ☐ B | Commuter | OSM | `Hankyu-Kobe` | 阪急神戸本線 | 大阪梅田 ⇄ 神戸三宮 | 32.3 km / 16 站 |
+| ☑ A ☑ B | Loop | OSM | `JR-Osaka-Loop` | 大阪環状線 | 環狀（錨點：大阪） | 21.7 km / 19 站 + 閉環 |
+| ☑ A ☑ B | Metro | OSM | `Osaka-Metro-Midosuji` | 大阪メトロ御堂筋線 | 江坂 ⇄ なかもず | 24.5 km / 20 站 |
+| ☑ A ☑ B | Commuter | OSM | `Hankyu-Kobe` | 阪急神戸本線 | 大阪梅田 ⇄ 神戸三宮 | 32.3 km / 16 站 |
 
 ## 批次 3 — 日本：跨區新幹線（1 條）
 
 | 狀態 | 類型 | 資料源 | id | 線名 | 起終點 | 全長 |
 |---|---|---|---|---|---|---|
-| ☑ A ☐ B | HSR | OSM | `Sanyo-Shinkansen` | 山陽新幹線 | 新大阪 ⇄ 博多 | 553.7 km / 19 站 |
+| ☑ A ☑ B | HSR | OSM | `Sanyo-Shinkansen` | 山陽新幹線 | 新大阪 ⇄ 博多 | 553.7 km / 19 站 |
 
 ---
 
@@ -102,10 +102,10 @@
 
 | 狀態 | 類型 | 資料源 | id | 線名 | 起終點 | 全長 |
 |---|---|---|---|---|---|---|
-| ☑ A ☐ B | Metro | OSM | `Seoul-Metro-1` | 수도권 전철 1호선 | 광운대 ⇄ 인천（核心 25 站） | 51.8 km |
-| ☑ A ☐ B | Loop | OSM | `Seoul-Metro-2` | 서울 지하철 2호선 | 環狀（錨點：시청） | 48.8 km / 43 站 + 閉環 |
-| ☑ A ☐ B | HSR | OSM | `KTX-Gyeongbu` | KTX 경부선 | 서울 ⇄ 부산 | 418 km / 10 站 |
-| ☑ A ☐ B | Metro | OSM | `Busan-Metro-1` | 부산 도시철도 1호선 | 다대포해수욕장 ⇄ 노포 | 40.5 km / 40 站 |
+| ☑ A ☑ B | Metro | OSM | `Seoul-Metro-1` | 수도권 전철 1호선 | 광운대 ⇄ 인천（核心 25 站） | 51.8 km |
+| ☑ A ☑ B | Loop | OSM | `Seoul-Metro-2` | 서울 지하철 2호선 | 環狀（錨點：시청） | 48.8 km / 43 站 + 閉環 |
+| ☑ A ☑ B | HSR | OSM | `KTX-Gyeongbu` | KTX 경부선 | 서울 ⇄ 부산 | 418 km / 10 站 |
+| ☑ A ☑ B | Metro | OSM | `Busan-Metro-1` | 부산 도시철도 1호선 | 다대포해수욕장 ⇄ 노포 | 40.5 km / 40 站 |
 
 ## 批次 5 — 香港：MTR（4 條）
 
@@ -113,10 +113,10 @@
 
 | 狀態 | 類型 | 資料源 | id | 線名 | 起終點 | 全長 |
 |---|---|---|---|---|---|---|
-| ☑ A ☐ B | Metro | OSM | `MTR-Tsuen-Wan` | 荃灣綫 | 中環 ⇄ 荃灣 | 16.0 km / 16 站 |
-| ☑ A ☐ B | Metro | OSM | `MTR-Island` | 港島綫 | 堅尼地城 ⇄ 柴灣 | 16.3 km / 17 站 |
-| ☑ A ☐ B | Commuter | OSM | `MTR-East-Rail` | 東鐵綫 | 金鐘 ⇄ 羅湖 | 35.5 km / 14 站 |
-| ☑ A ☐ B | Airport | OSM | `MTR-Airport-Express` | 機場快綫 | 香港 ⇄ 博覽館 | 35.3 km / 5 站 |
+| ☑ A ☑ B | Metro | OSM | `MTR-Tsuen-Wan` | 荃灣綫 | 中環 ⇄ 荃灣 | 16.0 km / 16 站 |
+| ☑ A ☑ B | Metro | OSM | `MTR-Island` | 港島綫 | 堅尼地城 ⇄ 柴灣 | 16.3 km / 17 站 |
+| ☑ A ☑ B | Commuter | OSM | `MTR-East-Rail` | 東鐵綫 | 金鐘 ⇄ 羅湖 | 35.5 km / 14 站 |
+| ☑ A ☑ B | Airport | OSM | `MTR-Airport-Express` | 機場快綫 | 香港 ⇄ 博覽館 | 35.3 km / 5 站 |
 
 ## 批次 6 — 中國：高鐵主幹線（3 條）
 
@@ -124,18 +124,18 @@
 
 | 狀態 | 類型 | 資料源 | id | 線名 | 起終點 | 全長 |
 |---|---|---|---|---|---|---|
-| ☑ A ☐ B | HSR | OSM | `Beijing-Shanghai-HSR` | 京滬高速鐵路 | 北京南 ⇄ 上海虹橋 | 1318 km / 23 站 |
-| ☑ A ☐ B | HSR | OSM | `Beijing-Guangzhou-HSR` | 京廣高速鐵路 | 北京西 ⇄ 廣州南 | 2298 km / 28 站 |
-| ☑ A ☐ B | HSR | OSM | `Shanghai-Kunming-HSR` | 滬昆高速鐵路 | 上海虹橋 ⇄ 昆明南 | 2252 km / 26 站 |
+| ☑ A ☑ B | HSR | OSM | `Beijing-Shanghai-HSR` | 京滬高速鐵路 | 北京南 ⇄ 上海虹橋 | 1318 km / 23 站 |
+| ☑ A ☑ B | HSR | OSM | `Beijing-Guangzhou-HSR` | 京廣高速鐵路 | 北京西 ⇄ 廣州南 | 2298 km / 28 站 |
+| ☑ A ☑ B | HSR | OSM | `Shanghai-Kunming-HSR` | 滬昆高速鐵路 | 上海虹橋 ⇄ 昆明南 | 2252 km / 26 站 |
 
 ## 批次 7 — 中國：北京 / 上海都會地鐵（4 條）
 
 | 狀態 | 類型 | 資料源 | id | 線名 | 起終點 | 全長 |
 |---|---|---|---|---|---|---|
-| ☑ A ☐ B | Metro | OSM | `Beijing-Subway-1` | 北京地鐵 1 號線 | 蘋果園 ⇄ 環球度假區 | 47.6 km / 35 站 |
-| ☑ A ☐ B | Loop | OSM | `Beijing-Subway-2` | 北京地鐵 2 號線 | 環狀（錨點：西直門） | 23.1 km / 18 站 + 閉環 |
-| ☑ A ☐ B | Metro | OSM | `Shanghai-Metro-1` | 上海地鐵 1 號線 | 富錦路 ⇄ 莘莊 | 36.4 km / 28 站 |
-| ☑ A ☐ B | Metro | OSM | `Shanghai-Metro-2` | 上海地鐵 2 號線 | 徐涇東 ⇄ 浦東國際機場 | 64.0 km / 30 站 |
+| ☑ A ☑ B | Metro | OSM | `Beijing-Subway-1` | 北京地鐵 1 號線 | 蘋果園 ⇄ 環球度假區 | 47.6 km / 35 站 |
+| ☑ A ☑ B | Loop | OSM | `Beijing-Subway-2` | 北京地鐵 2 號線 | 環狀（錨點：西直門） | 23.1 km / 18 站 + 閉環 |
+| ☑ A ☑ B | Metro | OSM | `Shanghai-Metro-1` | 上海地鐵 1 號線 | 富錦路 ⇄ 莘莊 | 36.4 km / 28 站 |
+| ☑ A ☑ B | Metro | OSM | `Shanghai-Metro-2` | 上海地鐵 2 號線 | 徐涇東 ⇄ 浦東國際機場 | 64.0 km / 30 站 |
 
 ## 批次 8 — 新加坡：MRT（3 條）
 
@@ -143,9 +143,9 @@
 
 | 狀態 | 類型 | 資料源 | id | 線名 | 起終點 | 全長 |
 |---|---|---|---|---|---|---|
-| ☑ A ☐ B | Metro | OSM | `SG-MRT-North-South` | North-South Line | Jurong East ⇄ Marina South Pier | 45 km / 27 站 |
-| ☑ A ☐ B | Metro | OSM | `SG-MRT-East-West` | East-West Line | Pasir Ris ⇄ Tuas Link | 57.2 km / 33 站 |
-| ☑ A ☐ B | Metro | OSM | `SG-MRT-Circle` | Circle Line | Dhoby Ghaut ⇄ HarbourFront（horseshoe）| 31.0 km / 28 站 |
+| ☑ A ☑ B | Metro | OSM | `SG-MRT-North-South` | North-South Line | Jurong East ⇄ Marina South Pier | 45 km / 27 站 |
+| ☑ A ☑ B | Metro | OSM | `SG-MRT-East-West` | East-West Line | Pasir Ris ⇄ Tuas Link | 57.2 km / 33 站 |
+| ☑ A ☑ B | Metro | OSM | `SG-MRT-Circle` | Circle Line | Dhoby Ghaut ⇄ HarbourFront（horseshoe）| 31.0 km / 28 站 |
 
 ## 批次 9 — 馬來西亞：吉隆坡（2 條）
 
@@ -153,8 +153,8 @@
 
 | 狀態 | 類型 | 資料源 | id | 線名 | 起終點 | 全長 |
 |---|---|---|---|---|---|---|
-| ☑ A ☐ B | Metro | OSM | `KL-Kelana-Jaya` | LRT Laluan Kelana Jaya | Putra Heights ⇄ Gombak | 46.4 km / 37 站 |
-| ☑ A ☐ B | Metro | OSM | `KL-MRT-Kajang` | MRT Laluan Kajang | Kwasa Damansara ⇄ Kajang | 51.0 km / 29 站 |
+| ☑ A ☑ B | Metro | OSM | `KL-Kelana-Jaya` | LRT Laluan Kelana Jaya | Putra Heights ⇄ Gombak | 46.4 km / 37 站 |
+| ☑ A ☑ B | Metro | OSM | `KL-MRT-Kajang` | MRT Laluan Kajang | Kwasa Damansara ⇄ Kajang | 51.0 km / 29 站 |
 
 ## 批次 10 — 泰國：曼谷（3 條）
 
@@ -162,9 +162,9 @@
 
 | 狀態 | 類型 | 資料源 | id | 線名 | 起終點 | 全長 |
 |---|---|---|---|---|---|---|
-| ☑ A ☐ B | Metro | OSM | `BKK-BTS-Sukhumvit` | BTS สายสุขุมวิท | Khu Khot ⇄ Kheha | 53.5 km / 47 站 |
-| ☑ A ☐ B | Metro | OSM | `BKK-MRT-Blue` | MRT สายสีน้ำเงิน | Tha Phra ⇄ Lak Song | 48.0 km / 38 站 |
-| ☑ A ☐ B | Airport | OSM | `BKK-Airport-Rail` | Airport Rail Link | Phaya Thai ⇄ Suvarnabhumi | 28.6 km / 8 站 |
+| ☑ A ☑ B | Metro | OSM | `BKK-BTS-Sukhumvit` | BTS สายสุขุมวิท | Khu Khot ⇄ Kheha | 53.5 km / 47 站 |
+| ☑ A ☑ B | Metro | OSM | `BKK-MRT-Blue` | MRT สายสีน้ำเงิน | Tha Phra ⇄ Lak Song | 48.0 km / 38 站 |
+| ☑ A ☑ B | Airport | OSM | `BKK-Airport-Rail` | Airport Rail Link | Phaya Thai ⇄ Suvarnabhumi | 28.6 km / 8 站 |
 
 ## 批次 11 — 越南：胡志明 / 河內（2 條）
 
@@ -172,8 +172,8 @@
 
 | 狀態 | 類型 | 資料源 | id | 線名 | 起終點 | 全長 |
 |---|---|---|---|---|---|---|
-| ☑ A ☐ B | Metro | OSM | `HCMC-Metro-1` | Tuyến Metro số 1 | Bến Thành ⇄ Suối Tiên | 19.7 km / 14 站 |
-| ☑ A ☐ B | Metro | OSM | `Hanoi-Metro-2A` | Tuyến số 2A | Cát Linh ⇄ Yên Nghĩa | 13.0 km / 12 站 |
+| ☑ A ☑ B | Metro | OSM | `HCMC-Metro-1` | Tuyến Metro số 1 | Bến Thành ⇄ Suối Tiên | 19.7 km / 14 站 |
+| ☑ A ☑ B | Metro | OSM | `Hanoi-Metro-2A` | Tuyến số 2A | Cát Linh ⇄ Yên Nghĩa | 13.0 km / 12 站 |
 
 ---
 
@@ -244,9 +244,9 @@
 - **HSR 類**（東海道、山陽、京滬、京廣、滬昆、KTX）：OSM relation 易包含上下行＋折返線，可能需 `corridor` 重建（參考 Tokaido 既有作法）。
 - **多 region 切換 UI**：地區數從 2 → 9，要看 `src/app-core.js` 的 region selector 是否仍適合（例如改下拉式或分組）。
 - **i18n**：新增日文／韓文／中文簡體／泰文／越南文站名後，要走 `i18n-sync` skill 對齊 zh-TW UI 字串。
-- **OSM 缺資料**：部分新興路線（HCMC Metro 1、KL MRT 新延伸）OSM 可能尚未完整，缺資料時 Phase B 可暫緩，Phase A 仍可上線。
-- **build 時間**：批次 6/7 的中國高鐵與都會地鐵會大幅增加 OSM 抓取量，要監控 `scripts/.cache/` 大小與 build 時間，必要時把 build 拆批跑。
+- **站點座標品質**：本輪沒有 0 km fallback；中國 HSR、上海地鐵、KL、曼谷與越南部分站表仍有座標粗略造成的 maxOffset 偏高，列入後續資料改善。
+- **build 時間**：批次 6/7 的中國高鐵與都會地鐵已大幅增加 generated shape 與 snapshot 體量，後續若再擴張需持續監控 `scripts/.cache/` 大小與 build 時間。
 
 ## 執行順序
 
-依序執行批次 1 → 11。每批做完 Phase A 即可 commit；Phase B 完成（OSM 形狀回灌）後再 commit 一次。中途若遇上游 OSM 資料缺，跳過該條 Phase B、繼續下一批。
+2026-05-09 已依批次 1 → 11 完成 Phase B 形狀回灌與 snapshot 更新。後續工作以資料品質改善為主，不再需要長期排程或重跑本輪循環。

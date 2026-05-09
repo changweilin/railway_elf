@@ -51,7 +51,10 @@
       "Bash(taskkill //F //IM node.exe //FI \"WINDOWTITLE eq vite*\")",
       "Bash(git checkout *)",
       "Bash(git rm *)",
-      "Bash(git remote *)"
+      "Bash(git remote *)",
+      "Bash(python -c ' *)",
+      "Bash(python *)",
+      "Bash(PYTHONIOENCODING=utf-8 python *)"
     ]
   }
 }

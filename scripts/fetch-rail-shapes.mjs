@@ -8,6 +8,7 @@
 // Optional flags:
 //   --skip-tw         Skip Taiwan (TDX). Useful when iterating on Japan-only.
 //   --skip-jp         Skip Japan (OSM). Useful when iterating on Taiwan-only.
+//   --only-lines=a,b  Fetch only the listed internal line ids.
 //   --pretty          Pretty-print the generated JS (default: minified-ish).
 //   --no-cache        Disable disk cache read+write (always hit network, no fallback).
 //   --refresh-cache   Bypass cache read but still update the cache on success.
@@ -37,6 +38,14 @@ const SKIP_JP = args.has("--skip-jp");
 const PRETTY = args.has("--pretty");
 const NO_CACHE = args.has("--no-cache");
 const REFRESH_CACHE = args.has("--refresh-cache");
+const ONLY_LINES = new Set(
+  process.argv
+    .slice(2)
+    .filter(arg => arg.startsWith("--only-lines="))
+    .flatMap(arg => arg.slice("--only-lines=".length).split(","))
+    .map(s => s.trim())
+    .filter(Boolean)
+);
 
 // ---------------------------------------------------------------------------
 // CONFIG: which internal line ids map to which upstream sources.
@@ -106,6 +115,41 @@ const OSM_LINE_MAP = {
   },
   "JR-Yamanote":        { name: "Yamanote Line (Outer)", relationIds: [1972920], loopAnchor: { lat: 35.6812, lng: 139.7671 } }, // 外回り 環狀,以東京站切開
   "JR-Chuo":            { name: "Chūō Line Rapid (down)", relationIds: [10363876] }, // 下り (Tokyo→west)
+  "Sanyo-Shinkansen": {
+    name: "Sanyō Shinkansen",
+    relationIds: [1837932],
+    corridor: { corridorKm: 2.5, sampleKm: 0.1 },
+  }, // 新大阪→博多; relation includes both directions, so rebuild one centerline
+
+  // Tokyo Metro (route=subway).
+  "Tokyo-Metro-Ginza":      { name: "Tokyo Metro Ginza Line (浅草→渋谷)",     relationIds: [443281] },  // A 線 (浅草→渋谷) 主行向
+  "Tokyo-Metro-Marunouchi": { name: "Tokyo Metro Marunouchi Line (池袋→荻窪)", relationIds: [8015932] }, // 本線 池袋→荻窪 (不含方南町支線)
+
+  // JR Keihin-Tōhoku (大宮↔横浜) + 根岸線 (横浜↔大船) 合併運轉。
+  // OSM 各為獨立 relation,串接後即覆蓋我們的 大宮↔大船 站表。
+  "JR-Keihin-Tohoku":   { name: "JR Keihin-Tōhoku + Negishi (大宮→大船)", relationIds: [5195691, 10257299] }, // 京浜東北南行 + 根岸下り
+
+  // JR 中央・総武緩行線 (Local) — 三鷹↔千葉。10312043 gives the cleanest
+  // station-order projection after fixing the Chiba-end station coordinates.
+  "JR-Sobu-Local": {
+    name: "Chūō-Sōbu Local (千葉→三鷹)",
+    relationIds: [10312043],
+  },
+
+  // 東急東横線 (渋谷→横浜) 順向。
+  "Tokyu-Toyoko":       { name: "Tōkyū Tōyoko Line (渋谷→横浜)", relationIds: [9288982] },
+
+  // 大阪環状線 — 環狀,錨點為大阪站。OSM 將外回り獨立 relation,以大阪
+  // 為起終共用點。
+  "JR-Osaka-Loop":      { name: "JR Osaka Loop (外回り)", relationIds: [10073682], loopAnchor: { lat: 34.7025, lng: 135.4959 } },
+
+  // 大阪メトロ御堂筋線 — 2024 北延伸後 relation 為 箕面萱野→中百舌鳥。
+  // 我們站表只覆蓋 江坂↔なかもず,polyline 會延伸到 箕面萱野 (北端外掛
+  // 段約 6 km),站點透過投影映射到 polyline 上保持一致。
+  "Osaka-Metro-Midosuji": { name: "Osaka Metro Midōsuji (箕面萱野→中百舌鳥)", relationIds: [2411153] },
+
+  // 阪急電鉄神戸本線 (大阪梅田→神戸三宮)。
+  "Hankyu-Kobe":        { name: "Hankyū Kōbe Line (梅田→三宮)", relationIds: [11966252] },
 
   // Taiwan Metro / LRT — single-direction sub-routes (NOT route_masters).
   // Using a master would pull both directional sub-routes whose tracks may be
@@ -125,6 +169,81 @@ const OSM_LINE_MAP = {
   "Tamsui-LRT":   { name: "Danhai LRT (上行)",  relationIds: [9154523] }, // 紅樹林→崁頂
   // Alishan main line (嘉義→阿里山). Mountain spurs (神木/沼平/祝山) are separate relations.
   "Alishan-Forest": { name: "Alishan Forest Railway", relationIds: [5570989] },
+
+  // Korea.
+  "Seoul-Metro-1": {
+    name: "Seoul Metropolitan Subway Line 1 (Soyosan→Incheon, clipped to Gwangwoon Univ.→Incheon)",
+    relationIds: [8691809],
+    corridor: { corridorKm: 1.2, sampleKm: 0.08 },
+  },
+  "Seoul-Metro-2": { name: "Seoul Subway Line 2 Outer Circle", relationIds: [2404374], loopAnchor: { lat: 37.5645, lng: 126.9776 } },
+  "KTX-Gyeongbu": {
+    name: "KTX Gyeongbu Line / Gyeongbu HSL (Seoul→Busan)",
+    relationIds: [11214334],
+    corridor: { corridorKm: 6.0, sampleKm: 0.3 },
+  },
+  "Busan-Metro-1": { name: "Busan Metro Line 1 (Dadaepo Beach→Nopo)", relationIds: [8255697] },
+
+  // Hong Kong MTR.
+  "MTR-Tsuen-Wan":       { name: "MTR Tsuen Wan Line (Central→Tsuen Wan)", relationIds: [9736530] },
+  "MTR-Island":          { name: "MTR Island Line (Kennedy Town→Chai Wan)", relationIds: [4432666] },
+  "MTR-East-Rail":       { name: "MTR East Rail Line (Admiralty→Lo Wu)", relationIds: [4248592] },
+  "MTR-Airport-Express": { name: "MTR Airport Express (Hong Kong→AsiaWorld-Expo)", relationIds: [5317239] },
+
+  // Mainland China. HSR entries use `route=railway` infrastructure relations;
+  // corridor reconstruction keeps only the intended station chain.
+  "Beijing-Shanghai-HSR": {
+    name: "Jinghu High-speed Line",
+    relationIds: [356778],
+    corridor: { corridorKm: 12.0, sampleKm: 1.0 },
+  },
+  "Beijing-Guangzhou-HSR": {
+    name: "Jinggang High-speed Line (clipped to Beijing West→Guangzhou South)",
+    relationIds: [5473433, 12265072],
+    corridor: { corridorKm: 14.0, sampleKm: 1.2 },
+  },
+  "Shanghai-Kunming-HSR": {
+    name: "Shanghai-Kunming High-speed Railway",
+    relationIds: [10627959],
+    corridor: { corridorKm: 14.0, sampleKm: 1.2 },
+  },
+  "Beijing-Subway-1": {
+    name: "Beijing Subway Line 1 / Batong (Gucheng→Universal Resort)",
+    relationIds: [1667140],
+    corridor: { corridorKm: 3.0, sampleKm: 0.08 },
+  },
+  "Beijing-Subway-2": {
+    name: "Beijing Subway Line 2 clockwise",
+    relationIds: [1667236],
+    loopAnchor: { lat: 39.94, lng: 116.349 },
+    corridor: { corridorKm: 1.5, sampleKm: 0.08 },
+  },
+  "Shanghai-Metro-1": {
+    name: "Shanghai Metro Line 1 (Fujin Road→Xinzhuang)",
+    relationIds: [199200],
+  },
+  "Shanghai-Metro-2": {
+    name: "Shanghai Metro Line 2 (Panxiang Road→Pudong Airport)",
+    relationIds: [5611326],
+  },
+
+  // Singapore MRT.
+  "SG-MRT-North-South": { name: "MRT North-South Line (Jurong East→Marina South Pier)", relationIds: [2312797] },
+  "SG-MRT-East-West":   { name: "MRT East-West Line (Pasir Ris→Tuas Link)", relationIds: [2312796] },
+  "SG-MRT-Circle":      { name: "MRT Circle Line (Dhoby Ghaut→HarbourFront)", relationIds: [7981669] },
+
+  // Kuala Lumpur.
+  "KL-Kelana-Jaya": { name: "Kelana Jaya Line (Putra Heights→Gombak)", relationIds: [8000438] },
+  "KL-MRT-Kajang":  { name: "Kajang Line (Kwasa Damansara→Kajang)", relationIds: [5690837] },
+
+  // Bangkok.
+  "BKK-BTS-Sukhumvit": { name: "BTS Sukhumvit Line (Khu Khot→Kheha)", relationIds: [444651] },
+  "BKK-MRT-Blue":      { name: "MRT Blue Line (Tha Phra→Lak Song)", relationIds: [444659] },
+  "BKK-Airport-Rail":  { name: "Airport Rail Link (Phaya Thai→Suvarnabhumi)", relationIds: [2148241] },
+
+  // Vietnam.
+  "HCMC-Metro-1":   { name: "HCMC Metro Line 1 (Ben Thanh→Suoi Tien)", relationIds: [11919223] },
+  "Hanoi-Metro-2A": { name: "Hanoi Metro Line 2A (Cat Linh→Yen Nghia)", relationIds: [9684066] },
 };
 
 // Simplification tolerance (km). 0.005 = 5 m. Bigger = smaller file, more loss.
@@ -1003,6 +1122,7 @@ function dedupeParallelWays(polys, parallelKm) {
 async function fetchOsmShapes(stationsByLineId) {
   const out = {};
   for (const [id, cfg] of Object.entries(OSM_LINE_MAP)) {
+    if (ONLY_LINES.size && !ONLY_LINES.has(id)) continue;
     try {
       out[id] = await fetchOsmShape(id, cfg, stationsByLineId[id]);
     } catch (e) {
@@ -1142,6 +1262,18 @@ function buildOutput(rawShapes, stationsByLineId) {
   return result;
 }
 
+function loadExistingGeneratedShapes() {
+  if (!existsSync(OUT_PATH)) return {};
+  const src = readFileSync(OUT_PATH, "utf8");
+  const m = src.match(/export\s+const\s+RAIL_SHAPES\s*=\s*(\{[\s\S]*\});?\s*$/);
+  if (!m) return {};
+  try {
+    return JSON.parse(m[1]);
+  } catch {
+    return {};
+  }
+}
+
 function emit(result) {
   const header =
     "// AUTO-GENERATED by scripts/fetch-rail-shapes.mjs — do not edit by hand.\n" +
@@ -1172,7 +1304,7 @@ async function main() {
   }
 
   const result = buildOutput(rawShapes, stationsByLineId);
-  emit(result);
+  emit(ONLY_LINES.size ? { ...loadExistingGeneratedShapes(), ...result } : result);
   logProvenanceSummary();
 }
 
