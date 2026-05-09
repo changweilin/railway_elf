@@ -768,13 +768,13 @@ body {
   transition: filter var(--me-transition-normal), opacity var(--me-transition-normal);
 }
 .map-tiles-dark {
-  filter: invert(0.88) hue-rotate(180deg) brightness(1.12) contrast(1.34) saturate(0.68);
+  filter: invert(0.84) hue-rotate(180deg) brightness(1.24) contrast(1.58) saturate(1.08);
 }
 .map-tiles-light {
   filter: brightness(0.84) contrast(1.26) saturate(0.86);
 }
 .map-tiles-streets-dark {
-  filter: invert(0.88) hue-rotate(180deg) brightness(1.12) contrast(1.34) saturate(0.68);
+  filter: invert(0.84) hue-rotate(180deg) brightness(1.24) contrast(1.58) saturate(1.08);
 }
 .map-tiles-streets-light {
   filter: brightness(0.84) contrast(1.26) saturate(0.86);
