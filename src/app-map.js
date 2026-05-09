@@ -281,7 +281,8 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
       : baseLines;
     const visibleIds = new Set(lines.map(l => l.id));
     const showStations = !viewport || viewport.zoom >= STATION_DOT_MIN_ZOOM;
-    const renderMode = `${showGrades ? 'grades' : 'plain'}:${showStations ? 'stations' : 'lines-only'}`;
+    const detailBucket = RailUtil.renderBucketForZoom(viewport && viewport.zoom);
+    const renderMode = `${showGrades ? 'grades' : 'plain'}:${showStations ? 'stations' : 'lines-only'}:${detailBucket}`;
 
     const removeLineLayers = (id) => {
       const entry = railLinesRef.current[id];
@@ -307,7 +308,7 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
     lines.forEach(line => {
       if (railLinesRef.current[line.id]) return;
       const hasShape = line.shape && line.shape.length >= 2;
-      const poly = hasShape ? line.shape : line.stations;
+      const poly = RailUtil.renderPolylineFor(line, viewport && viewport.zoom);
       const coords = slicePolylineToViewport(poly, viewport);
       const layers = [];
 
@@ -315,7 +316,7 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
         // Per-segment styling. The glow is split per segment too — drawing it
         // continuously under the line would fill the dashes of underground
         // sections and wash out the contrast between grades.
-        const segs = RailUtil.gradeSegments(line).flatMap(seg =>
+        const segs = RailUtil.gradeSegmentsForZoom(line, viewport && viewport.zoom).flatMap(seg =>
           slicePolylineToViewport(seg.points, viewport).map(points => ({ ...seg, points }))
         );
         // First pass: under-layers (glow / trench / halo), so the main line

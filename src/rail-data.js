@@ -27,9 +27,6 @@
 //                   distinct from 都會地下化 even though both are below grade).
 //   "elevated"    — 鐵路高架化 / viaduct (visibly raised above ground).
 //   "ground"      — 平面 / at-grade (default, not listed).
-
-import { RAIL_SHAPES } from "./rail-data.generated.js";
-
 export const RAIL_DATA = {
   taiwan: {
     label: "台灣 Taiwan",
@@ -2171,6 +2168,29 @@ export const RAIL_DATA = {
   },
 };
 
+const RAIL_SHAPE_LOADERS = {
+  taiwan:    () => import("./rail-shapes/taiwan.generated.js"),
+  japan:     () => import("./rail-shapes/japan.generated.js"),
+  korea:     () => import("./rail-shapes/korea.generated.js"),
+  hongkong:  () => import("./rail-shapes/hongkong.generated.js"),
+  china:     () => import("./rail-shapes/china.generated.js"),
+  singapore: () => import("./rail-shapes/singapore.generated.js"),
+  malaysia:  () => import("./rail-shapes/malaysia.generated.js"),
+  thailand:  () => import("./rail-shapes/thailand.generated.js"),
+  vietnam:   () => import("./rail-shapes/vietnam.generated.js"),
+};
+
+const loadedShapeRegions = new Set();
+const shapeLoadPromises = {};
+let railDataRevision = 0;
+
+function invalidateLineCaches(line) {
+  delete line._bounds;
+  delete line._renderPolylines;
+  delete line._gradeSegments;
+  delete line._gradeSegmentsByZoom;
+}
+
 // ========================================================
 // MERGE GENERATED SHAPES (from rail-data.generated.js, if present)
 // Each line in RAIL_SHAPES contributes:
@@ -2181,15 +2201,20 @@ export const RAIL_DATA = {
 // When a line has no generated shape, line.shape stays undefined and helpers
 // fall back to the station-to-station polyline as before.
 // ========================================================
-(function mergeShapes(){
-  const shapes = RAIL_SHAPES;
-  if (!shapes) return;
-  for (const region of Object.values(RAIL_DATA)) {
+function mergeShapes(shapes, regionKey) {
+  if (!shapes) return 0;
+  const regions = regionKey
+    ? [[regionKey, RAIL_DATA[regionKey]]]
+    : Object.entries(RAIL_DATA);
+  let merged = 0;
+
+  for (const [, region] of regions) {
+    if (!region) continue;
     for (const line of region.lines) {
       const gen = shapes[line.id];
       if (!gen || !gen.shape || gen.shape.length < 2) continue;
 
-      // Build shape with cumulative km in one pass
+      // Build shape with cumulative km in one pass.
       const pts = gen.shape;
       const out = new Array(pts.length);
       let cum = 0;
@@ -2197,7 +2222,6 @@ export const RAIL_DATA = {
       for (let i = 1; i < pts.length; i++) {
         const a = out[i-1];
         const b = { lat: pts[i][0], lng: pts[i][1] };
-        // Inline haversine to avoid forward-ref to RailUtil (defined below)
         const R = 6371;
         const toRad = d => d * Math.PI / 180;
         const dLat = toRad(b.lat - a.lat), dLng = toRad(b.lng - a.lng);
@@ -2208,14 +2232,11 @@ export const RAIL_DATA = {
       }
       line.shape = out;
 
-      // When the build script emits a full TDX-derived stations array (only for
-      // TRA-West, TRA-East, TRA-South-Link), replace the hand-coded stub entirely.
-      // The projected km values come straight from the shape projection and are
-      // guaranteed monotonic by construction, so we skip the stationKms
-      // monotonicity check for these lines.
       if (gen.stations && gen.stations.length > 0) {
         line.stations = gen.stations.map(s => ({ name: s.name, lat: s.lat, lng: s.lng, km: s.km }));
-        continue; // shape + stations done; skip the stationKms path below
+        invalidateLineCaches(line);
+        merged++;
+        continue;
       }
 
       if (gen.stationCoords) {
@@ -2227,13 +2248,6 @@ export const RAIL_DATA = {
         }
       }
 
-      // Validate the projected station kms before applying. Multi-segment or
-      // loop shapes (e.g. Tokaido stitched across multiple relations, Yamanote
-      // loop without a canonical anchor) can produce non-monotonic projected
-      // kms that break schedule generation. When that happens, keep the
-      // polyline geometry but discard the projected stationKms — the merge
-      // still benefits from the curved shape, while station kms fall back to
-      // the hand-coded values from the station list (preserved monotonicity).
       let useGenStationKms = true;
       if (gen.stationKms) {
         const isLoopLine = line.stations.length >= 3 &&
@@ -2256,17 +2270,10 @@ export const RAIL_DATA = {
         }
       }
 
-      // Snapshot hand-coded extremes BEFORE any station-km update, so we can
-      // apply the same linear remap to `line.grades` (whose km values were
-      // authored in hand-coded km space alongside the station list).
       const handFirst = line.stations[0].km;
       const handLast = line.stations[line.stations.length - 1].km;
       const handSpan = handLast - handFirst;
 
-      // Update station km from generator only when the projection is
-      // monotonic (validated above). Otherwise leave st.km at the hand-coded
-      // value, but rescale it to fit within the polyline's total length so
-      // train kinematics line up with the visible track.
       if (gen.stationKms && useGenStationKms) {
         const isLoopLine = line.stations.length >= 3 &&
           line.stations[0].name === line.stations[line.stations.length - 1].name;
@@ -2278,9 +2285,6 @@ export const RAIL_DATA = {
           if (k != null) st.km = k;
         }
       } else if (gen.totalKm != null && line.stations.length >= 2) {
-        // Non-monotonic projection: rescale hand-coded kms to span the
-        // polyline. Keeps inter-station spacing proportional to data while
-        // letting trains traverse the full visible track length.
         const last = line.stations[line.stations.length - 1].km;
         const first = line.stations[0].km;
         const span = last - first;
@@ -2292,10 +2296,6 @@ export const RAIL_DATA = {
         }
       }
 
-      // Apply the same linear remap (hand-coded km → post-merge station km)
-      // to grades so they stay aligned with stations on the polyline. Uses
-      // first/last stations as anchor points; intermediate stations may not
-      // be exactly proportional but typical drift is < 1 km.
       if (line.grades && handSpan > 0) {
         const newFirst = line.stations[0].km;
         const newLast = line.stations[line.stations.length - 1].km;
@@ -2308,9 +2308,33 @@ export const RAIL_DATA = {
           }
         }
       }
+
+      invalidateLineCaches(line);
+      merged++;
     }
   }
-})();
+  return merged;
+}
+
+export function loadRailShapesForRegion(regionKey) {
+  if (loadedShapeRegions.has(regionKey)) return Promise.resolve(railDataRevision);
+  if (shapeLoadPromises[regionKey]) return shapeLoadPromises[regionKey];
+  const loader = RAIL_SHAPE_LOADERS[regionKey];
+  if (!loader) return Promise.resolve(railDataRevision);
+
+  shapeLoadPromises[regionKey] = loader().then((module) => {
+    const merged = mergeShapes(module.RAIL_SHAPES, regionKey);
+    loadedShapeRegions.add(regionKey);
+    if (merged > 0) railDataRevision++;
+    return railDataRevision;
+  });
+  return shapeLoadPromises[regionKey];
+}
+
+export function loadAllRailShapes() {
+  return Promise.all(Object.keys(RAIL_DATA).map(loadRailShapesForRegion))
+    .then(() => railDataRevision);
+}
 
 // ========================================================
 // GEO HELPERS
@@ -2398,6 +2422,33 @@ export const RailUtil = (function(){
       P.lng >= bounds.west && P.lng <= bounds.east;
   }
 
+  function boundsForPoints(points) {
+    let south = Infinity, west = Infinity, north = -Infinity, east = -Infinity;
+    for (const p of points || []) {
+      const lat = Array.isArray(p) ? p[0] : p.lat;
+      const lng = Array.isArray(p) ? p[1] : p.lng;
+      if (lat < south) south = lat;
+      if (lat > north) north = lat;
+      if (lng < west) west = lng;
+      if (lng > east) east = lng;
+    }
+    return isFinite(south) ? { south, west, north, east } : null;
+  }
+
+  function boundsIntersect(a, b) {
+    if (!a || !b) return true;
+    return a.north >= b.south && a.south <= b.north &&
+      a.east >= b.west && a.west <= b.east;
+  }
+
+  function lineBounds(lineOrStations) {
+    if (Array.isArray(lineOrStations)) return boundsForPoints(lineOrStations);
+    if (!lineOrStations._bounds) {
+      lineOrStations._bounds = boundsForPoints(polylineFor(lineOrStations));
+    }
+    return lineOrStations._bounds;
+  }
+
   function segmentIntersectsBounds(A, B, bounds) {
     if (!bounds) return true;
     if (pointInBounds(A, bounds) || pointInBounds(B, bounds)) return true;
@@ -2411,6 +2462,7 @@ export const RailUtil = (function(){
 
   function lineIntersectsBounds(lineOrStations, bounds) {
     if (!bounds) return true;
+    if (!boundsIntersect(lineBounds(lineOrStations), bounds)) return false;
     const poly = polylineFor(lineOrStations);
     if (!poly || poly.length === 0) return false;
     if (poly.length === 1) return pointInBounds(poly[0], bounds);
@@ -2418,6 +2470,71 @@ export const RailUtil = (function(){
       if (segmentIntersectsBounds(poly[i], poly[i+1], bounds)) return true;
     }
     return false;
+  }
+
+  function renderBucketForZoom(zoom) {
+    if (zoom == null || zoom >= 13) return 'full';
+    if (zoom >= 11) return 'near';
+    if (zoom >= 9) return 'mid';
+    return 'far';
+  }
+
+  function simplifyToleranceForBucket(bucket) {
+    if (bucket === 'far') return 0.45;
+    if (bucket === 'mid') return 0.18;
+    if (bucket === 'near') return 0.06;
+    return 0;
+  }
+
+  function asPoint(p) {
+    return Array.isArray(p) ? { lat: p[0], lng: p[1] } : p;
+  }
+
+  function distanceToSegmentKm(P, A, B) {
+    return projectOnSegment(asPoint(P), asPoint(A), asPoint(B)).dist;
+  }
+
+  function simplifyPoints(points, toleranceKm) {
+    if (!points || points.length <= 2 || !(toleranceKm > 0)) return points || [];
+    const keep = new Uint8Array(points.length);
+    keep[0] = 1;
+    keep[points.length - 1] = 1;
+    const stack = [[0, points.length - 1]];
+    while (stack.length) {
+      const [start, end] = stack.pop();
+      if (end <= start + 1) continue;
+      let maxDist = -1;
+      let index = -1;
+      const A = points[start], B = points[end];
+      for (let i = start + 1; i < end; i++) {
+        const dist = distanceToSegmentKm(points[i], A, B);
+        if (dist > maxDist) {
+          maxDist = dist;
+          index = i;
+        }
+      }
+      if (maxDist > toleranceKm && index > start) {
+        keep[index] = 1;
+        stack.push([start, index], [index, end]);
+      }
+    }
+    const out = [];
+    for (let i = 0; i < points.length; i++) {
+      if (keep[i]) out.push(points[i]);
+    }
+    return out.length >= 2 ? out : points;
+  }
+
+  function renderPolylineFor(line, zoom) {
+    const poly = polylineFor(line);
+    if (!line.shape || line.shape.length < 2) return poly;
+    const bucket = renderBucketForZoom(zoom);
+    if (bucket === 'full') return poly;
+    if (!line._renderPolylines) line._renderPolylines = {};
+    if (!line._renderPolylines[bucket]) {
+      line._renderPolylines[bucket] = simplifyPoints(poly, simplifyToleranceForBucket(bucket));
+    }
+    return line._renderPolylines[bucket];
   }
 
   // ====================================================
@@ -2666,6 +2783,7 @@ export const RailUtil = (function(){
   // covering the entire line (so the renderer can call this unconditionally).
   // Returns: [{ type, fromKm, toKm, points: [[lat,lng], ...], note? }, ...]
   function gradeSegments(line) {
+    if (line._gradeSegments) return line._gradeSegments;
     const poly = polylineFor(line);
     if (!poly || poly.length < 2) return [];
     const totalKm = poly[poly.length - 1].km;
@@ -2688,7 +2806,7 @@ export const RailUtil = (function(){
       const t = span > 0 ? (k - A.km) / span : 0;
       return [A.lat + (B.lat - A.lat) * t, A.lng + (B.lng - A.lng) * t];
     };
-    return ranges.map(r => {
+    line._gradeSegments = ranges.map(r => {
       const lo = r.from, hi = r.to;
       let iLo = 0;
       for (let i = 0; i < poly.length - 1; i++) {
@@ -2705,13 +2823,31 @@ export const RailUtil = (function(){
       pts.push(interp(iHi, hi));
       return { type: r.type, fromKm: lo, toKm: hi, points: pts, note: r.note };
     });
+    return line._gradeSegments;
+  }
+
+  function gradeSegmentsForZoom(line, zoom) {
+    const bucket = renderBucketForZoom(zoom);
+    if (bucket === 'full') return gradeSegments(line);
+    if (!line._gradeSegmentsByZoom) line._gradeSegmentsByZoom = {};
+    if (!line._gradeSegmentsByZoom[bucket]) {
+      const toleranceKm = simplifyToleranceForBucket(bucket);
+      line._gradeSegmentsByZoom[bucket] = gradeSegments(line).map(seg => ({
+        ...seg,
+        points: simplifyPoints(seg.points, toleranceKm),
+      }));
+    }
+    return line._gradeSegmentsByZoom[bucket];
   }
 
   return { haversine, projectOnSegment, closestOnLine, positionAtKm,
            pointInBounds, segmentIntersectsBounds, lineIntersectsBounds,
+           boundsForPoints, boundsIntersect, lineBounds,
+           renderBucketForZoom, renderPolylineFor, gradeSegmentsForZoom,
            shapeBetween, curvatureRadii, gradeSegments,
            kinematicProfile, kmAtTimeInProfile, timeAtKmInProfile,
-           normalizeName, namesEqual };
+           normalizeName, namesEqual,
+           dataRevision: () => railDataRevision };
 })();
 
 // ========================================================
@@ -2743,7 +2879,7 @@ export const TrainGen = (function(){
     const lineFilter = normalizeLineFilter(lineIds);
     const dateKey = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
     // Bump the version suffix when the kinematic model changes.
-    const cacheKey = regionKey + "|" + dateKey + "|kinV2|" + (lineFilter ? lineFilter.key : "all");
+    const cacheKey = regionKey + "|" + dateKey + "|kinV2|" + railDataRevision + "|" + (lineFilter ? lineFilter.key : "all");
     if (cache[cacheKey]) return cache[cacheKey];
 
     const trains = [];

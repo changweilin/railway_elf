@@ -1,6 +1,6 @@
 // Main app component
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
-import { RAIL_DATA, RailUtil, TrainGen } from "./rail-data.js";
+import { RAIL_DATA, RailUtil, TrainGen, loadRailShapesForRegion } from "./rail-data.js";
 // Circular import (app-map → app-core too); safe because both sides reference
 // the imported symbols only at call time inside React component bodies.
 import { MapArea, TrainSheet, TrainModal } from "./app-map.js";
@@ -87,6 +87,7 @@ function App() {
   const [targetTime, setTargetTime] = useState(new Date());
   const [location, setLocation] = useState(null);        // {lat, lng, name}
   const [mapViewport, setMapViewport] = useState(null);  // buffered Leaflet bounds
+  const [railDataRevision, setRailDataRevision] = useState(() => RailUtil.dataRevision());
   const [favorites, setFavorites] = useState(() => {
     try { return JSON.parse(localStorage.getItem('relf.favs') || '[]'); } catch { return []; }
   });
@@ -145,6 +146,25 @@ function App() {
   const dismissNotice = useCallback((id) => {
     setNotices(prev => prev.filter(n => n.id !== id));
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    loadRailShapesForRegion(region)
+      .then((revision) => {
+        if (!cancelled) setRailDataRevision(revision);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          pushNotice('詳細鐵道線形載入失敗,暫時使用簡化路線顯示。', {
+            level: 'warn',
+            key: `rail-shapes-${region}`,
+            ttlMs: 6000,
+          });
+        }
+      });
+    return () => { cancelled = true; };
+  }, [region, pushNotice]);
+
   // Auto-dismiss after ttl
   useEffect(() => {
     if (notices.length === 0) return;
@@ -261,7 +281,7 @@ function App() {
   const [activeLineId, setActiveLineId] = useState(null);
   const visibleLines = useMemo(() =>
     RAIL_DATA[region].lines.filter(l => enabledCategories.includes(l.category)),
-    [region, enabledCategories]);
+    [region, enabledCategories, railDataRevision]);
   const mapVisibleLines = useMemo(() => {
     if (!mapViewport) return visibleLines;
     return visibleLines.filter(line => RailUtil.lineIntersectsBounds(line, mapViewport));

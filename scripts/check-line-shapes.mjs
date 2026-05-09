@@ -40,11 +40,12 @@ const OFFSET_SLACK_KM = 0.5;         // allow station offset to grow by 0.5 km
 // ---------------------------------------------------------------------------
 // rail-data.js is an ES module post-migration; dynamic-import it directly.
 
-const { RAIL_DATA, RailUtil } = await import("../src/rail-data.js");
+const { RAIL_DATA, RailUtil, loadAllRailShapes } = await import("../src/rail-data.js");
 if (!RAIL_DATA || !RailUtil) {
   console.error("Import failed — RAIL_DATA / RailUtil missing from rail-data.js");
   process.exit(1);
 }
+await loadAllRailShapes();
 
 // ---------------------------------------------------------------------------
 // Compute current metrics.

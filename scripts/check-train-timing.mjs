@@ -13,12 +13,13 @@
 // rail-data.js is an ES module that imports from its sibling generated file;
 // we just dynamic-import it directly. No vm sandbox / window-shim needed since
 // the migration to import/export.
-const { RAIL_DATA, RailUtil, TrainGen } = await import("../src/rail-data.js");
+const { RAIL_DATA, RailUtil, TrainGen, loadAllRailShapes } = await import("../src/rail-data.js");
 
 if (!RAIL_DATA || !RailUtil || !TrainGen) {
   console.error("Import failed — RAIL_DATA / RailUtil / TrainGen missing from rail-data.js");
   process.exit(1);
 }
+await loadAllRailShapes();
 
 // ---------------------------------------------------------------------------
 

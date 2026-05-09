@@ -1,6 +1,6 @@
-// Vite-managed entry. The full app graph (rail-data, app-core, app-map) is
-// imported here so Vite bundles every source module. Leaflet's stylesheet is
-// pulled in via npm so we no longer hit unpkg.
+// Vite-managed entry. Core app code is loaded up front; high-resolution rail
+// shapes are split into per-region dynamic chunks by rail-data.js.
+// Leaflet's stylesheet is pulled in via npm so we no longer hit unpkg.
 import React from "react";
 import { createRoot } from "react-dom/client";
 import "leaflet/dist/leaflet.css";

@@ -13,6 +13,8 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
+          const railShapeMatch = id.match(/src[\\/]rail-shapes[\\/](.+)\.generated\.js$/);
+          if (railShapeMatch) return `rail-shapes-${railShapeMatch[1]}`;
           if (id.includes('rail-data.generated')) return 'rail-shapes';
           if (id.includes('node_modules/leaflet')) return 'leaflet';
           if (id.includes('node_modules/react-dom')) return 'react-dom';
