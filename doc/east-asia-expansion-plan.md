@@ -10,6 +10,7 @@
 
 - **Phase A（手寫站表 + 車種）：完成 34/34 條（100%）** — `npm run check:timing` & `npm run test:smoke` & `npm run build` 全通過
 - **Phase B（OSM relation 對接）：34/34 條完成（100%）** — 批次 1–11 已補 OSM relation 並回灌真實軌道形狀；本輪沒有保留 0 km fallback。2026-05-09 高誤差複查後，補上 relation stop member 對站與 generated stationCoords 吸附，57 條線 runtime maxOffset 全部壓到 1.0 km 內。
+- **完整覆蓋 backlog（日本 / 南韓）：已建立規劃事項** — 覆蓋尚未加入的鐵道類型與候選線群；此區塊是後續大型擴張，不列入已完成的 34 條 Phase A/B 統計。
 
 ## 類型分類
 
@@ -22,7 +23,13 @@
 | 都會地鐵 | `Metro` | 城市內地鐵 / 捷運，含支線 |
 | 環狀線 | `Loop` | 閉環營運的特例（山手、大阪環状、首爾 2 號、北京 2 號、SG Circle） |
 | 機場線 | `Airport` | 機場專用直通線 |
-| 輕軌 | `LRT` | 輕軌、單軌、低運量系統（目前批次內無，台灣側已涵蓋） |
+| 傳統城際鐵路 | `Intercity` | 非高鐵的跨城市幹線與優等列車（JR 在來線特急、KORAIL ITX / Saemaeul / Mugunghwa / Nuriro） |
+| 地方 / 第三部門鐵路 | `Regional` | 地方鐵道、第三部門鐵道、郊外或鄉村支線 |
+| 輕軌 / 路面電車 | `LRT` / `Tram` | 輕軌、路面電車、新世代 LRT；台灣側已涵蓋淡海與高雄輕軌 |
+| 單軌 / 新交通 | `Monorail` / `AGT` | 都市單軌、膠輪導軌式新交通、低運量自動化捷運 |
+| 磁浮 / 線性馬達 | `Maglev` | 既有都市磁浮與未來營運的高速磁浮線 |
+| 觀光 / 保存鐵道 | `Heritage` | 觀光列車、保存鐵道、登山鐵道、鋼索線；班距模型需逐線判斷 |
+| 貨運鐵路 | `Freight` | 以路網完整性或非客運圖層為主；除非另建貨運預測模式，否則低優先 |
 
 ## 資料來源分級
 
@@ -107,6 +114,60 @@
 | ☑ A ☑ B | HSR | OSM | `KTX-Gyeongbu` | KTX 경부선 | 서울 ⇄ 부산 | 418 km / 10 站 |
 | ☑ A ☑ B | Metro | OSM | `Busan-Metro-1` | 부산 도시철도 1호선 | 다대포해수욕장 ⇄ 노포 | 40.5 km / 40 站 |
 
+---
+
+## 日本 / 南韓完整覆蓋 backlog（新增規劃事項）
+
+此區塊補上「目前尚未加入，但屬於日本 / 南韓鐵道系統的主要類型」。它不是一次要全做完的線路清單，而是後續拆批次時的覆蓋範圍表；實作時每一列再依城市、營運者、資料品質與 icon 需求拆成小批次。
+
+參考分類依據：
+
+- 日本：JNTO 的 [Traveling by Rail](https://www.japan.travel/en/guide/traveling-by-rail/) 將日本鐵道概括為 JR、新幹線、民鐵、地下鐵與觀光列車；MLIT 的 [鉄道統計年報](https://www.mlit.go.jp/tetudo/tetudo_tk6_000032.html) 涵蓋鐵道、軌道、索道事業，MLIT 中部運輸局的 [主な鉄道用語](https://wwwtb.mlit.go.jp/chubu/tetsudou/yougo.html) 也明列普通鐵道、單軌、新交通、鋼索、磁浮與索道等；MLIT [軌道法（路面電車等）](https://www.mlit.go.jp/road/sisaku/lrt/lrt_index.html) 作為 Tram / LRT 規劃依據。
+- 南韓：KORAIL 官方 [Train Information](https://info.korail.com/infoeng/index.do) 分為 High-Speed Train、General train、Metro Train；都市鐵道另有地鐵、輕量捷運與單軌系統。
+
+### 日本：未加入類型與候選線群
+
+目前已加入日本代表線：東海道 / 山陽新幹線、山手、中央快速、京浜東北、総武各停、東急東横、阪急神戸、大阪環状、御堂筋、銀座、丸ノ内。下表列出尚未完整納入的類型：
+
+| 狀態 | 類型 | 規劃範圍 | 候選線群 / 例子 | 資料源 | 備註 |
+|---|---|---|---|---|---|
+| □ backlog | HSR / Maglev | 其餘新幹線、迷你新幹線、未來高速磁浮 | 東北、北海道、上越、北陸、九州、西九州、秋田、山形；中央新幹線待營運後評估 | OSM + 官方站距 | HSR relation 常含上下行、側線、車庫，優先套 `corridor` 重建 |
+| □ backlog | Intercity | JR 在來線幹線與特急型服務 | 常磐、東北本線 / 宇都宮、高崎、総武快速 / 横須賀、紀勢、山陰、予讃、日豊、鹿児島本線等 | OSM + JR 公開站表 | 先以幹線段落切批，不一次塞全 JR 網 |
+| □ backlog | Commuter | JR 都會圈未覆蓋路線 | 埼京、湘南新宿、京葉、武蔵野、南武、横浜、関西本線 / 大和路、JR 京都 / 神戸 / 宝塚 / 阪和、名古屋 / 札幌 / 仙台圈 | OSM | 與既有山手 / 中央 / 京浜東北互相重疊，需避免重複 snap 干擾 |
+| □ backlog | Commuter / Intercity | 大手民鐵與準大手民鐵 | 東武、西武、京王、小田急、京成、京急、相鉄、近鉄、京阪、阪神、南海、名鉄、西鉄；補齊東急 / 阪急其他主線 | OSM + 民鐵站表 | 可先做機場、觀光地、都心放射線 |
+| □ backlog | Metro | 地下鐵 / 市營地鐵其餘系統 | Tokyo Metro 其餘線、都営地下鉄、横浜、名古屋、京都、神戸、福岡、札幌、仙台 | OSM | 同城市多線時要先確認 region selector 與 marker density |
+| □ backlog | Airport | 機場聯絡鐵道 | 成田 Express、京成 Skyliner / Access、京急空港線、東京モノレール、南海空港線、JR 関西空港線、名鉄空港線、福岡空港線 | OSM | 班距與停站型態明確，適合做成高優先小批次 |
+| □ backlog | Tram / LRT | 路面電車與新世代 LRT | 広島、長崎、熊本、鹿児島、富山、宇都宮ライトレール、都電荒川、東急世田谷、札幌、函館、岡山、松山、高知、福井、豊橋等 | OSM + MLIT 軌道資料 | 需補 tram icon 與低速 profile |
+| □ backlog | Monorail / AGT / Maglev | 都市單軌、新交通、都市磁浮 | 東京モノレール、大阪モノレール、多摩、千葉、湘南、沖縄ゆいレール；ゆりかもめ、日暮里・舎人、ポートライナー、六甲ライナー、ニュートラム；リニモ | OSM | 建議獨立 `Monorail` / `AGT` icon，不併入一般捷運 |
+| □ backlog | Regional | 第三部門 / 地方鐵道 | IGR / 青い森、三陸、しなの、えちごトキめき、あいの風とやま、IR いしかわ、肥薩おれんじ、各地方私鐵 | OSM + 地方站表 | 站距與班距差異大，適合按地區慢慢補 |
+| □ backlog | Heritage | 觀光 / 保存 / 登山 / 鋼索鐵道 | 箱根登山、黒部峡谷、嵯峨野観光、大井川、叡山、江ノ電；高野山ケーブル、生駒ケーブル等 | OSM + 營運者資料 | 若班距稀疏或季節性強，需加季節/休駛提示 |
+| □ backlog | Freight | 貨運主幹與臨港線 | JR Freight 主要貨物走廊、港灣 / 工業支線 | OSM + 貨運資料 | 與「下一班客車」核心不同，除非新增 freight layer，保持低優先 |
+
+### 南韓：未加入類型與候選線群
+
+目前已加入南韓代表線：수도권 전철 1호선、서울 지하철 2호선、KTX 경부선、부산 도시철도 1호선。下表列出尚未完整納入的類型：
+
+| 狀態 | 類型 | 規劃範圍 | 候選線群 / 例子 | 資料源 | 備註 |
+|---|---|---|---|---|---|
+| □ backlog | HSR | KTX / SRT 其餘高速服務與走廊 | SRT 수서系統；KTX 호남、전라、경전、강릉、중앙、중부내륙等 | OSM + KORAIL / SR 站表 | 可共用 KTX icon，但 SRT 需獨立 badge |
+| □ backlog | Intercity | 一般列車與優等在來線 | ITX-새마을、ITX-마음、누리로、무궁화호、ITX-청춘；京釜、湖南、中央、太白、嶺東、京春等 | OSM + KORAIL | 先補固定停站、班距穩定的主幹 |
+| □ backlog | Commuter / Metro | 首都圈廣域電鐵與地鐵未覆蓋線 | Seoul Metro 3–9、AREX、Shinbundang、Suin-Bundang、Gyeongui-Jungang、Gyeongchun、Gyeonggang、Seohae、Incheon 1/2 等 | OSM + operator data | 多線共線與直通複雜，需逐線確認 `directions` 與停站型 |
+| □ backlog | Metro | 非首都圈都市地鐵 | Busan 2–4、Daegu 1–2、Daejeon 1、Gwangju 1 | OSM | 與既有 Busan 1 組成第二批城市捷運 |
+| □ backlog | Airport | 機場聯絡鐵道 | AREX 일반 / 직통、金海機場相關城市鐵道銜接 | OSM | 可先做 AREX，資料結構與香港 / 曼谷機場線相近 |
+| □ backlog | LRT / AGT | 輕量捷運與無人自動運轉線 | Ui LRT、Sillim Line、Uijeongbu U Line、Yongin EverLine、Gimpo Goldline、Busan-Gimhae LRT、Incheon 2 等 | OSM + operator data | 需新增 low-capacity / driverless icon variants |
+| □ backlog | Monorail | 都市單軌 | Daegu Line 3；觀光型單軌另案評估 | OSM + Daegu operator data | 大邱 3 號線是最適合作為韓國單軌首例的候選 |
+| □ backlog | Tram | 現代路面電車 / tram 計畫 | Daejeon Line 2 等營運後納入；既有未營運計畫先不建資料 | OSM + 市府資料 | 未開業線只列規劃，不進 `RAIL_DATA` |
+| □ backlog | Regional | 地方支線與區域鐵路 | 東海、慶北、慶全、湖南支線、旌善等地方線 | OSM + KORAIL | 先排客運仍穩定營運者 |
+| □ backlog | Heritage | 觀光列車 / 保存鐵道 / railbike | O / V / S-train 類觀光服務、地方觀光鐵道與 railbike | OSM + 營運者資料 | 多為季節性或預約制，班距模型需特例 |
+| □ backlog | Freight | 貨運與工業線 | KORAIL 貨運走廊、港灣 / 產業線 | OSM + 貨運資料 | 低優先，除非新增非客運圖層 |
+
+Backlog 執行原則：
+
+1. 每個新類型先做一條「代表線」驗證 icon、速度 profile、站距投影與 snap 行為，再擴成整個城市或營運者。
+2. 日本優先順序建議：剩餘新幹線 → 機場線 → 東京 / 大阪地下鐵補齊 → 大手民鐵 → Tram / Monorail / AGT → Regional / Heritage。
+3. 南韓優先順序建議：SRT / KTX 其餘走廊 → AREX → 首都圈 3–9 與廣域線 → Busan / Daegu / Daejeon / Gwangju → LRT / Monorail → Regional / Heritage。
+4. Freight、鋼索、季節性觀光線若沒有穩定 passenger pass prediction 模型，先做地圖圖層規劃，不阻塞客運功能。
+
 ## 批次 5 — 香港：MTR（4 條）
 
 新增 `hongkong` region，center `[22.37, 114.13]`，zoom 11。
@@ -179,14 +240,14 @@
 
 ## 分類統計
 
-整個計畫合計 **34 條線**，分布如下：
+已完成的批次 1–11 合計 **34 條線**，分布如下；不含既有日本 3 條線（東海道新幹線、山手線、中央線）與上方新增的日本 / 南韓完整覆蓋 backlog。
 
 | 類型 | 條數 | 線名摘要 |
 |---|---|---|
 | HSR | 5 | 山陽新幹線、KTX 京釜、京滬、京廣、滬昆 |
-| Commuter | 4 | JR 京浜東北、JR 総武各停、東急東横、阪急神戸、MTR 東鐵 |
-| Metro | 19 | Tokyo Metro 2、Osaka Metro 1、Seoul 2、Busan 1、MTR 2、京滬地鐵 3、SG MRT 2、KL 2、BKK 2、HCMC/Hanoi 2 |
-| Loop | 5 | 大阪環状、Seoul 2 號、Beijing 2 號、SG Circle |
+| Commuter | 5 | JR 京浜東北、JR 総武各停、東急東横、阪急神戸、MTR 東鐵 |
+| Metro | 18 | Tokyo Metro 2、Osaka Metro 1、Seoul 1、Busan 1、MTR 2、北京 / 上海地鐵 3、SG MRT 2、KL 2、BKK 2、HCMC/Hanoi 2 |
+| Loop | 4 | 大阪環状、Seoul 2 號、Beijing 2 號、SG Circle |
 | Airport | 2 | MTR 機場快綫、BKK Airport Rail Link |
 | LRT | 0 | （台灣側已涵蓋淡海、高雄環狀輕軌） |
 

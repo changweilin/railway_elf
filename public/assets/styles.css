@@ -1378,6 +1378,13 @@ body.sheet-resizing .leaflet-container { pointer-events: none; }
     overflow: hidden;
     border-right: none;
   }
+  .sheet {
+    left: var(--me-panel-width);
+    transition: left var(--me-transition-smooth), transform var(--me-transition-smooth);
+  }
+  .main.panel-hidden .sheet {
+    left: 0;
+  }
 }
 
 /* ============== MOBILE ============== */

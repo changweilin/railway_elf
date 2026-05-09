@@ -4,7 +4,7 @@
 
 ## 目前結論
 
-沒有尚未完成的必要項目；大東亞擴張 Phase B 已完成 34/34 條 OSM 形狀回灌，snapshot 已更新到 57 條線。高誤差複查後，57 條線 runtime maxOffset 全部壓到 1.0 km 內，沒有 0 km fallback 或需阻塞上線的資料缺口。
+沒有尚未完成的必要項目；大東亞擴張 Phase B 已完成 34/34 條 OSM 形狀回灌，snapshot 已更新到 57 條線。高誤差複查後，57 條線 runtime maxOffset 全部壓到 1.0 km 內，沒有 0 km fallback 或需阻塞上線的資料缺口。日本 / 南韓「完整類型覆蓋」已作為可選大型 backlog 加入 `doc/east-asia-expansion-plan.md`，不列入目前完成率。
 
 ## 本次完成
 
@@ -27,8 +27,10 @@
 
 - Tokaido-Shinkansen：若 OSM 未來有更乾淨 relation，可替換 corridor reconstruction 並更新 snapshot（依賴上游資料,目前無動作可做）。
 - 若要再往工程級精度推進，可優先精修目前 maxOffset 約 0.75–1.0 km 的路線（如 `Beijing-Shanghai-HSR`、`Beijing-Guangzhou-HSR`、`JR-Keihin-Tohoku`、`KHH-Red`、`Tamsui-LRT`、`JR-Osaka-Loop`、`Tokyu-Toyoko`、`Seoul-Metro-1`、`TPE-Yellow`、`TYMRT`），用官方站點座標或更乾淨的 OSM station node 逐站替換。
+- 日本 / 南韓完整覆蓋：依 `doc/east-asia-expansion-plan.md` 的 backlog，未來可從剩餘新幹線 / SRT-KTX 走廊、機場線、東京 / 首都圈地鐵、Tram / Monorail / LRT 等類型各挑一條代表線先做。
 
 ## 建議下一步
 
 1. 後續資料改善：只做可選精修，優先處理 maxOffset 約 0.75–1.0 km 的路線與官方營業里程交叉校驗。
 2. 若 OSM 未來有更乾淨的 Tokaido-Shinkansen relation，再替換資料來源並更新 snapshot。
+3. 若要啟動下一輪資料擴張，先從日本 / 南韓完整覆蓋 backlog 選一個類型與一條代表線，補 icon / speed profile / shape pipeline 後再批量展開。

@@ -109,6 +109,42 @@ test.describe('homepage smoke', () => {
     expect(errors, `errors after map click:\n${errors.join('\n')}`).toEqual([]);
   });
 
+  test('desktop sidebar pushes train sheet instead of covering it', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop', 'desktop-only layout check');
+    const errors = captureErrors(page);
+    await page.goto('/');
+    await waitForAppReady(page);
+
+    const main = page.locator('.main');
+    const panel = page.locator('.panel');
+    const sheet = page.locator('.sheet');
+    const collapseBtn = page.locator('.tb-collapse-btn');
+
+    await expect(panel).toBeVisible();
+    await expect(sheet).toBeVisible();
+
+    const openPanelBox = await panel.boundingBox();
+    const openSheetBox = await sheet.boundingBox();
+    expect(openPanelBox).not.toBeNull();
+    expect(openSheetBox).not.toBeNull();
+    expect(openSheetBox.x).toBeGreaterThanOrEqual(openPanelBox.x + openPanelBox.width - 1);
+
+    await collapseBtn.click();
+    await expect(main).toHaveClass(/panel-hidden/);
+    await expect.poll(async () => (await sheet.boundingBox())?.x ?? -1).toBeLessThan(1);
+
+    await collapseBtn.click();
+    await expect(main).not.toHaveClass(/panel-hidden/);
+    await expect.poll(async () => {
+      const panelBox = await panel.boundingBox();
+      const sheetBox = await sheet.boundingBox();
+      if (!panelBox || !sheetBox) return -1;
+      return sheetBox.x - (panelBox.x + panelBox.width);
+    }).toBeGreaterThanOrEqual(-1);
+
+    expect(errors, `errors during desktop sidebar layout check:\n${errors.join('\n')}`).toEqual([]);
+  });
+
   test('train detail modal opens and closes', async ({ page }) => {
     const errors = captureErrors(page);
     await page.goto('/');
