@@ -60,6 +60,82 @@ const TRAIN_ICON_KIND_SIZE = {
   });
 })();
 
+const MAP_VIEWPORT_BUFFER_RATIO = 0.35;
+const VIEWPORT_DEBOUNCE_MS = 120;
+const STATION_DOT_MIN_ZOOM = 10;
+
+function getBufferedViewport(map) {
+  const bounds = map.getBounds().pad(MAP_VIEWPORT_BUFFER_RATIO);
+  return {
+    south: bounds.getSouth(),
+    west: bounds.getWest(),
+    north: bounds.getNorth(),
+    east: bounds.getEast(),
+    zoom: map.getZoom(),
+  };
+}
+
+function sameViewport(a, b) {
+  if (!a || !b) return false;
+  const eps = 0.00001;
+  return a.zoom === b.zoom &&
+    Math.abs(a.south - b.south) < eps &&
+    Math.abs(a.west - b.west) < eps &&
+    Math.abs(a.north - b.north) < eps &&
+    Math.abs(a.east - b.east) < eps;
+}
+
+function pointLat(p) {
+  return Array.isArray(p) ? p[0] : p.lat;
+}
+
+function pointLng(p) {
+  return Array.isArray(p) ? p[1] : p.lng;
+}
+
+function pointToLatLng(p) {
+  return [pointLat(p), pointLng(p)];
+}
+
+function pointInViewport(p, viewport) {
+  if (!viewport) return true;
+  const lat = pointLat(p);
+  const lng = pointLng(p);
+  return lat >= viewport.south && lat <= viewport.north &&
+    lng >= viewport.west && lng <= viewport.east;
+}
+
+function segmentIntersectsViewport(a, b, viewport) {
+  if (!viewport) return true;
+  if (pointInViewport(a, viewport) || pointInViewport(b, viewport)) return true;
+  const minLat = Math.min(pointLat(a), pointLat(b));
+  const maxLat = Math.max(pointLat(a), pointLat(b));
+  const minLng = Math.min(pointLng(a), pointLng(b));
+  const maxLng = Math.max(pointLng(a), pointLng(b));
+  return maxLat >= viewport.south && minLat <= viewport.north &&
+    maxLng >= viewport.west && minLng <= viewport.east;
+}
+
+function slicePolylineToViewport(polyline, viewport) {
+  if (!polyline || polyline.length < 2) return [];
+  if (!viewport) return [polyline.map(pointToLatLng)];
+  const segments = [];
+  let current = [];
+  for (let i = 0; i < polyline.length - 1; i++) {
+    const a = polyline[i];
+    const b = polyline[i+1];
+    if (segmentIntersectsViewport(a, b, viewport)) {
+      if (current.length === 0) current.push(pointToLatLng(a));
+      current.push(pointToLatLng(b));
+    } else if (current.length > 0) {
+      if (current.length >= 2) segments.push(current);
+      current = [];
+    }
+  }
+  if (current.length >= 2) segments.push(current);
+  return segments;
+}
+
 function buildTrainMarkerHtml(train) {
   const heading = (typeof train.heading === 'number' && isFinite(train.heading)) ? train.heading : 0;
   const dimmed = train.phase === 'dwelling' ? ' dwelling' : '';
@@ -79,13 +155,15 @@ function buildTrainMarkerHtml(train) {
   </div>`;
 }
 
-function MapArea({ region, location, nearest, liveTrains, targetTime, now, quickPick, handleQuickPick, lastPredictPick, visibleLines, mapLayer, setMapLayer, showGrades, onMapClick, onLocate, flyTo, onTrainClick, onHudClick, pushNotice }) {
+function MapArea({ region, location, nearest, liveTrains, targetTime, now, quickPick, handleQuickPick, lastPredictPick, visibleLines, mapLayer, setMapLayer, showGrades, onMapClick, onLocate, flyTo, onTrainClick, onHudClick, pushNotice, onViewportChange }) {
   const hudMode = quickPick === 'now' ? 'now' : 'predict';
   const mapRef = useRefM(null);
   const leafletRef = useRefM(null);
   const userMarkerRef = useRefM(null);
   const railLinesRef = useRefM({});
-  const prevShowGradesRef = useRefM(showGrades);
+  const prevLineRenderModeRef = useRefM(null);
+  const viewportRef = useRefM(null);
+  const [viewportTick, setViewportTick] = useStateM(0);
   const nearestMarkerRef = useRefM(null);
   const connectorRef = useRefM(null);
   const trainMarkersRef = useRefM({});
@@ -111,9 +189,35 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
     if (location) initialFramedRef.current = true;
     leafletRef.current = map;
 
-    map.on('click', (e) => {
+    const publishViewport = () => {
+      const next = getBufferedViewport(map);
+      if (sameViewport(viewportRef.current, next)) return;
+      viewportRef.current = next;
+      setViewportTick(t => t + 1);
+      if (onViewportChange) onViewportChange(next);
+    };
+
+    let viewportTimer = null;
+    const scheduleViewport = () => {
+      if (viewportTimer != null) clearTimeout(viewportTimer);
+      viewportTimer = setTimeout(publishViewport, VIEWPORT_DEBOUNCE_MS);
+    };
+
+    const handleMapClick = (e) => {
       onMapClick({ lat: e.latlng.lat, lng: e.latlng.lng });
-    });
+    };
+
+    map.on('click', handleMapClick);
+    map.on('moveend zoomend resize', scheduleViewport);
+    publishViewport();
+
+    return () => {
+      if (viewportTimer != null) clearTimeout(viewportTimer);
+      map.off('click', handleMapClick);
+      map.off('moveend zoomend resize', scheduleViewport);
+      map.remove();
+      leafletRef.current = null;
+    };
     // eslint-disable-next-line
   }, []);
 
@@ -165,47 +269,55 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
     };
   }, [mapLayer, pushNotice]);
 
-  // Draw rail lines when region or visibleLines change.
-  // Adds layers for newly-visible lines and removes layers for filtered-out
-  // lines incrementally, so toggling a category does not trigger a full redraw.
+  // Draw rail lines around the current viewport. The viewport includes a
+  // buffer so panning does not reveal empty track while the next slice loads.
   useEffectM(() => {
     const map = leafletRef.current;
     if (!map) return;
-    const lines = visibleLines || RAIL_DATA[region].lines;
+    const viewport = viewportRef.current || getBufferedViewport(map);
+    const baseLines = visibleLines || RAIL_DATA[region].lines;
+    const lines = viewport
+      ? baseLines.filter(line => RailUtil.lineIntersectsBounds(line, viewport))
+      : baseLines;
     const visibleIds = new Set(lines.map(l => l.id));
+    const showStations = !viewport || viewport.zoom >= STATION_DOT_MIN_ZOOM;
+    const renderMode = `${showGrades ? 'grades' : 'plain'}:${showStations ? 'stations' : 'lines-only'}`;
+
+    const removeLineLayers = (id) => {
+      const entry = railLinesRef.current[id];
+      if (!entry) return;
+      const layers = Array.isArray(entry) ? entry : entry.layers;
+      layers.forEach(l => map.removeLayer(l));
+      delete railLinesRef.current[id];
+    };
+
+    if (prevLineRenderModeRef.current !== renderMode) {
+      Object.keys(railLinesRef.current).forEach(removeLineLayers);
+      prevLineRenderModeRef.current = renderMode;
+    }
 
     // Remove layers for lines that are no longer visible
     Object.keys(railLinesRef.current).forEach(id => {
       if (!visibleIds.has(id)) {
-        railLinesRef.current[id].forEach(l => map.removeLayer(l));
-        delete railLinesRef.current[id];
+        removeLineLayers(id);
       }
     });
-
-    // Flush all line layers when the grades toggle flips so segmenting can be
-    // rebuilt from scratch. The incremental add-only path below would otherwise
-    // skip lines whose layer arrays already exist.
-    if (prevShowGradesRef.current !== showGrades) {
-      Object.keys(railLinesRef.current).forEach(id => {
-        railLinesRef.current[id].forEach(l => map.removeLayer(l));
-        delete railLinesRef.current[id];
-      });
-      prevShowGradesRef.current = showGrades;
-    }
 
     // Add layers for newly-visible lines
     lines.forEach(line => {
       if (railLinesRef.current[line.id]) return;
       const hasShape = line.shape && line.shape.length >= 2;
       const poly = hasShape ? line.shape : line.stations;
-      const coords = poly.map(s => [s.lat, s.lng]);
+      const coords = slicePolylineToViewport(poly, viewport);
       const layers = [];
 
       if (showGrades) {
         // Per-segment styling. The glow is split per segment too — drawing it
         // continuously under the line would fill the dashes of underground
         // sections and wash out the contrast between grades.
-        const segs = RailUtil.gradeSegments(line);
+        const segs = RailUtil.gradeSegments(line).flatMap(seg =>
+          slicePolylineToViewport(seg.points, viewport).map(points => ({ ...seg, points }))
+        );
         // First pass: under-layers (glow / trench / halo), so the main line
         // sits on top regardless of declaration order.
         segs.forEach(seg => {
@@ -241,23 +353,28 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
         });
       } else {
         // Default rendering: continuous glow + single coloured spine.
-        layers.push(L.polyline(coords, { color: line.color, weight: 7, opacity: 0.18 }).addTo(map));
-        layers.push(L.polyline(coords, { color: line.color, weight: 3, opacity: 0.9 }).addTo(map));
+        coords.forEach(points => {
+          layers.push(L.polyline(points, { color: line.color, weight: 7, opacity: 0.18 }).addTo(map));
+          layers.push(L.polyline(points, { color: line.color, weight: 3, opacity: 0.9 }).addTo(map));
+        });
       }
 
       // When a real-world shape is present, station hand-coded lat/lng may drift
       // off the track polyline; snap dots to positionAtKm so they sit on the line.
-      const stationDots = line.stations.map(s => {
-        const pos = hasShape ? RailUtil.positionAtKm(line, s.km) : { lat: s.lat, lng: s.lng };
-        return L.circleMarker([pos.lat, pos.lng], {
-          radius: 3, color: line.color, fillColor: '#0f1117',
-          fillOpacity: 1, weight: 2,
-        }).bindTooltip(s.name, { direction: 'top', offset: [0,-4], className: 'station-tip' })
-         .addTo(map);
-      });
-      railLinesRef.current[line.id] = [...layers, ...stationDots];
+      const stationDots = showStations
+        ? line.stations.flatMap(s => {
+            const pos = hasShape ? RailUtil.positionAtKm(line, s.km) : { lat: s.lat, lng: s.lng };
+            if (viewport && !RailUtil.pointInBounds(pos, viewport)) return [];
+            return [L.circleMarker([pos.lat, pos.lng], {
+              radius: 3, color: line.color, fillColor: '#0f1117',
+              fillOpacity: 1, weight: 2,
+            }).bindTooltip(s.name, { direction: 'top', offset: [0,-4], className: 'station-tip' })
+             .addTo(map)];
+          })
+        : [];
+      railLinesRef.current[line.id] = { layers: [...layers, ...stationDots] };
     });
-  }, [region, visibleLines, showGrades]);
+  }, [region, visibleLines, showGrades, viewportTick]);
 
   // Fit bounds only when the user explicitly switches region after the first
   // paint. The initial framing is handled by the location effect below so the

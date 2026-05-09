@@ -2392,6 +2392,34 @@ export const RailUtil = (function(){
     return { lat: last.lat, lng: last.lng };
   }
 
+  function pointInBounds(P, bounds) {
+    if (!P || !bounds) return true;
+    return P.lat >= bounds.south && P.lat <= bounds.north &&
+      P.lng >= bounds.west && P.lng <= bounds.east;
+  }
+
+  function segmentIntersectsBounds(A, B, bounds) {
+    if (!bounds) return true;
+    if (pointInBounds(A, bounds) || pointInBounds(B, bounds)) return true;
+    const minLat = Math.min(A.lat, B.lat);
+    const maxLat = Math.max(A.lat, B.lat);
+    const minLng = Math.min(A.lng, B.lng);
+    const maxLng = Math.max(A.lng, B.lng);
+    return maxLat >= bounds.south && minLat <= bounds.north &&
+      maxLng >= bounds.west && minLng <= bounds.east;
+  }
+
+  function lineIntersectsBounds(lineOrStations, bounds) {
+    if (!bounds) return true;
+    const poly = polylineFor(lineOrStations);
+    if (!poly || poly.length === 0) return false;
+    if (poly.length === 1) return pointInBounds(poly[0], bounds);
+    for (let i = 0; i < poly.length - 1; i++) {
+      if (segmentIntersectsBounds(poly[i], poly[i+1], bounds)) return true;
+    }
+    return false;
+  }
+
   // ====================================================
   // Kinematic helpers (curvature-aware velocity profile per inter-station run).
   // The profile object is a chain of (x, v, t) nodes along the actual polyline:
@@ -2680,6 +2708,7 @@ export const RailUtil = (function(){
   }
 
   return { haversine, projectOnSegment, closestOnLine, positionAtKm,
+           pointInBounds, segmentIntersectsBounds, lineIntersectsBounds,
            shapeBetween, curvatureRadii, gradeSegments,
            kinematicProfile, kmAtTimeInProfile, timeAtKmInProfile,
            normalizeName, namesEqual };
@@ -2697,15 +2726,24 @@ export const TrainGen = (function(){
     return Math.abs(h);
   }
 
-  // Generate all trains for a given region + date (local)
+  function normalizeLineFilter(lineIds) {
+    if (lineIds == null) return null;
+    const ids = lineIds instanceof Set ? Array.from(lineIds) : Array.isArray(lineIds) ? lineIds : [lineIds];
+    const uniq = Array.from(new Set(ids.filter(Boolean))).sort();
+    return { ids: new Set(uniq), key: uniq.length > 0 ? uniq.join(',') : '__none__' };
+  }
+
+  // Generate trains for a given region + date (local), optionally limited to
+  // a set of line ids so viewport-only map updates do not build the whole day.
   // Cached per (region, dateYYYYMMDD)
   const cache = {};
 
-  function generate(regionKey, date) {
+  function generate(regionKey, date, lineIds) {
     const region = RAIL_DATA[regionKey];
+    const lineFilter = normalizeLineFilter(lineIds);
     const dateKey = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate();
     // Bump the version suffix when the kinematic model changes.
-    const cacheKey = regionKey + "|" + dateKey + "|kinV2";
+    const cacheKey = regionKey + "|" + dateKey + "|kinV2|" + (lineFilter ? lineFilter.key : "all");
     if (cache[cacheKey]) return cache[cacheKey];
 
     const trains = [];
@@ -2714,6 +2752,7 @@ export const TrainGen = (function(){
     const svcStart = 5.5 * 60, svcEnd = 23.5 * 60;
 
     region.trainTemplates.forEach((tpl, tplIdx) => {
+      if (lineFilter && !lineFilter.ids.has(tpl.line)) return;
       const line = region.lines.find(l => l.id === tpl.line);
       if (!line) return;
       const numTrains = Math.max(1, Math.floor((svcEnd - svcStart) / tpl.interval));

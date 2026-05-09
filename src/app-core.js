@@ -86,6 +86,7 @@ function App() {
   const [now, setNow] = useState(new Date());
   const [targetTime, setTargetTime] = useState(new Date());
   const [location, setLocation] = useState(null);        // {lat, lng, name}
+  const [mapViewport, setMapViewport] = useState(null);  // buffered Leaflet bounds
   const [favorites, setFavorites] = useState(() => {
     try { return JSON.parse(localStorage.getItem('relf.favs') || '[]'); } catch { return []; }
   });
@@ -261,7 +262,11 @@ function App() {
   const visibleLines = useMemo(() =>
     RAIL_DATA[region].lines.filter(l => enabledCategories.includes(l.category)),
     [region, enabledCategories]);
-  const visibleLineIds = useMemo(() => new Set(visibleLines.map(l => l.id)), [visibleLines]);
+  const mapVisibleLines = useMemo(() => {
+    if (!mapViewport) return visibleLines;
+    return visibleLines.filter(line => RailUtil.lineIntersectsBounds(line, mapViewport));
+  }, [visibleLines, mapViewport]);
+  const mapVisibleLineIds = useMemo(() => new Set(mapVisibleLines.map(l => l.id)), [mapVisibleLines]);
   const { candidates, offRail } = useMemo(() => {
     if (!location) return { candidates: [], offRail: null };
     const lines = visibleLines;
@@ -316,7 +321,8 @@ function App() {
   }, [candidates, activeLineId]);
   const trains = useMemo(() => {
     if (activeCandidates.length === 0) return [];
-    const dayTrains = TrainGen.generate(region, targetTime);
+    const activeLineIds = new Set(activeCandidates.map(c => c.line.id));
+    const dayTrains = TrainGen.generate(region, targetTime, activeLineIds);
     const candidateByLine = new Map(activeCandidates.map(c => [c.line.id, c]));
     const out = [];
     const EPS_KM = 1e-6;
@@ -379,16 +385,16 @@ function App() {
     return Array.from(set);
   }, [trains]);
 
-  // ============= LIVE TRAINS (showing on map within ±30 min of now) =============
+  // ============= LIVE TRAINS (showing on map near the buffered viewport) =============
   // Uses pre-computed kinematic segments to evaluate position at time T,
   // including dwell-window detection so markers freeze briefly at stations.
   const liveTrains = useMemo(() => {
-    if (!nearest) return [];
-    const dayTrains = TrainGen.generate(region, targetTime);
+    if (mapVisibleLineIds.size === 0) return [];
+    const dayTrains = TrainGen.generate(region, targetTime, mapVisibleLineIds);
     const windowMs = 30 * 60 * 1000;
     const result = [];
     dayTrains.forEach(train => {
-      if (!visibleLineIds.has(train.line.id)) return;
+      if (!mapVisibleLineIds.has(train.line.id)) return;
       const start = train.startTime.getTime();
       const end = train.endTime.getTime();
       const T = targetTime.getTime();
@@ -428,6 +434,7 @@ function App() {
       }
       if (km == null) return;
       const pos = RailUtil.positionAtKm(train.line, km);
+      if (mapViewport && !RailUtil.pointInBounds(pos, mapViewport)) return;
       // Heading: compass bearing of travel direction at this point along the
       // polyline. Sample ±25 m on either side of the train (in canonical km
       // along the line, signed by travel direction) and take the great-circle
@@ -447,7 +454,7 @@ function App() {
       result.push({ ...train, livePos: pos, liveKm: km, phase, heading });
     });
     return result;
-  }, [region, targetTime, nearest, visibleLineIds]);
+  }, [region, targetTime, mapVisibleLineIds, mapViewport]);
 
   // ============= HANDLERS =============
   const [flyTo, setFlyTo] = useState(null); // {lat, lng, ts} — triggers map flyTo
@@ -731,6 +738,7 @@ function App() {
         flyTo,
         onTrainClick: setSelectedTrain,
         pushNotice,
+        onViewportChange: setMapViewport,
         onHudClick: () => {
           // Open the sidebar (mobile) or unhide it (desktop), then focus its time control.
           setPanelCollapsed(false);
