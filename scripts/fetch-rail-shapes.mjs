@@ -353,6 +353,13 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationStops: {},
   },
+  "Daegu-Metro-1": {
+    name: "Daegu Metro Line 1 (Seolhwa-Myeonggok→Hayang)",
+    relationIds: [7685464],
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "Daegu-Metro-3": {
     name: "Daegu Metro Line 3 monorail (Chilgok Kyungpook Nat'l Univ. Medical Center→Yongji)",
     relationIds: [7685727],
