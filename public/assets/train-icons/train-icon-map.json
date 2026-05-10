@@ -182,6 +182,14 @@
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png",
       "kind": "shinkansen"
     },
+    "korea|KTX-Gyeongjeon|KTX": {
+      "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx.png",
+      "kind": "shinkansen"
+    },
+    "korea|KTX-Gyeongjeon|KTX-산천": {
+      "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png",
+      "kind": "shinkansen"
+    },
     "korea|SRT-Gyeongbu|SRT": {
       "icon": "assets/train-icons/korea-srt-gyeongbu-srt.png",
       "kind": "shinkansen"
