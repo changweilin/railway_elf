@@ -4,7 +4,7 @@
 
 ## 目前結論
 
-沒有尚未完成的必要項目；大東亞擴張 Phase B 已完成 34/34 條 OSM 形狀回灌，snapshot 已更新到 66 條線。高誤差複查後，66 條線 runtime maxOffset 全部壓到 1.0 km 內，沒有 0 km fallback 或需阻塞上線的資料缺口。日本 / 南韓「完整類型覆蓋」已作為可選大型 backlog 加入 `doc/east-asia-expansion-plan.md`，不列入目前完成率；其中南韓 HSR 類已完成 SRT 代表線 `SRT-Gyeongbu` / `SRT-Honam` / `SRT-Jeolla` / `SRT-Gyeongjeon` / `SRT-Donghae` 與 KTX 代表線 `KTX-Honam`，Airport 類已完成第一條代表線 `AREX`，LRT/AGT 類已完成第一條代表線 `Gimpo-Goldline`，Monorail 類已完成第一條代表線 `Daegu-Metro-3`。
+沒有尚未完成的必要項目；大東亞擴張 Phase B 已完成 34/34 條 OSM 形狀回灌，snapshot 已更新到 67 條線。高誤差複查後，67 條線 runtime maxOffset 全部壓到 1.0 km 內，沒有 0 km fallback 或需阻塞上線的資料缺口。日本 / 南韓「完整類型覆蓋」已作為可選大型 backlog 加入 `doc/east-asia-expansion-plan.md`，不列入目前完成率；其中南韓 HSR 類已完成 SRT 代表線 `SRT-Gyeongbu` / `SRT-Honam` / `SRT-Jeolla` / `SRT-Gyeongjeon` / `SRT-Donghae` 與 KTX 代表線 `KTX-Honam` / `KTX-Jeolla`，Airport 類已完成第一條代表線 `AREX`，LRT/AGT 類已完成第一條代表線 `Gimpo-Goldline`，Monorail 類已完成第一條代表線 `Daegu-Metro-3`。
 
 ## 本次完成
 
@@ -27,6 +27,7 @@
 - 南韓 HSR seed：新增 `SRT-Gyeongjeon`（수서 ⇄ 진주）15 站、1 個 SRT train template、OSM relation `6096884` + `6094351` + `8842494` + `8839114` corridor；列車圖示先檢查同國同型號後沿用既有 SRT PNG，不新增 PNG。
 - 南韓 HSR seed：新增 `SRT-Donghae`（수서 ⇄ 포항）10 站、1 個 SRT train template、OSM relation `6096884` + `6094351` + `8840839` + `8835676` corridor；列車圖示先檢查同國同型號後沿用既有 SRT PNG，不新增 PNG。
 - 南韓 HSR seed：新增 `KTX-Honam`（용산 ⇄ 목포）10 站、2 個 KTX / KTX-산천 train templates、OSM relation `11214334` + `6095809` + `6094787` corridor；列車圖示先檢查同國同型號後沿用既有 KTX / KTX-산천 PNG，不新增 PNG。
+- 南韓 HSR seed：新增 `KTX-Jeolla`（용산 ⇄ 여수EXPO）13 站、2 個 KTX / KTX-산천 train templates、OSM relation `11214334` + `6095809` + `6096342` corridor；列車圖示先檢查同國同型號後沿用既有 KTX / KTX-산천 PNG，不新增 PNG。
 
 ## 未完成
 
@@ -36,7 +37,7 @@
 
 - Tokaido-Shinkansen：若 OSM 未來有更乾淨 relation，可替換 corridor reconstruction 並更新 snapshot（依賴上游資料,目前無動作可做）。
 - 若要再往工程級精度推進，可優先精修目前 maxOffset 約 0.75–1.0 km 的路線（如 `Beijing-Shanghai-HSR`、`Beijing-Guangzhou-HSR`、`JR-Keihin-Tohoku`、`KHH-Red`、`Tamsui-LRT`、`JR-Osaka-Loop`、`Tokyu-Toyoko`、`Seoul-Metro-1`、`TPE-Yellow`、`TYMRT`），用官方站點座標或更乾淨的 OSM station node 逐站替換。
-- 日本 / 南韓完整覆蓋：依 `doc/east-asia-expansion-plan.md` 的 backlog，未來可從剩餘新幹線 / KTX 走廊、東京 / 首都圈地鐵、Tram / Regional / Heritage 等類型各挑一條代表線先做；南韓 HSR 類已有 `SRT-Gyeongbu` / `SRT-Honam` / `SRT-Jeolla` / `SRT-Gyeongjeon` / `SRT-Donghae` / `KTX-Honam` seeds，Airport 類已有 `AREX` all-stop seed，LRT/AGT 類已有 `Gimpo-Goldline` seed，Monorail 類已有 `Daegu-Metro-3` seed，AREX 直通列車待 skip-stop template 支援後再補。
+- 日本 / 南韓完整覆蓋：依 `doc/east-asia-expansion-plan.md` 的 backlog，未來可從剩餘新幹線 / KTX 走廊、東京 / 首都圈地鐵、Tram / Regional / Heritage 等類型各挑一條代表線先做；南韓 HSR 類已有 `SRT-Gyeongbu` / `SRT-Honam` / `SRT-Jeolla` / `SRT-Gyeongjeon` / `SRT-Donghae` / `KTX-Honam` / `KTX-Jeolla` seeds，Airport 類已有 `AREX` all-stop seed，LRT/AGT 類已有 `Gimpo-Goldline` seed，Monorail 類已有 `Daegu-Metro-3` seed，AREX 直通列車待 skip-stop template 支援後再補。
 
 ## 建議下一步
 

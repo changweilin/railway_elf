@@ -259,6 +259,12 @@ const OSM_LINE_MAP = {
     corridor: { corridorKm: 3.0, sampleKm: 0.25 },
     snapStationCoordsOverKm: 1.0,
   },
+  "KTX-Jeolla": {
+    name: "KTX Jeolla Line (Yongsan-Yeosu EXPO)",
+    relationIds: [11214334, 6095809, 6096342],
+    corridor: { corridorKm: 3.0, sampleKm: 0.25 },
+    snapStationCoordsOverKm: 1.0,
+  },
   "SRT-Gyeongbu": {
     name: "SRT Gyeongbu Line (Suseo→Busan)",
     relationIds: [6096884, 6094351],

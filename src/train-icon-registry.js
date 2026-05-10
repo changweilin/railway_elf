@@ -51,6 +51,8 @@ export const TRAIN_ICON_REGISTRY = {
     'korea|KTX-Gyeongbu|KTX-산천': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png', kind: 'shinkansen' },
     'korea|KTX-Honam|KTX': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx.png', kind: 'shinkansen' },
     'korea|KTX-Honam|KTX-산천': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png', kind: 'shinkansen' },
+    'korea|KTX-Jeolla|KTX': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx.png', kind: 'shinkansen' },
+    'korea|KTX-Jeolla|KTX-산천': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png', kind: 'shinkansen' },
     'korea|SRT-Gyeongbu|SRT': { icon: 'assets/train-icons/korea-srt-gyeongbu-srt.png', kind: 'shinkansen' },
     'korea|SRT-Honam|SRT': { icon: 'assets/train-icons/korea-srt-gyeongbu-srt.png', kind: 'shinkansen' },
     'korea|SRT-Jeolla|SRT': { icon: 'assets/train-icons/korea-srt-gyeongbu-srt.png', kind: 'shinkansen' },
