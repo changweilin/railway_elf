@@ -236,6 +236,12 @@ const OSM_LINE_MAP = {
     corridor: { corridorKm: 1.0, sampleKm: 0.08 },
     snapStationCoordsOverKm: 1.0,
   },
+  "Seoul-Metro-4": {
+    name: "Seoul Metropolitan Subway Line 4 (Jinjeop→Oido)",
+    relationIds: [13675921, 2718884, 4744311],
+    corridor: { corridorKm: 1.2, sampleKm: 0.08 },
+    snapStationCoordsOverKm: 1.0,
+  },
   "AREX": {
     name: "Airport Railroad Express All-stop (Seoul Station→Incheon Int'l Airport Terminal 2)",
     relationIds: [7919000],
