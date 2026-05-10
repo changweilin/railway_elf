@@ -93,6 +93,7 @@ export const TRAIN_ICON_REGISTRY = {
     'korea|Busan-Metro-2|2호선': { icon: 'assets/train-icons/korea-busan-metro-2-line-2.png', kind: 'metro' },
     'korea|Busan-Metro-3|3호선': { icon: 'assets/train-icons/korea-busan-metro-3-line-3.png', kind: 'metro' },
     'korea|Busan-Metro-4|4호선': { icon: 'assets/train-icons/korea-busan-metro-4-line-4.png', kind: 'metro' },
+    'korea|Busan-Gimhae-LRT|BGL': { icon: 'assets/train-icons/korea-busan-gimhae-lrt-bgl.png', kind: 'lrt' },
 
     'hongkong|MTR-Tsuen-Wan|荃灣綫': { icon: 'assets/train-icons/hongkong-mtr-tsuen-wan-tsuen-wan-line.png', kind: 'metro' },
     'hongkong|MTR-Island|港島綫': { icon: 'assets/train-icons/hongkong-mtr-island-island-line.png', kind: 'metro' },

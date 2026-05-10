@@ -533,6 +533,13 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "Busan-Gimhae-LRT": {
+    name: "Busan-Gimhae Light Rail Transit (Sasang→Kaya University)",
+    relationIds: [2204611],
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // Hong Kong MTR.
   "MTR-Tsuen-Wan":       { name: "MTR Tsuen Wan Line (Central→Tsuen Wan)", relationIds: [9736530] },

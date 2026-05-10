@@ -342,6 +342,10 @@
       "icon": "assets/train-icons/korea-busan-metro-4-line-4.png",
       "kind": "metro"
     },
+    "korea|Busan-Gimhae-LRT|BGL": {
+      "icon": "assets/train-icons/korea-busan-gimhae-lrt-bgl.png",
+      "kind": "lrt"
+    },
     "hongkong|MTR-Tsuen-Wan|荃灣綫": {
       "icon": "assets/train-icons/hongkong-mtr-tsuen-wan-tsuen-wan-line.png",
       "kind": "metro"

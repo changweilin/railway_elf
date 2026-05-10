@@ -70,6 +70,7 @@ const VISUALS = {
   "korea|Busan-Metro-2|2호선": { shape: "metro", body: "#f8fafc", accent: "#81BF48", band: "#81BF48" },
   "korea|Busan-Metro-3|3호선": { shape: "metro", body: "#f8fafc", accent: "#BB8C00", band: "#BB8C00" },
   "korea|Busan-Metro-4|4호선": { shape: "metro", body: "#f8fafc", accent: "#217DCB", band: "#217DCB" },
+  "korea|Busan-Gimhae-LRT|BGL": { shape: "metro", body: "#f8fafc", accent: "#8652A1", band: "#8652A1" },
 
   "hongkong|MTR-Tsuen-Wan|荃灣綫": { shape: "metro", body: "#f8fafc", accent: "#e2231a", band: "#e2231a" },
   "hongkong|MTR-Island|港島綫": { shape: "metro", body: "#f8fafc", accent: "#007dc5", band: "#007dc5" },
