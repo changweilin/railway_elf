@@ -780,10 +780,10 @@ body {
   filter: brightness(0.84) contrast(1.26) saturate(0.86);
 }
 .map-tiles-terrain-dark {
-  filter: invert(0.74) hue-rotate(180deg) brightness(1.18) contrast(1.70) saturate(1.22);
+  filter: invert(0.73) hue-rotate(185deg) brightness(1.12) contrast(1.62) saturate(1.08);
 }
 .map-tiles-terrain-light {
-  filter: brightness(0.86) contrast(1.28) saturate(1.04);
+  filter: brightness(0.89) contrast(1.18) saturate(0.96);
 }
 .map-tiles-satellite-dark {
   filter: brightness(0.68) contrast(1.24) saturate(0.95);

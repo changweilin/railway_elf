@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "name": "Railway Elf map layer visual reference",
-  "lastReviewed": "2026-05-10",
-  "purpose": "Shared map base-layer, theme, and contrast data for other apps that want to match Railway Elf's street, terrain, and satellite visual treatment.",
+  "lastReviewed": "2026-05-11",
+  "purpose": "Shared map base-layer, theme, and contrast data for other apps that want to match Railway Elf's street, hiking/outdoor, and satellite visual treatment.",
   "defaults": {
     "baseLayer": "streets",
     "themePolicy": "The app theme controls light/dark map rendering. The map no longer has a separate manual light/dark switch.",
@@ -21,8 +21,8 @@
     },
     {
       "key": "terrain",
-      "label": "地形",
-      "labelEn": "Terrain",
+      "label": "登山/戶外",
+      "labelEn": "Hiking / Outdoor",
       "icon": "me-layer-topo",
       "isDefault": false
     },
@@ -45,12 +45,14 @@
       "notes": "Chosen instead of CARTO dark_all/light_all because Voyager keeps roads, labels, water, and green areas more legible after theme filters."
     },
     "terrain": {
-      "provider": "Esri",
-      "product": "World Topographic Map",
-      "urlTemplate": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
-      "attributionHtml": "Tiles &copy; Esri",
+      "provider": "OpenTopoMap",
+      "product": "OpenTopoMap raster tiles",
+      "urlTemplate": "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+      "subdomains": ["a", "b", "c"],
+      "attributionHtml": "Map data: &copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors, <a href=\"http://viewfinderpanoramas.org\">SRTM</a> | Map style: &copy; <a href=\"https://opentopomap.org\">OpenTopoMap</a> (<a href=\"https://creativecommons.org/licenses/by-sa/3.0/\">CC-BY-SA</a>)",
       "maxZoom": 19,
-      "notes": "Dark filter was tuned with mountain tiles so contour lines remain visible."
+      "maxNativeZoom": 17,
+      "notes": "Outdoor preset chosen for hiking context. Leaflet may zoom beyond 17 by upscaling native OpenTopoMap tiles so high app zooms do not request missing source tiles."
     },
     "satellite": {
       "provider": "Esri",
@@ -110,26 +112,26 @@
     "terrain": {
       "dark": {
         "cssSelector": ".map-tiles-terrain-dark",
-        "cssFilter": "invert(0.74) hue-rotate(180deg) brightness(1.18) contrast(1.70) saturate(1.22)",
+        "cssFilter": "invert(0.73) hue-rotate(185deg) brightness(1.12) contrast(1.62) saturate(1.08)",
         "operations": [
-          { "name": "invert", "value": 0.74 },
-          { "name": "hue-rotate", "degrees": 180 },
-          { "name": "brightness", "value": 1.18 },
-          { "name": "contrast", "value": 1.7 },
-          { "name": "saturate", "value": 1.22 }
+          { "name": "invert", "value": 0.73 },
+          { "name": "hue-rotate", "degrees": 185 },
+          { "name": "brightness", "value": 1.12 },
+          { "name": "contrast", "value": 1.62 },
+          { "name": "saturate", "value": 1.08 }
         ],
-        "visualIntent": "Dark topographic map that preserves contour lines, ridge shading, roads, water, and green terrain areas.",
+        "visualIntent": "Dark hiking/outdoor map that keeps OpenTopoMap contour lines, ridge shading, roads, water, and green terrain areas close to the previous dark topographic contrast.",
         "validationFocus": ["contour lines", "terrain shading", "roads", "water", "green areas"]
       },
       "light": {
         "cssSelector": ".map-tiles-terrain-light",
-        "cssFilter": "brightness(0.86) contrast(1.28) saturate(1.04)",
+        "cssFilter": "brightness(0.89) contrast(1.18) saturate(0.96)",
         "operations": [
-          { "name": "brightness", "value": 0.86 },
-          { "name": "contrast", "value": 1.28 },
-          { "name": "saturate", "value": 1.04 }
+          { "name": "brightness", "value": 0.89 },
+          { "name": "contrast", "value": 1.18 },
+          { "name": "saturate", "value": 0.96 }
         ],
-        "visualIntent": "Light topographic map with reduced glare and stronger terrain/road separation."
+        "visualIntent": "Light hiking/outdoor map with reduced glare while preserving OpenTopoMap contour and trail readability."
       }
     },
     "satellite": {
@@ -191,21 +193,21 @@
       "x": 6860,
       "y": 3506,
       "cartoVoyagerUrl": "https://a.basemaps.cartocdn.com/rastertiles/voyager/13/6860/3506.png",
-      "esriWorldTopoUrl": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/13/3506/6860"
+      "openTopoMapUrl": "https://a.tile.opentopomap.org/13/6860/3506.png"
     },
     "yangmingshanContours": {
       "description": "Mountain sample used to validate dark terrain contour-line visibility.",
       "z": 14,
       "x": 13724,
       "y": 7007,
-      "esriWorldTopoUrl": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/14/7007/13724"
+      "openTopoMapUrl": "https://a.tile.opentopomap.org/14/13724/7007.png"
     },
     "alishanContours": {
       "description": "Secondary mountain sample used to validate dark terrain contour-line visibility.",
       "z": 13,
       "x": 6844,
       "y": 3545,
-      "esriWorldTopoUrl": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/13/3545/6844"
+      "openTopoMapUrl": "https://a.tile.opentopomap.org/13/6844/3545.png"
     }
   },
   "implementationReferences": {

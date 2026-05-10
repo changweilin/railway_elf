@@ -27,7 +27,7 @@ const STATION_DOT_MIN_ZOOM = 10;
 const TRAIN_DETAIL_MIN_ZOOM = 12;
 const MAP_BASE_LAYER_OPTIONS = [
   { key: 'streets', label: '街道', icon: 'me-layer-streets' },
-  { key: 'terrain', label: '地形', icon: 'me-layer-topo' },
+  { key: 'terrain', label: '登山/戶外', icon: 'me-layer-topo' },
   { key: 'satellite', label: '衛星', icon: 'me-layer-satellite' },
 ];
 
@@ -278,16 +278,19 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
     const streetTiles = {
       url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
       attr: '&copy; OpenStreetMap &copy; CARTO',
+      options: { maxZoom: 19 },
     };
     const tileOptions = {
       streets: streetTiles,
       terrain: {
-        url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',
-        attr: 'Tiles &copy; Esri',
+        url: 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+        attr: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)',
+        options: { maxZoom: 19, maxNativeZoom: 17 },
       },
       satellite: {
         url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
         attr: 'Tiles &copy; Esri',
+        options: { maxZoom: 19 },
       },
     };
     const tiles = tileOptions[mapBaseLayer] || null;
@@ -295,7 +298,7 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
     const layer = L.tileLayer(resolvedTiles.url, {
       attribution: resolvedTiles.attr,
       className: `map-tiles map-tiles-${mapLayer} map-tiles-${mapBaseLayer} map-tiles-${mapBaseLayer}-${mapLayer}`,
-      maxZoom: 19,
+      ...resolvedTiles.options,
     }).addTo(map);
     // Tile error reporting: count failures within a short window so a single
     // CDN hiccup or one missing zoom-19 tile does not spam the user. Only
