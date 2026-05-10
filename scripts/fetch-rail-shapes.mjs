@@ -327,6 +327,13 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "Incheon-Metro-1": {
+    name: "Incheon Subway Line 1 (Songdo Moonlight Festival Park→Geomdan Lake Park)",
+    relationIds: [19425646],
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "AREX": {
     name: "Airport Railroad Express All-stop (Seoul Station→Incheon Int'l Airport Terminal 2)",
     relationIds: [7919000],

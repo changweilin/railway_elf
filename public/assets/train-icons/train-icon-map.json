@@ -198,6 +198,10 @@
       "icon": "assets/train-icons/korea-seohae-seohae.png",
       "kind": "commuter"
     },
+    "korea|Incheon-Metro-1|1호선": {
+      "icon": "assets/train-icons/korea-incheon-metro-1-line-1.png",
+      "kind": "metro"
+    },
     "korea|AREX|AREX": {
       "icon": "assets/train-icons/korea-arex-arex.png",
       "kind": "express"
