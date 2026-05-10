@@ -37,6 +37,7 @@ const VISUALS = {
   "korea|Seoul-Metro-2|순환": { shape: "metro", body: "#f8fafc", accent: "#00a84d", band: "#00a84d" },
   "korea|AREX|AREX": { shape: "express", body: "#f8fafc", accent: "#0079ac", accent2: "#f97316" },
   "korea|Gimpo-Goldline|골드라인": { shape: "metro", body: "#f8fafc", accent: "#ad8605", band: "#ad8605" },
+  "korea|Daegu-Metro-3|3호선": { shape: "monorail", body: "#f8fafc", accent: "#FDA208", accent2: "#111827" },
   "korea|KTX-Gyeongbu|KTX": { shape: "shinkansen", body: "#f8fafc", accent: "#0c4ca3", accent2: "#dc2626" },
   "korea|KTX-Gyeongbu|KTX-산천": { shape: "shinkansen", body: "#f8fafc", accent: "#dc2626", accent2: "#0c4ca3" },
   "korea|Busan-Metro-1|1호선": { shape: "metro", body: "#f8fafc", accent: "#f06a00", band: "#f06a00" },
@@ -143,6 +144,21 @@ function metro(v) {
   `);
 }
 
+function monorail(v) {
+  const accent2 = v.accent2 || v.accent;
+  return svgShell(`
+    <path d="M99 35H157L170 58V199L154 220H102L86 199V58Z" fill="${v.body}" stroke="${outline}" stroke-width="5" stroke-linejoin="round"/>
+    <rect x="104" y="52" width="48" height="27" rx="9" fill="${glass}"/>
+    <path d="M115 70L128 54L141 70Z" fill="${v.accent}"/>
+    <rect x="108" y="99" width="40" height="82" rx="12" fill="${windowFill}" opacity="0.88"/>
+    <path d="M94 89H162" stroke="${v.accent}" stroke-width="8" stroke-linecap="round"/>
+    <path d="M104 194H152" stroke="${accent2}" stroke-width="6" stroke-linecap="round"/>
+    <path d="M113 222H143L137 238H119Z" fill="${accent2}" stroke="${outline}" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M84 244H172" stroke="${v.accent}" stroke-width="10" stroke-linecap="round"/>
+    <path d="M101 106V178M155 106V178" stroke="${v.accent}" stroke-width="5" stroke-linecap="round"/>
+  `);
+}
+
 function classic(v) {
   const window = v.body === "#7c1d10" ? "#f8e7c1" : windowFill;
   return svgShell(`
@@ -162,6 +178,7 @@ function iconSvg(key, entry) {
   if (entry.kind === "shinkansen" || visual.shape === "shinkansen") return shinkansen(visual);
   if (visual.shape === "express") return express(visual);
   if (visual.shape === "metro") return metro(visual);
+  if (visual.shape === "monorail") return monorail(visual);
   if (visual.shape === "classic") return classic(visual);
   return commuter(visual);
 }

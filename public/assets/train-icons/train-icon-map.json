@@ -154,6 +154,10 @@
       "icon": "assets/train-icons/korea-gimpo-goldline-goldline.png",
       "kind": "lrt"
     },
+    "korea|Daegu-Metro-3|3호선": {
+      "icon": "assets/train-icons/korea-daegu-metro-3-line-3.png",
+      "kind": "monorail"
+    },
     "korea|KTX-Gyeongbu|KTX": {
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx.png",
       "kind": "shinkansen"

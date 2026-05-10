@@ -242,6 +242,12 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationStops: {},
   },
+  "Daegu-Metro-3": {
+    name: "Daegu Metro Line 3 monorail (Chilgok Kyungpook Nat'l Univ. Medical Center→Yongji)",
+    relationIds: [7685727],
+    orderStationKms: true,
+    stationStops: {},
+  },
   "KTX-Gyeongbu": {
     name: "KTX Gyeongbu Line / Gyeongbu HSL (Seoul→Busan)",
     relationIds: [11214334],

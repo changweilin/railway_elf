@@ -46,6 +46,7 @@ export const TRAIN_ICON_REGISTRY = {
     'korea|Seoul-Metro-2|순환': { icon: 'assets/train-icons/korea-seoul-metro-2-loop.png', kind: 'metro' },
     'korea|AREX|AREX': { icon: 'assets/train-icons/korea-arex-arex.png', kind: 'express' },
     'korea|Gimpo-Goldline|골드라인': { icon: 'assets/train-icons/korea-gimpo-goldline-goldline.png', kind: 'lrt' },
+    'korea|Daegu-Metro-3|3호선': { icon: 'assets/train-icons/korea-daegu-metro-3-line-3.png', kind: 'monorail' },
     'korea|KTX-Gyeongbu|KTX': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx.png', kind: 'shinkansen' },
     'korea|KTX-Gyeongbu|KTX-산천': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png', kind: 'shinkansen' },
     'korea|Busan-Metro-1|1호선': { icon: 'assets/train-icons/korea-busan-metro-1-line-1.png', kind: 'metro' },
@@ -88,6 +89,7 @@ export const TRAIN_ICON_KIND_SIZE = {
   limited:    36,
   commuter:   36,
   metro:      32,
+  monorail:   30,
   lrt:        28,
   heritage:   28,
 };
@@ -125,6 +127,7 @@ export function trainKindPriority(train, region) {
     case 'heritage': return 10;
     case 'commuter': return 6;
     case 'metro': return 4;
+    case 'monorail': return 4;
     case 'lrt': return 3;
     default: return 0;
   }
