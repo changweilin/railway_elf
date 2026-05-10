@@ -250,6 +250,13 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "Seoul-Metro-6": {
+    name: "Seoul Subway Line 6 (Eungam Loop to Sinnae)",
+    relationIds: [12080315],
+    corridor: { corridorKm: 1.2, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationKmByIndexOverrides: { 0: 0 },
+  },
   "Seoul-Metro-7": {
     name: "Seoul Subway Line 7 (Jangam→Seongnam)",
     relationIds: [12746493],
@@ -1545,6 +1552,7 @@ function buildOutput(rawShapes, stationsByLineId) {
     const orderStationKms = cfg.orderStationKms === true;
     const snapStationCoordsOverKm = cfg.snapStationCoordsOverKm ?? Infinity;
     const stationKms = {};
+    const stationKmsByIndex = [];
     const stationCoords = { ...(stopStationCoords || {}) };
     let maxStationDist = 0;
     let snappedStationCount = 0;
@@ -1556,7 +1564,9 @@ function buildOutput(rawShapes, stationsByLineId) {
       const st = projectionStations[i];
       const isLoopStart = isLoopLine && i === 0;
       const isLoopEnd = isLoopLine && i === projectionStations.length - 1;
-      const overrideKm = cfg.stationKmOverrides?.[st.name];
+      const hasIndexOverride = cfg.stationKmByIndexOverrides &&
+        Object.prototype.hasOwnProperty.call(cfg.stationKmByIndexOverrides, i);
+      const overrideKm = hasIndexOverride ? cfg.stationKmByIndexOverrides[i] : cfg.stationKmOverrides?.[st.name];
       let km;
       let dist;
       if (overrideKm != null) {
@@ -1579,6 +1589,7 @@ function buildOutput(rawShapes, stationsByLineId) {
         dist = projected.dist;
       }
       stationKms[st.name] = Number(km.toFixed(3));
+      stationKmsByIndex.push(Number(km.toFixed(3)));
       if (!stationCoords[st.name] && dist > snapStationCoordsOverKm) {
         const p = positionOnShapeAtKm(simplified, shapeKm, km);
         stationCoords[st.name] = [Number(p.lat.toFixed(6)), Number(p.lng.toFixed(6))];
@@ -1593,6 +1604,8 @@ function buildOutput(rawShapes, stationsByLineId) {
       totalKm: Number(shapeKm[shapeKm.length - 1].toFixed(3)),
       stationKms,
     };
+    const hasDuplicateStationNames = new Set(projectionStations.map(s => s.name)).size !== projectionStations.length;
+    if (hasDuplicateStationNames) entry.stationKmsByIndex = stationKmsByIndex;
     if (Object.keys(stationCoords).length > 0) entry.stationCoords = stationCoords;
 
     // For in-scope lines, also emit the full projected station list so that

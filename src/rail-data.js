@@ -1429,6 +1429,58 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "Seoul-Metro-6",
+        name: "서울 지하철 6호선",
+        nameEn: "Seoul Subway Line 6",
+        color: "#7C4932",
+        category: "捷運",
+        directions: { up: "상행 (응암순환 방면)", down: "하행 (신내 방면)" },
+        // 6호선: Eungam one-way loop followed by the eastbound trunk to Sinnae.
+        // Eungam intentionally appears twice so the loop movement stays explicit.
+        stations: [
+          { name: "응암", lat: 37.5987740, lng: 126.9157018, km: 0,    dwellSec: 30 },
+          { name: "역촌", lat: 37.6060541, lng: 126.9228008, km: 1.1 },
+          { name: "불광", lat: 37.6107380, lng: 126.9292223, km: 1.8, dwellSec: 30 },
+          { name: "독바위", lat: 37.6184519, lng: 126.9330576, km: 2.8 },
+          { name: "연신내", lat: 37.6186289, lng: 126.9205315, km: 3.9, dwellSec: 30 },
+          { name: "구산", lat: 37.6110401, lng: 126.9170995, km: 4.9 },
+          { name: "응암", lat: 37.5984384, lng: 126.9154726, km: 6.3, dwellSec: 30 },
+          { name: "새절", lat: 37.5910867, lng: 126.9134797, km: 7.2 },
+          { name: "증산", lat: 37.5841289, lng: 126.9098598, km: 8.0 },
+          { name: "디지털미디어시티", lat: 37.5762160, lng: 126.9014392, km: 9.2, dwellSec: 30 },
+          { name: "월드컵경기장", lat: 37.5701609, lng: 126.8992939, km: 9.9 },
+          { name: "마포구청", lat: 37.5635156, lng: 126.9033737, km: 10.8 },
+          { name: "망원", lat: 37.5559808, lng: 126.9101224, km: 11.8 },
+          { name: "합정", lat: 37.5492052, lng: 126.9134584, km: 12.7, dwellSec: 30 },
+          { name: "상수", lat: 37.5477391, lng: 126.9229225, km: 13.5 },
+          { name: "광흥창", lat: 37.5474490, lng: 126.9320010, km: 14.4 },
+          { name: "대흥", lat: 37.5476895, lng: 126.9423171, km: 15.3 },
+          { name: "공덕", lat: 37.5436396, lng: 126.9515209, km: 16.2, dwellSec: 30 },
+          { name: "효창공원앞", lat: 37.5393117, lng: 126.9613534, km: 17.3, dwellSec: 30 },
+          { name: "삼각지", lat: 37.5355911, lng: 126.9738989, km: 18.5, dwellSec: 30 },
+          { name: "녹사평", lat: 37.5347329, lng: 126.9864975, km: 19.6 },
+          { name: "이태원", lat: 37.5344810, lng: 126.9943860, km: 20.3 },
+          { name: "한강진", lat: 37.5398199, lng: 127.0017633, km: 21.3 },
+          { name: "버티고개", lat: 37.5482256, lng: 127.0066769, km: 22.3 },
+          { name: "약수", lat: 37.5541596, lng: 127.0103961, km: 23.1, dwellSec: 30 },
+          { name: "청구", lat: 37.5602864, lng: 127.0138544, km: 23.8, dwellSec: 30 },
+          { name: "신당", lat: 37.5664040, lng: 127.0162221, km: 24.6, dwellSec: 30 },
+          { name: "동묘앞", lat: 37.5714130, lng: 127.0158026, km: 25.1, dwellSec: 30 },
+          { name: "창신", lat: 37.5797860, lng: 127.0152730, km: 26.1 },
+          { name: "보문", lat: 37.5852622, lng: 127.0193326, km: 26.8, dwellSec: 30 },
+          { name: "안암", lat: 37.5862818, lng: 127.0293290, km: 27.7 },
+          { name: "고려대", lat: 37.5897500, lng: 127.0359359, km: 28.5 },
+          { name: "월곡", lat: 37.6019240, lng: 127.0414890, km: 29.9 },
+          { name: "상월곡", lat: 37.6062070, lng: 127.0482569, km: 30.7 },
+          { name: "돌곶이", lat: 37.6105343, lng: 127.0564905, km: 31.6 },
+          { name: "석계", lat: 37.6148757, lng: 127.0657680, km: 32.6, dwellSec: 30 },
+          { name: "태릉입구", lat: 37.6172248, lng: 127.0745285, km: 33.4, dwellSec: 30 },
+          { name: "화랑대", lat: 37.6197559, lng: 127.0837172, km: 34.3 },
+          { name: "봉화산", lat: 37.6173928, lng: 127.0910747, km: 35.0, dwellSec: 30 },
+          { name: "신내", lat: 37.6124026, lng: 127.1046462, km: 36.4, dwellSec: 30 },
+        ],
+      },
+      {
         id: "Seoul-Metro-7",
         name: "서울 지하철 7호선",
         nameEn: "Seoul Subway Line 7",
@@ -2075,6 +2127,7 @@ export const RAIL_DATA = {
       { line: "Seoul-Metro-3",  type: "3호선",  badge: "3",      badgeColor: "#ED6C00", speed: 40, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Seoul-Metro-4",  type: "4호선",  badge: "4",      badgeColor: "#009BCE", speed: 40, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Seoul-Metro-5",  type: "5호선",  badge: "5",      badgeColor: "#996CAC", speed: 40, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "Seoul-Metro-6",  type: "6호선",  badge: "6",      badgeColor: "#7C4932", speed: 40, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Seoul-Metro-7",  type: "7호선",  badge: "7",      badgeColor: "#747F00", speed: 40, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Seoul-Metro-8",  type: "8호선",  badge: "8",      badgeColor: "#E6186C", speed: 40, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Seoul-Metro-9",  type: "9호선",  badge: "9",      badgeColor: "#BDB092", speed: 40, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
@@ -3022,7 +3075,9 @@ function mergeShapes(shapes, regionKey) {
       }
 
       let useGenStationKms = true;
-      if (gen.stationKms) {
+      const hasIndexedStationKms = Array.isArray(gen.stationKmsByIndex) &&
+        gen.stationKmsByIndex.length === line.stations.length;
+      if (gen.stationKms || hasIndexedStationKms) {
         const isLoopLine = line.stations.length >= 3 &&
           line.stations[0].name === line.stations[line.stations.length - 1].name;
         let prev = -Infinity;
@@ -3030,7 +3085,9 @@ function mergeShapes(shapes, regionKey) {
           const st = line.stations[i];
           const isLoopStart = isLoopLine && i === 0 && gen.totalKm != null;
           const isLoopBack = isLoopLine && i === line.stations.length - 1 && gen.totalKm != null;
-          const k = isLoopStart ? 0 : (isLoopBack ? gen.totalKm : gen.stationKms[st.name]);
+          const k = hasIndexedStationKms
+            ? gen.stationKmsByIndex[i]
+            : (isLoopStart ? 0 : (isLoopBack ? gen.totalKm : gen.stationKms[st.name]));
           if (k == null) continue;
           if (k < prev || (k === prev && (i === 0 || line.stations[i-1].name !== st.name))) {
             useGenStationKms = false;
@@ -3047,14 +3104,16 @@ function mergeShapes(shapes, regionKey) {
       const handLast = line.stations[line.stations.length - 1].km;
       const handSpan = handLast - handFirst;
 
-      if (gen.stationKms && useGenStationKms) {
+      if ((gen.stationKms || hasIndexedStationKms) && useGenStationKms) {
         const isLoopLine = line.stations.length >= 3 &&
           line.stations[0].name === line.stations[line.stations.length - 1].name;
         for (let i = 0; i < line.stations.length; i++) {
           const st = line.stations[i];
           const isLoopStart = isLoopLine && i === 0 && gen.totalKm != null;
           const isLoopBack = isLoopLine && i === line.stations.length - 1 && gen.totalKm != null;
-          const k = isLoopStart ? 0 : (isLoopBack ? gen.totalKm : gen.stationKms[st.name]);
+          const k = hasIndexedStationKms
+            ? gen.stationKmsByIndex[i]
+            : (isLoopStart ? 0 : (isLoopBack ? gen.totalKm : gen.stationKms[st.name]));
           if (k != null) st.km = k;
         }
       } else if (gen.totalKm != null && line.stations.length >= 2) {
