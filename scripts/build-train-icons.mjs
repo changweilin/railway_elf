@@ -45,6 +45,7 @@ const VISUALS = {
   "korea|Ui-LRT|우이신설선": { shape: "metro", body: "#f8fafc", accent: "#BACC50", band: "#BACC50" },
   "korea|Sillim-LRT|신림선": { shape: "metro", body: "#f8fafc", accent: "#6789CA", band: "#6789CA" },
   "korea|Uijeongbu-LRT|U Line": { shape: "metro", body: "#f8fafc", accent: "#F0831E", band: "#F0831E" },
+  "korea|Yongin-EverLine|EverLine": { shape: "metro", body: "#f8fafc", accent: "#44A436", band: "#44A436" },
   "korea|Shinbundang|신분당선": { shape: "metro", body: "#f8fafc", accent: "#B81B30", band: "#B81B30" },
   "korea|Suin-Bundang|수인분당선": { shape: "commuter", body: "#f8fafc", accent: "#ECA300", accent2: "#7a5a00" },
   "korea|Gyeongui-Jungang|경의중앙선": { shape: "commuter", body: "#f8fafc", accent: "#6AC2B3", accent2: "#0f766e" },

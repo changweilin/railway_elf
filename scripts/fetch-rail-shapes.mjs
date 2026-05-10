@@ -303,6 +303,13 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "Yongin-EverLine": {
+    name: "Yongin EverLine (Giheung→Jeondae Everland)",
+    relationIds: [6064093],
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "Shinbundang": {
     name: "Shinbundang Line (Sinsa to Gwanggyo)",
     relationIds: [6060963],

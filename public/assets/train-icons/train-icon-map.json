@@ -186,6 +186,10 @@
       "icon": "assets/train-icons/korea-uijeongbu-lrt-u-line.png",
       "kind": "lrt"
     },
+    "korea|Yongin-EverLine|EverLine": {
+      "icon": "assets/train-icons/korea-yongin-everline-everline.png",
+      "kind": "lrt"
+    },
     "korea|Shinbundang|신분당선": {
       "icon": "assets/train-icons/korea-shinbundang-shinbundang.png",
       "kind": "metro"
