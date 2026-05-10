@@ -280,6 +280,14 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     snapStationCoordsOverKm: 1.0,
   },
+  "Shinbundang": {
+    name: "Shinbundang Line (Sinsa to Gwanggyo)",
+    relationIds: [6060963],
+    corridor: { corridorKm: 1.2, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "AREX": {
     name: "Airport Railroad Express All-stop (Seoul Station→Incheon Int'l Airport Terminal 2)",
     relationIds: [7919000],
