@@ -1436,6 +1436,29 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "KTX-Gangneung",
+        name: "KTX 강릉선",
+        nameEn: "KTX Gangneung Line",
+        color: "#0f766e",
+        category: "HSR",
+        directions: { up: "서울 방면", down: "강릉 방면" },
+        // KORAIL operates KTX-Eum on the Seoul/Cheongnyangni - Gangneung axis.
+        // This seed models the representative Seoul - Gangneung stopping pattern.
+        stations: [
+          { name: "서울",       lat: 37.554555, lng: 126.970779, km: 0,     dwellSec: 90 },
+          { name: "청량리",     lat: 37.580596, lng: 127.048257, km: 15.0,  dwellSec: 60 },
+          { name: "상봉",       lat: 37.597031, lng: 127.085656, km: 21.0 },
+          { name: "양평",       lat: 37.492847, lng: 127.491897, km: 58.0 },
+          { name: "서원주",     lat: 37.348530, lng: 127.839395, km: 94.0 },
+          { name: "만종",       lat: 37.353949, lng: 127.893112, km: 103.0 },
+          { name: "횡성",       lat: 37.482807, lng: 128.010484, km: 123.0 },
+          { name: "둔내",       lat: 37.510021, lng: 128.221271, km: 147.0 },
+          { name: "평창",       lat: 37.561957, lng: 128.430034, km: 174.0 },
+          { name: "진부(오대산)", lat: 37.642569, lng: 128.574822, km: 191.0 },
+          { name: "강릉",       lat: 37.764520, lng: 128.899398, km: 238.0, dwellSec: 90 },
+        ],
+      },
+      {
         id: "SRT-Gyeongbu",
         name: "SRT 경부선",
         nameEn: "SRT Gyeongbu Line",
@@ -1629,6 +1652,7 @@ export const RAIL_DATA = {
       { line: "KTX-Jeolla",     type: "KTX-산천", badge: "산천", badgeColor: "#dc2626", speed: 230, interval: 50, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "KTX-Gyeongjeon", type: "KTX",    badge: "KTX",    badgeColor: "#0284c7", speed: 250, interval: 50, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "KTX-Gyeongjeon", type: "KTX-산천", badge: "산천", badgeColor: "#dc2626", speed: 230, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
+      { line: "KTX-Gangneung",  type: "KTX-이음", badge: "이음", badgeColor: "#0f766e", speed: 230, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Gyeongbu",   type: "SRT",    badge: "SRT",    badgeColor: "#6f2da8", speed: 250, interval: 20, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Honam",      type: "SRT",    badge: "SRT",    badgeColor: "#8b5cf6", speed: 250, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Jeolla",     type: "SRT",    badge: "SRT",    badgeColor: "#a855f7", speed: 240, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },

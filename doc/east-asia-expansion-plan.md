@@ -9,9 +9,9 @@
 ## 整體進度
 
 - **Phase A（手寫站表 + 車種）：完成 34/34 條（100%）** — `npm run check:timing` & `npm run test:smoke` & `npm run build` 全通過
-- **Phase B（OSM relation 對接）：34/34 條完成（100%）** — 批次 1–11 已補 OSM relation 並回灌真實軌道形狀；本輪沒有保留 0 km fallback。2026-05-10 加入南韓 backlog seeds 後，68 條線 runtime maxOffset 全部壓到 1.0 km 內。
+- **Phase B（OSM relation 對接）：34/34 條完成（100%）** — 批次 1–11 已補 OSM relation 並回灌真實軌道形狀；本輪沒有保留 0 km fallback。2026-05-10 加入南韓 backlog seeds 後，69 條線 runtime maxOffset 全部壓到 1.0 km 內。
 - **完整覆蓋 backlog（日本 / 南韓）：已建立規劃事項** — 覆蓋尚未加入的鐵道類型與候選線群；此區塊是後續大型擴張，不列入已完成的 34 條 Phase A/B 統計。
-- **Backlog seed（南韓 HSR / Airport / LRT-AGT / Monorail）：SRT Gyeongbu / Honam / Jeolla / Gyeongjeon / Donghae、KTX Honam / Jeolla / Gyeongjeon、AREX、Gimpo Goldline 與 Daegu Metro Line 3 已完成代表線** — `SRT-Gyeongbu` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` corridor、line-aware SRT badge train icon；`SRT-Honam` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` + `6095809` + `6094787` corridor，並沿用同國同型號 SRT train icon；`SRT-Jeolla` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` + `6095809` + `6096342` corridor，並沿用同國同型號 SRT train icon；`SRT-Gyeongjeon` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` + `8842494` + `8839114` corridor，並沿用同國同型號 SRT train icon；`SRT-Donghae` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` + `8840839` + `8835676` corridor，並沿用同國同型號 SRT train icon；`KTX-Honam` 已補手寫站表、KTX / KTX-산천 train templates、OSM relation `11214334` + `6095809` + `6094787` corridor，並先檢查同國同型號後沿用既有 KTX / KTX-산천 PNG；`KTX-Jeolla` 已補手寫站表、KTX / KTX-산천 train templates、OSM relation `11214334` + `6095809` + `6096342` corridor，並先檢查同國同型號後沿用既有 KTX / KTX-산천 PNG；`KTX-Gyeongjeon` 已補手寫站表、KTX / KTX-산천 train templates、OSM relation `11214334` + `8839114` corridor，並先檢查同國同型號後沿用既有 KTX / KTX-산천 PNG；`AREX` 已補手寫站表、all-stop train template、OSM relation `7919000`、line-aware train icon；`Gimpo-Goldline` 已補 light metro 站表、all-stop train template、OSM relation `10092720`、line-aware train icon；`Daegu-Metro-3` 已補單軌站表、all-stop train template、OSM relation `7685727`、line-aware monorail train icon；可作為後續高速鐵道、機場線、低運量自動化線與單軌線的 SOP 範例。
+- **Backlog seed（南韓 HSR / Airport / LRT-AGT / Monorail）：SRT Gyeongbu / Honam / Jeolla / Gyeongjeon / Donghae、KTX Honam / Jeolla / Gyeongjeon / Gangneung、AREX、Gimpo Goldline 與 Daegu Metro Line 3 已完成代表線** — `SRT-Gyeongbu` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` corridor、line-aware SRT badge train icon；`SRT-Honam` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` + `6095809` + `6094787` corridor，並沿用同國同型號 SRT train icon；`SRT-Jeolla` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` + `6095809` + `6096342` corridor，並沿用同國同型號 SRT train icon；`SRT-Gyeongjeon` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` + `8842494` + `8839114` corridor，並沿用同國同型號 SRT train icon；`SRT-Donghae` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` + `8840839` + `8835676` corridor，並沿用同國同型號 SRT train icon；`KTX-Honam` 已補手寫站表、KTX / KTX-산천 train templates、OSM relation `11214334` + `6095809` + `6094787` corridor，並先檢查同國同型號後沿用既有 KTX / KTX-산천 PNG；`KTX-Jeolla` 已補手寫站表、KTX / KTX-산천 train templates、OSM relation `11214334` + `6095809` + `6096342` corridor，並先檢查同國同型號後沿用既有 KTX / KTX-산천 PNG；`KTX-Gyeongjeon` 已補手寫站表、KTX / KTX-산천 train templates、OSM relation `11214334` + `8839114` corridor，並先檢查同國同型號後沿用既有 KTX / KTX-산천 PNG；`KTX-Gangneung` 已補手寫站表、KTX-이음 train template、OSM relation `8842494` + `8817574` + `8821065` + `8825878` corridor，並先檢查同國同型號後新增 KTX-이음 PNG；`AREX` 已補手寫站表、all-stop train template、OSM relation `7919000`、line-aware train icon；`Gimpo-Goldline` 已補 light metro 站表、all-stop train template、OSM relation `10092720`、line-aware train icon；`Daegu-Metro-3` 已補單軌站表、all-stop train template、OSM relation `7685727`、line-aware monorail train icon；可作為後續高速鐵道、機場線、低運量自動化線與單軌線的 SOP 範例。
 
 ## 類型分類
 
@@ -116,6 +116,7 @@
 | ☑ A ☑ B | HSR | OSM | `KTX-Honam` | KTX 호남선 | 용산 ⇄ 목포 | 423.9 km / 10 站 |
 | ☑ A ☑ B | HSR | OSM | `KTX-Jeolla` | KTX 전라선 | 용산 ⇄ 여수EXPO | 388.2 km / 13 站 |
 | ☑ A ☑ B | HSR | OSM | `KTX-Gyeongjeon` | KTX 경전선 | 서울 ⇄ 진주 | 426.3 km / 14 站 |
+| ☑ A ☑ B | HSR | OSM | `KTX-Gangneung` | KTX 강릉선 | 서울 ⇄ 강릉 | 215.1 km / 11 站 |
 | ☑ A ☑ B | Metro | OSM | `Busan-Metro-1` | 부산 도시철도 1호선 | 다대포해수욕장 ⇄ 노포 | 40.5 km / 40 站 |
 
 ---
@@ -244,11 +245,11 @@ Backlog 執行原則：
 
 ## 分類統計
 
-已完成的批次 1–11 合計 **34 條線**，分布如下；不含既有日本 3 條線（東海道新幹線、山手線、中央線）與上方新增的日本 / 南韓完整覆蓋 backlog。另有 backlog seed：南韓 `SRT-Gyeongbu` / `SRT-Honam` / `SRT-Jeolla` / `SRT-Gyeongjeon` / `SRT-Donghae` / `KTX-Honam` / `KTX-Jeolla` / `KTX-Gyeongjeon` 8 條 HSR 線、`AREX` 1 條 Airport 線、`Gimpo-Goldline` 1 條 LRT/AGT 線、`Daegu-Metro-3` 1 條 Monorail 線已完成 A/B。
+已完成的批次 1–11 合計 **34 條線**，分布如下；不含既有日本 3 條線（東海道新幹線、山手線、中央線）與上方新增的日本 / 南韓完整覆蓋 backlog。另有 backlog seed：南韓 `SRT-Gyeongbu` / `SRT-Honam` / `SRT-Jeolla` / `SRT-Gyeongjeon` / `SRT-Donghae` / `KTX-Honam` / `KTX-Jeolla` / `KTX-Gyeongjeon` / `KTX-Gangneung` 9 條 HSR 線、`AREX` 1 條 Airport 線、`Gimpo-Goldline` 1 條 LRT/AGT 線、`Daegu-Metro-3` 1 條 Monorail 線已完成 A/B。
 
 | 類型 | 條數 | 線名摘要 |
 |---|---|---|
-| HSR | 13 | 山陽新幹線、KTX 京釜、KTX 湖南、KTX 全羅、KTX 慶全、SRT 京釜、SRT 湖南、SRT 全羅、SRT 慶全、SRT 東海、京滬、京廣、滬昆 |
+| HSR | 14 | 山陽新幹線、KTX 京釜、KTX 湖南、KTX 全羅、KTX 慶全、KTX 江陵、SRT 京釜、SRT 湖南、SRT 全羅、SRT 慶全、SRT 東海、京滬、京廣、滬昆 |
 | Commuter | 5 | JR 京浜東北、JR 総武各停、東急東横、阪急神戸、MTR 東鐵 |
 | Metro | 18 | Tokyo Metro 2、Osaka Metro 1、Seoul 1、Busan 1、MTR 2、北京 / 上海地鐵 3、SG MRT 2、KL 2、BKK 2、HCMC/Hanoi 2 |
 | Loop | 4 | 大阪環状、Seoul 2 號、Beijing 2 號、SG Circle |

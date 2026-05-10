@@ -271,6 +271,13 @@ const OSM_LINE_MAP = {
     corridor: { corridorKm: 3.0, sampleKm: 0.25 },
     snapStationCoordsOverKm: 1.0,
   },
+  "KTX-Gangneung": {
+    name: "KTX Gangneung Line (Seoul-Gangneung)",
+    relationIds: [8842494, 8817574, 8821065, 8825878],
+    corridor: { corridorKm: 3.0, sampleKm: 0.25 },
+    forceEndpointAnchors: true,
+    snapStationCoordsOverKm: 1.0,
+  },
   "SRT-Gyeongbu": {
     name: "SRT Gyeongbu Line (Suseo→Busan)",
     relationIds: [6096884, 6094351],
@@ -1427,6 +1434,18 @@ function buildOutput(rawShapes, stationsByLineId) {
     // Prepend/append their coordinates so each gets its own anchor.
     // For in-scope lines the full TDX list is used so anchoring covers all stations.
     const STUCK_DIST_KM = 0.5;
+    if (cfg.forceEndpointAnchors === true && projectionStations.length >= 2) {
+      const firstStation = projectionStations[0];
+      const lastStation = projectionStations[projectionStations.length - 1];
+      if (haversine(firstStation, simplified[0]) > STUCK_DIST_KM) {
+        simplified = [{ lat: firstStation.lat, lng: firstStation.lng }, ...simplified];
+        shapeKm = cumulativeKm(simplified);
+      }
+      if (haversine(lastStation, simplified[simplified.length - 1]) > STUCK_DIST_KM) {
+        simplified = [...simplified, { lat: lastStation.lat, lng: lastStation.lng }];
+        shapeKm = cumulativeKm(simplified);
+      }
+    }
     {
       const stuckPrefix = [];
       for (let i = 0; i < projectionStations.length; i++) {
