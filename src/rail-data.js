@@ -1859,6 +1859,31 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "Gyeonggang",
+        name: "수도권 전철 경강선",
+        nameEn: "Seoul Metropolitan Subway Gyeonggang Line",
+        color: "#0B318F",
+        category: "捷運",
+        directions: { up: "상행 (판교 방면)", down: "하행 (여주 방면)" },
+        // Main all-stop corridor: Pangyo to Yeoju. Bubal short-turns share the
+        // same template; future extensions west of Pangyo and east of Yeoju
+        // need branch/extension support before being folded into this line.
+        stations: [
+          { name: "판교", lat: 37.3947577, lng: 127.1115664, km: 0, dwellSec: 30 },
+          { name: "성남", lat: 37.3947450, lng: 127.1206192, km: 0.8, dwellSec: 30 },
+          { name: "이매", lat: 37.3946908, lng: 127.1276046, km: 1.417, dwellSec: 30 },
+          { name: "삼동", lat: 37.4086667, lng: 127.2033703, km: 8.288 },
+          { name: "경기광주", lat: 37.3989152, lng: 127.2532951, km: 12.829 },
+          { name: "초월", lat: 37.3731656, lng: 127.3004700, km: 17.885 },
+          { name: "곤지암", lat: 37.3505190, lng: 127.3462861, km: 22.654 },
+          { name: "신둔도예촌", lat: 37.3156754, lng: 127.4052750, km: 29.151 },
+          { name: "이천", lat: 37.2642550, lng: 127.4421828, km: 35.735 },
+          { name: "부발", lat: 37.2604283, lng: 127.4903138, km: 40.016, dwellSec: 30 },
+          { name: "세종대왕릉", lat: 37.2936415, lng: 127.5706498, km: 48.026 },
+          { name: "여주", lat: 37.2828230, lng: 127.6290136, km: 53.328, dwellSec: 30 },
+        ],
+      },
+      {
         id: "Gimpo-Goldline",
         name: "김포골드라인",
         nameEn: "Gimpo Goldline",
@@ -2334,6 +2359,7 @@ export const RAIL_DATA = {
       { line: "Suin-Bundang",   type: "수인분당선", badge: "SB",  badgeColor: "#ECA300", speed: 80, interval: 6,  accel: 0.90, decel: 1.00, aLat: 0.90, dwellSec: 25 },
       { line: "Gyeongui-Jungang", type: "경의중앙선", badge: "GJ", badgeColor: "#6AC2B3", speed: 85, interval: 10, accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 25 },
       { line: "Gyeongchun",     type: "경춘선", badge: "GC",     badgeColor: "#007A62", speed: 85, interval: 15, accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 25 },
+      { line: "Gyeonggang",     type: "경강선", badge: "GG",     badgeColor: "#0B318F", speed: 85, interval: 15, accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 25 },
       { line: "AREX",           type: "AREX",   badge: "A",      badgeColor: "#0079ac", speed: 90, interval: 8,  accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 30 },
       { line: "Gimpo-Goldline", type: "골드라인", badge: "G",    badgeColor: "#ad8605", speed: 80, interval: 3,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Daegu-Metro-3",  type: "3호선",  badge: "3",      badgeColor: "#FDA208", speed: 70, interval: 5,  accel: 1.00, decel: 1.10, aLat: 0.90, dwellSec: 25 },
