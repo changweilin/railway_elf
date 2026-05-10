@@ -53,6 +53,7 @@ const VISUALS = {
   "korea|AREX|AREX": { shape: "express", body: "#f8fafc", accent: "#0079ac", accent2: "#f97316" },
   "korea|Gimpo-Goldline|골드라인": { shape: "metro", body: "#f8fafc", accent: "#ad8605", band: "#ad8605" },
   "korea|Daegu-Metro-1|1호선": { shape: "metro", body: "#f8fafc", accent: "#EF5E37", band: "#EF5E37" },
+  "korea|Daegu-Metro-2|2호선": { shape: "metro", body: "#f8fafc", accent: "#33AA46", band: "#33AA46" },
   "korea|Daegu-Metro-3|3호선": { shape: "monorail", body: "#f8fafc", accent: "#FDA208", accent2: "#111827" },
   "korea|KTX-Gyeongbu|KTX": { shape: "shinkansen", body: "#f8fafc", accent: "#0c4ca3", accent2: "#dc2626" },
   "korea|KTX-Gyeongbu|KTX-산천": { shape: "shinkansen", body: "#f8fafc", accent: "#dc2626", accent2: "#0c4ca3" },
