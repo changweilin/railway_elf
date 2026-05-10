@@ -304,6 +304,14 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "Gyeongchun": {
+    name: "Gyeongchun Line all-stop (Cheongnyangni to Chuncheon)",
+    relationIds: [8656357],
+    corridor: { corridorKm: 1.8, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "AREX": {
     name: "Airport Railroad Express All-stop (Seoul Station→Incheon Int'l Airport Terminal 2)",
     relationIds: [7919000],

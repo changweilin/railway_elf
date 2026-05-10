@@ -186,6 +186,10 @@
       "icon": "assets/train-icons/korea-gyeongui-jungang-gyeongui-jungang.png",
       "kind": "commuter"
     },
+    "korea|Gyeongchun|경춘선": {
+      "icon": "assets/train-icons/korea-gyeongchun-gyeongchun.png",
+      "kind": "commuter"
+    },
     "korea|AREX|AREX": {
       "icon": "assets/train-icons/korea-arex-arex.png",
       "kind": "express"
