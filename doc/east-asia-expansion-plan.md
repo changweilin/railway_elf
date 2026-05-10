@@ -126,7 +126,7 @@
 | ☑ A ☑ B | Metro | OSM | `Suin-Bundang` | 수도권 전철 수인·분당선 | 청량리 ⇄ 인천 | 106.9 km / 63 站 |
 | ☑ A ☑ B | Metro | OSM | `Gyeongui-Jungang` | 수도권 전철 경의·중앙선 | 문산 ⇄ 용문（主線） | 118.0 km / 52 站 |
 | ☑ A ☑ B | Metro | OSM | `Gyeongchun` | 수도권 전철 경춘선 | 청량리 ⇄ 춘천（主線） | 85.1 km / 24 站 |
-| ☑ A ☑ B | Metro | OSM | `Gyeonggang` | 수도권 전철 경강선 | 판교 ⇄ 여주（主線） | 53.8 km / 12 站 |
+| ☑ A ☑ B | Metro | OSM | `Gyeonggang` | 수도권 전철 경강선 | 판교 ⇄ 여주（主線） | 56.0 km / 12 站 |
 | ☑ A ☑ B | HSR | OSM | `KTX-Gyeongbu` | KTX 경부선 | 서울 ⇄ 부산 | 418 km / 10 站 |
 | ☑ A ☑ B | HSR | OSM | `KTX-Honam` | KTX 호남선 | 용산 ⇄ 목포 | 423.9 km / 10 站 |
 | ☑ A ☑ B | HSR | OSM | `KTX-Jeolla` | KTX 전라선 | 용산 ⇄ 여수EXPO | 388.2 km / 13 站 |
