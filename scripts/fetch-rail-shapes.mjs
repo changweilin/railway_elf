@@ -334,6 +334,13 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "Incheon-Metro-2": {
+    name: "Incheon Subway Line 2 (Geomdan Oryu→Unyeon)",
+    relationIds: [7527496],
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "AREX": {
     name: "Airport Railroad Express All-stop (Seoul Station→Incheon Int'l Airport Terminal 2)",
     relationIds: [7919000],

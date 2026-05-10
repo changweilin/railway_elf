@@ -202,6 +202,10 @@
       "icon": "assets/train-icons/korea-incheon-metro-1-line-1.png",
       "kind": "metro"
     },
+    "korea|Incheon-Metro-2|2호선": {
+      "icon": "assets/train-icons/korea-incheon-metro-2-line-2.png",
+      "kind": "lrt"
+    },
     "korea|AREX|AREX": {
       "icon": "assets/train-icons/korea-arex-arex.png",
       "kind": "express"

@@ -58,6 +58,7 @@ export const TRAIN_ICON_REGISTRY = {
     'korea|Gyeonggang|경강선': { icon: 'assets/train-icons/korea-gyeonggang-gyeonggang.png', kind: 'commuter' },
     'korea|Seohae|서해선': { icon: 'assets/train-icons/korea-seohae-seohae.png', kind: 'commuter' },
     'korea|Incheon-Metro-1|1호선': { icon: 'assets/train-icons/korea-incheon-metro-1-line-1.png', kind: 'metro' },
+    'korea|Incheon-Metro-2|2호선': { icon: 'assets/train-icons/korea-incheon-metro-2-line-2.png', kind: 'lrt' },
     'korea|AREX|AREX': { icon: 'assets/train-icons/korea-arex-arex.png', kind: 'express' },
     'korea|Gimpo-Goldline|골드라인': { icon: 'assets/train-icons/korea-gimpo-goldline-goldline.png', kind: 'lrt' },
     'korea|Daegu-Metro-3|3호선': { icon: 'assets/train-icons/korea-daegu-metro-3-line-3.png', kind: 'monorail' },
