@@ -277,6 +277,12 @@ const OSM_LINE_MAP = {
     corridor: { corridorKm: 2.0, sampleKm: 0.25 },
     snapStationCoordsOverKm: 1.0,
   },
+  "SRT-Donghae": {
+    name: "SRT Donghae Line (Suseo-Pohang)",
+    relationIds: [6096884, 6094351, 8840839, 8835676],
+    corridor: { corridorKm: 2.0, sampleKm: 0.25 },
+    snapStationCoordsOverKm: 1.0,
+  },
   "Busan-Metro-1": {
     name: "Busan Metro Line 1 (Dadaepo Beach→Nopo)",
     relationIds: [8255697],
