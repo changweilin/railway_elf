@@ -291,6 +291,13 @@ const OSM_LINE_MAP = {
     forceEndpointAnchors: true,
     snapStationCoordsOverKm: 1.0,
   },
+  "KTX-Jungbu-Naeryuk": {
+    name: "KTX Jungbu Naeryuk Line (Pangyo-Mungyeong)",
+    relationIds: [8824194, 12351758],
+    corridor: { corridorKm: 3.0, sampleKm: 0.25 },
+    forceEndpointAnchors: true,
+    snapStationCoordsOverKm: 1.0,
+  },
   "SRT-Gyeongbu": {
     name: "SRT Gyeongbu Line (Suseo→Busan)",
     relationIds: [6096884, 6094351],

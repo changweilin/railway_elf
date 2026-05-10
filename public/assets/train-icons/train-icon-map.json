@@ -206,6 +206,10 @@
       "icon": "assets/train-icons/korea-ktx-gangneung-ktx-eum.png",
       "kind": "shinkansen"
     },
+    "korea|KTX-Jungbu-Naeryuk|KTX-이음": {
+      "icon": "assets/train-icons/korea-ktx-gangneung-ktx-eum.png",
+      "kind": "shinkansen"
+    },
     "korea|SRT-Gyeongbu|SRT": {
       "icon": "assets/train-icons/korea-srt-gyeongbu-srt.png",
       "kind": "shinkansen"
