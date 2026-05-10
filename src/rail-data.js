@@ -1412,6 +1412,33 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "SRT-Jeolla",
+        name: "SRT 전라선",
+        nameEn: "SRT Jeolla Line",
+        color: "#a855f7",
+        category: "HSR",
+        directions: { up: "수서 방면", down: "여수EXPO 방면" },
+        // SR official route: 수서 → 동탄 → 평택지제 → 천안아산 → 오송 → 공주 →
+        // 익산 → 전주 → 남원 → 곡성 → 구례구 → 순천 → 여천 → 여수EXPO.
+        // Iksan-Yeosu EXPO follows the Jeolla Line route distance of 180.4 km.
+        stations: [
+          { name: "수서",       lat: 37.487321, lng: 127.101690, km: 0,     dwellSec: 90 },
+          { name: "동탄",       lat: 37.200359, lng: 127.095576, km: 32.7 },
+          { name: "평택지제",   lat: 37.018753, lng: 127.069867, km: 53.5 },
+          { name: "천안아산",   lat: 36.794380, lng: 127.104499, km: 80.6 },
+          { name: "오송",       lat: 36.620230, lng: 127.327363, km: 109.0 },
+          { name: "공주",       lat: 36.332237, lng: 127.096637, km: 148.5 },
+          { name: "익산",       lat: 35.941256, lng: 126.945913, km: 194.6, dwellSec: 60 },
+          { name: "전주",       lat: 35.850054, lng: 127.162365, km: 220.0 },
+          { name: "남원",       lat: 35.411251, lng: 127.361333, km: 272.8 },
+          { name: "곡성",       lat: 35.283456, lng: 127.304458, km: 289.4 },
+          { name: "구례구",     lat: 35.163478, lng: 127.451967, km: 309.1 },
+          { name: "순천",       lat: 34.945811, lng: 127.504060, km: 335.4, dwellSec: 60 },
+          { name: "여천",       lat: 34.779462, lng: 127.664450, km: 360.4 },
+          { name: "여수EXPO",   lat: 34.755514, lng: 127.749239, km: 369.3, dwellSec: 90 },
+        ],
+      },
+      {
         id: "Busan-Metro-1",
         name: "부산 도시철도 1호선",
         nameEn: "Busan Metro Line 1",
@@ -1474,6 +1501,7 @@ export const RAIL_DATA = {
       { line: "KTX-Gyeongbu",   type: "KTX-산천", badge: "산천", badgeColor: "#dc2626", speed: 230, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Gyeongbu",   type: "SRT",    badge: "SRT",    badgeColor: "#6f2da8", speed: 250, interval: 20, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Honam",      type: "SRT",    badge: "SRT",    badgeColor: "#8b5cf6", speed: 250, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
+      { line: "SRT-Jeolla",     type: "SRT",    badge: "SRT",    badgeColor: "#a855f7", speed: 240, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "Busan-Metro-1",  type: "1호선",  badge: "1",      badgeColor: "#f06a00", speed: 35, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
     ],
   },

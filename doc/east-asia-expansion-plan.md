@@ -9,9 +9,9 @@
 ## 整體進度
 
 - **Phase A（手寫站表 + 車種）：完成 34/34 條（100%）** — `npm run check:timing` & `npm run test:smoke` & `npm run build` 全通過
-- **Phase B（OSM relation 對接）：34/34 條完成（100%）** — 批次 1–11 已補 OSM relation 並回灌真實軌道形狀；本輪沒有保留 0 km fallback。2026-05-10 加入南韓 backlog seeds 後，62 條線 runtime maxOffset 全部壓到 1.0 km 內。
+- **Phase B（OSM relation 對接）：34/34 條完成（100%）** — 批次 1–11 已補 OSM relation 並回灌真實軌道形狀；本輪沒有保留 0 km fallback。2026-05-10 加入南韓 backlog seeds 後，63 條線 runtime maxOffset 全部壓到 1.0 km 內。
 - **完整覆蓋 backlog（日本 / 南韓）：已建立規劃事項** — 覆蓋尚未加入的鐵道類型與候選線群；此區塊是後續大型擴張，不列入已完成的 34 條 Phase A/B 統計。
-- **Backlog seed（南韓 HSR / Airport / LRT-AGT / Monorail）：SRT Gyeongbu / Honam、AREX、Gimpo Goldline 與 Daegu Metro Line 3 已完成代表線** — `SRT-Gyeongbu` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` corridor、line-aware SRT badge train icon；`SRT-Honam` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` + `6095809` + `6094787` corridor，並沿用同國同型號 SRT train icon；`AREX` 已補手寫站表、all-stop train template、OSM relation `7919000`、line-aware train icon；`Gimpo-Goldline` 已補 light metro 站表、all-stop train template、OSM relation `10092720`、line-aware train icon；`Daegu-Metro-3` 已補單軌站表、all-stop train template、OSM relation `7685727`、line-aware monorail train icon；可作為後續高速鐵道、機場線、低運量自動化線與單軌線的 SOP 範例。
+- **Backlog seed（南韓 HSR / Airport / LRT-AGT / Monorail）：SRT Gyeongbu / Honam / Jeolla、AREX、Gimpo Goldline 與 Daegu Metro Line 3 已完成代表線** — `SRT-Gyeongbu` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` corridor、line-aware SRT badge train icon；`SRT-Honam` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` + `6095809` + `6094787` corridor，並沿用同國同型號 SRT train icon；`SRT-Jeolla` 已補手寫站表、SRT train template、OSM relation `6096884` + `6094351` + `6095809` + `6096342` corridor，並沿用同國同型號 SRT train icon；`AREX` 已補手寫站表、all-stop train template、OSM relation `7919000`、line-aware train icon；`Gimpo-Goldline` 已補 light metro 站表、all-stop train template、OSM relation `10092720`、line-aware train icon；`Daegu-Metro-3` 已補單軌站表、all-stop train template、OSM relation `7685727`、line-aware monorail train icon；可作為後續高速鐵道、機場線、低運量自動化線與單軌線的 SOP 範例。
 
 ## 類型分類
 
@@ -146,11 +146,11 @@
 
 ### 南韓：未加入類型與候選線群
 
-目前已加入南韓代表線：수도권 전철 1호선、서울 지하철 2호선、KTX 경부선、SRT 경부선、SRT 호남선、부산 도시철도 1호선。下表列出尚未完整納入的類型：
+目前已加入南韓代表線：수도권 전철 1호선、서울 지하철 2호선、KTX 경부선、SRT 경부선、SRT 호남선、SRT 전라선、부산 도시철도 1호선。下表列出尚未完整納入的類型：
 
 | 狀態 | 類型 | 規劃範圍 | 候選線群 / 例子 | 資料源 | 備註 |
 |---|---|---|---|---|---|
-| ◐ seed | HSR | KTX / SRT 其餘高速服務與走廊 | SRT 경부선（☑ A ☑ B）、SRT 호남선（☑ A ☑ B）；SRT 전라 / 경전 / 동해與 KTX 호남、전라、경전、강릉、중앙、중부내륙等 | OSM + KORAIL / SR 站表 | SRT Gyeongbu / Honam 已完成 SRT seed，Honam 沿用同國同型號 SRT badge；KTX 系列可續用 KTX icon |
+| ◐ seed | HSR | KTX / SRT 其餘高速服務與走廊 | SRT 경부선（☑ A ☑ B）、SRT 호남선（☑ A ☑ B）、SRT 전라선（☑ A ☑ B）；SRT 경전 / 동해與 KTX 호남、전라、경전、강릉、중앙、중부내륙等 | OSM + KORAIL / SR 站表 | SRT Gyeongbu / Honam / Jeolla 已完成 SRT seed，新增 SRT 線先檢查同國同型號圖示再沿用；KTX 系列可續用 KTX icon |
 | □ backlog | Intercity | 一般列車與優等在來線 | ITX-새마을、ITX-마음、누리로、무궁화호、ITX-청춘；京釜、湖南、中央、太白、嶺東、京春等 | OSM + KORAIL | 先補固定停站、班距穩定的主幹 |
 | □ backlog | Commuter / Metro | 首都圈廣域電鐵與地鐵未覆蓋線 | Seoul Metro 3–9、AREX、Shinbundang、Suin-Bundang、Gyeongui-Jungang、Gyeongchun、Gyeonggang、Seohae、Incheon 1/2 等 | OSM + operator data | 多線共線與直通複雜，需逐線確認 `directions` 與停站型 |
 | □ backlog | Metro | 非首都圈都市地鐵 | Busan 2–4、Daegu 1–2、Daejeon 1、Gwangju 1 | OSM | 與既有 Busan 1 組成第二批城市捷運 |
@@ -166,7 +166,7 @@ Backlog 執行原則：
 
 1. 每個新類型先做一條「代表線」驗證 icon、速度 profile、站距投影與 snap 行為，再擴成整個城市或營運者。
 2. 日本優先順序建議：剩餘新幹線 → 機場線 → 東京 / 大阪地下鐵補齊 → 大手民鐵 → Tram / Monorail / AGT → Regional / Heritage。
-3. 南韓優先順序建議：SRT / KTX 其餘走廊 → 首都圈 3–9 與廣域線 → Busan / Daegu / Daejeon / Gwangju → LRT / Monorail → Regional / Heritage；SRT Gyeongbu / Honam 已完成 HSR backlog seeds，AREX all-stop 已完成首條 Airport seed，Gimpo Goldline 已完成首條 LRT/AGT seed，Daegu Metro Line 3 已完成首條 Monorail seed。
+3. 南韓優先順序建議：SRT / KTX 其餘走廊 → 首都圈 3–9 與廣域線 → Busan / Daegu / Daejeon / Gwangju → LRT / Monorail → Regional / Heritage；SRT Gyeongbu / Honam / Jeolla 已完成 HSR backlog seeds，AREX all-stop 已完成首條 Airport seed，Gimpo Goldline 已完成首條 LRT/AGT seed，Daegu Metro Line 3 已完成首條 Monorail seed。
 4. Freight、鋼索、季節性觀光線若沒有穩定 passenger pass prediction 模型，先做地圖圖層規劃，不阻塞客運功能。
 
 ## 批次 5 — 香港：MTR（4 條）
@@ -241,11 +241,11 @@ Backlog 執行原則：
 
 ## 分類統計
 
-已完成的批次 1–11 合計 **34 條線**，分布如下；不含既有日本 3 條線（東海道新幹線、山手線、中央線）與上方新增的日本 / 南韓完整覆蓋 backlog。另有 backlog seed：南韓 `SRT-Gyeongbu` / `SRT-Honam` 2 條 HSR 線、`AREX` 1 條 Airport 線、`Gimpo-Goldline` 1 條 LRT/AGT 線、`Daegu-Metro-3` 1 條 Monorail 線已完成 A/B。
+已完成的批次 1–11 合計 **34 條線**，分布如下；不含既有日本 3 條線（東海道新幹線、山手線、中央線）與上方新增的日本 / 南韓完整覆蓋 backlog。另有 backlog seed：南韓 `SRT-Gyeongbu` / `SRT-Honam` / `SRT-Jeolla` 3 條 HSR 線、`AREX` 1 條 Airport 線、`Gimpo-Goldline` 1 條 LRT/AGT 線、`Daegu-Metro-3` 1 條 Monorail 線已完成 A/B。
 
 | 類型 | 條數 | 線名摘要 |
 |---|---|---|
-| HSR | 7 | 山陽新幹線、KTX 京釜、SRT 京釜、SRT 湖南、京滬、京廣、滬昆 |
+| HSR | 8 | 山陽新幹線、KTX 京釜、SRT 京釜、SRT 湖南、SRT 全羅、京滬、京廣、滬昆 |
 | Commuter | 5 | JR 京浜東北、JR 総武各停、東急東横、阪急神戸、MTR 東鐵 |
 | Metro | 18 | Tokyo Metro 2、Osaka Metro 1、Seoul 1、Busan 1、MTR 2、北京 / 上海地鐵 3、SG MRT 2、KL 2、BKK 2、HCMC/Hanoi 2 |
 | Loop | 4 | 大阪環状、Seoul 2 號、Beijing 2 號、SG Circle |

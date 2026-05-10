@@ -12,7 +12,7 @@ import {
 const ROOT = resolve(fileURLToPath(import.meta.url), "../..");
 const PUBLIC = resolve(ROOT, "public");
 const MAP_PATH = resolve(PUBLIC, "assets/train-icons/train-icon-map.json");
-const EXPECTED_LINE_OVERRIDES = 51;
+const EXPECTED_LINE_OVERRIDES = 52;
 
 function sortDeep(value) {
   if (Array.isArray(value)) return value.map(sortDeep);

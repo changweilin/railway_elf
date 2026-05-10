@@ -265,6 +265,12 @@ const OSM_LINE_MAP = {
     corridor: { corridorKm: 1.5, sampleKm: 0.25 },
     snapStationCoordsOverKm: 1.0,
   },
+  "SRT-Jeolla": {
+    name: "SRT Jeolla Line (Suseo-Yeosu EXPO)",
+    relationIds: [6096884, 6094351, 6095809, 6096342],
+    corridor: { corridorKm: 1.5, sampleKm: 0.25 },
+    snapStationCoordsOverKm: 1.0,
+  },
   "Busan-Metro-1": {
     name: "Busan Metro Line 1 (Dadaepo Beach→Nopo)",
     relationIds: [8255697],
