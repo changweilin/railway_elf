@@ -262,7 +262,7 @@ const OSM_LINE_MAP = {
   "SRT-Honam": {
     name: "SRT Honam Line (Suseo-Mokpo)",
     relationIds: [6096884, 6094351, 6095809, 6094787],
-    corridor: { corridorKm: 4.0, sampleKm: 0.25 },
+    corridor: { corridorKm: 1.5, sampleKm: 0.25 },
     snapStationCoordsOverKm: 1.0,
   },
   "Busan-Metro-1": {
