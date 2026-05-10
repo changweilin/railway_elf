@@ -258,6 +258,14 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "Seoul-Metro-8": {
+    name: "Seoul Subway Line 8 (Byeollae→Moran)",
+    relationIds: [2718901],
+    corridor: { corridorKm: 1.2, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "AREX": {
     name: "Airport Railroad Express All-stop (Seoul Station→Incheon Int'l Airport Terminal 2)",
     relationIds: [7919000],
