@@ -280,6 +280,15 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     snapStationCoordsOverKm: 1.0,
   },
+  "Ui-LRT": {
+    name: "Seoul LRT Ui-Sinseol Line (Bukhansan Ui→Sinseol-dong)",
+    relationIds: [7533582],
+    orderStationKms: true,
+    stationStops: {
+      "삼양사거리": 4852989066,
+    },
+    snapStationCoordsOverKm: 1.0,
+  },
   "Shinbundang": {
     name: "Shinbundang Line (Sinsa to Gwanggyo)",
     relationIds: [6060963],
