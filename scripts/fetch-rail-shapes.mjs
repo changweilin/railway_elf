@@ -236,6 +236,12 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationStops: {},
   },
+  "Gimpo-Goldline": {
+    name: "Gimpo Goldline (Yangchon→Gimpo Int'l Airport)",
+    relationIds: [10092720],
+    orderStationKms: true,
+    stationStops: {},
+  },
   "KTX-Gyeongbu": {
     name: "KTX Gyeongbu Line / Gyeongbu HSL (Seoul→Busan)",
     relationIds: [11214334],

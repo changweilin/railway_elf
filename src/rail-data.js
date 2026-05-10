@@ -1274,6 +1274,28 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "Gimpo-Goldline",
+        name: "김포골드라인",
+        nameEn: "Gimpo Goldline",
+        color: "#ad8605",
+        category: "LRT",
+        directions: { up: "상행 (양촌 방면)", down: "하행 (김포공항 방면)" },
+        // Gimpo Goldline: Yangchon ↔ Gimpo Int'l Airport 23.47 km, 10 stations.
+        // Light metro / AGT-like automated service, modeled as all-stop only.
+        stations: [
+          { name: "양촌",       lat: 37.641658, lng: 126.614822, km: 0,    dwellSec: 30 },
+          { name: "구래",       lat: 37.645315, lng: 126.628743, km: 1.37 },
+          { name: "마산",       lat: 37.640560, lng: 126.644145, km: 2.54 },
+          { name: "장기",       lat: 37.643975, lng: 126.669070, km: 5.53 },
+          { name: "운양",       lat: 37.653783, lng: 126.683932, km: 7.22 },
+          { name: "걸포북변",   lat: 37.631465, lng: 126.705881, km: 10.61 },
+          { name: "사우",       lat: 37.620157, lng: 126.719728, km: 12.48 },
+          { name: "풍무",       lat: 37.612354, lng: 126.732440, km: 13.86 },
+          { name: "고촌",       lat: 37.601304, lng: 126.770147, km: 17.55 },
+          { name: "김포공항",   lat: 37.562389, lng: 126.801895, km: 23.47, dwellSec: 30 },
+        ],
+      },
+      {
         id: "KTX-Gyeongbu",
         name: "KTX 경부선",
         nameEn: "KTX Gyeongbu Line",
@@ -1352,6 +1374,7 @@ export const RAIL_DATA = {
       { line: "Seoul-Metro-1",  type: "완행",   badge: "완",     badgeColor: "#0052a4", speed: 40, interval: 4,  accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 25 },
       { line: "Seoul-Metro-2",  type: "순환",   badge: "2",      badgeColor: "#00a84d", speed: 35, interval: 3,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "AREX",           type: "AREX",   badge: "A",      badgeColor: "#0079ac", speed: 90, interval: 8,  accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 30 },
+      { line: "Gimpo-Goldline", type: "골드라인", badge: "G",    badgeColor: "#ad8605", speed: 80, interval: 3,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "KTX-Gyeongbu",   type: "KTX",    badge: "KTX",    badgeColor: "#0c4ca3", speed: 250, interval: 20, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "KTX-Gyeongbu",   type: "KTX-산천", badge: "산천", badgeColor: "#dc2626", speed: 230, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "Busan-Metro-1",  type: "1호선",  badge: "1",      badgeColor: "#f06a00", speed: 35, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },

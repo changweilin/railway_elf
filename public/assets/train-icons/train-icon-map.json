@@ -150,6 +150,10 @@
       "icon": "assets/train-icons/korea-arex-arex.png",
       "kind": "express"
     },
+    "korea|Gimpo-Goldline|골드라인": {
+      "icon": "assets/train-icons/korea-gimpo-goldline-goldline.png",
+      "kind": "lrt"
+    },
     "korea|KTX-Gyeongbu|KTX": {
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx.png",
       "kind": "shinkansen"
