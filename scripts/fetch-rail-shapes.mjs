@@ -266,6 +266,13 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "Seoul-Metro-9": {
+    name: "Seoul Subway Line 9 all-stop (Gaewha→VHS Medical Center)",
+    relationIds: [2718888],
+    corridor: { corridorKm: 1.2, sampleKm: 0.08 },
+    orderStationKms: true,
+    snapStationCoordsOverKm: 1.0,
+  },
   "AREX": {
     name: "Airport Railroad Express All-stop (Seoul Station→Incheon Int'l Airport Terminal 2)",
     relationIds: [7919000],
