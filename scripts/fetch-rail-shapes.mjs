@@ -278,6 +278,12 @@ const OSM_LINE_MAP = {
     forceEndpointAnchors: true,
     snapStationCoordsOverKm: 1.0,
   },
+  "KTX-Donghae": {
+    name: "KTX Donghae Line (Seoul-Pohang)",
+    relationIds: [11214334, 8840839, 8835676],
+    corridor: { corridorKm: 2.0, sampleKm: 0.25 },
+    snapStationCoordsOverKm: 1.0,
+  },
   "SRT-Gyeongbu": {
     name: "SRT Gyeongbu Line (Suseo→Busan)",
     relationIds: [6096884, 6094351],

@@ -1459,6 +1459,26 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "KTX-Donghae",
+        name: "KTX 동해선",
+        nameEn: "KTX Donghae Line",
+        color: "#0369a1",
+        category: "HSR",
+        directions: { up: "서울 방면", down: "포항 방면" },
+        // KORAIL Donghae KTX runs on the Seoul - Dongdaegu - Pohang axis.
+        // This seed models the representative Seoul - Pohang stopping pattern.
+        stations: [
+          { name: "서울",       lat: 37.554700, lng: 126.970600, km: 0,     dwellSec: 90 },
+          { name: "광명",       lat: 37.415900, lng: 126.884900, km: 22.0 },
+          { name: "천안아산",   lat: 36.794500, lng: 127.104300, km: 96.0 },
+          { name: "오송",       lat: 36.620200, lng: 127.326000, km: 128.0 },
+          { name: "대전",       lat: 36.332000, lng: 127.434600, km: 161.0, dwellSec: 60 },
+          { name: "김천구미",   lat: 36.115300, lng: 128.173200, km: 225.0 },
+          { name: "동대구",     lat: 35.879400, lng: 128.628500, km: 293.0, dwellSec: 60 },
+          { name: "포항",       lat: 36.071233, lng: 129.342678, km: 363.0, dwellSec: 90 },
+        ],
+      },
+      {
         id: "SRT-Gyeongbu",
         name: "SRT 경부선",
         nameEn: "SRT Gyeongbu Line",
@@ -1653,6 +1673,8 @@ export const RAIL_DATA = {
       { line: "KTX-Gyeongjeon", type: "KTX",    badge: "KTX",    badgeColor: "#0284c7", speed: 250, interval: 50, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "KTX-Gyeongjeon", type: "KTX-산천", badge: "산천", badgeColor: "#dc2626", speed: 230, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "KTX-Gangneung",  type: "KTX-이음", badge: "이음", badgeColor: "#0f766e", speed: 230, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
+      { line: "KTX-Donghae",    type: "KTX",    badge: "KTX",    badgeColor: "#0369a1", speed: 250, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
+      { line: "KTX-Donghae",    type: "KTX-산천", badge: "산천", badgeColor: "#dc2626", speed: 230, interval: 70, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Gyeongbu",   type: "SRT",    badge: "SRT",    badgeColor: "#6f2da8", speed: 250, interval: 20, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Honam",      type: "SRT",    badge: "SRT",    badgeColor: "#8b5cf6", speed: 250, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Jeolla",     type: "SRT",    badge: "SRT",    badgeColor: "#a855f7", speed: 240, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
