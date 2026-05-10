@@ -253,6 +253,12 @@ const OSM_LINE_MAP = {
     relationIds: [11214334],
     corridor: { corridorKm: 6.0, sampleKm: 0.3 },
   },
+  "KTX-Honam": {
+    name: "KTX Honam Line (Yongsan-Mokpo)",
+    relationIds: [11214334, 6095809, 6094787],
+    corridor: { corridorKm: 3.0, sampleKm: 0.25 },
+    snapStationCoordsOverKm: 1.0,
+  },
   "SRT-Gyeongbu": {
     name: "SRT Gyeongbu Line (Suseo→Busan)",
     relationIds: [6096884, 6094351],
