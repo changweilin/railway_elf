@@ -296,6 +296,13 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "Uijeongbu-LRT": {
+    name: "Uijeongbu LRT U Line (Balgok→Depot Temporary Platform)",
+    relationIds: [13738410],
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "Shinbundang": {
     name: "Shinbundang Line (Sinsa to Gwanggyo)",
     relationIds: [6060963],

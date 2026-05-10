@@ -182,6 +182,10 @@
       "icon": "assets/train-icons/korea-sillim-lrt-sillim-line.png",
       "kind": "lrt"
     },
+    "korea|Uijeongbu-LRT|U Line": {
+      "icon": "assets/train-icons/korea-uijeongbu-lrt-u-line.png",
+      "kind": "lrt"
+    },
     "korea|Shinbundang|신분당선": {
       "icon": "assets/train-icons/korea-shinbundang-shinbundang.png",
       "kind": "metro"
