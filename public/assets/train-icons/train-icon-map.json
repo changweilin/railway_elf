@@ -178,6 +178,10 @@
       "icon": "assets/train-icons/korea-ui-lrt-ui-sinseol-line.png",
       "kind": "lrt"
     },
+    "korea|Sillim-LRT|신림선": {
+      "icon": "assets/train-icons/korea-sillim-lrt-sillim-line.png",
+      "kind": "lrt"
+    },
     "korea|Shinbundang|신분당선": {
       "icon": "assets/train-icons/korea-shinbundang-shinbundang.png",
       "kind": "metro"

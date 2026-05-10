@@ -1659,6 +1659,29 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "Sillim-LRT",
+        name: "서울 경전철 신림선",
+        nameEn: "Seoul LRT Sillim Line",
+        color: "#6789CA",
+        category: "LRT",
+        directions: { up: "상행 (샛강 방면)", down: "하행 (관악산 방면)" },
+        // Rubber-tyred automated light metro; OSM relation 14191877 follows
+        // the Saetgang→Gwanaksan direction and provides stop members for all stations.
+        stations: [
+          { name: "샛강", lat: 37.5173398, lng: 126.9293465, km: 0.000, dwellSec: 30 },
+          { name: "대방", lat: 37.5125156, lng: 126.9250675, km: 0.600, dwellSec: 30 },
+          { name: "서울지방병무청", lat: 37.5059702, lng: 126.9226486, km: 1.400 },
+          { name: "보라매", lat: 37.5003803, lng: 126.9204283, km: 2.000, dwellSec: 30 },
+          { name: "보라매공원", lat: 37.4952476, lng: 126.9181210, km: 2.600 },
+          { name: "보라매병원", lat: 37.4929164, lng: 126.9242838, km: 3.400 },
+          { name: "당곡", lat: 37.4897250, lng: 126.9277642, km: 3.900 },
+          { name: "신림", lat: 37.4848427, lng: 126.9295604, km: 4.600, dwellSec: 30 },
+          { name: "서원", lat: 37.4781827, lng: 126.9329546, km: 5.300 },
+          { name: "서울대벤처타운", lat: 37.4720468, lng: 126.9336031, km: 6.400 },
+          { name: "관악산", lat: 37.4687700, lng: 126.9452234, km: 7.800, dwellSec: 30 },
+        ],
+      },
+      {
         id: "AREX",
         name: "공항철도",
         nameEn: "Airport Railroad Express",
@@ -2763,6 +2786,7 @@ export const RAIL_DATA = {
       { line: "Seoul-Metro-8",  type: "8호선",  badge: "8",      badgeColor: "#E6186C", speed: 40, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Seoul-Metro-9",  type: "9호선",  badge: "9",      badgeColor: "#BDB092", speed: 40, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Ui-LRT",         type: "우이신설선", badge: "UI", badgeColor: "#BACC50", speed: 70, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "Sillim-LRT",     type: "신림선", badge: "SL",     badgeColor: "#6789CA", speed: 70, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Shinbundang",    type: "신분당선", badge: "DX",    badgeColor: "#B81B30", speed: 80, interval: 5,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Suin-Bundang",   type: "수인분당선", badge: "SB",  badgeColor: "#ECA300", speed: 80, interval: 6,  accel: 0.90, decel: 1.00, aLat: 0.90, dwellSec: 25 },
       { line: "Gyeongui-Jungang", type: "경의중앙선", badge: "GJ", badgeColor: "#6AC2B3", speed: 85, interval: 10, accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 25 },

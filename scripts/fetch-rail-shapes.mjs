@@ -289,6 +289,13 @@ const OSM_LINE_MAP = {
     },
     snapStationCoordsOverKm: 1.0,
   },
+  "Sillim-LRT": {
+    name: "Seoul LRT Sillim Line (Saetgang→Gwanaksan)",
+    relationIds: [14191877],
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "Shinbundang": {
     name: "Shinbundang Line (Sinsa to Gwanggyo)",
     relationIds: [6060963],

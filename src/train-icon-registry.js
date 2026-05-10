@@ -52,6 +52,7 @@ export const TRAIN_ICON_REGISTRY = {
     'korea|Seoul-Metro-8|8호선': { icon: 'assets/train-icons/korea-seoul-metro-8-line-8.png', kind: 'metro' },
     'korea|Seoul-Metro-9|9호선': { icon: 'assets/train-icons/korea-seoul-metro-9-line-9.png', kind: 'metro' },
     'korea|Ui-LRT|우이신설선': { icon: 'assets/train-icons/korea-ui-lrt-ui-sinseol-line.png', kind: 'lrt' },
+    'korea|Sillim-LRT|신림선': { icon: 'assets/train-icons/korea-sillim-lrt-sillim-line.png', kind: 'lrt' },
     'korea|Shinbundang|신분당선': { icon: 'assets/train-icons/korea-shinbundang-shinbundang.png', kind: 'metro' },
     'korea|Suin-Bundang|수인분당선': { icon: 'assets/train-icons/korea-suin-bundang-suin-bundang.png', kind: 'commuter' },
     'korea|Gyeongui-Jungang|경의중앙선': { icon: 'assets/train-icons/korea-gyeongui-jungang-gyeongui-jungang.png', kind: 'commuter' },
