@@ -158,6 +158,10 @@
       "icon": "assets/train-icons/korea-seoul-metro-5-line-5.png",
       "kind": "metro"
     },
+    "korea|Seoul-Metro-7|7호선": {
+      "icon": "assets/train-icons/korea-seoul-metro-7-line-7.png",
+      "kind": "metro"
+    },
     "korea|AREX|AREX": {
       "icon": "assets/train-icons/korea-arex-arex.png",
       "kind": "express"
