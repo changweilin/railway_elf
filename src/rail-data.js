@@ -1363,6 +1363,31 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "SRT-Gyeongbu",
+        name: "SRT 경부선",
+        nameEn: "SRT Gyeongbu Line",
+        color: "#6f2da8",
+        category: "HSR",
+        directions: { up: "수서 방면", down: "부산 방면" },
+        // SR official route: 수서 → 동탄 → 평택지제 → 천안아산 → 오송 → 대전 →
+        // 김천(구미) → 서대구 → 동대구 → 신경주 → 울산(통도사) → 부산.
+        // The end-to-end distance follows SR's Suseo-Busan 401.2 km service length.
+        stations: [
+          { name: "수서",       lat: 37.487321, lng: 127.101690, km: 0,     dwellSec: 90 },
+          { name: "동탄",       lat: 37.200138, lng: 127.095533, km: 32.4 },
+          { name: "평택지제",   lat: 37.018749, lng: 127.069842, km: 56.9 },
+          { name: "천안아산",   lat: 36.7945,   lng: 127.1043,   km: 82.0 },
+          { name: "오송",       lat: 36.6202,   lng: 127.3260,   km: 114.0 },
+          { name: "대전",       lat: 36.3320,   lng: 127.4346,   km: 147.0, dwellSec: 60 },
+          { name: "김천구미",   lat: 36.1153,   lng: 128.1732,   km: 211.0 },
+          { name: "서대구",     lat: 35.881470, lng: 128.540403, km: 270.0 },
+          { name: "동대구",     lat: 35.8794,   lng: 128.6285,   km: 279.0, dwellSec: 60 },
+          { name: "신경주",     lat: 35.7975,   lng: 129.1369,   km: 321.0 },
+          { name: "울산",       lat: 35.5512,   lng: 129.1330,   km: 350.0 },
+          { name: "부산",       lat: 35.1153,   lng: 129.0418,   km: 401.2, dwellSec: 90 },
+        ],
+      },
+      {
         id: "Busan-Metro-1",
         name: "부산 도시철도 1호선",
         nameEn: "Busan Metro Line 1",
@@ -1423,6 +1448,7 @@ export const RAIL_DATA = {
       { line: "Daegu-Metro-3",  type: "3호선",  badge: "3",      badgeColor: "#FDA208", speed: 70, interval: 5,  accel: 1.00, decel: 1.10, aLat: 0.90, dwellSec: 25 },
       { line: "KTX-Gyeongbu",   type: "KTX",    badge: "KTX",    badgeColor: "#0c4ca3", speed: 250, interval: 20, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "KTX-Gyeongbu",   type: "KTX-산천", badge: "산천", badgeColor: "#dc2626", speed: 230, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
+      { line: "SRT-Gyeongbu",   type: "SRT",    badge: "SRT",    badgeColor: "#6f2da8", speed: 250, interval: 20, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "Busan-Metro-1",  type: "1호선",  badge: "1",      badgeColor: "#f06a00", speed: 35, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
     ],
   },

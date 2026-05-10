@@ -40,6 +40,7 @@ const VISUALS = {
   "korea|Daegu-Metro-3|3호선": { shape: "monorail", body: "#f8fafc", accent: "#FDA208", accent2: "#111827" },
   "korea|KTX-Gyeongbu|KTX": { shape: "shinkansen", body: "#f8fafc", accent: "#0c4ca3", accent2: "#dc2626" },
   "korea|KTX-Gyeongbu|KTX-산천": { shape: "shinkansen", body: "#f8fafc", accent: "#dc2626", accent2: "#0c4ca3" },
+  "korea|SRT-Gyeongbu|SRT": { shape: "shinkansen", body: "#f8fafc", accent: "#6f2da8", accent2: "#dc2626" },
   "korea|Busan-Metro-1|1호선": { shape: "metro", body: "#f8fafc", accent: "#f06a00", band: "#f06a00" },
 
   "hongkong|MTR-Tsuen-Wan|荃灣綫": { shape: "metro", body: "#f8fafc", accent: "#e2231a", band: "#e2231a" },
