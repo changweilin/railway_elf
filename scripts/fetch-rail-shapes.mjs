@@ -288,6 +288,14 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "Suin-Bundang": {
+    name: "Suin-Bundang Line all-stop (Cheongnyangni to Incheon)",
+    relationIds: [11625556],
+    corridor: { corridorKm: 1.5, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "AREX": {
     name: "Airport Railroad Express All-stop (Seoul Station→Incheon Int'l Airport Terminal 2)",
     relationIds: [7919000],

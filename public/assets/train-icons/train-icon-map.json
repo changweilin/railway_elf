@@ -178,6 +178,10 @@
       "icon": "assets/train-icons/korea-shinbundang-shinbundang.png",
       "kind": "metro"
     },
+    "korea|Suin-Bundang|수인분당선": {
+      "icon": "assets/train-icons/korea-suin-bundang-suin-bundang.png",
+      "kind": "commuter"
+    },
     "korea|AREX|AREX": {
       "icon": "assets/train-icons/korea-arex-arex.png",
       "kind": "express"
