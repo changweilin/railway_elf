@@ -2157,6 +2157,40 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "Daejeon-Metro-1",
+        name: "대전 도시철도 1호선",
+        nameEn: "Daejeon Metro Line 1",
+        color: "#007448",
+        category: "捷運",
+        directions: { up: "상행 (판암 방면)", down: "하행 (반석 방면)" },
+        // Daejeon Line 1: Panam→Banseok all-stop route; OSM relation
+        // 7792527 provides complete stop members for 22 stations.
+        stations: [
+          { name: "판암", lat: 36.3169619, lng: 127.4576797, km: 0.000, dwellSec: 30 },
+          { name: "신흥", lat: 36.3196335, lng: 127.4489861, km: 0.852 },
+          { name: "대동", lat: 36.3294490, lng: 127.4429386, km: 2.161 },
+          { name: "대전역", lat: 36.3313841, lng: 127.4333493, km: 3.180, dwellSec: 30 },
+          { name: "중앙로", lat: 36.3286138, lng: 127.4258937, km: 3.915 },
+          { name: "중구청", lat: 36.3248208, lng: 127.4195531, km: 4.637 },
+          { name: "서대전네거리", lat: 36.3224022, lng: 127.4125356, km: 5.441 },
+          { name: "오룡", lat: 36.3284108, lng: 127.4050960, km: 6.385 },
+          { name: "용문", lat: 36.3382554, lng: 127.3932978, km: 7.906 },
+          { name: "탄방", lat: 36.3461286, lng: 127.3847192, km: 9.177 },
+          { name: "시청", lat: 36.3514837, lng: 127.3866258, km: 9.824, dwellSec: 30 },
+          { name: "정부청사", lat: 36.3576300, lng: 127.3816126, km: 10.825, dwellSec: 30 },
+          { name: "갈마", lat: 36.3577013, lng: 127.3727947, km: 11.615 },
+          { name: "월평", lat: 36.3583733, lng: 127.3645747, km: 12.356 },
+          { name: "갑천", lat: 36.3546063, lng: 127.3544975, km: 13.408 },
+          { name: "유성온천", lat: 36.3537327, lng: 127.3417016, km: 14.703, dwellSec: 30 },
+          { name: "구암", lat: 36.3567574, lng: 127.3306550, km: 15.748 },
+          { name: "현충원", lat: 36.3594558, lng: 127.3214460, km: 16.625 },
+          { name: "월드컵경기장", lat: 36.3667814, lng: 127.3179378, km: 17.650 },
+          { name: "노은", lat: 36.3741401, lng: 127.3179740, km: 18.468 },
+          { name: "지족", lat: 36.3843970, lng: 127.3195772, km: 19.635 },
+          { name: "반석", lat: 36.3926366, lng: 127.3144036, km: 20.667, dwellSec: 30 },
+        ],
+      },
+      {
         id: "ITX-Cheongchun",
         name: "ITX-청춘",
         nameEn: "ITX-Cheongchun",
@@ -2684,6 +2718,7 @@ export const RAIL_DATA = {
       { line: "Daegu-Metro-1",  type: "1호선",  badge: "1",      badgeColor: "#EF5E37", speed: 40, interval: 5,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Daegu-Metro-2",  type: "2호선",  badge: "2",      badgeColor: "#33AA46", speed: 40, interval: 5,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Daegu-Metro-3",  type: "3호선",  badge: "3",      badgeColor: "#FDA208", speed: 70, interval: 5,  accel: 1.00, decel: 1.10, aLat: 0.90, dwellSec: 25 },
+      { line: "Daejeon-Metro-1", type: "1호선", badge: "D1",     badgeColor: "#007448", speed: 40, interval: 5,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "ITX-Cheongchun", type: "ITX-청춘", badge: "ITX",  badgeColor: "#2563eb", speed: 180, interval: 60, accel: 0.70, decel: 0.75, aLat: 0.85, dwellSec: 45 },
       { line: "KTX-Gyeongbu",   type: "KTX",    badge: "KTX",    badgeColor: "#0c4ca3", speed: 250, interval: 20, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "KTX-Gyeongbu",   type: "KTX-산천", badge: "산천", badgeColor: "#dc2626", speed: 230, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
@@ -3638,9 +3673,9 @@ function mergeShapes(shapes, regionKey) {
           const st = line.stations[i];
           const isLoopStart = isLoopLine && i === 0 && gen.totalKm != null;
           const isLoopBack = isLoopLine && i === line.stations.length - 1 && gen.totalKm != null;
-          const k = hasIndexedStationKms
-            ? gen.stationKmsByIndex[i]
-            : (isLoopStart ? 0 : (isLoopBack ? gen.totalKm : gen.stationKms[st.name]));
+          const k = isLoopStart
+            ? 0
+            : (isLoopBack ? gen.totalKm : (hasIndexedStationKms ? gen.stationKmsByIndex[i] : gen.stationKms[st.name]));
           if (k == null) continue;
           if (k < prev || (k === prev && (i === 0 || line.stations[i-1].name !== st.name))) {
             useGenStationKms = false;
@@ -3664,9 +3699,9 @@ function mergeShapes(shapes, regionKey) {
           const st = line.stations[i];
           const isLoopStart = isLoopLine && i === 0 && gen.totalKm != null;
           const isLoopBack = isLoopLine && i === line.stations.length - 1 && gen.totalKm != null;
-          const k = hasIndexedStationKms
-            ? gen.stationKmsByIndex[i]
-            : (isLoopStart ? 0 : (isLoopBack ? gen.totalKm : gen.stationKms[st.name]));
+          const k = isLoopStart
+            ? 0
+            : (isLoopBack ? gen.totalKm : (hasIndexedStationKms ? gen.stationKmsByIndex[i] : gen.stationKms[st.name]));
           if (k != null) st.km = k;
         }
       } else if (gen.totalKm != null && line.stations.length >= 2) {

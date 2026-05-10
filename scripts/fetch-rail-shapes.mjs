@@ -373,6 +373,13 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationStops: {},
   },
+  "Daejeon-Metro-1": {
+    name: "Daejeon Metro Line 1 (Panam→Banseok)",
+    relationIds: [7792527],
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "KTX-Gyeongbu": {
     name: "KTX Gyeongbu Line / Gyeongbu HSL (Seoul→Busan)",
     relationIds: [11214334],
