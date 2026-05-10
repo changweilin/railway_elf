@@ -271,6 +271,12 @@ const OSM_LINE_MAP = {
     corridor: { corridorKm: 1.5, sampleKm: 0.25 },
     snapStationCoordsOverKm: 1.0,
   },
+  "SRT-Gyeongjeon": {
+    name: "SRT Gyeongjeon Line (Suseo-Jinju)",
+    relationIds: [6096884, 6094351, 8842494, 8839114],
+    corridor: { corridorKm: 2.0, sampleKm: 0.25 },
+    snapStationCoordsOverKm: 1.0,
+  },
   "Busan-Metro-1": {
     name: "Busan Metro Line 1 (Dadaepo Beach→Nopo)",
     relationIds: [8255697],

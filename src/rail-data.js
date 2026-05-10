@@ -1439,6 +1439,34 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "SRT-Gyeongjeon",
+        name: "SRT 경전선",
+        nameEn: "SRT Gyeongjeon Line",
+        color: "#9333ea",
+        category: "HSR",
+        directions: { up: "수서 방면", down: "진주 방면" },
+        // SR official route: 수서 → 동탄 → 평택지제 → 천안아산 → 오송 → 대전 →
+        // 김천(구미) → 서대구 → 동대구 → 밀양 → 진영 → 창원중앙 → 창원 → 마산 → 진주.
+        // Dongdaegu-Jinju uses the Gyeongbu Line to Miryang and the Gyeongjeon Line branch.
+        stations: [
+          { name: "수서",       lat: 37.487321, lng: 127.101690, km: 0,     dwellSec: 90 },
+          { name: "동탄",       lat: 37.200138, lng: 127.095533, km: 32.4 },
+          { name: "평택지제",   lat: 37.018749, lng: 127.069842, km: 56.9 },
+          { name: "천안아산",   lat: 36.794500, lng: 127.104300, km: 82.0 },
+          { name: "오송",       lat: 36.620200, lng: 127.326000, km: 114.0 },
+          { name: "대전",       lat: 36.332000, lng: 127.434600, km: 147.0, dwellSec: 60 },
+          { name: "김천구미",   lat: 36.115300, lng: 128.173200, km: 211.0 },
+          { name: "서대구",     lat: 35.881470, lng: 128.540403, km: 270.0 },
+          { name: "동대구",     lat: 35.879400, lng: 128.628500, km: 279.0, dwellSec: 60 },
+          { name: "밀양",       lat: 35.474851, lng: 128.771418, km: 326.0 },
+          { name: "진영",       lat: 35.298748, lng: 128.773550, km: 354.5 },
+          { name: "창원중앙",   lat: 35.242572, lng: 128.701605, km: 368.5 },
+          { name: "창원",       lat: 35.258125, lng: 128.607034, km: 378.5 },
+          { name: "마산",       lat: 35.236364, lng: 128.576728, km: 384.0, dwellSec: 60 },
+          { name: "진주",       lat: 35.150120, lng: 128.118349, km: 431.0, dwellSec: 90 },
+        ],
+      },
+      {
         id: "Busan-Metro-1",
         name: "부산 도시철도 1호선",
         nameEn: "Busan Metro Line 1",
@@ -1502,6 +1530,7 @@ export const RAIL_DATA = {
       { line: "SRT-Gyeongbu",   type: "SRT",    badge: "SRT",    badgeColor: "#6f2da8", speed: 250, interval: 20, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Honam",      type: "SRT",    badge: "SRT",    badgeColor: "#8b5cf6", speed: 250, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Jeolla",     type: "SRT",    badge: "SRT",    badgeColor: "#a855f7", speed: 240, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
+      { line: "SRT-Gyeongjeon", type: "SRT",    badge: "SRT",    badgeColor: "#9333ea", speed: 240, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "Busan-Metro-1",  type: "1호선",  badge: "1",      badgeColor: "#f06a00", speed: 35, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
     ],
   },
