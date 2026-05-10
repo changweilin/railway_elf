@@ -454,6 +454,13 @@ const OSM_LINE_MAP = {
     stationStops: {},
     stationKmOverrides: { "동대신": 21.2 },
   },
+  "Busan-Metro-2": {
+    name: "Busan Metro Line 2 (Jangsan→Yangsan)",
+    relationIds: [2194999],
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // Hong Kong MTR.
   "MTR-Tsuen-Wan":       { name: "MTR Tsuen Wan Line (Central→Tsuen Wan)", relationIds: [9736530] },

@@ -298,6 +298,10 @@
       "icon": "assets/train-icons/korea-busan-metro-1-line-1.png",
       "kind": "metro"
     },
+    "korea|Busan-Metro-2|2호선": {
+      "icon": "assets/train-icons/korea-busan-metro-2-line-2.png",
+      "kind": "metro"
+    },
     "hongkong|MTR-Tsuen-Wan|荃灣綫": {
       "icon": "assets/train-icons/hongkong-mtr-tsuen-wan-tsuen-wan-line.png",
       "kind": "metro"
