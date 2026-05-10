@@ -2545,6 +2545,32 @@ export const RAIL_DATA = {
           { name: "대저", lat: 35.2134159, lng: 128.9607978, km: 18.142, dwellSec: 30 },
         ],
       },
+      {
+        id: "Busan-Metro-4",
+        name: "부산 도시철도 4호선",
+        nameEn: "Busan Metro Line 4",
+        color: "#217DCB",
+        category: "捷運",
+        directions: { up: "상행 (미남 방면)", down: "하행 (안평 방면)" },
+        // 부산 4호선: rubber-tyred light metro from Minam to Anpyeong; OSM
+        // relation 2205952 provides complete stop members for 14 stations.
+        stations: [
+          { name: "미남", lat: 35.2065213, lng: 129.0687890, km: 0, dwellSec: 30 },
+          { name: "동래", lat: 35.2047222, lng: 129.0772975, km: 0.926 },
+          { name: "수안", lat: 35.2017248, lng: 129.0838787, km: 1.611 },
+          { name: "낙민", lat: 35.2001883, lng: 129.0908233, km: 2.267 },
+          { name: "충렬사", lat: 35.1997237, lng: 129.0975688, km: 2.979 },
+          { name: "명장", lat: 35.2053788, lng: 129.1017618, km: 3.722 },
+          { name: "서동", lat: 35.2130228, lng: 129.1075237, km: 4.765 },
+          { name: "금사", lat: 35.2157922, lng: 129.1152377, km: 5.552 },
+          { name: "반여농산물시장", lat: 35.2177692, lng: 129.1238374, km: 6.368 },
+          { name: "석대", lat: 35.2180644, lng: 129.1368574, km: 7.567 },
+          { name: "영산대", lat: 35.2256484, lng: 129.1460921, km: 8.934 },
+          { name: "윗반송", lat: 35.2325216, lng: 129.1539359, km: 10.056 },
+          { name: "고촌", lat: 35.2361256, lng: 129.1604700, km: 10.795 },
+          { name: "안평", lat: 35.2373765, lng: 129.1717326, km: 11.856, dwellSec: 30 },
+        ],
+      },
     ],
     trainTemplates: [
       { line: "Seoul-Metro-1",  type: "급행",   badge: "급행",   badgeColor: "#1d4ed8", speed: 60, interval: 12, accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 25 },
@@ -2590,6 +2616,7 @@ export const RAIL_DATA = {
       { line: "Busan-Metro-1",  type: "1호선",  badge: "1",      badgeColor: "#f06a00", speed: 35, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Busan-Metro-2",  type: "2호선",  badge: "2",      badgeColor: "#81BF48", speed: 40, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Busan-Metro-3",  type: "3호선",  badge: "3",      badgeColor: "#BB8C00", speed: 40, interval: 5,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "Busan-Metro-4",  type: "4호선",  badge: "4",      badgeColor: "#217DCB", speed: 55, interval: 5,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
     ],
   },
 
