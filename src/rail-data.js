@@ -2516,6 +2516,35 @@ export const RAIL_DATA = {
           { name: "양산", lat: 35.3386950, lng: 129.0263995, km: 45.801, dwellSec: 30 },
         ],
       },
+      {
+        id: "Busan-Metro-3",
+        name: "부산 도시철도 3호선",
+        nameEn: "Busan Metro Line 3",
+        color: "#BB8C00",
+        category: "捷運",
+        directions: { up: "상행 (수영 방면)", down: "하행 (대저 방면)" },
+        // 부산 3호선: Suyeong→Daejeo all-stop route; OSM relation 2195014
+        // provides complete stop members for the current 17-station service.
+        stations: [
+          { name: "수영", lat: 35.1654182, lng: 129.1146714, km: 0, dwellSec: 30 },
+          { name: "망미", lat: 35.1717331, lng: 129.1075159, km: 1.065 },
+          { name: "배산", lat: 35.1734626, lng: 129.0957491, km: 2.159 },
+          { name: "물만골", lat: 35.1766388, lng: 129.0858331, km: 3.214 },
+          { name: "연산", lat: 35.1859918, lng: 129.0815013, km: 4.333, dwellSec: 30 },
+          { name: "거제", lat: 35.1885438, lng: 129.0739981, km: 5.073 },
+          { name: "종합운동장", lat: 35.1914648, lng: 129.0674868, km: 5.767 },
+          { name: "사직", lat: 35.1990904, lng: 129.0650666, km: 6.643 },
+          { name: "미남", lat: 35.2065443, lng: 129.0687047, km: 7.563, dwellSec: 30 },
+          { name: "만덕", lat: 35.2129876, lng: 129.0364611, km: 10.774 },
+          { name: "남산정", lat: 35.2133254, lng: 129.0239260, km: 11.925 },
+          { name: "숙등", lat: 35.2119767, lng: 129.0127544, km: 12.958 },
+          { name: "덕천", lat: 35.2102272, lng: 129.0057948, km: 13.62, dwellSec: 30 },
+          { name: "구포", lat: 35.2067105, lng: 128.9963297, km: 14.65 },
+          { name: "강서구청", lat: 35.2112369, lng: 128.9819597, km: 16.204 },
+          { name: "체육공원", lat: 35.2125086, lng: 128.9693851, km: 17.355 },
+          { name: "대저", lat: 35.2134159, lng: 128.9607978, km: 18.142, dwellSec: 30 },
+        ],
+      },
     ],
     trainTemplates: [
       { line: "Seoul-Metro-1",  type: "급행",   badge: "급행",   badgeColor: "#1d4ed8", speed: 60, interval: 12, accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 25 },
@@ -2560,6 +2589,7 @@ export const RAIL_DATA = {
       { line: "SRT-Donghae",    type: "SRT",    badge: "SRT",    badgeColor: "#7c3aed", speed: 240, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "Busan-Metro-1",  type: "1호선",  badge: "1",      badgeColor: "#f06a00", speed: 35, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Busan-Metro-2",  type: "2호선",  badge: "2",      badgeColor: "#81BF48", speed: 40, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "Busan-Metro-3",  type: "3호선",  badge: "3",      badgeColor: "#BB8C00", speed: 40, interval: 5,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
     ],
   },
 
