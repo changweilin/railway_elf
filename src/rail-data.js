@@ -1479,6 +1479,35 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "KTX-Jungang",
+        name: "KTX 중앙선",
+        nameEn: "KTX Jungang Line",
+        color: "#0891b2",
+        category: "HSR",
+        directions: { up: "서울 방면", down: "부전 방면" },
+        // KORAIL KTX-Eum central-line service links Seoul/Cheongnyangni with
+        // Bujeon via the Jungang and Donghae corridors. This seed models the
+        // representative Seoul - Bujeon stopping pattern.
+        stations: [
+          { name: "서울",       lat: 37.554700, lng: 126.970600, km: 0,     dwellSec: 90 },
+          { name: "청량리",     lat: 37.580596, lng: 127.048257, km: 15.0,  dwellSec: 60 },
+          { name: "상봉",       lat: 37.597031, lng: 127.085656, km: 21.0 },
+          { name: "양평",       lat: 37.492847, lng: 127.491897, km: 58.0 },
+          { name: "서원주",     lat: 37.348530, lng: 127.839395, km: 94.0 },
+          { name: "원주",       lat: 37.316379, lng: 127.920730, km: 104.0 },
+          { name: "제천",       lat: 37.128700, lng: 128.205400, km: 151.0 },
+          { name: "단양",       lat: 36.981712, lng: 128.342873, km: 169.0 },
+          { name: "풍기",       lat: 36.872000, lng: 128.524000, km: 196.0 },
+          { name: "영주",       lat: 36.810700, lng: 128.624000, km: 207.0 },
+          { name: "안동",       lat: 36.569302, lng: 128.678354, km: 237.0 },
+          { name: "의성",       lat: 36.352000, lng: 128.697000, km: 264.0 },
+          { name: "영천",       lat: 35.966800, lng: 128.938100, km: 311.0 },
+          { name: "경주",       lat: 35.798100, lng: 129.138100, km: 333.0 },
+          { name: "태화강",     lat: 35.538700, lng: 129.353700, km: 367.0 },
+          { name: "부전",       lat: 35.162700, lng: 129.061100, km: 433.0, dwellSec: 90 },
+        ],
+      },
+      {
         id: "SRT-Gyeongbu",
         name: "SRT 경부선",
         nameEn: "SRT Gyeongbu Line",
@@ -1675,6 +1704,7 @@ export const RAIL_DATA = {
       { line: "KTX-Gangneung",  type: "KTX-이음", badge: "이음", badgeColor: "#0f766e", speed: 230, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "KTX-Donghae",    type: "KTX",    badge: "KTX",    badgeColor: "#0369a1", speed: 250, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "KTX-Donghae",    type: "KTX-산천", badge: "산천", badgeColor: "#dc2626", speed: 230, interval: 70, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
+      { line: "KTX-Jungang",    type: "KTX-이음", badge: "이음", badgeColor: "#0891b2", speed: 230, interval: 80, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Gyeongbu",   type: "SRT",    badge: "SRT",    badgeColor: "#6f2da8", speed: 250, interval: 20, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Honam",      type: "SRT",    badge: "SRT",    badgeColor: "#8b5cf6", speed: 250, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Jeolla",     type: "SRT",    badge: "SRT",    badgeColor: "#a855f7", speed: 240, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },

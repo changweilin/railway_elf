@@ -284,6 +284,13 @@ const OSM_LINE_MAP = {
     corridor: { corridorKm: 2.0, sampleKm: 0.25 },
     snapStationCoordsOverKm: 1.0,
   },
+  "KTX-Jungang": {
+    name: "KTX Jungang Line (Seoul-Bujeon)",
+    relationIds: [8842494, 8817574, 8821065, 8880536, 8880709, 8835676, 8879475],
+    corridor: { corridorKm: 3.0, sampleKm: 0.25 },
+    forceEndpointAnchors: true,
+    snapStationCoordsOverKm: 1.0,
+  },
   "SRT-Gyeongbu": {
     name: "SRT Gyeongbu Line (Suseo→Busan)",
     relationIds: [6096884, 6094351],
