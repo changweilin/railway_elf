@@ -230,6 +230,10 @@
       "icon": "assets/train-icons/korea-daejeon-metro-1-line-1.png",
       "kind": "metro"
     },
+    "korea|Gwangju-Metro-1|1호선": {
+      "icon": "assets/train-icons/korea-gwangju-metro-1-line-1.png",
+      "kind": "metro"
+    },
     "korea|KTX-Gyeongbu|KTX": {
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx.png",
       "kind": "shinkansen"

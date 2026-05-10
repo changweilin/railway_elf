@@ -380,6 +380,13 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "Gwangju-Metro-1": {
+    name: "Gwangju Metro Line 1 (Nokdong→Pyeongdong)",
+    relationIds: [13463725],
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "KTX-Gyeongbu": {
     name: "KTX Gyeongbu Line / Gyeongbu HSL (Seoul→Busan)",
     relationIds: [11214334],
