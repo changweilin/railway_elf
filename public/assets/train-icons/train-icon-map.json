@@ -194,6 +194,10 @@
       "icon": "assets/train-icons/korea-gyeonggang-gyeonggang.png",
       "kind": "commuter"
     },
+    "korea|Seohae|서해선": {
+      "icon": "assets/train-icons/korea-seohae-seohae.png",
+      "kind": "commuter"
+    },
     "korea|AREX|AREX": {
       "icon": "assets/train-icons/korea-arex-arex.png",
       "kind": "express"
