@@ -41,6 +41,7 @@ const VISUALS = {
   "korea|KTX-Gyeongbu|KTX": { shape: "shinkansen", body: "#f8fafc", accent: "#0c4ca3", accent2: "#dc2626" },
   "korea|KTX-Gyeongbu|KTX-산천": { shape: "shinkansen", body: "#f8fafc", accent: "#dc2626", accent2: "#0c4ca3" },
   "korea|KTX-Gangneung|KTX-이음": { shape: "shinkansen", body: "#f8fafc", accent: "#0f766e", accent2: "#38bdf8" },
+  "korea|ITX-Cheongchun|ITX-청춘": { shape: "express", body: "#f8fafc", accent: "#2563eb", accent2: "#22c55e" },
   "korea|SRT-Gyeongbu|SRT": { shape: "shinkansen", body: "#f8fafc", accent: "#6f2da8", accent2: "#dc2626" },
   "korea|Busan-Metro-1|1호선": { shape: "metro", body: "#f8fafc", accent: "#f06a00", band: "#f06a00" },
 

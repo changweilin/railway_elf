@@ -210,6 +210,10 @@
       "icon": "assets/train-icons/korea-ktx-gangneung-ktx-eum.png",
       "kind": "shinkansen"
     },
+    "korea|ITX-Cheongchun|ITX-청춘": {
+      "icon": "assets/train-icons/korea-itx-cheongchun-itx-cheongchun.png",
+      "kind": "express"
+    },
     "korea|SRT-Gyeongbu|SRT": {
       "icon": "assets/train-icons/korea-srt-gyeongbu-srt.png",
       "kind": "shinkansen"
