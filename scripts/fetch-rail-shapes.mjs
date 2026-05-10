@@ -242,6 +242,14 @@ const OSM_LINE_MAP = {
     corridor: { corridorKm: 1.2, sampleKm: 0.08 },
     snapStationCoordsOverKm: 1.0,
   },
+  "Seoul-Metro-5": {
+    name: "Seoul Metropolitan Subway Line 5 main branch (Banghwa→Hanam Geomdansan)",
+    relationIds: [12497486],
+    corridor: { corridorKm: 1.2, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "AREX": {
     name: "Airport Railroad Express All-stop (Seoul Station→Incheon Int'l Airport Terminal 2)",
     relationIds: [7919000],
