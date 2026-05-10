@@ -1388,6 +1388,30 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "SRT-Honam",
+        name: "SRT 호남선",
+        nameEn: "SRT Honam Line",
+        color: "#8b5cf6",
+        category: "HSR",
+        directions: { up: "수서 방면", down: "목포 방면" },
+        // SR official route: 수서 → 동탄 → 평택지제 → 천안아산 → 오송 → 공주 →
+        // 익산 → 정읍 → 광주송정 → 나주 → 목포.
+        // The end-to-end distance follows SR's Suseo-Mokpo 354.2 km service length.
+        stations: [
+          { name: "수서",       lat: 37.487321, lng: 127.101690, km: 0,     dwellSec: 90 },
+          { name: "동탄",       lat: 37.200359, lng: 127.095576, km: 32.4 },
+          { name: "평택지제",   lat: 37.018753, lng: 127.069867, km: 56.9 },
+          { name: "천안아산",   lat: 36.794380, lng: 127.104499, km: 82.0 },
+          { name: "오송",       lat: 36.620230, lng: 127.327363, km: 114.0 },
+          { name: "공주",       lat: 36.332237, lng: 127.096637, km: 151.0 },
+          { name: "익산",       lat: 35.941256, lng: 126.945913, km: 188.0, dwellSec: 60 },
+          { name: "정읍",       lat: 35.575773, lng: 126.841917, km: 229.0 },
+          { name: "광주송정",   lat: 35.137707, lng: 126.790110, km: 281.0, dwellSec: 60 },
+          { name: "나주",       lat: 35.013927, lng: 126.717485, km: 301.0 },
+          { name: "목포",       lat: 34.792134, lng: 126.387645, km: 354.2, dwellSec: 90 },
+        ],
+      },
+      {
         id: "Busan-Metro-1",
         name: "부산 도시철도 1호선",
         nameEn: "Busan Metro Line 1",
@@ -1449,6 +1473,7 @@ export const RAIL_DATA = {
       { line: "KTX-Gyeongbu",   type: "KTX",    badge: "KTX",    badgeColor: "#0c4ca3", speed: 250, interval: 20, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "KTX-Gyeongbu",   type: "KTX-산천", badge: "산천", badgeColor: "#dc2626", speed: 230, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "SRT-Gyeongbu",   type: "SRT",    badge: "SRT",    badgeColor: "#6f2da8", speed: 250, interval: 20, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
+      { line: "SRT-Honam",      type: "SRT",    badge: "SRT",    badgeColor: "#8b5cf6", speed: 250, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "Busan-Metro-1",  type: "1호선",  badge: "1",      badgeColor: "#f06a00", speed: 35, interval: 4,  accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
     ],
   },

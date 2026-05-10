@@ -1,7 +1,7 @@
 // Generates line-aware train marker PNGs and the contact sheet.
 // Existing type-fallback PNGs are kept as-is; this script renders only the
 // line override assets declared in src/train-icon-registry.js.
-import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
@@ -215,6 +215,7 @@ function contactEntries() {
 
 async function renderIcon(page, key, entry) {
   const outPath = publicPath(entry.icon);
+  if (!VISUALS[key] && existsSync(outPath)) return;
   await page.setViewportSize({ width: 256, height: 256 });
   await page.setContent(`<html><body style="margin:0;background:transparent"><div id="icon" style="width:256px;height:256px">${iconSvg(key, entry)}</div></body></html>`);
   await page.locator("#icon").screenshot({ path: outPath, omitBackground: true });

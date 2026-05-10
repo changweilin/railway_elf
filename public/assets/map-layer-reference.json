@@ -1,0 +1,218 @@
+{
+  "schemaVersion": 1,
+  "name": "Railway Elf map layer visual reference",
+  "lastReviewed": "2026-05-10",
+  "purpose": "Shared map base-layer, theme, and contrast data for other apps that want to match Railway Elf's street, terrain, and satellite visual treatment.",
+  "defaults": {
+    "baseLayer": "streets",
+    "themePolicy": "The app theme controls light/dark map rendering. The map no longer has a separate manual light/dark switch.",
+    "themeStorageKey": "relf.theme",
+    "baseLayerStorageKey": "relf.mapBaseLayer",
+    "allowedThemes": ["dark", "light"],
+    "allowedBaseLayers": ["streets", "terrain", "satellite"]
+  },
+  "uiOptions": [
+    {
+      "key": "streets",
+      "label": "街道",
+      "labelEn": "Streets",
+      "icon": "me-layer-streets",
+      "isDefault": true
+    },
+    {
+      "key": "terrain",
+      "label": "地形",
+      "labelEn": "Terrain",
+      "icon": "me-layer-topo",
+      "isDefault": false
+    },
+    {
+      "key": "satellite",
+      "label": "衛星",
+      "labelEn": "Satellite",
+      "icon": "me-layer-satellite",
+      "isDefault": false
+    }
+  ],
+  "tileSources": {
+    "streets": {
+      "provider": "CARTO",
+      "product": "Voyager raster tiles",
+      "urlTemplate": "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+      "subdomains": ["a", "b", "c"],
+      "attributionHtml": "&copy; OpenStreetMap &copy; CARTO",
+      "maxZoom": 19,
+      "notes": "Chosen instead of CARTO dark_all/light_all because Voyager keeps roads, labels, water, and green areas more legible after theme filters."
+    },
+    "terrain": {
+      "provider": "Esri",
+      "product": "World Topographic Map",
+      "urlTemplate": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
+      "attributionHtml": "Tiles &copy; Esri",
+      "maxZoom": 19,
+      "notes": "Dark filter was tuned with mountain tiles so contour lines remain visible."
+    },
+    "satellite": {
+      "provider": "Esri",
+      "product": "World Imagery",
+      "urlTemplate": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      "attributionHtml": "Tiles &copy; Esri",
+      "maxZoom": 19,
+      "notes": "Satellite is only contrast-balanced; semantic colors are preserved more loosely than streets/terrain."
+    }
+  },
+  "filters": {
+    "fallback": {
+      "dark": {
+        "cssFilter": "invert(0.72) hue-rotate(200deg) brightness(1.20) contrast(1.86) saturate(0.88)",
+        "operations": [
+          { "name": "invert", "value": 0.72 },
+          { "name": "hue-rotate", "degrees": 200 },
+          { "name": "brightness", "value": 1.2 },
+          { "name": "contrast", "value": 1.86 },
+          { "name": "saturate", "value": 0.88 }
+        ]
+      },
+      "light": {
+        "cssFilter": "brightness(0.84) contrast(1.26) saturate(0.86)",
+        "operations": [
+          { "name": "brightness", "value": 0.84 },
+          { "name": "contrast", "value": 1.26 },
+          { "name": "saturate", "value": 0.86 }
+        ]
+      }
+    },
+    "streets": {
+      "dark": {
+        "cssSelector": ".map-tiles-streets-dark",
+        "cssFilter": "invert(0.72) hue-rotate(200deg) brightness(1.20) contrast(1.86) saturate(0.88)",
+        "operations": [
+          { "name": "invert", "value": 0.72 },
+          { "name": "hue-rotate", "degrees": 200 },
+          { "name": "brightness", "value": 1.2 },
+          { "name": "contrast", "value": 1.86 },
+          { "name": "saturate", "value": 0.88 }
+        ],
+        "visualIntent": "Bright, high-contrast dark street map. Green areas are aligned toward terrain dark's olive green; water is blue-gray; building and land areas are neutral gray; roads and labels stay readable without the older orange-black cast.",
+        "alignmentTarget": "terrain.dark"
+      },
+      "light": {
+        "cssSelector": ".map-tiles-streets-light",
+        "cssFilter": "brightness(0.84) contrast(1.26) saturate(0.86)",
+        "operations": [
+          { "name": "brightness", "value": 0.84 },
+          { "name": "contrast", "value": 1.26 },
+          { "name": "saturate", "value": 0.86 }
+        ],
+        "visualIntent": "Slightly dimmed light street map with enough road and label contrast to sit behind rail overlays."
+      }
+    },
+    "terrain": {
+      "dark": {
+        "cssSelector": ".map-tiles-terrain-dark",
+        "cssFilter": "invert(0.74) hue-rotate(180deg) brightness(1.18) contrast(1.70) saturate(1.22)",
+        "operations": [
+          { "name": "invert", "value": 0.74 },
+          { "name": "hue-rotate", "degrees": 180 },
+          { "name": "brightness", "value": 1.18 },
+          { "name": "contrast", "value": 1.7 },
+          { "name": "saturate", "value": 1.22 }
+        ],
+        "visualIntent": "Dark topographic map that preserves contour lines, ridge shading, roads, water, and green terrain areas.",
+        "validationFocus": ["contour lines", "terrain shading", "roads", "water", "green areas"]
+      },
+      "light": {
+        "cssSelector": ".map-tiles-terrain-light",
+        "cssFilter": "brightness(0.86) contrast(1.28) saturate(1.04)",
+        "operations": [
+          { "name": "brightness", "value": 0.86 },
+          { "name": "contrast", "value": 1.28 },
+          { "name": "saturate", "value": 1.04 }
+        ],
+        "visualIntent": "Light topographic map with reduced glare and stronger terrain/road separation."
+      }
+    },
+    "satellite": {
+      "dark": {
+        "cssSelector": ".map-tiles-satellite-dark",
+        "cssFilter": "brightness(0.68) contrast(1.24) saturate(0.95)",
+        "operations": [
+          { "name": "brightness", "value": 0.68 },
+          { "name": "contrast", "value": 1.24 },
+          { "name": "saturate", "value": 0.95 }
+        ],
+        "visualIntent": "Darkened imagery with stronger rail overlay separation."
+      },
+      "light": {
+        "cssSelector": ".map-tiles-satellite-light",
+        "cssFilter": "brightness(0.88) contrast(1.12) saturate(1.02)",
+        "operations": [
+          { "name": "brightness", "value": 0.88 },
+          { "name": "contrast", "value": 1.12 },
+          { "name": "saturate", "value": 1.02 }
+        ],
+        "visualIntent": "Slightly dimmed imagery with modest contrast improvement."
+      }
+    }
+  },
+  "colorAlignmentNotes": {
+    "darkMode": {
+      "strategy": "Use bright/high-contrast alignment. Similar objects across street and terrain layers should feel related rather than identical.",
+      "greenAreas": "Street dark green areas were shifted toward terrain dark olive green.",
+      "water": "Street dark water was shifted toward terrain dark blue-gray.",
+      "roads": "Street dark roads keep higher contrast than terrain roads so urban navigation remains legible.",
+      "buildingsAndLand": "Street dark building and land areas were neutralized away from orange-black toward gray/olive-gray."
+    },
+    "lightMode": {
+      "strategy": "Both street and terrain light layers are dimmed from their provider defaults to avoid glare while retaining label contrast."
+    }
+  },
+  "cssClassContract": {
+    "tileLayerBaseClass": "map-tiles",
+    "themeClasses": {
+      "dark": "map-tiles-dark",
+      "light": "map-tiles-light"
+    },
+    "layerClasses": {
+      "streets": "map-tiles-streets",
+      "terrain": "map-tiles-terrain",
+      "satellite": "map-tiles-satellite"
+    },
+    "combinedClassPattern": "map-tiles map-tiles-{theme} map-tiles-{baseLayer} map-tiles-{baseLayer}-{theme}",
+    "examples": [
+      "map-tiles map-tiles-dark map-tiles-streets map-tiles-streets-dark",
+      "map-tiles map-tiles-light map-tiles-terrain map-tiles-terrain-light"
+    ]
+  },
+  "sampleTiles": {
+    "taipeiUrban": {
+      "description": "Urban sample used to compare street and terrain colors at the same coordinate.",
+      "z": 13,
+      "x": 6860,
+      "y": 3506,
+      "cartoVoyagerUrl": "https://a.basemaps.cartocdn.com/rastertiles/voyager/13/6860/3506.png",
+      "esriWorldTopoUrl": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/13/3506/6860"
+    },
+    "yangmingshanContours": {
+      "description": "Mountain sample used to validate dark terrain contour-line visibility.",
+      "z": 14,
+      "x": 13724,
+      "y": 7007,
+      "esriWorldTopoUrl": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/14/7007/13724"
+    },
+    "alishanContours": {
+      "description": "Secondary mountain sample used to validate dark terrain contour-line visibility.",
+      "z": 13,
+      "x": 6844,
+      "y": 3545,
+      "esriWorldTopoUrl": "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/13/3545/6844"
+    }
+  },
+  "implementationReferences": {
+    "stateOwner": "src/app-core.js",
+    "leafletTileOwner": "src/app-map.js",
+    "cssOwner": "public/assets/styles.css",
+    "mapAreaProps": ["mapLayer", "mapBaseLayer", "setMapBaseLayer"],
+    "leafletClassNameTemplate": "map-tiles map-tiles-${mapLayer} map-tiles-${mapBaseLayer} map-tiles-${mapBaseLayer}-${mapLayer}"
+  }
+}
