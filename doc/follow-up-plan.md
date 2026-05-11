@@ -92,7 +92,7 @@
 2. [x] 完成 34/34 Phase A 與 Phase B，並更新 `src/rail-data.generated.js`、`scripts/line-shape-snapshot.json`。
 3. [x] 34/34 完成後建置與測試通過：`npm run build` / `npm run check:timing` / `npm run check:shapes` / `npm run test:smoke`（26 passed / 2 skipped）。
 4. [x] Service Worker、PWA 圖片、bundle 拆分完成並回歸。
-5. [ ] 下一輪可選精修：將列入 `maxOffset 0.75–1.0 km` 清單（如 `Beijing-Shanghai-HSR`、`Beijing-Guangzhou-HSR`、`Tokaido`）逐條壓低。
+5. [x] 下一輪可選精修：將列入 `maxOffset 0.75–1.0 km` 清單（如 `Beijing-Shanghai-HSR`、`Beijing-Guangzhou-HSR`、`Tokaido`）逐條壓低（已完成：三者皆已壓低至 `0.75 km` 以下）。
    - [x] Beijing-Shanghai-HSR 已壓低到 0.680 km（< 0.75）。
    - [x] Beijing-Guangzhou-HSR 已壓低到 0.597 km（< 0.75）。
 - [x] Tokaido-Shinkansen 待壓低（已沿用既有 icon：`japan-` 系列；`check:train-icons`、`check:shapes`、`check:timing` 通過，snapshot maxOffset 0.131km）。
