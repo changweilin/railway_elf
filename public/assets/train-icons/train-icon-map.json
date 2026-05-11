@@ -134,6 +134,10 @@
       "icon": "assets/train-icons/japan-sanyo-shinkansen-sakura.png",
       "kind": "shinkansen"
     },
+    "japan|Nishi-Kyushu-Shinkansen|かもめ": {
+      "icon": "assets/train-icons/japan-nishi-kyushu-shinkansen-kamome.png",
+      "kind": "shinkansen"
+    },
     "japan|Tokyo-Monorail|普通": {
       "icon": "assets/train-icons/japan-tokyo-monorail-local.png",
       "kind": "monorail"

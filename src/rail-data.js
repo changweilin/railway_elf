@@ -800,6 +800,23 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "Nishi-Kyushu-Shinkansen",
+        name: "西九州新幹線",
+        nameEn: "Nishi Kyushu Shinkansen",
+        color: "#e11d48",
+        category: "HSR",
+        directions: { up: "上り (武雄温泉方面)", down: "下り (長崎方面)" },
+        // 西九州新幹線:武雄温泉↔長崎 5 駅,約 66 km。fallback km is
+        // line-length scaled; generated OSM stationKms replace it for runtime.
+        stations: [
+          { name: "武雄温泉", lat: 33.1964792, lng: 130.0230661, km: 0,    dwellSec: 60 },
+          { name: "嬉野温泉", lat: 33.1066719, lng: 129.9989438, km: 10.9 },
+          { name: "新大村",   lat: 32.9329805, lng: 129.9570496, km: 32.2 },
+          { name: "諫早",     lat: 32.8515808, lng: 130.0414370, km: 44.7, dwellSec: 60 },
+          { name: "長崎",     lat: 32.7521727, lng: 129.8688815, km: 66.0, dwellSec: 90 },
+        ],
+      },
+      {
         id: "JR-Osaka-Loop",
         name: "大阪環状線",
         nameEn: "JR Osaka Loop Line",
@@ -1169,6 +1186,7 @@ export const RAIL_DATA = {
       { line: "Sanyo-Shinkansen",         type: "みずほ",     badge: "みずほ", badgeColor: "#a78bfa", speed: 290, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "Sanyo-Shinkansen",         type: "さくら",     badge: "さくら", badgeColor: "#f472b6", speed: 270, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "Sanyo-Shinkansen",         type: "こだま",     badge: "こだま", badgeColor: "#60a5fa", speed: 180, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
+      { line: "Nishi-Kyushu-Shinkansen",  type: "かもめ",     badge: "かもめ", badgeColor: "#e11d48", speed: 230, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "Tokyo-Monorail",           type: "普通",       badge: "MO",     badgeColor: "#003685", speed: 80,  interval: 5,  accel: 0.95, decel: 1.05, aLat: 0.85, dwellSec: 25 },
     ],
   },

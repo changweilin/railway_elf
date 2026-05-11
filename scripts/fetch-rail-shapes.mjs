@@ -133,6 +133,14 @@ const OSM_LINE_MAP = {
     relationIds: [1837932],
     corridor: { corridorKm: 2.5, sampleKm: 0.1 },
   }, // 新大阪→博多; relation includes both directions, so rebuild one centerline
+  "Nishi-Kyushu-Shinkansen": {
+    name: "Nishi-Kyushu Shinkansen (Takeo-Onsen→Nagasaki)",
+    relationIds: [7356208],
+    stationStops: {},
+    orderStationKms: true,
+    corridor: { corridorKm: 1.2, sampleKm: 0.08 },
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // Tokyo Metro (route=subway).
   "Tokyo-Metro-Ginza":      { name: "Tokyo Metro Ginza Line (浅草→渋谷)",     relationIds: [443281] },  // A 線 (浅草→渋谷) 主行向
