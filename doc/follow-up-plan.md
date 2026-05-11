@@ -95,7 +95,7 @@
 5. [ ] 下一輪可選精修：將列入 `maxOffset 0.75–1.0 km` 清單（如 `Beijing-Shanghai-HSR`、`Beijing-Guangzhou-HSR`、`Tokaido`）逐條壓低。
    - [x] Beijing-Shanghai-HSR 已壓低到 0.680 km（< 0.75）。
    - [x] Beijing-Guangzhou-HSR 已壓低到 0.597 km（< 0.75）。
-   - [ ] Tokaido-Shinkansen 待壓低。
+- [x] Tokaido-Shinkansen 待壓低（已沿用既有 icon：`japan-` 系列；`check:train-icons`、`check:shapes`、`check:timing` 通過，snapshot maxOffset 0.131km）。
 6. [ ] 下一輪可選精修：完成已標註待補關係的支線/變體（如 Line 9 快慢法、Gyeongui short-turn、Gyeongchun variants）所需 template 支援。
 
 ### 5.5 需要策略決策
