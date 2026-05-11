@@ -142,6 +142,10 @@
       "icon": "assets/train-icons/japan-tokyo-monorail-local.png",
       "kind": "monorail"
     },
+    "japan|Utsunomiya-Lightline|ライトライン": {
+      "icon": "assets/train-icons/japan-utsunomiya-lightline-lightline.png",
+      "kind": "lrt"
+    },
     "korea|Seoul-Metro-1|급행": {
       "icon": "assets/train-icons/korea-seoul-metro-1-express.png",
       "kind": "express"

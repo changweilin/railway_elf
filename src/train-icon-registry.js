@@ -42,6 +42,7 @@ export const TRAIN_ICON_REGISTRY = {
     'japan|Sanyo-Shinkansen|さくら': { icon: 'assets/train-icons/japan-sanyo-shinkansen-sakura.png', kind: 'shinkansen' },
     'japan|Nishi-Kyushu-Shinkansen|かもめ': { icon: 'assets/train-icons/japan-nishi-kyushu-shinkansen-kamome.png', kind: 'shinkansen' },
     'japan|Tokyo-Monorail|普通': { icon: 'assets/train-icons/japan-tokyo-monorail-local.png', kind: 'monorail' },
+    'japan|Utsunomiya-Lightline|ライトライン': { icon: 'assets/train-icons/japan-utsunomiya-lightline-lightline.png', kind: 'lrt' },
 
     'korea|Seoul-Metro-1|급행': { icon: 'assets/train-icons/korea-seoul-metro-1-express.png', kind: 'express' },
     'korea|Seoul-Metro-1|완행': { icon: 'assets/train-icons/korea-seoul-metro-1-local.png', kind: 'commuter' },

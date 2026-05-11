@@ -33,6 +33,7 @@ const VISUALS = {
   "japan|Sanyo-Shinkansen|さくら": { shape: "shinkansen", body: "#f8fafc", accent: "#f472b6", accent2: "#2563eb" },
   "japan|Nishi-Kyushu-Shinkansen|かもめ": { shape: "shinkansen", body: "#f8fafc", accent: "#e11d48", accent2: "#111827" },
   "japan|Tokyo-Monorail|普通": { shape: "monorail", body: "#f8fafc", accent: "#003685", accent2: "#e60013" },
+  "japan|Utsunomiya-Lightline|ライトライン": { shape: "metro", body: "#f8fafc", accent: "#facc15", band: "#facc15" },
 
   "korea|Seoul-Metro-1|급행": { shape: "commuter", body: "#f8fafc", accent: "#1d4ed8", accent2: "#0c4ca3" },
   "korea|Seoul-Metro-1|완행": { shape: "commuter", body: "#f8fafc", accent: "#0052a4", accent2: "#60a5fa" },

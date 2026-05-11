@@ -152,6 +152,12 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     snapStationCoordsOverKm: 1.0,
   },
+  "Utsunomiya-Lightline": {
+    name: "Utsunomiya Haga Light Rail Line (Utsunomiya Station East→Haga-Takanezawa Industrial Park)",
+    relationIds: [12419659],
+    orderStationKms: true,
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // JR Keihin-Tōhoku (大宮↔横浜) + 根岸線 (横浜↔大船) 合併運轉。
   // OSM 各為獨立 relation,串接後即覆蓋我們的 大宮↔大船 站表。

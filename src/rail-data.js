@@ -1160,6 +1160,38 @@ export const RAIL_DATA = {
           { name: "羽田空港第2ターミナル",  lat: 35.5508377, lng: 139.7882856, km: 18.047, dwellSec: 30 },
         ],
       },
+      {
+        id: "Utsunomiya-Lightline",
+        name: "宇都宮芳賀ライトレール線",
+        nameEn: "Utsunomiya Haga Light Rail Line",
+        color: "#facc15",
+        category: "LRT",
+        directions: { up: "上り (宇都宮駅東口方面)", down: "下り (芳賀・高根沢工業団地方面)" },
+        // Official route map lists 19 stops from Utsunomiya Station East to
+        // Haga-Takanezawa Industrial Park. Fallback km values are scaled to the
+        // 14.6 km project length; generated OSM stationKms replace them at runtime.
+        stations: [
+          { name: "宇都宮駅東口", lat: 36.5590222, lng: 139.8995751, km: 0.000, dwellSec: 25 },
+          { name: "東宿郷", lat: 36.5582650, lng: 139.9040643, km: 0.432 },
+          { name: "駅東公園前", lat: 36.5579621, lng: 139.9081419, km: 0.817 },
+          { name: "峰", lat: 36.5575329, lng: 139.9162772, km: 1.584 },
+          { name: "陽東3丁目", lat: 36.5572788, lng: 139.9232319, km: 2.239 },
+          { name: "宇都宮大学陽東キャンパス", lat: 36.5570446, lng: 139.9301903, km: 2.894 },
+          { name: "平石", lat: 36.5550683, lng: 139.9392659, km: 3.778 },
+          { name: "平石中央小学校前", lat: 36.5548335, lng: 139.9447606, km: 4.296 },
+          { name: "飛山城跡", lat: 36.5483643, lng: 139.9634208, km: 6.208 },
+          { name: "清陵高校前", lat: 36.5449489, lng: 139.9762998, km: 7.484 },
+          { name: "清原地区市民センター前", lat: 36.5476408, lng: 139.9842429, km: 8.295 },
+          { name: "グリーンスタジアム前", lat: 36.5535964, lng: 139.9832384, km: 8.999 },
+          { name: "ゆいの杜西", lat: 36.5674513, lng: 139.9872795, km: 10.665 },
+          { name: "ゆいの杜中央", lat: 36.5677248, lng: 139.9929737, km: 11.202 },
+          { name: "ゆいの杜東", lat: 36.5676112, lng: 139.9987885, km: 11.749 },
+          { name: "芳賀台", lat: 36.5661120, lng: 140.0064986, km: 12.495 },
+          { name: "芳賀町工業団地管理センター前", lat: 36.5649729, lng: 140.0106667, km: 12.909 },
+          { name: "かしの森公園前", lat: 36.5723821, lng: 140.0145609, km: 13.851 },
+          { name: "芳賀・高根沢工業団地", lat: 36.5784382, lng: 140.0120077, km: 14.600, dwellSec: 25 },
+        ],
+      },
     ],
     trainTemplates: [
       { line: "Tokaido-Shinkansen", type: "のぞみ",     badge: "のぞみ", badgeColor: "#6ee7b7", speed: 270, interval: 10, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
@@ -1188,6 +1220,7 @@ export const RAIL_DATA = {
       { line: "Sanyo-Shinkansen",         type: "こだま",     badge: "こだま", badgeColor: "#60a5fa", speed: 180, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "Nishi-Kyushu-Shinkansen",  type: "かもめ",     badge: "かもめ", badgeColor: "#e11d48", speed: 230, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "Tokyo-Monorail",           type: "普通",       badge: "MO",     badgeColor: "#003685", speed: 80,  interval: 5,  accel: 0.95, decel: 1.05, aLat: 0.85, dwellSec: 25 },
+      { line: "Utsunomiya-Lightline",     type: "ライトライン", badge: "HU",   badgeColor: "#facc15", speed: 30,  interval: 8,  accel: 0.80, decel: 0.90, aLat: 0.80, dwellSec: 20 },
     ],
   },
 
