@@ -137,6 +137,13 @@ const OSM_LINE_MAP = {
   // Tokyo Metro (route=subway).
   "Tokyo-Metro-Ginza":      { name: "Tokyo Metro Ginza Line (浅草→渋谷)",     relationIds: [443281] },  // A 線 (浅草→渋谷) 主行向
   "Tokyo-Metro-Marunouchi": { name: "Tokyo Metro Marunouchi Line (池袋→荻窪)", relationIds: [8015932] }, // 本線 池袋→荻窪 (不含方南町支線)
+  "Tokyo-Monorail": {
+    name: "Tokyo Monorail Haneda Airport Line Local (Hamamatsucho→Haneda Airport Terminal 2)",
+    relationIds: [3417174],
+    stationStops: {},
+    orderStationKms: true,
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // JR Keihin-Tōhoku (大宮↔横浜) + 根岸線 (横浜↔大船) 合併運轉。
   // OSM 各為獨立 relation,串接後即覆蓋我們的 大宮↔大船 站表。

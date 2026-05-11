@@ -1119,6 +1119,30 @@ export const RAIL_DATA = {
           { from: 13.6, to: 14.3, type: "elevated", note: "渋谷站高架月台 (東急東横與銀座線共構)" },
         ],
       },
+      {
+        id: "Tokyo-Monorail",
+        name: "東京モノレール羽田空港線",
+        nameEn: "Tokyo Monorail Haneda Airport Line",
+        color: "#003685",
+        category: "Monorail",
+        directions: { up: "上り (モノレール浜松町方面)", down: "下り (羽田空港第2ターミナル方面)" },
+        // Official line map lists 11 stations from Monorail Hamamatsucho to
+        // Haneda Airport Terminal 2; only the all-stop local template is modeled
+        // until skip-stop service support is available.
+        stations: [
+          { name: "モノレール浜松町",       lat: 35.6555976, lng: 139.7567934, km: 0.050, dwellSec: 30 },
+          { name: "天王洲アイル",           lat: 35.6227519, lng: 139.7508064, km: 4.141 },
+          { name: "大井競馬場前",           lat: 35.5951293, lng: 139.7470745, km: 7.318 },
+          { name: "流通センター",           lat: 35.5816902, lng: 139.7491442, km: 8.851 },
+          { name: "昭和島",                 lat: 35.5707693, lng: 139.7500681, km: 10.105 },
+          { name: "整備場",                 lat: 35.5551633, lng: 139.7533778, km: 12.005 },
+          { name: "天空橋",                 lat: 35.5489899, lng: 139.7543945, km: 12.705 },
+          { name: "羽田空港第3ターミナル",  lat: 35.5438943, lng: 139.7686676, km: 14.227, dwellSec: 30 },
+          { name: "新整備場",               lat: 35.5428370, lng: 139.7868127, km: 16.329 },
+          { name: "羽田空港第1ターミナル",  lat: 35.5491467, lng: 139.7845042, km: 17.100, dwellSec: 30 },
+          { name: "羽田空港第2ターミナル",  lat: 35.5508377, lng: 139.7882856, km: 18.047, dwellSec: 30 },
+        ],
+      },
     ],
     trainTemplates: [
       { line: "Tokaido-Shinkansen", type: "のぞみ",     badge: "のぞみ", badgeColor: "#6ee7b7", speed: 270, interval: 10, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
@@ -1145,6 +1169,7 @@ export const RAIL_DATA = {
       { line: "Sanyo-Shinkansen",         type: "みずほ",     badge: "みずほ", badgeColor: "#a78bfa", speed: 290, interval: 60, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "Sanyo-Shinkansen",         type: "さくら",     badge: "さくら", badgeColor: "#f472b6", speed: 270, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
       { line: "Sanyo-Shinkansen",         type: "こだま",     badge: "こだま", badgeColor: "#60a5fa", speed: 180, interval: 30, accel: 0.72, decel: 0.70, aLat: 0.85, dwellSec: 60 },
+      { line: "Tokyo-Monorail",           type: "普通",       badge: "MO",     badgeColor: "#003685", speed: 80,  interval: 5,  accel: 0.95, decel: 1.05, aLat: 0.85, dwellSec: 25 },
     ],
   },
 

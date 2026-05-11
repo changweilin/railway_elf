@@ -40,6 +40,7 @@ export const TRAIN_ICON_REGISTRY = {
     'japan|Hankyu-Kobe|特急': { icon: 'assets/train-icons/japan-hankyu-kobe-limited-express.png', kind: 'express' },
     'japan|Sanyo-Shinkansen|みずほ': { icon: 'assets/train-icons/japan-sanyo-shinkansen-mizuho.png', kind: 'shinkansen' },
     'japan|Sanyo-Shinkansen|さくら': { icon: 'assets/train-icons/japan-sanyo-shinkansen-sakura.png', kind: 'shinkansen' },
+    'japan|Tokyo-Monorail|普通': { icon: 'assets/train-icons/japan-tokyo-monorail-local.png', kind: 'monorail' },
 
     'korea|Seoul-Metro-1|급행': { icon: 'assets/train-icons/korea-seoul-metro-1-express.png', kind: 'express' },
     'korea|Seoul-Metro-1|완행': { icon: 'assets/train-icons/korea-seoul-metro-1-local.png', kind: 'commuter' },

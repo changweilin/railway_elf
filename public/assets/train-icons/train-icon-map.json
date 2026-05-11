@@ -134,6 +134,10 @@
       "icon": "assets/train-icons/japan-sanyo-shinkansen-sakura.png",
       "kind": "shinkansen"
     },
+    "japan|Tokyo-Monorail|普通": {
+      "icon": "assets/train-icons/japan-tokyo-monorail-local.png",
+      "kind": "monorail"
+    },
     "korea|Seoul-Metro-1|급행": {
       "icon": "assets/train-icons/korea-seoul-metro-1-express.png",
       "kind": "express"

@@ -31,6 +31,7 @@ const VISUALS = {
   "japan|Hankyu-Kobe|特急": { shape: "classic", body: "#7c1d10", accent: "#fde047", accent2: "#facc15", roof: "#5b140b" },
   "japan|Sanyo-Shinkansen|みずほ": { shape: "shinkansen", body: "#f8fafc", accent: "#a78bfa", accent2: "#2563eb" },
   "japan|Sanyo-Shinkansen|さくら": { shape: "shinkansen", body: "#f8fafc", accent: "#f472b6", accent2: "#2563eb" },
+  "japan|Tokyo-Monorail|普通": { shape: "monorail", body: "#f8fafc", accent: "#003685", accent2: "#e60013" },
 
   "korea|Seoul-Metro-1|급행": { shape: "commuter", body: "#f8fafc", accent: "#1d4ed8", accent2: "#0c4ca3" },
   "korea|Seoul-Metro-1|완행": { shape: "commuter", body: "#f8fafc", accent: "#0052a4", accent2: "#60a5fa" },
