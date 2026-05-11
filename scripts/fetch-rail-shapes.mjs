@@ -574,7 +574,7 @@ const OSM_LINE_MAP = {
     name: "Jinghu High-speed Line",
     relationIds: [356778],
     corridor: { corridorKm: 12.0, sampleKm: 1.0 },
-    snapStationCoordsOverKm: 1.0,
+    snapStationCoordsOverKm: 0.75,
   },
   "Beijing-Guangzhou-HSR": {
     name: "Jinggang High-speed Line (clipped to Beijing West→Guangzhou South)",
