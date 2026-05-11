@@ -80,3 +80,33 @@
 1. 後續資料改善：只做可選精修，優先處理 maxOffset 約 0.75–1.0 km 的路線與官方營業里程交叉校驗。
 2. 若 OSM 未來有更乾淨的 Tokaido-Shinkansen relation，再替換資料來源並更新 snapshot。
 3. 若要啟動下一輪資料擴張，先從日本 / 南韓完整覆蓋 backlog 選一個尚未 seed 的類型與一條代表線，補 icon / speed profile / shape pipeline 後再批量展開；日本 Tram / LRT 已有 `Utsunomiya-Lightline` 作為低速 profile 與 LRT 圖示範例。
+
+## 5.3 vs 5.5 任務拆分與進度管理（本輪與下一輪）
+
+### 5.3 可直接執行
+- 目標：維持既有完成品質，做可驗證的資料更新與精修。
+- 當前狀態：本輪「必要項目」已結束，後續屬可選優化與下一輪 seed 擴展。
+
+#### 5.3 進度看板
+1. [x] 完成本輪必要項目（0 未完成）。
+2. [x] 完成 34/34 Phase A 與 Phase B，並更新 `src/rail-data.generated.js`、`scripts/line-shape-snapshot.json`。
+3. [x] 34/34 完成後建置與測試通過：`npm run build` / `npm run check:timing` / `npm run check:shapes` / `npm run test:smoke`（26 passed / 2 skipped）。
+4. [x] Service Worker、PWA 圖片、bundle 拆分完成並回歸。
+5. [ ] 下一輪可選精修：將列入 `maxOffset 0.75–1.0 km` 清單（如 `Beijing-Shanghai-HSR`、`Beijing-Guangzhou-HSR`、`Tokaido` 等）逐條壓低。
+6. [ ] 下一輪可選精修：完成已標註待補關係的支線/變體（如 Line 9 快慢法、Gyeongui short-turn、Gyeongchun variants）所需 template 支援。
+
+### 5.5 需要策略決策
+- 目標：在再擴張前定義下一輪大方向，避免資源重工。
+- 建議由 5.5 負責每輪啟動前的節點決策，5.3 只負責落地執行。
+
+#### 5.5 進度看板
+1. [x] 已完成「本輪必要項目判定」：回報無阻塞項目，將 backlog 轉為可選。
+2. [ ] 決定下一輪首選類型：在日本 / 南韓剩餘 backlog 中先挑 1 種 type（例如 Regional、Heritage、剩餘 Metro）。
+3. [ ] 決定 seed 擴展節奏：每輪固定 1 代表線→先驗證 icon/speed/shape→再擴張同網絡。
+4. [ ] 確認是否導入更多 branch/short-turn template（line-aware）與 skip-stop 規則，並同步規劃 app-core 模型更新邊界。
+5. [ ] 做「資料源路徑」決策：是否接入 Level-2/4 資源、授權上限、更新週期與維護成本。
+
+### 下一步行事曆（建議）
+- 每輪開始：5.5 完成 backlog 類型排序 + seed 列表。
+- 每輪執行：5.3 以 seed 粒度完成 A/B + script 更新。
+- 每輪結束：5.5 檢視 `maxOffset`、回傳優先修正清單、更新兩份文檔的進度條。

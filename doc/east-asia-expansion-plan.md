@@ -358,3 +358,34 @@ Backlog 執行原則：
 ## 執行順序
 
 2026-05-09 已依批次 1 → 11 完成 Phase B 形狀回灌與 snapshot 更新；同日完成高誤差複查、OSM stop member 對站、snapshot 二次精修更新。2026-05-11 起可選 backlog 持續補 seed；`Nishi-Kyushu-Shinkansen` 已完成日本 HSR 代表線，`Tokyo-Monorail` 已完成日本 Airport / Monorail 代表線，`Utsunomiya-Lightline` 已完成日本 Tram / LRT 代表線。後續循環可從剩餘日本 HSR / Metro / Regional / Heritage 或南韓 Regional / Heritage 另挑小項目。
+
+## 5.3 vs 5.5 任務拆分與進度管理
+
+### 5.3 可直接執行（GPT-5.3-Codex-Spark）
+- 目標：可按既有格式直接落地的資料新增/修正，包含手寫站表、train template、OSM 關聯、shape 回灌與 icon 更新。
+- 交付條件：資料可驗證、可回復、可建置。
+
+#### 進度看板（5.3）
+1. [x] 完成既有 34 條 Phase A / Phase B（含日本・南韓 seed 完成）且 snapshot 已更新到 103 條線。
+2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Vietnam 各區批次）。
+3. [x] 維護資料源（以 OSM 為主）並更新 `OSM_LINE_MAP`、`rail-data`、`trainTemplates` 的常規新增流程。
+4. [x] 針對高誤差路段執行 station-to-station/stop-node 對站修正（已完成：多條南韓與東南亞主要線路）。
+5. [ ] 持續追加入列 backlog 的候選新線（日本 Metro、南韓 Regional / Heritage）前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路。
+6. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
+
+### 5.5 需要跨模組判斷（GPT-5.5）
+- 目標：涉及策略、優先序、資料模型邊界與 UI/流程風險的決策性工作。
+- 交付條件：完成規則共識後再下放 5.3 實作，避免反覆退回。
+
+#### 進度看板（5.5）
+1. [x] 確認「完成」與「可選 backlog」邊界（目前結論：必要項目已無）並固定為每輪 1 類型 1 seed 的擴張策略。
+2. [ ] 審核「日本/南韓完整覆蓋」長期路線地圖：決定下一輪優先順序（HSR 其餘走廊 vs 首都圈 vs 非首都圈）。
+3. [ ] 評估 loop/複線/共線的策略模板（`loopAnchor`、`corridor`、branch/short-turn）在 `app-core` 與 `app-map` 的長期維運性。
+4. [ ] 規劃多 region UI 與地區切換體驗（9+ region 規模）是否改版為下拉/群組，以免後續擴展衝突。
+5. [ ] i18n 策略決定（中文、日文、韓文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
+6. [ ] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
+
+### 每 1 輪管理規則（共用）
+- 5.3 工作可按 `seed` 粒度收斂：每輪至少完成 1 條完整 seed（A+B）並出具 smoke + shape + timing 驗證。
+- 5.5 工作完成後才更新 `doc/east-asia-expansion-plan.md` 的「完成/待辦」欄位，避免前後矛盾。
+- 任何 `station-to-station` fallback > 1.0 km 持續維持為高優先修正，並附上對應 `maxOffset` 數值。
