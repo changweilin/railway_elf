@@ -13,6 +13,7 @@ body {
 #app {
   position: fixed; inset: 0;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   grid-template-rows: var(--me-toolbar-height) 1fr;
   overflow: hidden;
 }
@@ -25,6 +26,7 @@ body {
   border-bottom: 1px solid var(--me-border);
   z-index: 500;
   height: var(--me-toolbar-height);
+  min-width: 0;
 }
 .tb-logo {
   display: flex; align-items: center; gap: 10px;
@@ -100,6 +102,7 @@ body {
   grid-template-columns: 1fr;
   overflow: hidden;
   min-height: 0;
+  min-width: 0;
   position: relative;
 }
 
@@ -738,6 +741,7 @@ body {
 .map-area {
   position: relative;
   min-height: 0;
+  min-width: 0;
   background: var(--me-bg-primary);
   transition: background-color var(--me-transition-normal);
 }
@@ -1360,6 +1364,7 @@ body.sheet-resizing .leaflet-container { pointer-events: none; }
 .tb-region-select {
   position: relative;
   display: inline-flex; align-items: center;
+  min-width: 0;
 }
 .tb-region-select select {
   appearance: none; -webkit-appearance: none;
@@ -1372,6 +1377,7 @@ body.sheet-resizing .leaflet-container { pointer-events: none; }
   font-family: inherit;
   cursor: pointer;
   transition: var(--me-transition-fast);
+  max-width: 100%;
 }
 .tb-region-select select:hover { border-color: var(--me-border-hover); }
 .tb-region-select select:focus {
@@ -1450,6 +1456,9 @@ body.sheet-resizing .leaflet-container { pointer-events: none; }
 
 @media (max-width: 900px) {
   .main { grid-template-columns: 1fr; }
+  .toolbar > .tb-tool:last-child { display: none; }
+  .tb-region-select { flex: 1 1 auto; }
+  .tb-region-select select { width: 100%; }
   .panel {
     width: min(88vw, 360px);
     z-index: 1200; /* above all map controls + FABs */
