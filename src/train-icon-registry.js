@@ -1,138 +1,195 @@
 // Train icon registry shared by the map and validation scripts.
 // Paths are relative to the document URL so the app works under `/` and under
 // the GitHub Pages project sub-path.
+import { RAIL_DATA } from "./rail-data.js";
+
+function icon(file, kind) {
+  return { icon: `assets/train-icons/${file}`, kind };
+}
+
+const templatesByLine = new Map();
+
+function trainTemplates(region, lineId) {
+  const key = `${region}|${lineId}`;
+  if (!templatesByLine.has(key)) {
+    const templates = RAIL_DATA[region]?.trainTemplates
+      .filter(template => template.line === lineId) || [];
+    templatesByLine.set(key, templates);
+  }
+  return templatesByLine.get(key);
+}
+
+function templateType(region, lineId, typeIndex) {
+  const template = trainTemplates(region, lineId)[typeIndex];
+  if (!template) {
+    throw new Error(`Missing train template for ${region}|${lineId}|${typeIndex}`);
+  }
+  return template.type;
+}
+
+function fromUniqueEntries(entries) {
+  const registry = {};
+  for (const [key, entry] of entries) {
+    if (registry[key]) throw new Error(`Duplicate train icon registry key: ${key}`);
+    registry[key] = entry;
+  }
+  return registry;
+}
+
+function typeFallback(region, lineId, typeIndex, file, kind) {
+  return [templateType(region, lineId, typeIndex), icon(file, kind)];
+}
+
+function lineOverride(region, lineId, typeIndex, file, kind) {
+  return [
+    `${region}|${lineId}|${templateType(region, lineId, typeIndex)}`,
+    icon(file, kind),
+  ];
+}
+
+const typeFallbackSpecs = [
+  ["taiwan", "TRA-West", 0, "tze-chiang.png", "express"],
+  ["taiwan", "TRA-West", 1, "chu-kuang.png", "limited"],
+  ["taiwan", "TRA-West", 2, "local-emu.png", "commuter"],
+  ["taiwan", "THSR", 0, "thsr-700t.png", "shinkansen"],
+  ["taiwan", "TRA-East", 0, "taroko.png", "express"],
+  ["taiwan", "TRA-East", 1, "puyuma.png", "express"],
+  ["taiwan", "Alishan-Forest", 0, "alishan-express.png", "heritage"],
+  ["taiwan", "TPE-Red", 0, "metro.png", "metro"],
+  ["taiwan", "TYMRT", 0, "tymetro-commuter.png", "commuter"],
+  ["taiwan", "TYMRT", 1, "tymetro-express.png", "express"],
+  ["taiwan", "KHH-LRT", 0, "lrt.png", "lrt"],
+  ["japan", "Tokaido-Shinkansen", 0, "shinkansen-nozomi.png", "shinkansen"],
+  ["japan", "Tokaido-Shinkansen", 1, "shinkansen-hikari.png", "shinkansen"],
+  ["japan", "Tokaido-Shinkansen", 2, "shinkansen-kodama.png", "shinkansen"],
+  ["japan", "JR-Yamanote", 0, "yamanote.png", "commuter"],
+  ["japan", "JR-Chuo", 0, "chuo-rapid.png", "express"],
+  ["japan", "JR-Chuo", 1, "chuo-special-rapid.png", "express"],
+];
+
+const lineOverrideSpecs = [
+  ["taiwan", "TRA-Coast", 1, "taiwan-tra-coast-semi-express.png", "express"],
+
+  ["japan", "Tokyo-Metro-Ginza", 0, "japan-tokyo-metro-ginza-ginza-line.png", "metro"],
+  ["japan", "Tokyo-Metro-Marunouchi", 0, "japan-tokyo-metro-marunouchi-marunouchi-line.png", "metro"],
+  ["japan", "JR-Keihin-Tohoku", 0, "japan-jr-keihin-tohoku-local.png", "commuter"],
+  ["japan", "JR-Sobu-Local", 0, "japan-jr-sobu-local-local.png", "commuter"],
+  ["japan", "Tokyu-Toyoko", 0, "japan-tokyu-toyoko-local.png", "commuter"],
+  ["japan", "Tokyu-Toyoko", 1, "japan-tokyu-toyoko-express.png", "express"],
+  ["japan", "Tokyu-Toyoko", 2, "japan-tokyu-toyoko-limited-express.png", "express"],
+  ["japan", "JR-Osaka-Loop", 0, "japan-jr-osaka-loop-local.png", "commuter"],
+  ["japan", "JR-Osaka-Loop", 1, "japan-jr-osaka-loop-yamatoji-rapid.png", "express"],
+  ["japan", "Osaka-Metro-Midosuji", 0, "japan-osaka-metro-midosuji-midosuji-line.png", "metro"],
+  ["japan", "Hankyu-Kobe", 0, "japan-hankyu-kobe-local.png", "commuter"],
+  ["japan", "Hankyu-Kobe", 1, "japan-hankyu-kobe-commuter-limited-express.png", "express"],
+  ["japan", "Hankyu-Kobe", 2, "japan-hankyu-kobe-limited-express.png", "express"],
+  ["japan", "Sanyo-Shinkansen", 1, "japan-sanyo-shinkansen-mizuho.png", "shinkansen"],
+  ["japan", "Sanyo-Shinkansen", 2, "japan-sanyo-shinkansen-sakura.png", "shinkansen"],
+  ["japan", "Nishi-Kyushu-Shinkansen", 0, "japan-nishi-kyushu-shinkansen-kamome.png", "shinkansen"],
+  ["japan", "Tokyo-Monorail", 0, "japan-tokyo-monorail-local.png", "monorail"],
+  ["japan", "Utsunomiya-Lightline", 0, "japan-utsunomiya-lightline-lightline.png", "lrt"],
+
+  ["korea", "Seoul-Metro-1", 0, "korea-seoul-metro-1-express.png", "express"],
+  ["korea", "Seoul-Metro-1", 1, "korea-seoul-metro-1-local.png", "commuter"],
+  ["korea", "Seoul-Metro-2", 0, "korea-seoul-metro-2-loop.png", "metro"],
+  ["korea", "Seoul-Metro-3", 0, "korea-seoul-metro-3-line-3.png", "metro"],
+  ["korea", "Seoul-Metro-4", 0, "korea-seoul-metro-4-line-4.png", "metro"],
+  ["korea", "Seoul-Metro-5", 0, "korea-seoul-metro-5-line-5.png", "metro"],
+  ["korea", "Seoul-Metro-6", 0, "korea-seoul-metro-6-line-6.png", "metro"],
+  ["korea", "Seoul-Metro-7", 0, "korea-seoul-metro-7-line-7.png", "metro"],
+  ["korea", "Seoul-Metro-8", 0, "korea-seoul-metro-8-line-8.png", "metro"],
+  ["korea", "Seoul-Metro-9", 0, "korea-seoul-metro-9-line-9.png", "metro"],
+  ["korea", "Seoul-Metro-9", 1, "korea-seoul-metro-9-line-9.png", "metro"],
+  ["korea", "Seoul-Metro-9", 2, "korea-seoul-metro-9-line-9.png", "metro"],
+  ["korea", "Ui-LRT", 0, "korea-ui-lrt-ui-sinseol-line.png", "lrt"],
+  ["korea", "Sillim-LRT", 0, "korea-sillim-lrt-sillim-line.png", "lrt"],
+  ["korea", "Uijeongbu-LRT", 0, "korea-uijeongbu-lrt-u-line.png", "lrt"],
+  ["korea", "Yongin-EverLine", 0, "korea-yongin-everline-everline.png", "lrt"],
+  ["korea", "Shinbundang", 0, "korea-shinbundang-shinbundang.png", "metro"],
+  ["korea", "Suin-Bundang", 0, "korea-suin-bundang-suin-bundang.png", "commuter"],
+  ["korea", "Gyeongui-Jungang", 0, "korea-gyeongui-jungang-gyeongui-jungang.png", "commuter"],
+  ["korea", "Gyeongui-Jungang", 1, "korea-gyeongui-jungang-gyeongui-jungang.png", "commuter"],
+  ["korea", "Gyeongchun", 0, "korea-gyeongchun-gyeongchun.png", "commuter"],
+  ["korea", "Gyeongchun", 1, "korea-gyeongchun-gyeongchun.png", "commuter"],
+  ["korea", "Gyeongchun", 2, "korea-gyeongchun-gyeongchun.png", "commuter"],
+  ["korea", "Gyeonggang", 0, "korea-gyeonggang-gyeonggang.png", "commuter"],
+  ["korea", "Seohae", 0, "korea-seohae-seohae.png", "commuter"],
+  ["korea", "Incheon-Metro-1", 0, "korea-incheon-metro-1-line-1.png", "metro"],
+  ["korea", "Incheon-Metro-2", 0, "korea-incheon-metro-2-line-2.png", "lrt"],
+  ["korea", "AREX", 0, "korea-arex-arex.png", "express"],
+  ["korea", "Gimpo-Goldline", 0, "korea-gimpo-goldline-goldline.png", "lrt"],
+  ["korea", "Daegu-Metro-1", 0, "korea-daegu-metro-1-line-1.png", "metro"],
+  ["korea", "Daegu-Metro-2", 0, "korea-daegu-metro-2-line-2.png", "metro"],
+  ["korea", "Daegu-Metro-3", 0, "korea-daegu-metro-3-line-3.png", "monorail"],
+  ["korea", "Daejeon-Metro-1", 0, "korea-daejeon-metro-1-line-1.png", "metro"],
+  ["korea", "Gwangju-Metro-1", 0, "korea-gwangju-metro-1-line-1.png", "metro"],
+  ["korea", "KTX-Gyeongbu", 0, "korea-ktx-gyeongbu-ktx.png", "shinkansen"],
+  ["korea", "KTX-Gyeongbu", 1, "korea-ktx-gyeongbu-ktx-sancheon.png", "shinkansen"],
+  ["korea", "KTX-Honam", 0, "korea-ktx-gyeongbu-ktx.png", "shinkansen"],
+  ["korea", "KTX-Honam", 1, "korea-ktx-gyeongbu-ktx-sancheon.png", "shinkansen"],
+  ["korea", "KTX-Jeolla", 0, "korea-ktx-gyeongbu-ktx.png", "shinkansen"],
+  ["korea", "KTX-Jeolla", 1, "korea-ktx-gyeongbu-ktx-sancheon.png", "shinkansen"],
+  ["korea", "KTX-Gyeongjeon", 0, "korea-ktx-gyeongbu-ktx.png", "shinkansen"],
+  ["korea", "KTX-Gyeongjeon", 1, "korea-ktx-gyeongbu-ktx-sancheon.png", "shinkansen"],
+  ["korea", "KTX-Gangneung", 0, "korea-ktx-gangneung-ktx-eum.png", "shinkansen"],
+  ["korea", "KTX-Donghae", 0, "korea-ktx-gyeongbu-ktx.png", "shinkansen"],
+  ["korea", "KTX-Donghae", 1, "korea-ktx-gyeongbu-ktx-sancheon.png", "shinkansen"],
+  ["korea", "KTX-Jungang", 0, "korea-ktx-gangneung-ktx-eum.png", "shinkansen"],
+  ["korea", "KTX-Jungbu-Naeryuk", 0, "korea-ktx-gangneung-ktx-eum.png", "shinkansen"],
+  ["korea", "ITX-Cheongchun", 0, "korea-itx-cheongchun-itx-cheongchun.png", "express"],
+  ["korea", "SRT-Gyeongbu", 0, "korea-srt-gyeongbu-srt.png", "shinkansen"],
+  ["korea", "SRT-Honam", 0, "korea-srt-gyeongbu-srt.png", "shinkansen"],
+  ["korea", "SRT-Jeolla", 0, "korea-srt-gyeongbu-srt.png", "shinkansen"],
+  ["korea", "SRT-Gyeongjeon", 0, "korea-srt-gyeongbu-srt.png", "shinkansen"],
+  ["korea", "SRT-Donghae", 0, "korea-srt-gyeongbu-srt.png", "shinkansen"],
+  ["korea", "Busan-Metro-1", 0, "korea-busan-metro-1-line-1.png", "metro"],
+  ["korea", "Busan-Metro-2", 0, "korea-busan-metro-2-line-2.png", "metro"],
+  ["korea", "Busan-Metro-3", 0, "korea-busan-metro-3-line-3.png", "metro"],
+  ["korea", "Busan-Metro-4", 0, "korea-busan-metro-4-line-4.png", "metro"],
+  ["korea", "Busan-Gimhae-LRT", 0, "korea-busan-gimhae-lrt-bgl.png", "lrt"],
+
+  ["hongkong", "MTR-Tsuen-Wan", 0, "hongkong-mtr-tsuen-wan-tsuen-wan-line.png", "metro"],
+  ["hongkong", "MTR-Island", 0, "hongkong-mtr-island-island-line.png", "metro"],
+  ["hongkong", "MTR-East-Rail", 0, "hongkong-mtr-east-rail-east-rail-line.png", "commuter"],
+  ["hongkong", "MTR-Airport-Express", 0, "hongkong-mtr-airport-express-airport-express.png", "express"],
+
+  ["china", "Beijing-Shanghai-HSR", 0, "china-beijing-shanghai-hsr-fuxing.png", "shinkansen"],
+  ["china", "Beijing-Shanghai-HSR", 1, "china-beijing-shanghai-hsr-hexie.png", "shinkansen"],
+  ["china", "Beijing-Guangzhou-HSR", 0, "china-beijing-guangzhou-hsr-fuxing.png", "shinkansen"],
+  ["china", "Beijing-Guangzhou-HSR", 1, "china-beijing-guangzhou-hsr-hexie.png", "shinkansen"],
+  ["china", "Shanghai-Kunming-HSR", 0, "china-shanghai-kunming-hsr-fuxing.png", "shinkansen"],
+  ["china", "Shanghai-Kunming-HSR", 1, "china-shanghai-kunming-hsr-hexie.png", "shinkansen"],
+  ["china", "Beijing-Subway-1", 0, "china-beijing-subway-1-line-1.png", "metro"],
+  ["china", "Beijing-Subway-2", 0, "china-beijing-subway-2-line-2.png", "metro"],
+  ["china", "Shanghai-Metro-1", 0, "china-shanghai-metro-1-line-1.png", "metro"],
+  ["china", "Shanghai-Metro-2", 0, "china-shanghai-metro-2-line-2.png", "metro"],
+
+  ["singapore", "SG-MRT-North-South", 0, "singapore-sg-mrt-north-south-nsl.png", "metro"],
+  ["singapore", "SG-MRT-East-West", 0, "singapore-sg-mrt-east-west-ewl.png", "metro"],
+  ["singapore", "SG-MRT-Circle", 0, "singapore-sg-mrt-circle-ccl.png", "metro"],
+
+  ["malaysia", "KL-Kelana-Jaya", 0, "malaysia-kl-kelana-jaya-lrt.png", "metro"],
+  ["malaysia", "KL-MRT-Kajang", 0, "malaysia-kl-mrt-kajang-mrt.png", "metro"],
+
+  ["thailand", "BKK-BTS-Sukhumvit", 0, "thailand-bkk-bts-sukhumvit-bts.png", "metro"],
+  ["thailand", "BKK-MRT-Blue", 0, "thailand-bkk-mrt-blue-mrt.png", "metro"],
+  ["thailand", "BKK-Airport-Rail", 0, "thailand-bkk-airport-rail-arl.png", "express"],
+
+  ["vietnam", "HCMC-Metro-1", 0, "vietnam-hcmc-metro-1-metro-1.png", "metro"],
+  ["vietnam", "Hanoi-Metro-2A", 0, "vietnam-hanoi-metro-2a-metro-2a.png", "metro"],
+];
+
 export const TRAIN_ICON_REGISTRY = {
-  typeFallbacks: {
-    '?ªå¼·':     { icon: 'assets/train-icons/tze-chiang.png',         kind: 'express' },
-    '?’å?':     { icon: 'assets/train-icons/chu-kuang.png',          kind: 'limited' },
-    '?€??:     { icon: 'assets/train-icons/local-emu.png',          kind: 'commuter' },
-    'é«˜éµ':     { icon: 'assets/train-icons/thsr-700t.png',          kind: 'shinkansen' },
-    'å¤ªé­¯??:   { icon: 'assets/train-icons/taroko.png',             kind: 'express' },
-    '?®æ???:   { icon: 'assets/train-icons/puyuma.png',             kind: 'express' },
-    '?¿é?å±±è?': { icon: 'assets/train-icons/alishan-express.png',    kind: 'heritage' },
-    '?·é?':     { icon: 'assets/train-icons/metro.png',              kind: 'metro' },
-    '?®é€šè?':   { icon: 'assets/train-icons/tymetro-commuter.png',   kind: 'commuter' },
-    '?´é?è»?:   { icon: 'assets/train-icons/tymetro-express.png',    kind: 'express' },
-    'è¼•è?':     { icon: 'assets/train-icons/lrt.png',                kind: 'lrt' },
-    '?®ã???:   { icon: 'assets/train-icons/shinkansen-nozomi.png',  kind: 'shinkansen' },
-    '?²ã???:   { icon: 'assets/train-icons/shinkansen-hikari.png',  kind: 'shinkansen' },
-    '?“ã???:   { icon: 'assets/train-icons/shinkansen-kodama.png',  kind: 'shinkansen' },
-    'å±±æ?ç·?:   { icon: 'assets/train-icons/yamanote.png',           kind: 'commuter' },
-    'å¿«é€?:     { icon: 'assets/train-icons/chuo-rapid.png',         kind: 'express' },
-    '?¹åˆ¥å¿«é€?: { icon: 'assets/train-icons/chuo-special-rapid.png', kind: 'express' },
-  },
-
-  lineOverrides: {
-    'taiwan|TRA-Coast|?€?“å¿«': { icon: 'assets/train-icons/taiwan-tra-coast-semi-express.png', kind: 'express' },
-
-    'japan|Tokyo-Metro-Ginza|?€åº§ç?': { icon: 'assets/train-icons/japan-tokyo-metro-ginza-ginza-line.png', kind: 'metro' },
-    'japan|Tokyo-Metro-Marunouchi|ä¸¸ã??…ç?': { icon: 'assets/train-icons/japan-tokyo-metro-marunouchi-marunouchi-line.png', kind: 'metro' },
-    'japan|JR-Keihin-Tohoku|?„é??œè?': { icon: 'assets/train-icons/japan-jr-keihin-tohoku-local.png', kind: 'commuter' },
-    'japan|JR-Sobu-Local|?„é??œè?': { icon: 'assets/train-icons/japan-jr-sobu-local-local.png', kind: 'commuter' },
-    'japan|Tokyu-Toyoko|?„å?': { icon: 'assets/train-icons/japan-tokyu-toyoko-local.png', kind: 'commuter' },
-    'japan|Tokyu-Toyoko|?¥è?': { icon: 'assets/train-icons/japan-tokyu-toyoko-express.png', kind: 'express' },
-    'japan|Tokyu-Toyoko|?¹æ€?: { icon: 'assets/train-icons/japan-tokyu-toyoko-limited-express.png', kind: 'express' },
-    'japan|JR-Osaka-Loop|?®é€?: { icon: 'assets/train-icons/japan-jr-osaka-loop-local.png', kind: 'commuter' },
-    'japan|JR-Osaka-Loop|å¤§å?è·¯å¿«??: { icon: 'assets/train-icons/japan-jr-osaka-loop-yamatoji-rapid.png', kind: 'express' },
-    'japan|Osaka-Metro-Midosuji|å¾¡å?ç­‹ç?': { icon: 'assets/train-icons/japan-osaka-metro-midosuji-midosuji-line.png', kind: 'metro' },
-    'japan|Hankyu-Kobe|?®é€?: { icon: 'assets/train-icons/japan-hankyu-kobe-local.png', kind: 'commuter' },
-    'japan|Hankyu-Kobe|?šå‹¤?¹æ€?: { icon: 'assets/train-icons/japan-hankyu-kobe-commuter-limited-express.png', kind: 'express' },
-    'japan|Hankyu-Kobe|?¹æ€?: { icon: 'assets/train-icons/japan-hankyu-kobe-limited-express.png', kind: 'express' },
-    'japan|Sanyo-Shinkansen|?¿ã???: { icon: 'assets/train-icons/japan-sanyo-shinkansen-mizuho.png', kind: 'shinkansen' },
-    'japan|Sanyo-Shinkansen|?•ã???: { icon: 'assets/train-icons/japan-sanyo-shinkansen-sakura.png', kind: 'shinkansen' },
-    'japan|Nishi-Kyushu-Shinkansen|?‹ã???: { icon: 'assets/train-icons/japan-nishi-kyushu-shinkansen-kamome.png', kind: 'shinkansen' },
-    'japan|Tokyo-Monorail|?®é€?: { icon: 'assets/train-icons/japan-tokyo-monorail-local.png', kind: 'monorail' },
-    'japan|Utsunomiya-Lightline|?©ã‚¤?ˆãƒ©?¤ãƒ³': { icon: 'assets/train-icons/japan-utsunomiya-lightline-lightline.png', kind: 'lrt' },
-
-    'korea|Seoul-Metro-1|ê¸‰í?': { icon: 'assets/train-icons/korea-seoul-metro-1-express.png', kind: 'express' },
-    'korea|Seoul-Metro-1|?„í?': { icon: 'assets/train-icons/korea-seoul-metro-1-local.png', kind: 'commuter' },
-    'korea|Seoul-Metro-2|?œí?': { icon: 'assets/train-icons/korea-seoul-metro-2-loop.png', kind: 'metro' },
-    'korea|Seoul-Metro-3|3?¸ì?': { icon: 'assets/train-icons/korea-seoul-metro-3-line-3.png', kind: 'metro' },
-    'korea|Seoul-Metro-4|4?¸ì?': { icon: 'assets/train-icons/korea-seoul-metro-4-line-4.png', kind: 'metro' },
-    'korea|Seoul-Metro-5|5?¸ì?': { icon: 'assets/train-icons/korea-seoul-metro-5-line-5.png', kind: 'metro' },
-    'korea|Seoul-Metro-6|6?¸ì?': { icon: 'assets/train-icons/korea-seoul-metro-6-line-6.png', kind: 'metro' },
-    'korea|Seoul-Metro-7|7?¸ì?': { icon: 'assets/train-icons/korea-seoul-metro-7-line-7.png', kind: 'metro' },
-    'korea|Seoul-Metro-8|8?¸ì?': { icon: 'assets/train-icons/korea-seoul-metro-8-line-8.png', kind: 'metro' },
-    'korea|Seoul-Metro-9|9?¸ì?': { icon: 'assets/train-icons/korea-seoul-metro-9-line-9.png', kind: 'metro' },
-    'korea|Seoul-Metro-9|Line 9 Fast': { icon: 'assets/train-icons/korea-seoul-metro-9-line-9.png', kind: 'metro' },
-    'korea|Seoul-Metro-9|Line 9 Slow': { icon: 'assets/train-icons/korea-seoul-metro-9-line-9.png', kind: 'metro' },
-    'korea|Ui-LRT|?°ì´? ì„¤??: { icon: 'assets/train-icons/korea-ui-lrt-ui-sinseol-line.png', kind: 'lrt' },
-    'korea|Sillim-LRT|? ë¦¼??: { icon: 'assets/train-icons/korea-sillim-lrt-sillim-line.png', kind: 'lrt' },
-    'korea|Uijeongbu-LRT|U Line': { icon: 'assets/train-icons/korea-uijeongbu-lrt-u-line.png', kind: 'lrt' },
-    'korea|Yongin-EverLine|EverLine': { icon: 'assets/train-icons/korea-yongin-everline-everline.png', kind: 'lrt' },
-    'korea|Shinbundang|? ë??¹ì?': { icon: 'assets/train-icons/korea-shinbundang-shinbundang.png', kind: 'metro' },
-    'korea|Suin-Bundang|?˜ì¸ë¶„ë‹¹??: { icon: 'assets/train-icons/korea-suin-bundang-suin-bundang.png', kind: 'commuter' },
-    'korea|Gyeongui-Jungang|ê²½ì?ì¤‘ì???: { icon: 'assets/train-icons/korea-gyeongui-jungang-gyeongui-jungang.png', kind: 'commuter' },
-    'korea|Gyeongui-Jungang|Gyeongui short-turn': { icon: 'assets/train-icons/korea-gyeongui-jungang-gyeongui-jungang.png', kind: 'commuter' },
-    'korea|Gyeongchun|ê²½ì???: { icon: 'assets/train-icons/korea-gyeongchun-gyeongchun.png', kind: 'commuter' },
-    'korea|Gyeongchun|Gyeongchun Sangbong': { icon: 'assets/train-icons/korea-gyeongchun-gyeongchun.png', kind: 'commuter' },
-    'korea|Gyeongchun|Gyeongchun Gwangwoon': { icon: 'assets/train-icons/korea-gyeongchun-gyeongchun.png', kind: 'commuter' },
-    'korea|Gyeonggang|ê²½ê???: { icon: 'assets/train-icons/korea-gyeonggang-gyeonggang.png', kind: 'commuter' },
-    'korea|Seohae|?œí•´??: { icon: 'assets/train-icons/korea-seohae-seohae.png', kind: 'commuter' },
-    'korea|Incheon-Metro-1|1?¸ì?': { icon: 'assets/train-icons/korea-incheon-metro-1-line-1.png', kind: 'metro' },
-    'korea|Incheon-Metro-2|2?¸ì?': { icon: 'assets/train-icons/korea-incheon-metro-2-line-2.png', kind: 'lrt' },
-    'korea|AREX|AREX': { icon: 'assets/train-icons/korea-arex-arex.png', kind: 'express' },
-    'korea|Gimpo-Goldline|ê³¨ë??¼ì¸': { icon: 'assets/train-icons/korea-gimpo-goldline-goldline.png', kind: 'lrt' },
-    'korea|Daegu-Metro-1|1?¸ì?': { icon: 'assets/train-icons/korea-daegu-metro-1-line-1.png', kind: 'metro' },
-    'korea|Daegu-Metro-2|2?¸ì?': { icon: 'assets/train-icons/korea-daegu-metro-2-line-2.png', kind: 'metro' },
-    'korea|Daegu-Metro-3|3?¸ì?': { icon: 'assets/train-icons/korea-daegu-metro-3-line-3.png', kind: 'monorail' },
-    'korea|Daejeon-Metro-1|1?¸ì?': { icon: 'assets/train-icons/korea-daejeon-metro-1-line-1.png', kind: 'metro' },
-    'korea|Gwangju-Metro-1|1?¸ì?': { icon: 'assets/train-icons/korea-gwangju-metro-1-line-1.png', kind: 'metro' },
-    'korea|KTX-Gyeongbu|KTX': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx.png', kind: 'shinkansen' },
-    'korea|KTX-Gyeongbu|KTX-?°ì?': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png', kind: 'shinkansen' },
-    'korea|KTX-Honam|KTX': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx.png', kind: 'shinkansen' },
-    'korea|KTX-Honam|KTX-?°ì?': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png', kind: 'shinkansen' },
-    'korea|KTX-Jeolla|KTX': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx.png', kind: 'shinkansen' },
-    'korea|KTX-Jeolla|KTX-?°ì?': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png', kind: 'shinkansen' },
-    'korea|KTX-Gyeongjeon|KTX': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx.png', kind: 'shinkansen' },
-    'korea|KTX-Gyeongjeon|KTX-?°ì?': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png', kind: 'shinkansen' },
-    'korea|KTX-Gangneung|KTX-?´ì?': { icon: 'assets/train-icons/korea-ktx-gangneung-ktx-eum.png', kind: 'shinkansen' },
-    'korea|KTX-Donghae|KTX': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx.png', kind: 'shinkansen' },
-    'korea|KTX-Donghae|KTX-?°ì?': { icon: 'assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png', kind: 'shinkansen' },
-    'korea|KTX-Jungang|KTX-?´ì?': { icon: 'assets/train-icons/korea-ktx-gangneung-ktx-eum.png', kind: 'shinkansen' },
-    'korea|KTX-Jungbu-Naeryuk|KTX-?´ì?': { icon: 'assets/train-icons/korea-ktx-gangneung-ktx-eum.png', kind: 'shinkansen' },
-    'korea|ITX-Cheongchun|ITX-ì²­ì?': { icon: 'assets/train-icons/korea-itx-cheongchun-itx-cheongchun.png', kind: 'express' },
-    'korea|SRT-Gyeongbu|SRT': { icon: 'assets/train-icons/korea-srt-gyeongbu-srt.png', kind: 'shinkansen' },
-    'korea|SRT-Honam|SRT': { icon: 'assets/train-icons/korea-srt-gyeongbu-srt.png', kind: 'shinkansen' },
-    'korea|SRT-Jeolla|SRT': { icon: 'assets/train-icons/korea-srt-gyeongbu-srt.png', kind: 'shinkansen' },
-    'korea|SRT-Gyeongjeon|SRT': { icon: 'assets/train-icons/korea-srt-gyeongbu-srt.png', kind: 'shinkansen' },
-    'korea|SRT-Donghae|SRT': { icon: 'assets/train-icons/korea-srt-gyeongbu-srt.png', kind: 'shinkansen' },
-    'korea|Busan-Metro-1|1?¸ì?': { icon: 'assets/train-icons/korea-busan-metro-1-line-1.png', kind: 'metro' },
-    'korea|Busan-Metro-2|2?¸ì?': { icon: 'assets/train-icons/korea-busan-metro-2-line-2.png', kind: 'metro' },
-    'korea|Busan-Metro-3|3?¸ì?': { icon: 'assets/train-icons/korea-busan-metro-3-line-3.png', kind: 'metro' },
-    'korea|Busan-Metro-4|4?¸ì?': { icon: 'assets/train-icons/korea-busan-metro-4-line-4.png', kind: 'metro' },
-    'korea|Busan-Gimhae-LRT|BGL': { icon: 'assets/train-icons/korea-busan-gimhae-lrt-bgl.png', kind: 'lrt' },
-
-    'hongkong|MTR-Tsuen-Wan|?ƒç£ç¶?: { icon: 'assets/train-icons/hongkong-mtr-tsuen-wan-tsuen-wan-line.png', kind: 'metro' },
-    'hongkong|MTR-Island|æ¸¯å³¶ç¶?: { icon: 'assets/train-icons/hongkong-mtr-island-island-line.png', kind: 'metro' },
-    'hongkong|MTR-East-Rail|?±éµç¶?: { icon: 'assets/train-icons/hongkong-mtr-east-rail-east-rail-line.png', kind: 'commuter' },
-    'hongkong|MTR-Airport-Express|æ©Ÿå ´å¿«ç¶«': { icon: 'assets/train-icons/hongkong-mtr-airport-express-airport-express.png', kind: 'express' },
-
-    'china|Beijing-Shanghai-HSR|å¾©è???: { icon: 'assets/train-icons/china-beijing-shanghai-hsr-fuxing.png', kind: 'shinkansen' },
-    'china|Beijing-Shanghai-HSR|?Œè«§??: { icon: 'assets/train-icons/china-beijing-shanghai-hsr-hexie.png', kind: 'shinkansen' },
-    'china|Beijing-Guangzhou-HSR|å¾©è???: { icon: 'assets/train-icons/china-beijing-guangzhou-hsr-fuxing.png', kind: 'shinkansen' },
-    'china|Beijing-Guangzhou-HSR|?Œè«§??: { icon: 'assets/train-icons/china-beijing-guangzhou-hsr-hexie.png', kind: 'shinkansen' },
-    'china|Shanghai-Kunming-HSR|å¾©è???: { icon: 'assets/train-icons/china-shanghai-kunming-hsr-fuxing.png', kind: 'shinkansen' },
-    'china|Shanghai-Kunming-HSR|?Œè«§??: { icon: 'assets/train-icons/china-shanghai-kunming-hsr-hexie.png', kind: 'shinkansen' },
-    'china|Beijing-Subway-1|1?Ÿç?': { icon: 'assets/train-icons/china-beijing-subway-1-line-1.png', kind: 'metro' },
-    'china|Beijing-Subway-2|2?Ÿç?': { icon: 'assets/train-icons/china-beijing-subway-2-line-2.png', kind: 'metro' },
-    'china|Shanghai-Metro-1|1?Ÿç?': { icon: 'assets/train-icons/china-shanghai-metro-1-line-1.png', kind: 'metro' },
-    'china|Shanghai-Metro-2|2?Ÿç?': { icon: 'assets/train-icons/china-shanghai-metro-2-line-2.png', kind: 'metro' },
-
-    'singapore|SG-MRT-North-South|NSL': { icon: 'assets/train-icons/singapore-sg-mrt-north-south-nsl.png', kind: 'metro' },
-    'singapore|SG-MRT-East-West|EWL': { icon: 'assets/train-icons/singapore-sg-mrt-east-west-ewl.png', kind: 'metro' },
-    'singapore|SG-MRT-Circle|CCL': { icon: 'assets/train-icons/singapore-sg-mrt-circle-ccl.png', kind: 'metro' },
-
-    'malaysia|KL-Kelana-Jaya|LRT': { icon: 'assets/train-icons/malaysia-kl-kelana-jaya-lrt.png', kind: 'metro' },
-    'malaysia|KL-MRT-Kajang|MRT': { icon: 'assets/train-icons/malaysia-kl-mrt-kajang-mrt.png', kind: 'metro' },
-
-    'thailand|BKK-BTS-Sukhumvit|BTS': { icon: 'assets/train-icons/thailand-bkk-bts-sukhumvit-bts.png', kind: 'metro' },
-    'thailand|BKK-MRT-Blue|MRT': { icon: 'assets/train-icons/thailand-bkk-mrt-blue-mrt.png', kind: 'metro' },
-    'thailand|BKK-Airport-Rail|ARL': { icon: 'assets/train-icons/thailand-bkk-airport-rail-arl.png', kind: 'express' },
-
-    'vietnam|HCMC-Metro-1|Metro 1': { icon: 'assets/train-icons/vietnam-hcmc-metro-1-metro-1.png', kind: 'metro' },
-    'vietnam|Hanoi-Metro-2A|Metro 2A': { icon: 'assets/train-icons/vietnam-hanoi-metro-2a-metro-2a.png', kind: 'metro' },
-  },
+  typeFallbacks: fromUniqueEntries(
+    typeFallbackSpecs.map(([region, lineId, typeIndex, file, kind]) =>
+      typeFallback(region, lineId, typeIndex, file, kind)
+    )
+  ),
+  lineOverrides: fromUniqueEntries(
+    lineOverrideSpecs.map(([region, lineId, typeIndex, file, kind]) =>
+      lineOverride(region, lineId, typeIndex, file, kind)
+    )
+  ),
 };
 
 export const TRAIN_ICON_KIND_SIZE = {

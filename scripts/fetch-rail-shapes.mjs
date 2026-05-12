@@ -683,6 +683,75 @@ function haversine(a, b) {
   return 2 * R_EARTH * Math.asin(Math.sqrt(x));
 }
 
+function alignStationStopMembers(stations, stopMembers, options = {}) {
+  const maxDistKm = options.maxDistKm ?? 1.0;
+  const searchWindow = options.searchWindow ?? 6;
+  const reverseOptions = typeof options.reverse === "boolean" ? [options.reverse] : [false, true];
+  const offsetOptions = Number.isFinite(options.offset) ? [options.offset] : [0];
+  let best = null;
+
+  for (const reverse of reverseOptions) {
+    const stops = reverse ? stopMembers.slice().reverse() : stopMembers;
+    for (const offset of offsetOptions) {
+      const stationCoords = {};
+      const stationCoordsByIndex = Array(stations.length).fill(null);
+      const distances = [];
+      let cursor = Math.max(0, offset);
+
+      for (let i = 0; i < stations.length; i++) {
+        let bestIdx = -1;
+        let bestDist = Infinity;
+        const remainingStations = stations.length - i - 1;
+        const latestUsefulStop = Math.max(cursor, stops.length - remainingStations);
+        const searchLimit = Math.min(latestUsefulStop, cursor + searchWindow);
+        const end = Math.min(stops.length, Math.max(cursor + 1, searchLimit + 1));
+
+        for (let j = cursor; j < end; j++) {
+          const dist = haversine(stations[i], stops[j]);
+          if (dist < bestDist) {
+            bestDist = dist;
+            bestIdx = j;
+          }
+        }
+
+        if (bestIdx >= 0 && bestDist <= maxDistKm) {
+          const stop = stops[bestIdx];
+          stationCoords[stations[i].name] = [
+            Number(stop.lat.toFixed(6)),
+            Number(stop.lng.toFixed(6)),
+          ];
+          stationCoordsByIndex[i] = stationCoords[stations[i].name];
+          distances.push(bestDist);
+          cursor = bestIdx + 1;
+        }
+      }
+
+      if (distances.length === 0) continue;
+      const avgDist = distances.reduce((sum, dist) => sum + dist, 0) / distances.length;
+      const maxDist = Math.max(...distances);
+      const score = (stations.length - distances.length) * 3 + avgDist + maxDist * 0.25;
+      const candidate = {
+        stationCoords,
+        stationCoordsByIndex,
+        matched: distances.length,
+        avgDist,
+        maxDist,
+        reverse,
+        offset,
+        score,
+      };
+
+      if (!best ||
+          candidate.matched > best.matched ||
+          (candidate.matched === best.matched && candidate.score < best.score)) {
+        best = candidate;
+      }
+    }
+  }
+
+  return best;
+}
+
 // Point→segment perpendicular distance in km, using local flat-earth.
 function perpDistKm(P, A, B) {
   const latMid = (A.lat + B.lat + P.lat) / 3;
@@ -980,6 +1049,7 @@ async function withRetry(label, fn, { attempts = 4, baseMs = 1500 } = {}) {
 // 'cache-fallback' = network failed and we served stale cache.
 const sourceProvenance = { fresh: [], 'cache-offline': [], 'cache-fallback': [] };
 const osmStationCoordsByLineId = {};
+const osmStationCoordsByIndexByLineId = {};
 
 // Fetch JSON with retry + disk cache fallback. Cache is keyed on `cacheKey`.
 // On network failure after all retries, returns the cached value if present.
@@ -1395,7 +1465,6 @@ async function fetchOsmShape(internalId, cfg, stations) {
   }
 
   if (cfg.stationStops && stations && stations.length > 0) {
-    const { reverse = false, offset = 0 } = cfg.stationStops;
     const relationIds = new Set(cfg.relationIds.map(Number));
     let stopMembers = [];
     for (const rel of relations) {
@@ -1406,20 +1475,13 @@ async function fetchOsmShape(internalId, cfg, stations) {
         .filter(Boolean);
       if (members.length > stopMembers.length) stopMembers = members;
     }
-    if (reverse) stopMembers = stopMembers.slice().reverse();
-    const stationCoords = {};
-    for (let i = 0; i < stations.length; i++) {
-      const stop = stopMembers[i + offset];
-      if (!stop) continue;
-      stationCoords[stations[i].name] = [
-        Number(stop.lat.toFixed(6)),
-        Number(stop.lng.toFixed(6)),
-      ];
-    }
-    if (Object.keys(stationCoords).length > 0) {
-      osmStationCoordsByLineId[internalId] = stationCoords;
+    const stopAlignment = alignStationStopMembers(stations, stopMembers, cfg.stationStops);
+    if (stopAlignment && Object.keys(stopAlignment.stationCoords).length > 0) {
+      osmStationCoordsByLineId[internalId] = stopAlignment.stationCoords;
+      osmStationCoordsByIndexByLineId[internalId] = stopAlignment.stationCoordsByIndex;
       console.log(
-        `[OSM] ${internalId}: mapped ${Object.keys(stationCoords).length}/${stations.length} station coords from relation stops`
+        `[OSM] ${internalId}: mapped ${stopAlignment.matched}/${stations.length} station coords from relation stops` +
+        ` (reverse=${stopAlignment.reverse}, max ${Math.round(stopAlignment.maxDist * 1000)}m)`
       );
     }
   }
@@ -1642,9 +1704,10 @@ function buildOutput(rawShapes, stationsByLineId) {
     const cfg = { ...(LINE_OUTPUT_OPTIONS[lineId] || {}), ...(OSM_LINE_MAP[lineId] || {}) };
     const stations = tdxStations || stationsByLineId[lineId] || [];
     const stopStationCoords = osmStationCoordsByLineId[lineId] || null;
-    const projectionStations = stopStationCoords
-      ? stations.map(s => {
-          const coord = stopStationCoords[s.name];
+    const stopStationCoordsByIndex = osmStationCoordsByIndexByLineId[lineId] || null;
+    const projectionStations = stopStationCoords || stopStationCoordsByIndex
+      ? stations.map((s, i) => {
+          const coord = stopStationCoordsByIndex?.[i] || stopStationCoords?.[s.name];
           return coord ? { ...s, lat: coord[0], lng: coord[1] } : s;
         })
       : stations;
@@ -1722,9 +1785,13 @@ function buildOutput(rawShapes, stationsByLineId) {
     const stationKms = {};
     const stationKmsByIndex = [];
     const stationCoords = { ...(stopStationCoords || {}) };
+    const stationCoordsByIndex = Array.isArray(stopStationCoordsByIndex)
+      ? stopStationCoordsByIndex.slice()
+      : [];
     let maxStationDist = 0;
     let snappedStationCount = 0;
-    const stopStationCount = stopStationCoords ? Object.keys(stopStationCoords).length : 0;
+    const stopStationCount = stationCoordsByIndex.filter(Boolean).length ||
+      (stopStationCoords ? Object.keys(stopStationCoords).length : 0);
     let minStationKm = -Infinity;
     const totalKm = shapeKm[shapeKm.length - 1];
     const isLoopLine = projectionStations.length >= 3 && projectionStations[0].name === projectionStations[projectionStations.length - 1].name;
@@ -1758,9 +1825,10 @@ function buildOutput(rawShapes, stationsByLineId) {
       }
       stationKms[st.name] = Number(km.toFixed(3));
       stationKmsByIndex.push(Number(km.toFixed(3)));
-      if (!stationCoords[st.name] && dist > snapStationCoordsOverKm) {
+      if (!stationCoords[st.name] && !stationCoordsByIndex[i] && dist > snapStationCoordsOverKm) {
         const p = positionOnShapeAtKm(simplified, shapeKm, km);
         stationCoords[st.name] = [Number(p.lat.toFixed(6)), Number(p.lng.toFixed(6))];
+        stationCoordsByIndex[i] = stationCoords[st.name];
         snappedStationCount++;
       }
       if (dist > maxStationDist) maxStationDist = dist;
@@ -1775,6 +1843,7 @@ function buildOutput(rawShapes, stationsByLineId) {
     const hasDuplicateStationNames = new Set(projectionStations.map(s => s.name)).size !== projectionStations.length;
     if (hasDuplicateStationNames) entry.stationKmsByIndex = stationKmsByIndex;
     if (Object.keys(stationCoords).length > 0) entry.stationCoords = stationCoords;
+    if (stationCoordsByIndex.some(Boolean)) entry.stationCoordsByIndex = stationCoordsByIndex;
 
     // For in-scope lines, also emit the full projected station list so that
     // mergeShapes() in rail-data.js can replace the hand-coded stub array.

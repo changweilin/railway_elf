@@ -1,10 +1,32 @@
 # Railway Elf 進度報告
 
-更新日期：2026-05-11
+## 2026-05-12 5.5 route supervision update
+
+- [x] Current route coverage audit: `src/rail-data.js`, `src/rail-data.generated.js`, and `scripts/line-shape-snapshot.json` all cover 103 current line ids; no currently modeled railway is missing a generated route.
+- [x] Syntax and generated-merge blockers fixed enough for the data modules to load: `src/rail-data.js` now falls back to generated station km/coord order when generated keys do not match curated station names.
+- [x] Train icon registry restored to resolve against the actual `RAIL_DATA` template keys: 101 line overrides, 17 type fallbacks, 0 unresolved templates, 0 unused overrides.
+- [x] `npm.cmd run build:rail-data` completed with network access: 98 fresh TDX/OSM sources, 0 cache fallbacks, generated rail data and regional shape chunks rewritten through the script.
+- [x] Live rebuild route-error blockers minimized by adding indexed generated station coords: `Tokyo-Monorail` 0.005 km, `Seoul-Metro-7` 0.008 km, `Suin-Bundang` 0.023 km, `Gyeongui-Jungang` 0.039 km, `Seohae` 0.004 km, `Incheon-Metro-1` 0.005 km, `Daegu-Metro-1` 0.004 km, `Daegu-Metro-3` 0.003 km, `Busan-Metro-2` 0.023 km.
+- [x] Timing blocker resolved: `Busan-Metro-2` route/station alignment no longer stretches trips; `check:timing` is back to 39,456 trains checked with 0 failures.
+- [x] Verification status: `check:train-icons`, `check:shapes`, `check:timing`, and production `build` all passed after the indexed station-coordinate fix.
+- [x] Long-running supervision completed: heartbeat `railway-elf-5-5-route-supervision` was stopped after the 5.5 route-minimization blocker checks went green.
+
+
+更新日期：2026-05-12
 
 ## 目前結論
 
+2026-05-12 live rebuild 後，本段舊結論僅保留為歷史狀態；最新可執行清單以上方 5.5 route supervision update 為準。
+
 沒有尚未完成的必要項目；大東亞擴張 Phase B 已完成 34/34 條 OSM 形狀回灌，snapshot 已更新到 103 條線。高誤差複查後，103 條線 runtime maxOffset 全部壓到 1.0 km 內，沒有 0 km fallback 或需阻塞上線的資料缺口。日本 / 南韓「完整類型覆蓋」已作為可選大型 backlog 加入 `doc/east-asia-expansion-plan.md`，不列入目前完成率；其中日本 HSR 類已完成代表線 `Nishi-Kyushu-Shinkansen`，Airport / Monorail 類已完成代表線 `Tokyo-Monorail`，Tram / LRT 類已完成代表線 `Utsunomiya-Lightline`，南韓 HSR 類已完成 SRT 代表線 `SRT-Gyeongbu` / `SRT-Honam` / `SRT-Jeolla` / `SRT-Gyeongjeon` / `SRT-Donghae` 與 KTX 代表線 `KTX-Honam` / `KTX-Jeolla` / `KTX-Gyeongjeon` / `KTX-Gangneung` / `KTX-Donghae` / `KTX-Jungang` / `KTX-Jungbu-Naeryuk`，Intercity 類已完成第一條代表線 `ITX-Cheongchun`，Commuter / Metro 類已完成代表線 `Seoul-Metro-3` / `Seoul-Metro-4` / `Seoul-Metro-5` / `Seoul-Metro-6` / `Seoul-Metro-7` / `Seoul-Metro-8` / `Seoul-Metro-9` / `Shinbundang` / `Suin-Bundang` / `Gyeongui-Jungang` / `Gyeongchun` / `Gyeonggang` / `Seohae` / `Incheon-Metro-1` / `Busan-Metro-2` / `Busan-Metro-3` / `Busan-Metro-4` / `Daegu-Metro-1` / `Daegu-Metro-2` / `Daejeon-Metro-1` / `Gwangju-Metro-1`，Airport 類已完成第一條代表線 `AREX`，LRT/AGT 類已完成代表線 `Gimpo-Goldline` / `Incheon-Metro-2` / `Ui-LRT` / `Sillim-LRT` / `Uijeongbu-LRT` / `Yongin-EverLine` / `Busan-Gimhae-LRT`，Monorail 類已完成代表線 `Tokyo-Monorail` / `Daegu-Metro-3`。
+
+## 2026-05-12 路線與誤差稽核
+
+- [x] 現有資料線 route 覆蓋檢查：`src/rail-data.js` 可掃到 103 條 line id，`src/rail-data.generated.js` 有 103 條 generated route，`scripts/line-shape-snapshot.json` 也有 103 條 snapshot；目前沒有「已在資料檔中、但尚未建立 generated route」的鐵道。
+- [x] 長期擴張 backlog 分流：未建立 route 的項目屬於可選擴張，不是現有資料缺口。日本仍有 Intercity、JR 都會圈、民鐵、其餘 Metro、成田/京成/京急/南海等機場線、其餘 Tram / Monorail / AGT、Regional、Heritage、Freight；南韓仍有一般列車幹線、AREX 直通 / 金海機場銜接、Daejeon Line 2 營運後納入、Regional、Heritage、Freight。
+- [x] 修復 `src/rail-data.js` 的內容語法錯誤；runtime 已可載入資料並重新計算 maxOffset，後續改以 5.5 route supervision update 的 live rebuild 阻塞清單追蹤。
+- [ ] 最小化已建立 route 但 maxOffset 仍高於 0.75 km 的候選線：`Beijing-Shanghai-HSR` 0.987 km、`Beijing-Guangzhou-HSR` 0.986 km、`JR-Keihin-Tohoku` 0.980 km、`KHH-Red` 0.948 km、`Tamsui-LRT` 0.915 km、`JR-Osaka-Loop` 0.865 km、`KTX-Jungang` 0.865 km、`Tokyu-Toyoko` 0.864 km、`Seoul-Metro-1` 0.857 km、`TPE-Yellow` 0.849 km、`TYMRT` 0.833 km、`Tokyo-Metro-Marunouchi` 0.761 km。
+- [ ] 第二優先品質清單：若要把門檻從 0.75 km 再壓到 0.50 km，接著檢查 `KHH-LRT`、`Beijing-Subway-1`、`KL-MRT-Kajang`、`TRA-Jiji`、`Alishan-Forest`、`Beijing-Subway-2`、`Hankyu-Kobe`、`Seoul-Metro-9`、`KL-Kelana-Jaya`、`BKK-Airport-Rail`、`TRA-Neiwan`、`TRA-Pingxi`。
 
 ## 本次完成
 
