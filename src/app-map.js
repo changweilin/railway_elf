@@ -569,12 +569,11 @@ function MapArea({ region, location, nearest, liveTrains, targetTime, now, quick
               e.stopPropagation();
               // Switching from "now" → forecast: restore the bucket the user
               // last used (+30 / +1 小時 / 自訂), defaulting to +30 on first
-              // toggle. Already-forecast modes stay put. Open the panel either
-              // way so the user can fine-tune.
+              // toggle. Already-forecast modes stay put; the clock body opens
+              // the panel when the user wants to fine-tune.
               if (handleQuickPick && quickPick === 'now') {
                 handleQuickPick(lastPredictPick || '30');
               }
-              if (onHudClick) onHudClick();
             },
           }, "預測"),
         ),

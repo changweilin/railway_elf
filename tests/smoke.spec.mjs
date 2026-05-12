@@ -167,7 +167,7 @@ test.describe('homepage smoke', () => {
     expect(errors, `errors during modal flow:\n${errors.join('\n')}`).toEqual([]);
   });
 
-  test('HUD now/predict tab drives global targetTime', async ({ page }) => {
+  test('HUD now/predict tab drives global targetTime without opening time panel', async ({ page }) => {
     const errors = captureErrors(page);
     await page.goto('/');
     await waitForAppReady(page);
@@ -187,18 +187,20 @@ test.describe('homepage smoke', () => {
     await expect.poll(async () => (await clock.textContent())?.trim() ?? '',
       { timeout: 4000 }).not.toBe(before);
 
-    // Predict-tab side-effect on mobile: opens the drawer panel as an overlay
-    // so the user can fine-tune the time. That panel covers the HUD, so close
-    // it via the toolbar menu toggle before clicking 現在 again. On desktop
-    // the menu button is hidden (the panel is a permanent sidebar), so this
-    // step is a no-op there.
+    // The 預測 tab only switches modes; the time body is the explicit affordance
+    // for jumping to the side-panel time controls.
     const menuBtn = page.locator('.tb-menu-btn');
-    if (await menuBtn.isVisible().catch(() => false)) {
-      const isOpen = await menuBtn.evaluate((el) => el.classList.contains('active'));
-      if (isOpen) {
-        await menuBtn.click();
-        await expect(page.locator('.panel.open')).toHaveCount(0);
-      }
+    const hasMobileDrawer = await menuBtn.isVisible().catch(() => false);
+    if (hasMobileDrawer) {
+      await expect(page.locator('.panel.open')).toHaveCount(0);
+    }
+
+    await page.locator('.map-hud-clock-body').click();
+    await expect(page.locator('.panel-section.flash')).toHaveCount(1);
+    if (hasMobileDrawer) {
+      await expect(page.locator('.panel.open')).toBeVisible();
+      await menuBtn.click();
+      await expect(page.locator('.panel.open')).toHaveCount(0);
     }
 
     // Switching back to 現在 resyncs.
