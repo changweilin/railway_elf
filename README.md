@@ -1,100 +1,189 @@
-# Railway Elf
+﻿# Railway Elf
 
-A static web app that predicts when the next train will pass a given point on
-Taiwan and Japan rail lines. Pick a line, drop a pin, and the map shows live
-animated trains plus a sheet listing each upcoming pass.
+Railway Elf 是一個以 `React 18 + Leaflet + Vite` 打造的鐵路動態預估前端應用，核心目標是以地圖為中心，結合手工維護的鐵路路網資料與列車規則，提供多區域「附近列車候選」與「到站時間預估」體驗，並具備 PWA 與離線快取能力。
 
-- Frontend: React 18 + Leaflet 1.9, bundled by Vite from npm dependencies. The app code itself is plain `React.createElement` (no JSX); files cross-reference each other through ES module `import` / `export`.
-- Map: Leaflet 1.9 with hand-tuned markers and gestures.
-- Data: hand-curated lines/stations/templates in `src/rail-data.js`,
-  merged with real polyline geometry generated into
-  `src/rail-data.generated.js`.
+專案以 `ES module` + `React.createElement` 為主要風格（未使用 JSX），適合作為台灣、日本、韓國、香港、新加坡、馬來西亞、泰國、越南等地區的跨域鐵道展示與查詢介面。
 
-## Screenshots
+## 1. 專案標題與簡介 (Title & Description)
 
-Finding upcoming trains as they pass a selected rail point on the map.
+### 專案名稱
 
-| Desktop | Mobile |
-|---|---|
-| <img src="doc/screenshots/map-train-passes-desktop.png" alt="Desktop map showing trains passing a selected railway point" width="640"> | <img src="doc/screenshots/map-train-passes-mobile.png" alt="Mobile map showing trains passing a selected railway point" width="260"> |
+- Railway Elf
 
-## Quick start
+### 一句話描述
+
+- 一個以地圖互動為主軸的鐵道列車預估應用：使用者只要在地圖上選點，即可快速取得附近路線、候選列車與到站預告。
+
+### 專案定位
+
+- 以前端為主體、資料流程為輔助的靜態部署方案。
+- 透過腳本化資料流程維持 `RAIL_DATA`、線路幾何與時刻計算的一致性。
+- 支援桌機與行動裝置情境的互動與面板操作。
+
+## 2. 核心功能特性 (Features)
+
+- 多區域路網支援：涵蓋 `taiwan`, `japan`, `korea`, `hongkong`, `china`, `singapore`, `malaysia`, `thailand`, `vietnam`。
+- 地圖為核心的線路候選邏輯：依據使用者位置/選點與軌道幾何進行 snap，回傳附近可行線路與到站預估。
+- 列車時間預估：透過 `TrainGen` 動態生成每趟列車的時序資料，並以 km/速度模型結合停靠時間做預告。
+- 互動式地圖體驗：
+  - 路線、站點、列車 marker 渲染與管理
+  - 地圖主題與圖層（街道／地形／衛星）切換
+  - 地圖 bounds 與 viewport 管理
+- 清楚的列車資訊面板：
+  - 支援方向、類別、時間預覽、收藏位置、通知提示
+  - 提供剩餘時間與列車/路線對應視覺標籤
+- PWA 基礎支援：離線快取與 manifest，提升離線與回訪體驗。
+- 自動化驗證：
+  - `scripts/check-line-shapes.mjs`：線路形狀一致性檢查
+  - `scripts/check-train-timing.mjs`：列車時序一致性檢查
+  - CI 執行建置、形狀檢查、時序檢查與 smoke test
+- 圖示與資產治理：
+  - `train-icon-registry.js` 與 `public/assets/train-icons/*`
+  - 提供 `check:train-icons` / `build:train-icons` 流程。
+
+## 3. 系統需求與安裝步驟 (Prerequisites & Installation)
+
+### 系統需求
+
+- Node.js：建議 `22.x`（CI 使用 Node 22）
+- npm：隨 Node 安裝
+- Git：用於版本控管與更新
+- 作業系統：Windows / macOS / Linux
+
+### 安裝步驟
 
 ```bash
+# 1. 進入專案資料夾
+cd C:\Users\user\Documents\app\railway_elf
+
+# 2. 安裝套件
 npm install
-npm run dev          # vite on http://localhost:4180
 ```
 
-The page is fully static — `npm run build` outputs to `dist/` and can be served
-from anywhere (the Vite `base` is `./`, so it works under a sub-path).
+### 常用腳本
 
-## Scripts
+- `npm run dev`：啟動開發伺服器
+- `npm run build`：建立 production bundle
+- `npm run preview -- --host`：預覽建置結果
+- `npm run test:smoke`：執行 Playwright smoke test
+- `npm run build:rail-data`：重抓並重建路網資料（含分割 chunk）
+- `npm run build:rail-data:tw`：只重建台灣路網
+- `npm run build:rail-data:jp`：只重建日本路網
+- `npm run build:train-icons`：重建列車圖示
+- `npm run check:train-icons`：檢查列車圖示對應
+- `npm run check:timing`：檢查列車時序與數值一致性
+- `npm run check:shapes`：檢查路線 shape 幾何一致性
+- `npm run build:pwa-images`：產生 PWA 影像資產
 
-| Command | What it does |
-|---|---|
-| `npm run dev` | Vite dev server on port 4180. |
-| `npm run build` | Static production build into `dist/`. |
-| `npm run preview` | Preview the production build. |
-| `npm run build:rail-data` | Regenerate `src/rail-data.generated.js` from TDX (Taiwan) + OSM Overpass (Japan). |
-| `npm run build:rail-data:tw` | TW lines only (skip Japan). |
-| `npm run build:rail-data:jp` | JP lines only (no TDX credentials needed). |
-| `npm run check:timing` | Sanity-check generated train timing against templates. |
+### TDX / OSM 重建路網（可選）
 
-## Data pipeline
-
-End users do **not** need any API keys — the published site is pure static
-HTML/JS. Credentials are only needed when you regenerate the rail-shape file
-locally:
-
-1. Register at <https://tdx.transportdata.tw/> and create an API key.
-2. `cp .env.example .env` and fill in `TDX_CLIENT_ID` / `TDX_CLIENT_SECRET`.
-3. `npm run build:rail-data`.
-
-Full walk-through (with TDX schema notes, OSM relation ids, and known
-shape-quality caveats) lives in `scripts/TDX-SETUP.md`.
-
-A GitHub Actions workflow (`.github/workflows/update-rail-shapes.yml`) reruns
-the pipeline monthly and opens a PR if the shapes change.
-
-## Repository layout
-
-```
-index.html                       Entry HTML; references the single Vite module entry.
-src/
-  main.js                        Vite entry. Imports React, ReactDOM, Leaflet (+ CSS), then App. Calls createRoot.
-  app-core.js                    App shell, state, panels, sheets.
-  app-map.js                     Leaflet integration, markers, gestures.
-  rail-data.js                   Hand-curated lines / stations / train templates (RailUtil lives here too).
-  rail-data.generated.js         Generated polylines + station-km tables (do not edit by hand).
-public/assets/
-  styles.css, tokens.css, icons.svg, logo-mark.svg, logo-mark-light.svg, logo-mark-dark.svg
-  train-icons/                   Top-down PNG icons + train-icon-map.json (see its own README).
-scripts/
-  fetch-rail-shapes.mjs          TDX + OSM Overpass fetcher / stitcher / simplifier.
-  check-train-timing.mjs         Timing sanity check.
-  check-line-shapes.mjs          Line-shape ratchet (see scripts/line-shape-snapshot.json).
-  TDX-SETUP.md                   Data-source setup guide.
-doc/                             Project notes.
+```bash
+# 建立環境變數檔
+Copy-Item .env.example .env
+# 或 Linux / macOS:
+# cp .env.example .env
 ```
 
-## Tech notes
+編輯 `.env`，補齊 `TDX_CLIENT_ID` 與 `TDX_CLIENT_SECRET` 後再執行：
 
-- React, ReactDOM, and Leaflet come from npm; the entire app graph is bundled
-  by Vite starting at `src/main.js` (which imports `App` from `./app-core.js`,
-  which in turn imports rail-data and the map components). Vite emits a single
-  hashed `dist/assets/index-*.js` plus the leaflet CSS chunk.
-- `app-core.js` ↔ `app-map.js` form a deliberate ES module circular import.
-  That works because both files only reach across at call time (inside
-  React component bodies / event handlers), never at module top level.
-- Source code uses `React.createElement` only — no JSX transform is wired up.
-- Geometry helpers (haversine, projection, position-at-km) live in `RailUtil`
-  inside `src/rail-data.js` and are mirrored on the build side in
-  `scripts/fetch-rail-shapes.mjs`.
-- Generated shapes are authoritative for station kilometres; the frontend
-  `mergeShapes` reconciles the hand-curated and generated data.
+```bash
+npm run build:rail-data
+```
 
-## License / data attribution
+## 4. 快速上手與使用範例 (Quick Start / Usage)
 
-- Taiwan rail geometry: TDX (交通部運輸資料流通服務).
-- Japan rail geometry: © OpenStreetMap contributors, ODbL.
-- Train icon visual references: see `public/assets/train-icons/README.md`.
+### 4.1 啟動與進入
+
+```bash
+npm run dev
+```
+
+1. 開啟 `http://localhost:4180`。
+2. 選擇地區並載入對應資料。
+3. 在地圖點選位置後，觀察底部面板與候選列車列表。
+4. 使用方向／類別／時間預覽條件調整搜尋結果。
+
+### 4.2 常見操作
+
+- 切換地區：選取不同地區時會切換對應 `RAIL_DATA` 與 shape 分流。
+- 切換時間：提供「現在」、「30 分鐘後」、「60 分鐘後」與自訂時間。
+- 線路與方向過濾：依列車別（TRA / HSR / Metro / LRT）與上下行篩選。
+- 收藏點位：保存常用查詢位置，快速回到。
+
+### 4.3 路網資料維運流程
+
+```bash
+npm run build:rail-data
+npm run check:shapes
+npm run check:timing
+```
+
+> `src/rail-data.generated.js` 與 `src/rail-shapes/*.generated.js` 為自動產生檔，請不要直接手動編輯；若站點、路線或規則變更，請透過腳本重建。
+
+## 5. 專案架構說明 (Project Structure)
+
+```text
+C:\Users\user\Documents\app\railway_elf
+  .github/
+    workflows/
+      ci.yml
+      deploy-pages.yml
+      update-rail-shapes.yml
+  scripts/
+    fetch-rail-shapes.mjs
+    split-rail-shapes.mjs
+    check-line-shapes.mjs
+    check-train-timing.mjs
+    check-train-icons.mjs
+    build-train-icons.mjs
+    build-pwa-images.mjs
+    TDX-SETUP.md
+    line-shape-snapshot.json
+  src/
+    main.js
+    app-core.js
+    app-map.js
+    rail-data.js
+    rail-data.generated.js
+    rail-shapes/
+      taiwan.generated.js
+      japan.generated.js
+      korea.generated.js
+      hongkong.generated.js
+      china.generated.js
+      singapore.generated.js
+      malaysia.generated.js
+      thailand.generated.js
+      vietnam.generated.js
+    train-icon-registry.js
+  public/
+    sw.js
+    manifest.webmanifest
+    assets/
+      styles.css
+      tokens.css
+      icons.svg
+      logo-mark.svg
+      logo-mark-180.png
+      train-icons/
+        README.md
+        train-icon-map.json
+        *.png
+  tests/
+    *.mjs
+  index.html
+  package.json
+  package-lock.json
+  playwright.config.js
+  vite.config.js
+  .env.example
+  README.md
+```
+
+## 6. 授權條款 (License)
+
+本專案採用 **Apache License 2.0**。
+
+- 若你將專案外部發布或分發，請在根目錄放置 `LICENSE` 檔並保留完整授權內容。
+- 官方授權條文：<https://www.apache.org/licenses/LICENSE-2.0>
+

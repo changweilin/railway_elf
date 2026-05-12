@@ -11,10 +11,74 @@
 - 新增流程或特殊校正後，同步更新本 SOP 或相關文件。
 - Windows PowerShell 環境若 `npm` 被 Execution Policy 擋下，改用 `npm.cmd`。
 
+## 模型分工與 skill 啟用
+
+本節只負責分配內部工作，不代表本輪要實際執行。預設把輸入明確、可依現有
+pattern 落地、且能用現有腳本驗證的工作交給 `GPT-5.3-Codex-Spark`。凡是需要
+跨來源判讀、跨模組策略、接受風險或重新設計規則的工作，先交給 `GPT-5.5`
+做決策；決策完成後，才能把明確 seed 或 patch 範圍下放給 Spark。
+
+### GPT-5.3-Codex-Spark 可直接勝任
+
+- 已有明確資料來源時，新增或修正 region、line、station、train template。
+- 依既有 pattern 補 OSM relation、TDX LineID、`corridor`、`loopAnchor`、
+  `stationStops`，前提是根因與目標線段已被確認。
+- 修正 line id 對齊、站序、station km 單調性、缺漏 train template、圖示
+  registry key 等機械性不變式問題。
+- 沿用同國家既有同型號列車圖示，或依既有 recipe 重新產生 PNG/contact sheet。
+- 執行 `build:rail-data`、`check:shapes`、`check:timing`、`check:train-icons`、
+  `build`、`test:smoke`，並回報失敗原因、數量與耗時。
+- 既有 React/Leaflet pattern 內的窄範圍 UI bug 修正。
+- 使用 `RAIL_DATA`、`RailUtil`、`TrainGen` 做 read-only service analysis。
+- 替 GPT-5.5 收集輸入：錯誤 log、shape 指標、候選 relation、差異摘要、重現步驟。
+
+### Spark 不應自行決策，交給 GPT-5.5
+
+- 新國家或新地區的 region 切分、跨境線歸屬、未營運路線是否納入、資料量策略。
+- 官方資料、OSM、TDX、維基或實際營運狀態互相矛盾時的權威來源判定。
+- 大幅調整 `RailUtil`、projection、stitch、simplify、anchor slicing 或 snapshot
+  接受規則。
+- `check:shapes` 出現明顯退化時，決定是否接受較大的 `totalKm`、
+  `maxStationOffsetKm` 或 `shapePoints` 變動。
+- `app-core.js` / `app-map.js` 狀態架構、ES module cycle、Leaflet lifecycle、
+  i18n layer、build pipeline 的重設計。
+- 找不到可沿用圖示時，決定新列車圖示的車型代表性、塗裝抽象方式與視覺規則。
+- 任何需要大量外部查證、授權/法律判讀、產品策略或 UX 策略的工作。
+
+### 5.5 交接輸出格式
+
+GPT-5.5 的輸出應是決策與分派，不直接執行本 SOP 的 patch。交接給 Spark 前，
+至少寫清楚：
+
+- `decision`: approved / blocked / needs-research / downscope。
+- `scope`: region、line id、station 範圍、owned files。
+- `source`: 採用資料來源、拒絕的候選來源與原因。
+- `constraints`: 不可碰的檔案、不可接受的 snapshot 變動、需要保留的不變式。
+- `checks`: Spark 完成後必跑的最小驗證。
+- `report`: 需要回填的數量、耗時、before/after 指標。
+
+### 按需啟用的 skill
+
+以下內容不列入每次日常維護的常駐流程；只有觸發條件出現時，才把對應流程獨立
+啟用為 skill。skill 應只載入該任務需要的規則、輸入、owned files、輸出格式與
+驗證，不要把整份 SOP 全部搬入上下文。
+
+| Skill | 何時啟用 | 預設模型 | 交付物 |
+|---|---|---|---|
+| `railway-elf-source-research` | 新線沒有可信 relation/LineID、來源互相矛盾、路線可能尚未營運 | GPT-5.5 決策，Spark 只整理候選與 log | 權威來源、採用/拒絕原因、可下放 seed |
+| `railway-elf-geo-calibration` | `check:shapes` 失敗、`monotonic=false`、offset 或 totalKm 異常 | Spark 可跑診斷與已知修法；不明根因交 GPT-5.5 | before/after 指標、根因、校正手段 |
+| `railway-elf-train-icon-pipeline` | `check:train-icons` unresolved、需要新 PNG 或 contact sheet QA | Spark 沿用/產生；新視覺規則交 GPT-5.5 | registry 變更、PNG/contact sheet、QA 結論 |
+| `railway-elf-browser-ui-qa` | 地圖互動、bottom sheet、marker、responsive layout 變更 | Spark 修窄範圍 bug；互動架構交 GPT-5.5 | browser QA 範圍、截圖/觀察、修正清單 |
+| `railway-elf-locale-label-review` | 新語系、romanization、跨國同名站、方向文字政策 | Spark 做機械一致性；命名政策交 GPT-5.5 | label 決策、需同步的欄位、風險 |
+| `railway-elf-service-analysis` | 頻率、覆蓋率、class mix、headway 等 read-only 分析 | Spark | 查詢方法、限制說明、結果表 |
+| `railway-elf-release-round-report` | 長輪次、push pending、需要彙整數量與耗時 | Spark 收集；GPT-5.5 排下輪策略 | 本輪變更數量、檢查耗時、下一輪 seed |
+
 ## 整體作業順序
 
 新增或擴充一條路線時，依序做：
 
+0. 先依「模型分工與 skill 啟用」判斷是否可由 Spark 直接執行；若屬於 GPT-5.5
+   決策範圍，先只產生決策/seed，不執行 patch。
 1. 定義範圍：確認 region、line id、路線名稱、起終點、路線類型、資料來源。
 2. 建立 `src/rail-data.js` 的 region、line、station。
 3. 建立 train template，讓列車可被 `TrainGen` 產生。

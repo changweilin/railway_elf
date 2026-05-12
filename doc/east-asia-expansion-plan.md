@@ -409,6 +409,22 @@ Backlog 執行原則：
 
 採用任何 Level 4 資料源前，需用戶明確授權並評估授權條款。
 
+## 低優先未完成項（由 follow-up-plan 移入）
+
+下列項目不再放在 `doc/follow-up-plan.md` 的近期未完成清單，避免干擾泰國 / 新馬 P0 seed。除非用戶明確指定，這些只在完成高優先資料更新後再挑選執行。
+
+| 類別 | 項目 | 目前處理方式 |
+|---|---|---|
+| 工程級精度 | Tokaido-Shinkansen 若 OSM 未來有更乾淨 relation，可替換 corridor reconstruction 並更新 snapshot | 依賴上游資料；目前不主動處理 |
+| 工程級精度 | 已建立 route 但 maxOffset 約 0.75–1.0 km 的路線可再精修，例如 `JR-Keihin-Tohoku`、`KHH-Red`、`Tamsui-LRT`、`JR-Osaka-Loop`、`Tokyu-Toyoko`、`Seoul-Metro-1`、`TPE-Yellow`、`TYMRT`、`Tokyo-Metro-Marunouchi` | 可用官方站點坐標或更乾淨的 OSM station node 逐站替換；不阻塞 P0 擴張 |
+| 工程級精度 | 若要把門檻從 0.75 km 壓到 0.50 km，可依序檢查 `KHH-LRT`、`Beijing-Subway-1`、`KL-MRT-Kajang`、`TRA-Jiji`、`Alishan-Forest`、`Beijing-Subway-2`、`Hankyu-Kobe`、`Seoul-Metro-9`、`KL-Kelana-Jaya`、`BKK-Airport-Rail`、`TRA-Neiwan`、`TRA-Pingxi` | 第二優先品質清單 |
+| 日本 / 南韓完整覆蓋 | 日本剩餘新幹線 / JR 都會圈 / 民鐵 / 其餘 Metro / 機場線 / Regional / Heritage / Freight；南韓一般列車、Regional、Heritage、Freight | 已有各類代表線 seed；下一批建議改挑 Regional / Heritage 作範例 |
+| 支線與快慢車模型 | AREX 直通、Seoul Line 9 急行、Gyeongui-Jungang 支線/短折、Gyeongchun 상봉 / 광운대 variants、Gyeonggang 부발 short-turn、Seohae 대곡 short-turn | 等 skip-stop 或 branch/short-turn template 成熟後再補 |
+| 泰國 / 新馬策略 | SG LRT loops、KL Ampang / Sri Petaling 共線、ERL KLIA Transit / Ekspres、BKK Pink branch、SRT Red Lines 共線 | 先不阻塞 `BKK-BTS-Silom`、`BKK-MRT-Purple`、`KL-MRT-Putrajaya`、`SG-MRT-North-East` 等 P0 seed |
+| 跨境與未營運線 | `SG-MY-RTS-Link` region 歸屬、CIQ 提示、跨境票制；`Penang-Mutiara-LRT`、`SG-MRT-Cross-Island`、`BKK-MRT-Orange` 等未完整載客項 | monitor；正式載客與資料穩定前不建正式 pass |
+| UI / i18n | 多 region selector 改版、12+ region 分組、泰文 / 馬來文 / 印尼文 / 越南文站名與 zh-TW 字串同步 | 等 P0 seed 量增加後再評估是否需要 UI 改版 |
+| 資料源策略 | Level-2 政府 API 與 Level-4 付費資料是否納入、授權上限、更新週期與維護成本 | 需用戶授權與成本判準後才啟動 |
+
 ---
 
 ## 完成標準
