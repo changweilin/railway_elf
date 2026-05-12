@@ -96,12 +96,13 @@
 - Tokaido-Shinkansen：若 OSM 未來有更乾淨 relation，可替換 corridor reconstruction 並更新 snapshot（依賴上游資料,目前無動作可做）。
 - 若要再往工程級精度推進，可優先精修目前 maxOffset 約 0.75–1.0 km 的路線（如 `Beijing-Shanghai-HSR`、`Beijing-Guangzhou-HSR`、`JR-Keihin-Tohoku`、`KHH-Red`、`Tamsui-LRT`、`JR-Osaka-Loop`、`Tokyu-Toyoko`、`Seoul-Metro-1`、`TPE-Yellow`、`TYMRT`），用官方站點座標或更乾淨的 OSM station node 逐站替換。
 - 日本 / 南韓完整覆蓋：依 `doc/east-asia-expansion-plan.md` 的 backlog，未來可從剩餘新幹線 / KTX 走廊、東京 / 首都圈地鐵、Regional / Heritage 等類型各挑一條代表線先做；日本 HSR 類已有 `Nishi-Kyushu-Shinkansen` seed，Airport / Monorail 類已有 `Tokyo-Monorail` seed，Tram / LRT 類已有 `Utsunomiya-Lightline` seed，南韓 HSR 類已有 `SRT-Gyeongbu` / `SRT-Honam` / `SRT-Jeolla` / `SRT-Gyeongjeon` / `SRT-Donghae` / `KTX-Honam` / `KTX-Jeolla` / `KTX-Gyeongjeon` / `KTX-Gangneung` / `KTX-Donghae` / `KTX-Jungang` / `KTX-Jungbu-Naeryuk` seeds，Intercity 類已有 `ITX-Cheongchun` seed，Commuter / Metro 類已有 `Seoul-Metro-3` / `Seoul-Metro-4` / `Seoul-Metro-5` / `Seoul-Metro-6` / `Seoul-Metro-7` / `Seoul-Metro-8` / `Seoul-Metro-9` / `Shinbundang` / `Suin-Bundang` / `Gyeongui-Jungang` / `Gyeongchun` / `Gyeonggang` / `Seohae` / `Incheon-Metro-1` / `Busan-Metro-2` / `Busan-Metro-3` / `Busan-Metro-4` / `Daegu-Metro-1` / `Daegu-Metro-2` / `Daejeon-Metro-1` / `Gwangju-Metro-1` seeds，Airport 類已有 `AREX` all-stop seed，LRT/AGT 類已有 `Gimpo-Goldline` / `Incheon-Metro-2` / `Ui-LRT` / `Sillim-LRT` / `Uijeongbu-LRT` / `Yongin-EverLine` / `Busan-Gimhae-LRT` seeds，Monorail 類已有 `Tokyo-Monorail` / `Daegu-Metro-3` seeds；非首都圈城市捷運 Busan / Daegu / Daejeon / Gwangju seeds 已完成，下一批可改挑 Regional / Heritage；AREX 直通列車、Line 9 急行、Gyeongui-Jungang 支線/短折、Gyeongchun 상봉 / 광운대 variants、Gyeonggang 부발 short-turn 與 Seohae 대곡 short-turn 待 skip-stop 或 branch/short-turn template 支援後再補。
+- 亞洲其他區域完整覆蓋：依 `doc/east-asia-expansion-plan.md` 新增 P0/P1 清單，下一輪優先改為泰國曼谷補完（首選 `BKK-BTS-Silom`，接著 `BKK-MRT-Purple`、`BKK-MRT-Yellow`、`BKK-MRT-Pink`、`BKK-SRT-Dark-Red`）→ 新加坡 / 馬來西亞補完（`SG-MRT-North-East`、`SG-MRT-Downtown`、`SG-MRT-Thomson-East-Coast`、`KL-MRT-Putrajaya`、`KL-Monorail`、KTM Komuter / ERL）→ 印尼 / 菲律賓 / 越南補完；RTS Link、SG LRT loops、KL branch/shared trunk、ERL express/local 先交 5.5 決策後再下放。
 
 ## 建議下一步
 
 1. 後續資料改善：只做可選精修，優先處理 maxOffset 約 0.75–1.0 km 的路線與官方營業里程交叉校驗。
 2. 若 OSM 未來有更乾淨的 Tokaido-Shinkansen relation，再替換資料來源並更新 snapshot。
-3. 若要啟動下一輪資料擴張，先從日本 / 南韓完整覆蓋 backlog 選一個尚未 seed 的類型與一條代表線，補 icon / speed profile / shape pipeline 後再批量展開；日本 Tram / LRT 已有 `Utsunomiya-Lightline` 作為低速 profile 與 LRT 圖示範例。
+3. 若要啟動下一輪資料擴張，先從亞洲其他區域 P0 清單選泰國曼谷 seed（建議 `BKK-BTS-Silom`），完成 icon / speed profile / shape pipeline 後再往 `BKK-MRT-Purple` 與新馬 P0 推進；日本 / 南韓完整覆蓋維持可選 backlog。
 
 ## 5.3 vs 5.5 任務拆分與進度管理（本輪與下一輪）
 
@@ -117,8 +118,9 @@
 5. [x] 下一輪可選精修：將列入 `maxOffset 0.75–1.0 km` 清單（如 `Beijing-Shanghai-HSR`、`Beijing-Guangzhou-HSR`、`Tokaido`）逐條壓低（已完成：三者皆已壓低至 `0.75 km` 以下）。
    - [x] Beijing-Shanghai-HSR 已壓低到 0.680 km（< 0.75）。
    - [x] Beijing-Guangzhou-HSR 已壓低到 0.597 km（< 0.75）。
-- [x] Tokaido-Shinkansen 待壓低（已沿用既有 icon：`japan-` 系列；`check:train-icons`、`check:shapes`、`check:timing` 通過，snapshot maxOffset 0.131km）。
+   - [x] Tokaido-Shinkansen 待壓低（已沿用既有 icon：`japan-` 系列；`check:train-icons`、`check:shapes`、`check:timing` 通過，snapshot maxOffset 0.131km）。
 6. [x] 下一輪可選精修：完成已標註待補關係的支線/變體（如 Line 9 快慢法、Gyeongui short-turn、Gyeongchun variants）所需 template 支援。
+7. [ ] 下一輪亞洲其他區域 seed：先做 `BKK-BTS-Silom` Phase A+B，再依序推 `BKK-MRT-Purple`、`BKK-MRT-Yellow`、`BKK-MRT-Pink`、`KL-MRT-Putrajaya`、`SG-MRT-North-East`。
 
 ### 5.5 需要策略決策
 - 目標：在再擴張前定義下一輪大方向，避免資源重工。
@@ -126,10 +128,10 @@
 
 #### 5.5 進度看板
 1. [x] 已完成「本輪必要項目判定」：回報無阻塞項目，將 backlog 轉為可選。
-2. [ ] 決定下一輪首選類型：在日本 / 南韓剩餘 backlog 中先挑 1 種 type（例如 Regional、Heritage、剩餘 Metro）。
-3. [ ] 決定 seed 擴展節奏：每輪固定 1 代表線→先驗證 icon/speed/shape→再擴張同網絡。
-4. [ ] 確認是否導入更多 branch/short-turn template（line-aware）與 skip-stop 規則，並同步規劃 app-core 模型更新邊界。
-5. [ ] 做「資料源路徑」決策：是否接入 Level-2/4 資源、授權上限、更新週期與維護成本。
+2. [x] 決定下一輪首選區域：泰國曼谷補完優先，新加坡 / 馬來西亞補完第二，印尼 / 菲律賓 / 越南第三，日本 / 南韓剩餘完整覆蓋暫列可選。
+3. [ ] 決定 seed 擴展節奏：每輪固定 1 代表線→先驗證 icon/speed/shape→再擴張同網絡；建議先跑「泰國 2 條 → 馬來西亞 1 條 → 新加坡 1 條」循環。
+4. [ ] 確認是否導入更多 branch/short-turn template（line-aware）與 skip-stop 規則，並同步規劃 app-core 模型更新邊界；優先檢查 SG LRT loops、KL Ampang/Sri Petaling、SRT Red Lines、ERL KLIA Transit/Ekspres、BKK Pink branch。
+5. [ ] 做「資料源路徑」決策：是否接入 Level-2/4 資源、授權上限、更新週期與維護成本；RTS Link 載客前只監控官方進度，不建正式資料。
 
 ### 下一步行事曆（建議）
 - 每輪開始：5.5 完成 backlog 類型排序 + seed 列表。

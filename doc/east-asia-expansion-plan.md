@@ -1,16 +1,17 @@
 # 大東亞路網擴張計畫
 
-更新日期：2026-05-11
+更新日期：2026-05-12
 
 台灣側已涵蓋 21 條線（TRA 全幹線＋4 條支線、阿里山林鐵、THSR、北捷 5 線、機捷、高捷紅/橘、高雄輕軌、淡海輕軌），`follow-up-plan.md` 已標示「沒有尚未完成的必要項目」。本文件定義整個大東亞區域的擴張批次與每條線的執行步驟。
 
-涵蓋範圍：**日本 / 南韓 / 香港 / 中國 / 新加坡 / 馬來西亞 / 泰國 / 越南**。
+現行完成批次涵蓋範圍：**日本 / 南韓 / 香港 / 中國 / 新加坡 / 馬來西亞 / 泰國 / 越南**。新增 backlog 另列 **印尼 / 菲律賓 / 南亞 / 西亞** 作為泰國與新馬之後的候選池。
 
 ## 整體進度
 
 - **Phase A（手寫站表 + 車種）：完成 34/34 條（100%）** — `npm run check:timing` & `npm run test:smoke` & `npm run build` 全通過
 - **Phase B（OSM relation 對接）：34/34 條完成（100%）** — 批次 1–11 已補 OSM relation 並回灌真實軌道形狀；本輪沒有保留 0 km fallback。2026-05-11 加入日本 / 南韓 backlog seeds 後，103 條線 runtime maxOffset 全部壓到 1.0 km 內。
 - **完整覆蓋 backlog（日本 / 南韓）：已建立規劃事項** — 覆蓋尚未加入的鐵道類型與候選線群；此區塊是後續大型擴張，不列入已完成的 34 條 Phase A/B 統計。
+- **亞洲其他區域 backlog（泰國 / 新馬優先）：已建立規劃事項** — 下一輪優先順序調整為泰國曼谷補完 → 新加坡 / 馬來西亞補完與新馬跨境監控 → 印尼 / 菲律賓 / 越南補完；未營運或跨境 CIQ 複雜項目先交 5.5 判定，再下放 5.3。
 - **Backlog seed（日本 HSR）：Nishi Kyushu Shinkansen 已完成代表線** — `Nishi-Kyushu-Shinkansen` 已補 5 站手寫站表、`かもめ` train template、OSM relation `7356208` corridor + stop nodes、line-aware `かもめ` train icon；列車圖示先檢查日本既有新幹線圖示，確認無同國同型號 / 同塗裝 `かもめ` PNG 可沿用後才新增 `japan-nishi-kyushu-shinkansen-kamome.png`。
 - **Backlog seed（日本 Airport / Monorail）：Tokyo Monorail 已完成代表線** — `Tokyo-Monorail` 已補 11 站手寫站表、普通 train template、OSM relation `3417174`、line-aware monorail train icon；列車圖示先檢查日本既有圖示，確認無同國同型號 monorail PNG 可沿用後才新增 `japan-tokyo-monorail-local.png`。
 - **Backlog seed（日本 Tram / LRT）：Utsunomiya Lightline 已完成代表線** — `Utsunomiya-Lightline` 已補 19 站手寫站表、`ライトライン` train template、OSM route relation `12419659`、line-aware LRT train icon；列車圖示先檢查日本既有低床 LRT / tram 圖示，確認無同國同型號 Lightline / HU300 PNG 可沿用後才新增 `japan-utsunomiya-lightline-lightline.png`。
@@ -212,6 +213,81 @@ Backlog 執行原則：
 3. 南韓優先順序建議：SRT / KTX 其餘走廊 → 首都圈廣域線 → Busan / Daegu / Daejeon / Gwangju → Intercity / LRT / Monorail → Regional / Heritage；SRT Gyeongbu / Honam / Jeolla / Gyeongjeon / Donghae 與 KTX Honam / Jeolla / Gyeongjeon / Gangneung / Donghae / Jungang / Jungbu Naeryuk 已完成 HSR backlog seeds，ITX-Cheongchun 已完成首條 Intercity seed，Seoul-Metro-3 / Seoul-Metro-4 / Seoul-Metro-5 / Seoul-Metro-6 / Seoul-Metro-7 / Seoul-Metro-8 / Seoul-Metro-9 / Shinbundang / Suin-Bundang / Gyeongui-Jungang / Gyeongchun / Gyeonggang / Seohae / Incheon-Metro-1 / Busan-Metro-2 / Busan-Metro-3 / Busan-Metro-4 / Daegu-Metro-1 / Daegu-Metro-2 / Daejeon-Metro-1 / Gwangju-Metro-1 已完成 Commuter / Metro seeds，AREX all-stop 已完成首條 Airport seed，Gimpo Goldline / Incheon-Metro-2 / Ui-LRT / Sillim-LRT / Uijeongbu-LRT / Yongin-EverLine / Busan-Gimhae-LRT 已完成 LRT/AGT seeds，Daegu Metro Line 3 已完成首條 Monorail seed。
 4. Freight、鋼索、季節性觀光線若沒有穩定 passenger pass prediction 模型，先做地圖圖層規劃，不阻塞客運功能。
 
+## 亞洲其他區域完整覆蓋 backlog（泰國 / 新馬優先）
+
+此區塊補上日本 / 南韓以外的下一輪路線池。優先順序依本輪決策固定為 **泰國曼谷補完 → 新加坡 / 馬來西亞補完與新馬跨境監控 → 印尼 / 菲律賓 / 越南補完**。這些項目不改寫既有 34 條 Phase A/B 完成率；每輪仍以 1 條 seed 完成 A+B、icon、timing、shape 與 smoke 驗證為單位。
+
+資料確認依據：
+
+- 新加坡：LTA Rail Network 現行 6 條 MRT 與 2 組 LRT，並列 North East / Downtown / Thomson-East Coast / Bukit Panjang LRT / Sengkang-Punggol LRT。
+- 泰國：MRTA Yellow / Pink / Blue / Purple、BTS Sukhumvit / Silom / Gold、SRTET Red Line 官方頁面；Orange 等未全線營運者先列監控。
+- 馬來西亞 / 新馬：MyRapid LRT / MRT / Monorail、KTMB Komuter / ETS / Intercity、LTA JB-Singapore RTS Link；RTS Link 目標 2026 年底載客服務，營運前不進 5.3 實作。
+
+### P0：泰國曼谷補完（下一輪首選）
+
+| 優先 | 狀態 | 類型 | id | 線名 | 起終點 / 範圍 | 5.3 責任 | 5.5 責任 |
+|---|---|---|---|---|---|---|---|
+| P0-TH-1 | □ seed | Metro | `BKK-BTS-Silom` | BTS สายสีลม | National Stadium ⇄ Bang Wa | 補站表、BTS train template、OSM relation、沿用/新增 BTS 綠線圖示 | 無阻塞；只需確認是否與 Sukhumvit 共用 train icon |
+| P0-TH-2 | □ seed | Metro | `BKK-MRT-Purple` | MRT สายสีม่วง | Khlong Bang Phai ⇄ Tao Poon | 補站表、MRT heavy-rail template、OSM relation、BEM purple icon | 無阻塞；若與未來南延伸合併，另開 extension pass |
+| P0-TH-3 | □ seed | Monorail / AGT | `BKK-MRT-Yellow` | MRT สายสีเหลือง | Lat Phrao ⇄ Samrong（30.4 km / 23 站） | 補站表、straddle monorail template、OSM relation、Yellow Line 圖示 | 決定 `Monorail` 還是 `Metro` category 顯示規則 |
+| P0-TH-4 | □ seed | Monorail / AGT | `BKK-MRT-Pink` | MRT สายสีชมพู | Nonthaburi Civic Center ⇄ Min Buri（34.5 km / 30 站） | 補站表、straddle monorail template、OSM relation、Pink Line 圖示 | Muang Thong Thani 支線若納入，需 branch/extension 規則 |
+| P0-TH-5 | □ seed | Commuter | `BKK-SRT-Dark-Red` | SRT Dark Red Line | Krung Thep Aphiwat ⇄ Rangsit / Don Mueang corridor | 補站表、commuter EMU template、OSM relation、SRT Red Line 圖示 | 與 Light Red 共用 trunk / transfer 呈現先定義 |
+| P0-TH-6 | □ backlog | Commuter | `BKK-SRT-Light-Red` | SRT Light Red Line | Krung Thep Aphiwat ⇄ Taling Chan / west corridor | 等 5.5 確認營運段後 seed | 確認當前服務段、延伸站與是否獨立 line object |
+| P0-TH-7 | □ optional | AGT | `BKK-BTS-Gold` | BTS Gold Line | Krung Thon Buri ⇄ Khlong San | 可作小型 APM seed，補 3 站與 Gold Line 圖示 | 決定小型 feeder 是否納入主路網統計 |
+| P0-TH-8 | □ monitor | Metro | `BKK-MRT-Orange` | MRT Orange Line | 待完整載客段確認 | 不執行 | 只在正式營運段、站名與 OSM relation 穩定後下放 |
+
+### P0：新加坡 / 新馬補完
+
+| 優先 | 狀態 | 類型 | id | 線名 | 起終點 / 範圍 | 5.3 責任 | 5.5 責任 |
+|---|---|---|---|---|---|---|---|
+| P0-SG-1 | □ seed | Metro | `SG-MRT-North-East` | North East Line | HarbourFront ⇄ Punggol Coast（22 km / 17 站） | 補站表、driverless heavy metro template、OSM relation、NEL purple icon | 無阻塞；Punggol Coast 已營運時納入 current baseline |
+| P0-SG-2 | □ seed | Metro | `SG-MRT-Downtown` | Downtown Line | Bukit Panjang ⇄ Expo（42 km / 35 站，含 Hume） | 補站表、driverless metro template、OSM relation、DTL blue icon | DTL3e 若 2026 後續開通，作 extension pass |
+| P0-SG-3 | □ seed | Metro | `SG-MRT-Thomson-East-Coast` | Thomson-East Coast Line | Woodlands North ⇄ Bayshore current segment（40.6 km / 27 站） | 補現行營運段站表、TEL template、OSM relation、brown icon | 未完工東段與 future extension 不提前進 `RAIL_DATA` |
+| P0-SG-4 | □ backlog | AGT / LRT | `SG-LRT-Bukit-Panjang` | Bukit Panjang LRT | Choa Chu Kang ⇄ Bukit Panjang loop network | 等 loop 規則確認後 seed | 決定 LRT loop / service pattern 在 line object 中如何表示 |
+| P0-SG-5 | □ backlog | AGT / LRT | `SG-LRT-Sengkang` / `SG-LRT-Punggol` | Sengkang / Punggol LRT | 各 14 站、東西 loops | 等 loop 規則確認後 seed | 決定兩組 loop 是拆線、合併，或用 repeated station/loopAnchor |
+| P0-SG-6 | □ monitor | Cross-border LRT | `SG-MY-RTS-Link` | Johor Bahru-Singapore RTS Link | Woodlands North ⇄ Bukit Chagar（4 km / 2 站，目標 2026 年底） | 不在載客前建正式 pass；可先備 icon / region strategy | 決定跨 region、CIQ、票制與 `singapore` / `malaysia` / `sg-my` 歸屬 |
+| P0-SG-7 | □ monitor | Metro | `SG-MRT-Cross-Island` | Cross Island Line | future stages | 不執行 | 待載客段開通與 LTA current line list 更新 |
+
+### P0：馬來西亞補完
+
+| 優先 | 狀態 | 類型 | id | 線名 | 起終點 / 範圍 | 5.3 責任 | 5.5 責任 |
+|---|---|---|---|---|---|---|---|
+| P0-MY-1 | □ seed | Metro | `KL-MRT-Putrajaya` | MRT Putrajaya Line | Kwasa Damansara ⇄ Putrajaya Sentral（57.7 km / 36 站） | 補站表、MRT train template、OSM relation、PYL yellow icon | 無阻塞；長線站距需優先 shape 對站 |
+| P0-MY-2 | □ seed | Metro / LRT | `KL-LRT-Ampang` | LRT Ampang Line | Sentul Timur ⇄ Ampang | 以獨立 line object 補站表、template、OSM relation | 與 Sri Petaling 共用 trunk 是否需要 branch-aware 模型 |
+| P0-MY-3 | □ seed | Metro / LRT | `KL-LRT-Sri-Petaling` | LRT Sri Petaling Line | Sentul Timur ⇄ Putra Heights | 以獨立 line object 補站表、template、OSM relation | 若未來合併為 branch network，需 app-core/app-map 表示策略 |
+| P0-MY-4 | □ seed | Monorail | `KL-Monorail` | KL Monorail | KL Sentral ⇄ Titiwangsa（11 站） | 補站表、monorail template、OSM relation、KL Monorail icon | 無阻塞；可作東南亞 monorail icon 範例 |
+| P0-MY-5 | □ seed | Commuter | `KTM-Komuter-Batu-Caves-Pulau-Sebang` | KTM Komuter Batu Caves - Pulau Sebang | Batu Caves ⇄ Pulau Sebang（135 km） | 補長距通勤站表、KTM EMU template、OSM relation | 長線班距與部分短折服務先不建，等 template 支援 |
+| P0-MY-6 | □ seed | Commuter | `KTM-Komuter-Tanjung-Malim-Port-Klang` | KTM Komuter Tanjung Malim - Port Klang | Tanjung Malim ⇄ Pelabuhan Klang（131 km） | 補站表、KTM EMU template、OSM relation | 同上；確認 terminal name 與英/馬來文 labels |
+| P0-MY-7 | □ seed | Airport | `ERL-KLIA-Transit` | KLIA Transit | KL Sentral ⇄ KLIA2 local stops | 補 local airport service 站表、ERL template、OSM relation | 與 KLIA Ekspres 共線時先以 local 為 seed |
+| P0-MY-8 | □ backlog | Airport | `ERL-KLIA-Ekspres` | KLIA Ekspres | KL Sentral ⇄ KLIA / KLIA2 express | 等 skip-stop / express template 確認後補 | 決定 express 同 corridor pass prediction 與 UI 呈現 |
+| P0-MY-9 | □ monitor | LRT | `Penang-Mutiara-LRT` | Penang Mutiara Line | future operational segment | 不執行 | 待正式載客與 OSM/官方站表穩定 |
+
+### P1：其他亞洲候選池（泰國 / 新馬之後）
+
+| 優先 | 區域 | 候選線群 | 5.3 可先做 | 5.5 先判斷 |
+|---|---|---|---|---|
+| P1-ID | 印尼 | Jakarta MRT North-South Phase 1、LRT Jakarta、LRT Jabodebek、KAI Commuter Bogor / Cikarang / Rangkasbitung / Tangerang、Soekarno-Hatta Airport Rail Link | Jakarta MRT Phase 1 可作第一條 seed | KAI Commuter 多分支與長線直通需 branch/short-turn 規則 |
+| P1-PH | 菲律賓 | Manila LRT-1、LRT-2、MRT-3、PNR / NSCR future corridor | LRT-2 或 MRT-3 可作第一條 seed | LRT-1 extension 與 NSCR 未來段需確認 current baseline |
+| P1-VN | 越南 | HCMC Line 1（已完成）、Hanoi 2A（已完成）、Hanoi Line 3 elevated segment、HCMC Line 2 future | Hanoi Line 3 current service 可作補完 seed | 未全線營運段與 future HCMC extensions 不提前建正式資料 |
+| P2-SA | 南亞 / 西亞 | Delhi / Mumbai / Bengaluru / Bangkok-scale 以外大型都會鐵路、Dubai Metro、Doha Metro 等 | 暫不進 5.3 | 需另開大型 region selector、語系與資料量策略 |
+
+### 亞洲其他區域 5.3 / 5.5 任務分配
+
+5.3 可直接執行：
+
+1. 依 P0-TH-1 → P0-TH-5 順序補曼谷已營運線，每條線都完成 Phase A + Phase B、train icon、`check:timing`、`check:shapes`、`test:smoke`。
+2. 泰國前 2 條 seed 完成後，平行展開 P0-MY-1 `KL-MRT-Putrajaya` 與 P0-SG-1 `SG-MRT-North-East`，確保新馬資料與既有 SG/MY region 格式一致。
+3. 馬來西亞 LRT / KTM / ERL 採「先獨立 line object，後續再合併 branch 模型」策略，避免 branch 規則尚未定案時阻塞站表與 shape 回灌。
+4. 新加坡 MRT 補完先做重軌 MRT（North East / Downtown / Thomson-East-Coast current segment），LRT loop 與 RTS Link 暫不下放。
+
+5.5 需要先決策：
+
+1. 確認每輪實作順序是否維持「泰國 2 條 seed → 馬來西亞 1 條 seed → 新加坡 1 條 seed」循環，或一次把同城市補完。
+2. 定義 loop / branch / shared trunk / express service 的資料模型邊界：SG LRT、KL Ampang / Sri Petaling、SRT Red Lines、ERL KLIA Transit / Ekspres、BKK Pink branch 都依此規則下放。
+3. 決定 RTS Link 載客後的 region 歸屬與 UI 呈現：`singapore`、`malaysia`、或新增 `sg-my` cross-border region。
+4. 決定是否排除非鐵路 BRT（例如 Sunway BRT）；除非新增非 rail category，預設不列入本鐵道路網計畫。
+5. 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed，並先評估多 region UI 是否足以承受 12+ regions。
+
 ## 批次 5 — 香港：MTR（4 條）
 
 新增 `hongkong` region，center `[22.37, 114.13]`，zoom 11。
@@ -284,7 +360,7 @@ Backlog 執行原則：
 
 ## 分類統計
 
-已完成的批次 1–11 合計 **34 條線**，分布如下；不含既有日本 3 條線（東海道新幹線、山手線、中央線）與上方新增的日本 / 南韓完整覆蓋 backlog。另有 backlog seed：日本 `Nishi-Kyushu-Shinkansen` 1 條 HSR 線、`Tokyo-Monorail` 1 條 Airport / Monorail 線、`Utsunomiya-Lightline` 1 條 Tram / LRT 線、南韓 `SRT-Gyeongbu` / `SRT-Honam` / `SRT-Jeolla` / `SRT-Gyeongjeon` / `SRT-Donghae` / `KTX-Honam` / `KTX-Jeolla` / `KTX-Gyeongjeon` / `KTX-Gangneung` / `KTX-Donghae` / `KTX-Jungang` / `KTX-Jungbu-Naeryuk` 12 條 HSR 線、`ITX-Cheongchun` 1 條 Intercity 線、`Seoul-Metro-3` / `Seoul-Metro-4` / `Seoul-Metro-5` / `Seoul-Metro-6` / `Seoul-Metro-7` / `Seoul-Metro-8` / `Seoul-Metro-9` / `Shinbundang` / `Suin-Bundang` / `Gyeongui-Jungang` / `Gyeongchun` / `Gyeonggang` / `Seohae` / `Incheon-Metro-1` / `Busan-Metro-2` / `Busan-Metro-3` / `Busan-Metro-4` / `Daegu-Metro-1` / `Daegu-Metro-2` / `Daejeon-Metro-1` / `Gwangju-Metro-1` 21 條 Commuter / Metro 線、`AREX` 1 條 Airport 線、`Gimpo-Goldline` / `Incheon-Metro-2` / `Ui-LRT` / `Sillim-LRT` / `Uijeongbu-LRT` / `Yongin-EverLine` / `Busan-Gimhae-LRT` 7 條 LRT/AGT 線、`Daegu-Metro-3` 1 條 Monorail 線已完成 A/B。
+已完成的批次 1–11 合計 **34 條線**，分布如下；不含既有日本 3 條線（東海道新幹線、山手線、中央線）、上方新增的日本 / 南韓完整覆蓋 backlog、以及亞洲其他區域 P0/P1 backlog。另有 backlog seed：日本 `Nishi-Kyushu-Shinkansen` 1 條 HSR 線、`Tokyo-Monorail` 1 條 Airport / Monorail 線、`Utsunomiya-Lightline` 1 條 Tram / LRT 線、南韓 `SRT-Gyeongbu` / `SRT-Honam` / `SRT-Jeolla` / `SRT-Gyeongjeon` / `SRT-Donghae` / `KTX-Honam` / `KTX-Jeolla` / `KTX-Gyeongjeon` / `KTX-Gangneung` / `KTX-Donghae` / `KTX-Jungang` / `KTX-Jungbu-Naeryuk` 12 條 HSR 線、`ITX-Cheongchun` 1 條 Intercity 線、`Seoul-Metro-3` / `Seoul-Metro-4` / `Seoul-Metro-5` / `Seoul-Metro-6` / `Seoul-Metro-7` / `Seoul-Metro-8` / `Seoul-Metro-9` / `Shinbundang` / `Suin-Bundang` / `Gyeongui-Jungang` / `Gyeongchun` / `Gyeonggang` / `Seohae` / `Incheon-Metro-1` / `Busan-Metro-2` / `Busan-Metro-3` / `Busan-Metro-4` / `Daegu-Metro-1` / `Daegu-Metro-2` / `Daejeon-Metro-1` / `Gwangju-Metro-1` 21 條 Commuter / Metro 線、`AREX` 1 條 Airport 線、`Gimpo-Goldline` / `Incheon-Metro-2` / `Ui-LRT` / `Sillim-LRT` / `Uijeongbu-LRT` / `Yongin-EverLine` / `Busan-Gimhae-LRT` 7 條 LRT/AGT 線、`Daegu-Metro-3` 1 條 Monorail 線已完成 A/B。
 
 | 類型 | 條數 | 線名摘要 |
 |---|---|---|
@@ -357,7 +433,7 @@ Backlog 執行原則：
 
 ## 執行順序
 
-2026-05-09 已依批次 1 → 11 完成 Phase B 形狀回灌與 snapshot 更新；同日完成高誤差複查、OSM stop member 對站、snapshot 二次精修更新。2026-05-11 起可選 backlog 持續補 seed；`Nishi-Kyushu-Shinkansen` 已完成日本 HSR 代表線，`Tokyo-Monorail` 已完成日本 Airport / Monorail 代表線，`Utsunomiya-Lightline` 已完成日本 Tram / LRT 代表線。後續循環可從剩餘日本 HSR / Metro / Regional / Heritage 或南韓 Regional / Heritage 另挑小項目。
+2026-05-09 已依批次 1 → 11 完成 Phase B 形狀回灌與 snapshot 更新；同日完成高誤差複查、OSM stop member 對站、snapshot 二次精修更新。2026-05-11 起可選 backlog 持續補 seed；`Nishi-Kyushu-Shinkansen` 已完成日本 HSR 代表線，`Tokyo-Monorail` 已完成日本 Airport / Monorail 代表線，`Utsunomiya-Lightline` 已完成日本 Tram / LRT 代表線。2026-05-12 起下一輪擴張優先順序改為泰國曼谷補完、新加坡 / 馬來西亞補完與新馬 RTS Link 監控；日本 / 南韓剩餘完整覆蓋維持可選 backlog。
 
 ## 5.3 vs 5.5 任務拆分與進度管理
 
@@ -370,8 +446,9 @@ Backlog 執行原則：
 2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Vietnam 各區批次）。
 3. [x] 維護資料源（以 OSM 為主）並更新 `OSM_LINE_MAP`、`rail-data`、`trainTemplates` 的常規新增流程。
 4. [x] 針對高誤差路段執行 station-to-station/stop-node 對站修正（已完成：多條南韓與東南亞主要線路）。
-5. [ ] 持續追加入列 backlog 的候選新線（日本 Metro、南韓 Regional / Heritage）前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路。
-6. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
+5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；下一輪首選 `BKK-BTS-Silom`，之後依 `P0-TH`、`P0-MY`、`P0-SG` 清單輪替。
+6. [ ] 泰國 / 新馬 P0 seed 執行：每條線都補 `rail-data`、train template、OSM relation、train icon，並跑 `npm run build:rail-data`、`npm run check:shapes`、`npm run check:timing`、`npm run test:smoke`。
+7. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
 
 ### 5.5 需要跨模組判斷（GPT-5.5）
 - 目標：涉及策略、優先序、資料模型邊界與 UI/流程風險的決策性工作。
@@ -379,11 +456,12 @@ Backlog 執行原則：
 
 #### 進度看板（5.5）
 1. [x] 確認「完成」與「可選 backlog」邊界（目前結論：必要項目已無）並固定為每輪 1 類型 1 seed 的擴張策略。
-2. [ ] 審核「日本/南韓完整覆蓋」長期路線地圖：決定下一輪優先順序（HSR 其餘走廊 vs 首都圈 vs 非首都圈）。
-3. [ ] 評估 loop/複線/共線的策略模板（`loopAnchor`、`corridor`、branch/short-turn）在 `app-core` 與 `app-map` 的長期維運性。
-4. [ ] 規劃多 region UI 與地區切換體驗（9+ region 規模）是否改版為下拉/群組，以免後續擴展衝突。
-5. [ ] i18n 策略決定（中文、日文、韓文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
-6. [ ] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
+2. [x] 決定亞洲其他區域下一輪優先順序：泰國曼谷補完 → 新加坡 / 馬來西亞補完與新馬 RTS Link 監控 → 印尼 / 菲律賓 / 越南補完。
+3. [ ] 評估 loop/複線/共線的策略模板（`loopAnchor`、`corridor`、branch/short-turn）在 `app-core` 與 `app-map` 的長期維運性；優先用於 SG LRT、KL Ampang/Sri Petaling、SRT Red Lines、ERL express/local。
+4. [ ] 決定 RTS Link 載客後的 region 歸屬、CIQ 提示、跨境線是否新增 `sg-my` region；載客前只監控，不交給 5.3 建正式資料。
+5. [ ] 規劃多 region UI 與地區切換體驗（12+ region 規模）是否改版為下拉/群組，以免後續擴展衝突。
+6. [ ] i18n 策略決定（中文、日文、韓文、泰文、馬來文、印尼文、越南文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
+7. [ ] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
 
 ### 每 1 輪管理規則（共用）
 - 5.3 工作可按 `seed` 粒度收斂：每輪至少完成 1 條完整 seed（A+B）並出具 smoke + shape + timing 驗證。

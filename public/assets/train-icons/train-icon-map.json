@@ -1,188 +1,188 @@
 {
   "typeFallbacks": {
-    "?芸撥": {
+    "自強": {
       "icon": "assets/train-icons/tze-chiang.png",
       "kind": "express"
     },
-    "??": {
+    "莒光": {
       "icon": "assets/train-icons/chu-kuang.png",
       "kind": "limited"
     },
-    "???": {
+    "區間": {
       "icon": "assets/train-icons/local-emu.png",
       "kind": "commuter"
     },
-    "擃": {
+    "高鐵": {
       "icon": "assets/train-icons/thsr-700t.png",
       "kind": "shinkansen"
     },
-    "憭芷陌??": {
+    "太魯閣": {
       "icon": "assets/train-icons/taroko.png",
       "kind": "express"
     },
-    "?格???": {
+    "普悠瑪": {
       "icon": "assets/train-icons/puyuma.png",
       "kind": "express"
     },
-    "?輸?撅梯?": {
+    "阿里山號": {
       "icon": "assets/train-icons/alishan-express.png",
       "kind": "heritage"
     },
-    "?琿?": {
+    "捷運": {
       "icon": "assets/train-icons/metro.png",
       "kind": "metro"
     },
-    "?桅?": {
+    "普通車": {
       "icon": "assets/train-icons/tymetro-commuter.png",
       "kind": "commuter"
     },
-    "?湧?頠?": {
+    "直達車": {
       "icon": "assets/train-icons/tymetro-express.png",
       "kind": "express"
     },
-    "頛?": {
+    "輕軌": {
       "icon": "assets/train-icons/lrt.png",
       "kind": "lrt"
     },
-    "?柴???": {
+    "のぞみ": {
       "icon": "assets/train-icons/shinkansen-nozomi.png",
       "kind": "shinkansen"
     },
-    "?脯???": {
+    "ひかり": {
       "icon": "assets/train-icons/shinkansen-hikari.png",
       "kind": "shinkansen"
     },
-    "????": {
+    "こだま": {
       "icon": "assets/train-icons/shinkansen-kodama.png",
       "kind": "shinkansen"
     },
-    "撅望?蝺?": {
+    "山手線": {
       "icon": "assets/train-icons/yamanote.png",
       "kind": "commuter"
     },
-    "敹恍?": {
+    "快速": {
       "icon": "assets/train-icons/chuo-rapid.png",
       "kind": "express"
     },
-    "?孵敹恍?": {
+    "特別快速": {
       "icon": "assets/train-icons/chuo-special-rapid.png",
       "kind": "express"
     }
   },
   "lineOverrides": {
-    "taiwan|TRA-Coast|??翰": {
+    "taiwan|TRA-Coast|區間快": {
       "icon": "assets/train-icons/taiwan-tra-coast-semi-express.png",
       "kind": "express"
     },
-    "japan|Tokyo-Metro-Ginza|?摨抒?": {
+    "japan|Tokyo-Metro-Ginza|銀座線": {
       "icon": "assets/train-icons/japan-tokyo-metro-ginza-ginza-line.png",
       "kind": "metro"
     },
-    "japan|Tokyo-Metro-Marunouchi|銝詻???": {
+    "japan|Tokyo-Metro-Marunouchi|丸ノ内線": {
       "icon": "assets/train-icons/japan-tokyo-metro-marunouchi-marunouchi-line.png",
       "kind": "metro"
     },
-    "japan|JR-Keihin-Tohoku|????": {
+    "japan|JR-Keihin-Tohoku|各駅停車": {
       "icon": "assets/train-icons/japan-jr-keihin-tohoku-local.png",
       "kind": "commuter"
     },
-    "japan|JR-Sobu-Local|????": {
+    "japan|JR-Sobu-Local|各駅停車": {
       "icon": "assets/train-icons/japan-jr-sobu-local-local.png",
       "kind": "commuter"
     },
-    "japan|Tokyu-Toyoko|??": {
+    "japan|Tokyu-Toyoko|各停": {
       "icon": "assets/train-icons/japan-tokyu-toyoko-local.png",
       "kind": "commuter"
     },
-    "japan|Tokyu-Toyoko|?亥?": {
+    "japan|Tokyu-Toyoko|急行": {
       "icon": "assets/train-icons/japan-tokyu-toyoko-express.png",
       "kind": "express"
     },
-    "japan|Tokyu-Toyoko|?寞?": {
+    "japan|Tokyu-Toyoko|特急": {
       "icon": "assets/train-icons/japan-tokyu-toyoko-limited-express.png",
       "kind": "express"
     },
-    "japan|JR-Osaka-Loop|?桅?": {
+    "japan|JR-Osaka-Loop|普通": {
       "icon": "assets/train-icons/japan-jr-osaka-loop-local.png",
       "kind": "commuter"
     },
-    "japan|JR-Osaka-Loop|憭批?頝臬翰??": {
+    "japan|JR-Osaka-Loop|大和路快速": {
       "icon": "assets/train-icons/japan-jr-osaka-loop-yamatoji-rapid.png",
       "kind": "express"
     },
-    "japan|Osaka-Metro-Midosuji|敺∪?蝑?": {
+    "japan|Osaka-Metro-Midosuji|御堂筋線": {
       "icon": "assets/train-icons/japan-osaka-metro-midosuji-midosuji-line.png",
       "kind": "metro"
     },
-    "japan|Hankyu-Kobe|?桅?": {
+    "japan|Hankyu-Kobe|普通": {
       "icon": "assets/train-icons/japan-hankyu-kobe-local.png",
       "kind": "commuter"
     },
-    "japan|Hankyu-Kobe|??寞?": {
+    "japan|Hankyu-Kobe|通勤特急": {
       "icon": "assets/train-icons/japan-hankyu-kobe-commuter-limited-express.png",
       "kind": "express"
     },
-    "japan|Hankyu-Kobe|?寞?": {
+    "japan|Hankyu-Kobe|特急": {
       "icon": "assets/train-icons/japan-hankyu-kobe-limited-express.png",
       "kind": "express"
     },
-    "japan|Sanyo-Shinkansen|?踴???": {
+    "japan|Sanyo-Shinkansen|みずほ": {
       "icon": "assets/train-icons/japan-sanyo-shinkansen-mizuho.png",
       "kind": "shinkansen"
     },
-    "japan|Sanyo-Shinkansen|????": {
+    "japan|Sanyo-Shinkansen|さくら": {
       "icon": "assets/train-icons/japan-sanyo-shinkansen-sakura.png",
       "kind": "shinkansen"
     },
-    "japan|Nishi-Kyushu-Shinkansen|????": {
+    "japan|Nishi-Kyushu-Shinkansen|かもめ": {
       "icon": "assets/train-icons/japan-nishi-kyushu-shinkansen-kamome.png",
       "kind": "shinkansen"
     },
-    "japan|Tokyo-Monorail|?桅?": {
+    "japan|Tokyo-Monorail|普通": {
       "icon": "assets/train-icons/japan-tokyo-monorail-local.png",
       "kind": "monorail"
     },
-    "japan|Utsunomiya-Lightline|?押??扎": {
+    "japan|Utsunomiya-Lightline|ライトライン": {
       "icon": "assets/train-icons/japan-utsunomiya-lightline-lightline.png",
       "kind": "lrt"
     },
-    "korea|Seoul-Metro-1|篣?": {
+    "korea|Seoul-Metro-1|급행": {
       "icon": "assets/train-icons/korea-seoul-metro-1-express.png",
       "kind": "express"
     },
-    "korea|Seoul-Metro-1|??": {
+    "korea|Seoul-Metro-1|완행": {
       "icon": "assets/train-icons/korea-seoul-metro-1-local.png",
       "kind": "commuter"
     },
-    "korea|Seoul-Metro-2|??": {
+    "korea|Seoul-Metro-2|순환": {
       "icon": "assets/train-icons/korea-seoul-metro-2-loop.png",
       "kind": "metro"
     },
-    "korea|Seoul-Metro-3|3?賄?": {
+    "korea|Seoul-Metro-3|3호선": {
       "icon": "assets/train-icons/korea-seoul-metro-3-line-3.png",
       "kind": "metro"
     },
-    "korea|Seoul-Metro-4|4?賄?": {
+    "korea|Seoul-Metro-4|4호선": {
       "icon": "assets/train-icons/korea-seoul-metro-4-line-4.png",
       "kind": "metro"
     },
-    "korea|Seoul-Metro-5|5?賄?": {
+    "korea|Seoul-Metro-5|5호선": {
       "icon": "assets/train-icons/korea-seoul-metro-5-line-5.png",
       "kind": "metro"
     },
-    "korea|Seoul-Metro-6|6?賄?": {
+    "korea|Seoul-Metro-6|6호선": {
       "icon": "assets/train-icons/korea-seoul-metro-6-line-6.png",
       "kind": "metro"
     },
-    "korea|Seoul-Metro-7|7?賄?": {
+    "korea|Seoul-Metro-7|7호선": {
       "icon": "assets/train-icons/korea-seoul-metro-7-line-7.png",
       "kind": "metro"
     },
-    "korea|Seoul-Metro-8|8?賄?": {
+    "korea|Seoul-Metro-8|8호선": {
       "icon": "assets/train-icons/korea-seoul-metro-8-line-8.png",
       "kind": "metro"
     },
-    "korea|Seoul-Metro-9|9?賄?": {
+    "korea|Seoul-Metro-9|9호선": {
       "icon": "assets/train-icons/korea-seoul-metro-9-line-9.png",
       "kind": "metro"
     },
@@ -194,11 +194,11 @@
       "icon": "assets/train-icons/korea-seoul-metro-9-line-9.png",
       "kind": "metro"
     },
-    "korea|Ui-LRT|?域???": {
+    "korea|Ui-LRT|우이신설선": {
       "icon": "assets/train-icons/korea-ui-lrt-ui-sinseol-line.png",
       "kind": "lrt"
     },
-    "korea|Sillim-LRT|?汝??": {
+    "korea|Sillim-LRT|신림선": {
       "icon": "assets/train-icons/korea-sillim-lrt-sillim-line.png",
       "kind": "lrt"
     },
@@ -210,15 +210,15 @@
       "icon": "assets/train-icons/korea-yongin-everline-everline.png",
       "kind": "lrt"
     },
-    "korea|Shinbundang|???寢?": {
+    "korea|Shinbundang|신분당선": {
       "icon": "assets/train-icons/korea-shinbundang-shinbundang.png",
       "kind": "metro"
     },
-    "korea|Suin-Bundang|?賱??": {
+    "korea|Suin-Bundang|수인분당선": {
       "icon": "assets/train-icons/korea-suin-bundang-suin-bundang.png",
       "kind": "commuter"
     },
-    "korea|Gyeongui-Jungang|窶趣?鴗???": {
+    "korea|Gyeongui-Jungang|경의중앙선": {
       "icon": "assets/train-icons/korea-gyeongui-jungang-gyeongui-jungang.png",
       "kind": "commuter"
     },
@@ -226,7 +226,7 @@
       "icon": "assets/train-icons/korea-gyeongui-jungang-gyeongui-jungang.png",
       "kind": "commuter"
     },
-    "korea|Gyeongchun|窶趣???": {
+    "korea|Gyeongchun|경춘선": {
       "icon": "assets/train-icons/korea-gyeongchun-gyeongchun.png",
       "kind": "commuter"
     },
@@ -238,19 +238,19 @@
       "icon": "assets/train-icons/korea-gyeongchun-gyeongchun.png",
       "kind": "commuter"
     },
-    "korea|Gyeonggang|窶赭???": {
+    "korea|Gyeonggang|경강선": {
       "icon": "assets/train-icons/korea-gyeonggang-gyeonggang.png",
       "kind": "commuter"
     },
-    "korea|Seohae|???": {
+    "korea|Seohae|서해선": {
       "icon": "assets/train-icons/korea-seohae-seohae.png",
       "kind": "commuter"
     },
-    "korea|Incheon-Metro-1|1?賄?": {
+    "korea|Incheon-Metro-1|1호선": {
       "icon": "assets/train-icons/korea-incheon-metro-1-line-1.png",
       "kind": "metro"
     },
-    "korea|Incheon-Metro-2|2?賄?": {
+    "korea|Incheon-Metro-2|2호선": {
       "icon": "assets/train-icons/korea-incheon-metro-2-line-2.png",
       "kind": "lrt"
     },
@@ -258,27 +258,27 @@
       "icon": "assets/train-icons/korea-arex-arex.png",
       "kind": "express"
     },
-    "korea|Gimpo-Goldline|窸刺??潰": {
+    "korea|Gimpo-Goldline|골드라인": {
       "icon": "assets/train-icons/korea-gimpo-goldline-goldline.png",
       "kind": "lrt"
     },
-    "korea|Daegu-Metro-1|1?賄?": {
+    "korea|Daegu-Metro-1|1호선": {
       "icon": "assets/train-icons/korea-daegu-metro-1-line-1.png",
       "kind": "metro"
     },
-    "korea|Daegu-Metro-2|2?賄?": {
+    "korea|Daegu-Metro-2|2호선": {
       "icon": "assets/train-icons/korea-daegu-metro-2-line-2.png",
       "kind": "metro"
     },
-    "korea|Daegu-Metro-3|3?賄?": {
+    "korea|Daegu-Metro-3|3호선": {
       "icon": "assets/train-icons/korea-daegu-metro-3-line-3.png",
       "kind": "monorail"
     },
-    "korea|Daejeon-Metro-1|1?賄?": {
+    "korea|Daejeon-Metro-1|1호선": {
       "icon": "assets/train-icons/korea-daejeon-metro-1-line-1.png",
       "kind": "metro"
     },
-    "korea|Gwangju-Metro-1|1?賄?": {
+    "korea|Gwangju-Metro-1|1호선": {
       "icon": "assets/train-icons/korea-gwangju-metro-1-line-1.png",
       "kind": "metro"
     },
@@ -286,7 +286,7 @@
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx.png",
       "kind": "shinkansen"
     },
-    "korea|KTX-Gyeongbu|KTX-?域?": {
+    "korea|KTX-Gyeongbu|KTX-산천": {
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png",
       "kind": "shinkansen"
     },
@@ -294,7 +294,7 @@
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx.png",
       "kind": "shinkansen"
     },
-    "korea|KTX-Honam|KTX-?域?": {
+    "korea|KTX-Honam|KTX-산천": {
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png",
       "kind": "shinkansen"
     },
@@ -302,7 +302,7 @@
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx.png",
       "kind": "shinkansen"
     },
-    "korea|KTX-Jeolla|KTX-?域?": {
+    "korea|KTX-Jeolla|KTX-산천": {
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png",
       "kind": "shinkansen"
     },
@@ -310,11 +310,11 @@
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx.png",
       "kind": "shinkansen"
     },
-    "korea|KTX-Gyeongjeon|KTX-?域?": {
+    "korea|KTX-Gyeongjeon|KTX-산천": {
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png",
       "kind": "shinkansen"
     },
-    "korea|KTX-Gangneung|KTX-?渥?": {
+    "korea|KTX-Gangneung|KTX-이음": {
       "icon": "assets/train-icons/korea-ktx-gangneung-ktx-eum.png",
       "kind": "shinkansen"
     },
@@ -322,19 +322,19 @@
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx.png",
       "kind": "shinkansen"
     },
-    "korea|KTX-Donghae|KTX-?域?": {
+    "korea|KTX-Donghae|KTX-산천": {
       "icon": "assets/train-icons/korea-ktx-gyeongbu-ktx-sancheon.png",
       "kind": "shinkansen"
     },
-    "korea|KTX-Jungang|KTX-?渥?": {
+    "korea|KTX-Jungang|KTX-이음": {
       "icon": "assets/train-icons/korea-ktx-gangneung-ktx-eum.png",
       "kind": "shinkansen"
     },
-    "korea|KTX-Jungbu-Naeryuk|KTX-?渥?": {
+    "korea|KTX-Jungbu-Naeryuk|KTX-이음": {
       "icon": "assets/train-icons/korea-ktx-gangneung-ktx-eum.png",
       "kind": "shinkansen"
     },
-    "korea|ITX-Cheongchun|ITX-麮原?": {
+    "korea|ITX-Cheongchun|ITX-청춘": {
       "icon": "assets/train-icons/korea-itx-cheongchun-itx-cheongchun.png",
       "kind": "express"
     },
@@ -358,19 +358,19 @@
       "icon": "assets/train-icons/korea-srt-gyeongbu-srt.png",
       "kind": "shinkansen"
     },
-    "korea|Busan-Metro-1|1?賄?": {
+    "korea|Busan-Metro-1|1호선": {
       "icon": "assets/train-icons/korea-busan-metro-1-line-1.png",
       "kind": "metro"
     },
-    "korea|Busan-Metro-2|2?賄?": {
+    "korea|Busan-Metro-2|2호선": {
       "icon": "assets/train-icons/korea-busan-metro-2-line-2.png",
       "kind": "metro"
     },
-    "korea|Busan-Metro-3|3?賄?": {
+    "korea|Busan-Metro-3|3호선": {
       "icon": "assets/train-icons/korea-busan-metro-3-line-3.png",
       "kind": "metro"
     },
-    "korea|Busan-Metro-4|4?賄?": {
+    "korea|Busan-Metro-4|4호선": {
       "icon": "assets/train-icons/korea-busan-metro-4-line-4.png",
       "kind": "metro"
     },
@@ -378,59 +378,59 @@
       "icon": "assets/train-icons/korea-busan-gimhae-lrt-bgl.png",
       "kind": "lrt"
     },
-    "hongkong|MTR-Tsuen-Wan|?蝬?": {
+    "hongkong|MTR-Tsuen-Wan|荃灣綫": {
       "icon": "assets/train-icons/hongkong-mtr-tsuen-wan-tsuen-wan-line.png",
       "kind": "metro"
     },
-    "hongkong|MTR-Island|皜臬雀蝬?": {
+    "hongkong|MTR-Island|港島綫": {
       "icon": "assets/train-icons/hongkong-mtr-island-island-line.png",
       "kind": "metro"
     },
-    "hongkong|MTR-East-Rail|?梢蝬?": {
+    "hongkong|MTR-East-Rail|東鐵綫": {
       "icon": "assets/train-icons/hongkong-mtr-east-rail-east-rail-line.png",
       "kind": "commuter"
     },
-    "hongkong|MTR-Airport-Express|璈敹怎陲": {
+    "hongkong|MTR-Airport-Express|機場快綫": {
       "icon": "assets/train-icons/hongkong-mtr-airport-express-airport-express.png",
       "kind": "express"
     },
-    "china|Beijing-Shanghai-HSR|敺抵???": {
+    "china|Beijing-Shanghai-HSR|復興號": {
       "icon": "assets/train-icons/china-beijing-shanghai-hsr-fuxing.png",
       "kind": "shinkansen"
     },
-    "china|Beijing-Shanghai-HSR|?咩??": {
+    "china|Beijing-Shanghai-HSR|和諧號": {
       "icon": "assets/train-icons/china-beijing-shanghai-hsr-hexie.png",
       "kind": "shinkansen"
     },
-    "china|Beijing-Guangzhou-HSR|敺抵???": {
+    "china|Beijing-Guangzhou-HSR|復興號": {
       "icon": "assets/train-icons/china-beijing-guangzhou-hsr-fuxing.png",
       "kind": "shinkansen"
     },
-    "china|Beijing-Guangzhou-HSR|?咩??": {
+    "china|Beijing-Guangzhou-HSR|和諧號": {
       "icon": "assets/train-icons/china-beijing-guangzhou-hsr-hexie.png",
       "kind": "shinkansen"
     },
-    "china|Shanghai-Kunming-HSR|敺抵???": {
+    "china|Shanghai-Kunming-HSR|復興號": {
       "icon": "assets/train-icons/china-shanghai-kunming-hsr-fuxing.png",
       "kind": "shinkansen"
     },
-    "china|Shanghai-Kunming-HSR|?咩??": {
+    "china|Shanghai-Kunming-HSR|和諧號": {
       "icon": "assets/train-icons/china-shanghai-kunming-hsr-hexie.png",
       "kind": "shinkansen"
     },
-    "china|Beijing-Subway-1|1??": {
+    "china|Beijing-Subway-1|1號線": {
       "icon": "assets/train-icons/china-beijing-subway-1-line-1.png",
       "kind": "metro"
     },
-    "china|Beijing-Subway-2|2??": {
+    "china|Beijing-Subway-2|2號線": {
       "icon": "assets/train-icons/china-beijing-subway-2-line-2.png",
       "kind": "metro"
     },
-    "china|Shanghai-Metro-1|1??": {
+    "china|Shanghai-Metro-1|1號線": {
       "icon": "assets/train-icons/china-shanghai-metro-1-line-1.png",
       "kind": "metro"
     },
-    "china|Shanghai-Metro-2|2??": {
+    "china|Shanghai-Metro-2|2號線": {
       "icon": "assets/train-icons/china-shanghai-metro-2-line-2.png",
       "kind": "metro"
     },
