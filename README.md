@@ -10,6 +10,14 @@ animated trains plus a sheet listing each upcoming pass.
   merged with real polyline geometry generated into
   `src/rail-data.generated.js`.
 
+## Screenshots
+
+Finding upcoming trains as they pass a selected rail point on the map.
+
+| Desktop | Mobile |
+|---|---|
+| <img src="doc/screenshots/map-train-passes-desktop.png" alt="Desktop map showing trains passing a selected railway point" width="640"> | <img src="doc/screenshots/map-train-passes-mobile.png" alt="Mobile map showing trains passing a selected railway point" width="260"> |
+
 ## Quick start
 
 ```bash
