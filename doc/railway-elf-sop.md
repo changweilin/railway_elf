@@ -512,7 +512,8 @@ npm.cmd run check:timing
 11. [x] `SG-LRT-Bukit-Panjang` 已完成：`src/rail-data.js`（line / 19-stop clockwise loop / BPLRT template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `1159434` + `loopAnchor`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/singapore-sg-lrt-bukit-panjang-bplrt.png`（BPLRT icon）。
 12. [x] `KL-LRT-Ampang` 已完成：`src/rail-data.js`（line / 18 stations / AGL template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `4466552`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-kl-lrt-ampang-agl.png`（AGL icon）。
 13. [x] `KL-LRT-Sri-Petaling` 已完成：`src/rail-data.js`（line / 29 stations / SPL template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `3374384`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-kl-lrt-sri-petaling-spl.png`（SPL icon）。
-14. [ ] 下一輪 5.3 預計接續：`ERL-KLIA-Transit` all-stop local airport seed；`ERL-KLIA-Ekspres` 與 KTM Komuter 仍遵守各自 5.5 gate。
+14. [x] `ERL-KLIA-Transit` 已完成：`src/rail-data.js`（line / 6 stations / ERL airport template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `8119876`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-erl-klia-transit-erl.png`（ERL icon）。
+15. [ ] 下一輪 5.3 預計接續：`BKK-SRT-Light-Red` current 4-station commuter seed；Salaya / Siriraj future extensions 仍遵守 5.5 gate。
 
 ## 發布前檢查
 

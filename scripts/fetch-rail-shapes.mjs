@@ -676,6 +676,14 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "ERL-KLIA-Transit": {
+    name: "KLIA Transit (KL Sentral to KLIA T2)",
+    relationIds: [8119876],
+    corridor: { corridorKm: 2.0, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // Bangkok.
   "BKK-BTS-Sukhumvit": {

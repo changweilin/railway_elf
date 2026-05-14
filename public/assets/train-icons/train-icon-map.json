@@ -486,6 +486,10 @@
       "icon": "assets/train-icons/malaysia-kl-monorail-mrl.png",
       "kind": "monorail"
     },
+    "malaysia|ERL-KLIA-Transit|ERL": {
+      "icon": "assets/train-icons/malaysia-erl-klia-transit-erl.png",
+      "kind": "express"
+    },
     "thailand|BKK-BTS-Sukhumvit|BTS": {
       "icon": "assets/train-icons/thailand-bkk-bts-sukhumvit-bts.png",
       "kind": "metro"

@@ -3922,6 +3922,24 @@ export const RAIL_DATA = {
           { name: "Titiwangsa",       lat: 3.173229, lng: 101.695950, km: 8.6, dwellSec: 30 },
         ],
       },
+      {
+        id: "ERL-KLIA-Transit",
+        name: "KLIA Transit",
+        nameEn: "KLIA Transit",
+        color: "#7c3aed",
+        category: "Airport",
+        directions: { up: "KL Sentral bound", down: "KLIA T2 bound" },
+        // KLIA Transit all-stop airport service: KL Sentral to KLIA T2.
+        // KLIA Ekspres remains omitted until skip-stop service patterns exist.
+        stations: [
+          { name: "KL Sentral",             lat: 3.133887, lng: 101.686639, km: 0.0,  dwellSec: 45 },
+          { name: "Bandar Tasik Selatan",   lat: 3.075819, lng: 101.710193, km: 8.9 },
+          { name: "Putrajaya/Cyberjaya",    lat: 2.931692, lng: 101.670988, km: 29.4 },
+          { name: "Salak Tinggi",           lat: 2.825665, lng: 101.713435, km: 44.3 },
+          { name: "KLIA T1",                lat: 2.754550, lng: 101.704527, km: 53.8 },
+          { name: "KLIA T2",                lat: 2.744480, lng: 101.685208, km: 56.2, dwellSec: 45 },
+        ],
+      },
     ],
     trainTemplates: [
       { line: "KL-Kelana-Jaya",  type: "LRT",  badge: "LRT", badgeColor: "#dc2626", speed: 38, interval: 3, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
@@ -3930,6 +3948,7 @@ export const RAIL_DATA = {
       { line: "KL-MRT-Kajang",   type: "MRT",  badge: "MRT", badgeColor: "#16a34a", speed: 45, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "KL-MRT-Putrajaya", type: "PYL",  badge: "PYL", badgeColor: "#ffcc00", speed: 45, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "KL-Monorail",     type: "MRL",  badge: "MRL", badgeColor: "#84bd00", speed: 38, interval: 7, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "ERL-KLIA-Transit", type: "ERL",  badge: "ERL", badgeColor: "#7c3aed", speed: 90, interval: 20, accel: 0.80, decel: 0.90, aLat: 0.85, dwellSec: 45 },
     ],
   },
 
