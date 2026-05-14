@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.5 Malaysia airport/commuter gate
+
+- [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records `ERL-KLIA-Transit` as the next Malaysia cleared seed, limited to the all-stop KL Sentral ⇄ KLIA T2 local airport service.
+- [x] Cleaned the completed 5.5 option by marking the Malaysia airport/commuter gate done in `doc/east-asia-expansion-plan.md` and updating `doc/railway-elf-sop.md` next-round handoff.
+- [x] No concurrent uncommitted 5.3 diff was present; the existing Sri Petaling LRT 5.3 work was already committed before this 5.5 docs pass.
+
 ## 2026-05-15 5.3 Sri Petaling LRT seed
 
 - [x] Completed one 5.3 seed item: `KL-LRT-Sri-Petaling` is now in `RAIL_DATA` with 29 stations from Sentul Timur to Putra Heights, an `SPL` LRT train template, OSM route relation `3374384`, generated Malaysia shape data, and a line-aware Sri Petaling LRT icon.

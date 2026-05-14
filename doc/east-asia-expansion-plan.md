@@ -256,10 +256,10 @@ Backlog 執行原則：
 | P0-MY-2 | ☑ A ☑ B | Metro / LRT | `KL-LRT-Ampang` | LRT Ampang Line | Sentul Timur ⇄ Ampang | 已補 18 站、`AGL` template、OSM relation `4466552`、AGL orange icon、Malaysia generated shape | 無阻塞；以獨立 shared-trunk line object 建模；shape maxOffset 0.005 km |
 | P0-MY-3 | ☑ A ☑ B | Metro / LRT | `KL-LRT-Sri-Petaling` | LRT Sri Petaling Line | Sentul Timur ⇄ Putra Heights | 已補 29 站、`SPL` template、OSM relation `3374384`、SPL maroon icon、Malaysia generated shape | 無阻塞；以獨立 shared-trunk line object 建模；shape maxOffset 0.008 km |
 | P0-MY-4 | ☑ A ☑ B | Monorail | `KL-Monorail` | KL Monorail | KL Sentral ⇄ Titiwangsa（8.6 km / 11 站） | 已補站表、`Monorail` template、OSM relation `2546881`、MRL monorail icon、Malaysia generated shape | 無阻塞；shape maxOffset 0.005 km，可作東南亞 monorail icon 範例 |
-| P0-MY-5 | □ seed | Commuter | `KTM-Komuter-Batu-Caves-Pulau-Sebang` | KTM Komuter Batu Caves - Pulau Sebang | Batu Caves ⇄ Pulau Sebang（135 km） | 補長距通勤站表、KTM EMU template、OSM relation | 長線班距與部分短折服務先不建，等 template 支援 |
-| P0-MY-6 | □ seed | Commuter | `KTM-Komuter-Tanjung-Malim-Port-Klang` | KTM Komuter Tanjung Malim - Port Klang | Tanjung Malim ⇄ Pelabuhan Klang（131 km） | 補站表、KTM EMU template、OSM relation | 同上；確認 terminal name 與英/馬來文 labels |
-| P0-MY-7 | □ seed | Airport | `ERL-KLIA-Transit` | KLIA Transit | KL Sentral ⇄ KLIA2 local stops | 補 local airport service 站表、ERL template、OSM relation | 5.5 已決定 all-stop/local 可先 seed；與 Ekspres 共線不阻塞 |
-| P0-MY-8 | □ backlog | Airport | `ERL-KLIA-Ekspres` | KLIA Ekspres | KL Sentral ⇄ KLIA / KLIA2 express | 等 skip-stop / express template 確認後補 | 非連續停站的 pass prediction / UI 標示仍待後續 template 支援 |
+| P0-MY-5 | □ deferred seed | Commuter | `KTM-Komuter-Batu-Caves-Pulau-Sebang` | KTM Komuter Batu Caves - Pulau Sebang | Batu Caves ⇄ Pulau Sebang（135 km） | 先不搶在 ERL Transit 前；後續補長距通勤站表、KTM EMU template、OSM relation | 長線班距與部分短折服務先不建，等 template/short-turn policy 支援 |
+| P0-MY-6 | □ deferred seed | Commuter | `KTM-Komuter-Tanjung-Malim-Port-Klang` | KTM Komuter Tanjung Malim - Port Klang | Tanjung Malim ⇄ Pelabuhan Klang（131 km） | 先不搶在 ERL Transit 前；後續補站表、KTM EMU template、OSM relation | 同上；確認 terminal name 與英/馬來文 labels |
+| P0-MY-7 | □ next seed | Airport | `ERL-KLIA-Transit` | KLIA Transit | KL Sentral ⇄ KLIA2 local stops | 下一個 Malaysia cleared seed：補 all-stop local airport service 站表、ERL template、OSM relation | 5.5 已決定 all-stop/local 可先 seed；與 Ekspres 共線不阻塞 |
+| P0-MY-8 | □ blocked | Airport | `ERL-KLIA-Ekspres` | KLIA Ekspres | KL Sentral ⇄ KLIA / KLIA2 express | 等 skip-stop / express template 確認後補 | blocked：regular non-stop 與 late-night all-stations pattern 需要非連續停站 UI/runtime 支援 |
 | P0-MY-9 | □ monitor | LRT | `Penang-Mutiara-LRT` | Penang Mutiara Line | future operational segment | 不執行 | 待正式載客與 OSM/官方站表穩定 |
 
 ### P1：其他亞洲候選池（泰國 / 新馬之後）
@@ -276,9 +276,10 @@ Backlog 執行原則：
 5.3 可直接執行：
 
 1. 依 P0-TH-1 → P0-TH-5 順序補曼谷已營運線，每條線都完成 Phase A + Phase B、train icon、`check:timing`、`check:shapes`、`test:smoke`。
-2. 泰國前 2 條 monorail seed、`BKK-SRT-Dark-Red`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang` 與 `KL-LRT-Sri-Petaling` 已完成；下一個 5.3 seed 轉剩餘 Malaysia / Singapore cleared seeds，例如 `ERL-KLIA-Transit`、KTM Komuter 或 SG LRT loops。Dark Red 完成後不批量補完整曼谷，改依 P0 放行狀態在 Malaysia / Singapore cleared seeds 間輪替。
+2. 泰國前 2 條 monorail seed、`BKK-SRT-Dark-Red`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang` 與 `KL-LRT-Sri-Petaling` 已完成；下一個 5.3 seed 轉 `ERL-KLIA-Transit`，之後再回到 SG LRT loops 或其他 cleared seeds。Dark Red 完成後不批量補完整曼谷，改依 P0 放行狀態在 Malaysia / Singapore cleared seeds 間輪替。
 3. 馬來西亞 LRT / KTM / ERL 採「先獨立 line object，後續再合併 branch 模型」策略，避免 branch 規則尚未定案時阻塞站表與 shape 回灌。
 4. 新加坡 MRT 補完先做重軌 MRT（North East / Downtown / Thomson-East-Coast current segment），Bukit Panjang LRT loop 已完成；Sengkang / Punggol LRT loop 與 RTS Link 暫不下放。
+5. Sri Petaling 完成後，下一個 Malaysia cleared seed 優先做 `ERL-KLIA-Transit` all-stop local airport service；KTM Komuter 長線與 `ERL-KLIA-Ekspres` 暫不搶先。
 
 5.5 需要先決策：
 
@@ -287,6 +288,7 @@ Backlog 執行原則：
 3. 已決定 RTS Link 載客後新增 `sg-my` cross-border region；載客前維持 monitor，不交 5.3 建正式資料。
 4. 已決定排除非鐵路 BRT（例如 Sunway BRT）；除非未來新增明確 non-rail transit category，預設不列入本鐵道路網計畫。
 5. 已決定 P1 第一條 seed：印尼 `JKT-MRT-North-South`（Jakarta MRT North-South Phase 1，Lebak Bulus ⇄ Bundaran HI）；多 region UI 已決定維持原生 select，12+ regions 時改為群組化 select。
+6. 已決定 Malaysia airport/commuter gate：`ERL-KLIA-Transit` 是下一個 cleared seed；`ERL-KLIA-Ekspres` 等 skip-stop / express runtime，KTM Komuter 長線等 short-turn policy。
 
 ## 批次 5 — 香港：MTR（4 條）
 
@@ -480,6 +482,7 @@ Backlog 執行原則：
 7. [x] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
 8. [x] 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed：先下放 `JKT-MRT-North-South` 的 Jakarta MRT Phase 1 現行營運段。
 9. [x] 決定 `BKK-BTS-Gold` 小型 feeder：可納入 rail network 作 optional AGT/APM seed，但不計為必須完成的 trunk/P0 coverage gate。
+10. [x] 決定 Malaysia airport/commuter gate：下一個 cleared seed 為 `ERL-KLIA-Transit`；`ERL-KLIA-Ekspres` 與 KTM Komuter 先保留阻塞。
 
 #### 2026-05-14 5.5 決策：Bangkok straddle monorail category
 
@@ -538,11 +541,11 @@ Backlog 執行原則：
 #### 2026-05-15 5.5 決策：P0 seed cadence
 
 - `decision`: approved + downscope。後續 P0 擴張維持「每輪 1 條完整 seed」作為硬規則：同一輪必須完成站表、train template、OSM/shape mapping、line-aware icon、generated outputs 與最小檢查後才開下一條。不採同城市一次補完；原先「泰國 2 條 → 馬來西亞 1 條 → 新加坡 1 條」只保留為早期 bootstrapping 參考，現在改用 cleared P0 queue + blocker fallback。
-- `scope`: Asia P0 seed order and handoff policy. `BKK-SRT-Dark-Red`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, and `KL-LRT-Sri-Petaling` were completed in 2026-05-15 5.3 rounds; the current 5.3 next target moves to remaining Malaysia / Singapore cleared seeds before returning to additional Thailand optional / monitor items. ERL local service, KTM Komuter, and remaining SG LRT loops follow only after their existing 5.5 constraints are respected.
+- `scope`: Asia P0 seed order and handoff policy. `BKK-SRT-Dark-Red`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, and `KL-LRT-Sri-Petaling` were completed in 2026-05-15 5.3 rounds; the current 5.3 next target is `ERL-KLIA-Transit` before returning to SG LRT loops or additional Thailand optional / monitor items. KTM Komuter and remaining SG LRT loops follow only after their existing 5.5 constraints are respected.
 - `source`: Current repo backlog shows `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `KL-MRT-Putrajaya`, `KL-Monorail`, `SG-MRT-North-East`, `SG-MRT-Downtown`, and `SG-MRT-Thomson-East-Coast` completed. Existing check history demonstrates each seed has non-trivial icon, generated-shape, timing, and smoke-test work, so batching multiple lines in one round increases conflict and verification risk.
 - `constraints`: Do not start a second seed in the same 5.3 round before the first seed's icon/template/shape/checks are complete and committed. Do not force a strict country cycle when the next same-country candidate is monitor-only, future-service, or has an unresolved branch/skip-stop blocker. Do not let this cadence decision override the separate RTS Link, ERL Ekspres, SRT Light Red, or Pink branch gates.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For future 5.3 seeds, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` when new PNG assets are generated.
-- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 seed cadence 決策。`BKK-SRT-Dark-Red`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang` 與 `KL-LRT-Sri-Petaling` 已於 2026-05-15 5.3 seed 完成；下一個可下放 seed 轉剩餘 Malaysia / Singapore cleared seeds。
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 seed cadence 決策。`BKK-SRT-Dark-Red`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang` 與 `KL-LRT-Sri-Petaling` 已於 2026-05-15 5.3 seed 完成；下一個可下放 seed 轉 `ERL-KLIA-Transit`。
 
 #### 2026-05-15 5.5 決策：P0 launch-gate reconciliation
 
@@ -560,7 +563,7 @@ Backlog 執行原則：
 - `source`: Repo taxonomy and UI are rail-centered (`Metro`, `Commuter`, `HSR`, `Airport`, `LRT`, `Monorail`, `AGT`, etc.) and do not have a bus/BRT category. Rapid KL's official MyRapid page identifies the Sunway service as Bus Rapid Transit using electric buses on a dedicated elevated track, so it is transit infrastructure but not a rail vehicle/service. Source: https://myrapid.com.my/bus-train/rapid-kl/brt/
 - `constraints`: Do not overload existing `AGT`, `LRT`, `Monorail`, `Metro`, or `Airport` categories to represent bus services. Do not add bus icons, bus timetables, bus stop naming rules, or bus-specific routing behavior in a rail seed. If a future non-rail feature is approved, isolate it as a separate product/schema decision instead of slipping it into a rail-data pass.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. No data, generated shape, timing, icon, or smoke checks are required because this pass changes no runtime files. A future non-rail feature would require a new 5.5 UX/data-model decision plus `npm.cmd run build` and browser smoke before any data seed.
-- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 non-rail BRT exclusion 決策。Sunway BRT 不下放 5.3；下一個 rail seed 轉剩餘 Malaysia / Singapore cleared seeds。
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 non-rail BRT exclusion 決策。Sunway BRT 不下放 5.3；下一個 rail seed 轉 `ERL-KLIA-Transit`。
 
 #### 2026-05-15 5.5 決策：P1 first seed
 
@@ -578,7 +581,16 @@ Backlog 執行原則：
 - `source`: BTS official Gold Line page says the first phase is part of Bangkok Rail Mass Rapid Transit System, uses an Automated People Mover system, and currently has 3 stations between Krung Thon Buri and Khlong San over 1.8 km. Source: https://www.bts.co.th/eng/info/GoldLine-info-history.html
 - `constraints`: Seed only the current 3-station APM segment; do not include future Prajadhipok / other extension concepts until passenger service and official station names are stable. Do not include buses, ferries, ICONSIAM shuttle routing, or non-rail feeder services in this pass. Keep the route as a standalone AGT/APM line object with its own Gold Line icon/template; do not merge it into BTS Silom or treat it as a branch graph.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For a future Gold Line data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if a new Gold Line PNG/contact sheet is generated.
-- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 Bangkok Gold Line feeder inclusion 決策。`BKK-BTS-Gold` 可下放為 optional AGT/APM seed，但下一個主線 seed 轉剩餘 Malaysia / Singapore cleared seeds。
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 Bangkok Gold Line feeder inclusion 決策。`BKK-BTS-Gold` 可下放為 optional AGT/APM seed，但下一個主線 seed 轉 `ERL-KLIA-Transit`。
+
+#### 2026-05-15 5.5 決策：Malaysia airport/commuter next seed
+
+- `decision`: approved + downscope。`KL-LRT-Sri-Petaling` 完成後，下一個 Malaysia cleared seed 選 `ERL-KLIA-Transit`，只做 KL Sentral ⇄ KLIA T2 的 all-stop local airport service。`ERL-KLIA-Ekspres` 暫時 blocked，因為常態 non-stop 與 late-night all-stations behavior 需要 skip-stop / service-pattern runtime 與 UI 標示；KTM Komuter 兩條長線暫時 deferred，等 short-turn / partial-service policy 後再做。
+- `scope`: `ERL-KLIA-Transit` only, station order `KL Sentral` ⇄ `Bandar Tasik Selatan` ⇄ `Putrajaya & Cyberjaya` ⇄ `Salak Tinggi` ⇄ `KLIA T1` ⇄ `KLIA T2`; future Spark owned files are `src/rail-data.js`, `scripts/fetch-rail-shapes.mjs`, `src/train-icon-registry.js`, train icon scripts/assets, generated Malaysia shape outputs, and narrow docs. `app-core.js` / `app-map.js` skip-stop or service-pattern work is explicitly out of scope for the Transit seed.
+- `source`: KLIA Ekspres official materials describe KLIA Transit as stopping at the intermediate stations Bandar Tasik Selatan, Putrajaya & Cyberjaya, and Salak Tinggi, with current timetable columns for KL Sentral, Bandar Tasik Selatan, Putrajaya & Cyberjaya, Salak Tinggi, KLIA T1, and KLIA T2. The same official site describes KLIA Ekspres as regular non-stop service, with late-night trains stopping at all stations, so Ekspres is not a simple all-stop or contiguous endpoint-trim template. Sources: https://www.kliaekspres.com/about-us/, https://www.kliaekspres.com/products-fares/klia-transit/, https://www.kliaekspres.com/products-fares/klia-ekspres/
+- `constraints`: Do not model KLIA Ekspres with `stationIdxStart` / `stationIdxEnd`; that field cannot skip intermediate stations. Do not mix Transit and Ekspres services inside one line object. Do not start KTM Komuter before accepting a long-line/short-turn policy and terminal naming pass. For `ERL-KLIA-Transit`, keep airport terminal naming aligned with current official labels (`KLIA T1`, `KLIA T2`) while preserving any OSM/generated shape matching keys needed by scripts.
+- `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md doc/railway-elf-sop.md`. For the future Transit data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if a new ERL PNG/contact sheet is generated.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 Malaysia airport/commuter gate 決策。下一個可下放 seed：`ERL-KLIA-Transit`；blocked remains：`ERL-KLIA-Ekspres` skip-stop/service-pattern runtime and KTM Komuter long-line/short-turn policy。
 
 ### 每 1 輪管理規則（共用）
 - 5.3 工作可按 `seed` 粒度收斂：每輪至少完成 1 條完整 seed（A+B）並出具 smoke + shape + timing 驗證。
