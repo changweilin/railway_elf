@@ -285,7 +285,7 @@ Backlog 執行原則：
 1. 已決定 seed cadence：每輪只做 1 條完整 seed，完成 icon/template/shape/checks 後才交下一條；不採同城市一次補完，固定「泰國 2 → 馬來西亞 1 → 新加坡 1」只作早期 bootstrapping，不再作硬性循環。
 2. 已定義 loop / branch / shared trunk / express service 的資料模型邊界：SG LRT 可用可驗證 loop 站序 seed，KL Ampang / Sri Petaling 與 SRT Red Lines 以獨立 line object 表示共線，ERL KLIA Transit 可先 seed，Ekspres 等 skip-stop template。
 3. 已決定 RTS Link 載客後新增 `sg-my` cross-border region；載客前維持 monitor，不交 5.3 建正式資料。
-4. 決定是否排除非鐵路 BRT（例如 Sunway BRT）；除非新增非 rail category，預設不列入本鐵道路網計畫。
+4. 已決定排除非鐵路 BRT（例如 Sunway BRT）；除非未來新增明確 non-rail transit category，預設不列入本鐵道路網計畫。
 5. 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed；多 region UI 已決定維持原生 select，12+ regions 時改為群組化 select。
 
 ## 批次 5 — 香港：MTR（4 條）
@@ -550,6 +550,15 @@ Backlog 執行原則：
 - `constraints`: Do not merge shared-trunk services into a single branch graph. Do not implement non-contiguous skip-stop or express stopping patterns in the existing `stationIdxStart` / `stationIdxEnd` fields. `ERL-KLIA-Ekspres`, BKK Pink Muang Thong Thani branch, and SRT Light Red current-service confirmation remain separate future gates; this pass only confirms they no longer block `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, or SG LRT local loop seeds. `KL-Monorail` is now completed as an independent seed.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For future seeds touched by this decision, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` when new PNG assets are generated.
 - `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 launch-gate reconciliation。`KL-Monorail` 已完成；下一個可下放 seed 維持 `SG-LRT-Bukit-Panjang`。
+
+#### 2026-05-15 5.5 決策：non-rail BRT exclusion
+
+- `decision`: approved + blocked-by-default。非鐵路 BRT 不納入目前 Railway Elf rail network；Sunway BRT / BRT Sunway Line 不作 `RAIL_DATA` line、train template、shape mapping 或 icon。未來只有在產品範圍明確擴到 bus/BRT/non-rail transit，且新增 category、UI wording、icon taxonomy 與 checks 後，才可另開 non-rail pass。
+- `scope`: Sunway BRT and similar bus rapid transit systems in Malaysia / Southeast Asia backlog triage. This pass changes docs only. Future rail seeds are unaffected: `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, KTM Komuter, and confirmed rail/monorail/AGT/LRT lines remain eligible under their own gates.
+- `source`: Repo taxonomy and UI are rail-centered (`Metro`, `Commuter`, `HSR`, `Airport`, `LRT`, `Monorail`, `AGT`, etc.) and do not have a bus/BRT category. Rapid KL's official MyRapid page identifies the Sunway service as Bus Rapid Transit using electric buses on a dedicated elevated track, so it is transit infrastructure but not a rail vehicle/service. Source: https://myrapid.com.my/bus-train/rapid-kl/brt/
+- `constraints`: Do not overload existing `AGT`, `LRT`, `Monorail`, `Metro`, or `Airport` categories to represent bus services. Do not add bus icons, bus timetables, bus stop naming rules, or bus-specific routing behavior in a rail seed. If a future non-rail feature is approved, isolate it as a separate product/schema decision instead of slipping it into a rail-data pass.
+- `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. No data, generated shape, timing, icon, or smoke checks are required because this pass changes no runtime files. A future non-rail feature would require a new 5.5 UX/data-model decision plus `npm.cmd run build` and browser smoke before any data seed.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 non-rail BRT exclusion 決策。Sunway BRT 不下放 5.3；下一個 rail seed 維持 `SG-LRT-Bukit-Panjang`。
 
 ### 每 1 輪管理規則（共用）
 - 5.3 工作可按 `seed` 粒度收斂：每輪至少完成 1 條完整 seed（A+B）並出具 smoke + shape + timing 驗證。

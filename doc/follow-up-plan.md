@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.5 non-rail BRT exclusion
+
+- [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records the non-rail BRT exclusion decision in the SOP 5.5 handoff format; Sunway BRT remains out of `RAIL_DATA` unless a future non-rail category is explicitly approved.
+- [x] Cleaned the completed 5.5 option in the source checklist by marking the BRT exclusion decision done in `doc/east-asia-expansion-plan.md`; no readable unchecked `follow-up-plan.md` checkbox existed for this migrated item.
+- [x] No concurrent uncommitted 5.3 diff was present; the existing KL Monorail 5.3 work was already committed before this 5.5 docs pass.
+
 ## 2026-05-15 5.3 KL Monorail seed
 
 - [x] Completed one 5.3 seed item: `KL-Monorail` is now in `RAIL_DATA` with 11 stations from KL Sentral to Titiwangsa, a `Monorail` MRL train template, OSM route relation `2546881`, generated Malaysia shape data, and a line-aware KL Monorail icon.
