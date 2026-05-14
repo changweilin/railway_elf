@@ -617,6 +617,7 @@ const OSM_LINE_MAP = {
   // Singapore MRT.
   "SG-MRT-North-South": { name: "MRT North-South Line (Jurong East→Marina South Pier)", relationIds: [2312797] },
   "SG-MRT-East-West":   { name: "MRT East-West Line (Pasir Ris→Tuas Link)", relationIds: [2312796] },
+  "SG-MRT-North-East":  { name: "MRT North East Line (HarbourFront→Punggol Coast)", relationIds: [2293545], orderStationKms: true, stationStops: {} },
   "SG-MRT-Circle":      { name: "MRT Circle Line (Dhoby Ghaut→HarbourFront)", relationIds: [7981669] },
 
   // Kuala Lumpur.
@@ -644,13 +645,13 @@ const OSM_LINE_MAP = {
   },
   "BKK-BTS-Silom": {
     name: "BTS Silom Line (National Stadium→Bang Wa)",
-    relationIds: [7989387],
+    relationIds: [2067854],
     orderStationKms: true,
     stationStops: {},
   },
   "BKK-MRT-Purple": {
     name: "MRT Purple Line (Khlong Bang Phai→Tao Poon)",
-    relationIds: [7725058],
+    relationIds: [6988563],
     orderStationKms: true,
     stationStops: {},
   },

@@ -501,7 +501,8 @@ npm.cmd run check:timing
 
 1. [x] `BKK-BTS-Silom` 已完成：`src/rail-data.js`（line / station / train template）、`scripts/fetch-rail-shapes.mjs`（OSM shape 映射）、`src/train-icon-registry.js`（沿用既有 `BTS` icon）。
 2. [x] `BKK-MRT-Purple` 已完成：`src/rail-data.js`（line / station / train template）、`scripts/fetch-rail-shapes.mjs`（OSM shape 映射）、`src/train-icon-registry.js`（新增 `thailand-bkk-mrt-purple-mrt.png`）。
-3. [ ] 下一輪 5.3 預計接續：`BKK-MRT-Yellow`、`BKK-MRT-Pink`、`BKK-SRT-Dark-Red`、`KL-MRT-Putrajaya`、`SG-MRT-North-East`。
+3. [x] `SG-MRT-North-East` 已完成：`src/rail-data.js`（line / station / driverless metro template）、`scripts/fetch-rail-shapes.mjs`（OSM shape 映射）、`src/train-icon-registry.js` 與 `public/assets/train-icons/singapore-sg-mrt-north-east-nel.png`（NEL purple icon）。
+4. [ ] 下一輪 5.3 預計接續：`BKK-MRT-Yellow`、`BKK-MRT-Pink`、`BKK-SRT-Dark-Red`、`KL-MRT-Putrajaya`。
 
 ## 發布前檢查
 

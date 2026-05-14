@@ -442,6 +442,10 @@
       "icon": "assets/train-icons/singapore-sg-mrt-east-west-ewl.png",
       "kind": "metro"
     },
+    "singapore|SG-MRT-North-East|NEL": {
+      "icon": "assets/train-icons/singapore-sg-mrt-north-east-nel.png",
+      "kind": "metro"
+    },
     "singapore|SG-MRT-Circle|CCL": {
       "icon": "assets/train-icons/singapore-sg-mrt-circle-ccl.png",
       "kind": "metro"

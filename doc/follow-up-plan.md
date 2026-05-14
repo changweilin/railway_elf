@@ -25,13 +25,13 @@
 ### 5.3 ?舐?乩???
 | ?? | id | ???| ?湔?批捆 | ?酉 |
 |---|---|---|---|---|
-| 1 | `BKK-BTS-Silom` | 瘜啣? | 鋆?BTS Silom Line 蝡”?TS train template?SM relation??蝺?蝷?| 銝?頛芷??賂?蝣箄??臬瘝輻 Sukhumvit ?內 |
-| 2 | `BKK-MRT-Purple` | 已完成 | MRT Purple Line（heavy-rail template + OSM relation + shape 映射） | 已完成（line/station/template/shape/icon） |
-| 3 | `BKK-MRT-Yellow` | 瘜啣? | 鋆?Yellow Line 蝡”?traddle monorail template?SM relation??蝷?| 憿?憿舐內?? `Monorail / AGT` 閮? |
-| 4 | `BKK-MRT-Pink` | 瘜啣? | 鋆?Pink Line 銝餌?蝡”?onorail template?SM relation??蝷?| Muang Thong Thani ?舐???蝝 |
-| 5 | `BKK-SRT-Dark-Red` | 瘜啣? | 鋆?SRT Dark Red Line 蝡”?ommuter EMU template?SM relation?RT Red Line ?內 | ??Light Red ?梁????摰???|
-| 6 | `KL-MRT-Putrajaya` | 擐砌?镼蹂? | 鋆?Putrajaya Line 蝡”?RT template?SM relation?YL yellow icon | ?瑞?蝡???芸? shape 撠? |
-| 7 | `SG-MRT-North-East` | ?啣???| 鋆?North East Line 蝡”?riverless metro template?SM relation?EL purple icon | Punggol Coast 蝝 current baseline |
+| 1 | `BKK-BTS-Silom` | done | BTS Silom: station/template/OSM relation/icon; fixed route relation and stop-node coords this round | done (shape maxOffset 0.006 km) |
+| 2 | `BKK-MRT-Purple` | done | MRT Purple: heavy-rail template + OSM relation + shape mapping + BEM purple icon; fixed route relation and stop-node coords this round | done (shape maxOffset 0.003 km) |
+| 3 | `BKK-MRT-Yellow` | todo | Yellow Line: station table, straddle monorail template, OSM relation, Yellow Line icon | needs Monorail / AGT display rule |
+| 4 | `BKK-MRT-Pink` | todo | Pink Line: station table, monorail template, OSM relation, Pink Line icon | Muang Thong Thani branch should be separate pass |
+| 5 | `BKK-SRT-Dark-Red` | todo | SRT Dark Red: commuter EMU template, OSM relation, SRT Red Line icon | Light Red / shared trunk rule pending |
+| 6 | `KL-MRT-Putrajaya` | candidate | Putrajaya Line: MRT template, OSM relation, PYL yellow icon | verify shape source |
+| 7 | `SG-MRT-North-East` | done | North East Line: driverless metro template, OSM relation, NEL purple icon | done (Punggol Coast current baseline / shape maxOffset 0.004 km) |
 | 8 | `SG-MRT-Downtown` | ?啣???| 鋆?Downtown Line 蝡”?riverless metro template?SM relation?TL blue icon | 敺? extension ?阡? pass |
 | 9 | `SG-MRT-Thomson-East-Coast` | ?啣???| 鋆?TEL ?曇???畾萇?銵具emplate?SM relation?rown icon | ?芸?撌交畾萎?????`RAIL_DATA` |
 | 10 | `KL-LRT-Ampang` / `KL-LRT-Sri-Petaling` | 擐砌?镼蹂? | ?誑?函? line object 鋆?銵具emplate?SM relation | branch 璅∪??芸?獢?銝?雿?|
@@ -48,7 +48,7 @@
 餈??芸???瘜啣? / ?圈收 P0 seed 撠?賢嚗銵??桐誑銝??銝頛芾???啜皞?
 撌脩宏??follow-up嚗okaido relation ?踵??極蝔? maxOffset 蝎曆耨???/ ??摰閬??ranch/short-turn ?瑟?璅∪??TS Link 頝典? region?evel-2/4 鞈?皞? region UI ??i18n 蝑嚗絞銝餈質馱??`doc/east-asia-expansion-plan.md`??
 ## 撱箄降銝?甇?
-1. ?? `BKK-BTS-Silom` Phase A+B嚗???icon / speed profile / shape pipeline??2. ?亥???`BKK-MRT-Purple`嚗Ⅱ隤靚琿?頠?MRT template ??BEM icon 璅????3. 瘜啣???2 璇?seed 蝛拙?敺?????`KL-MRT-Putrajaya` ??`SG-MRT-North-East`嚗Ⅱ靽擐?region ?澆???????氬?
+1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `SG-MRT-North-East`. 2. Next 5.3 seed priority: `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `KL-MRT-Putrajaya`.
 ## 5.3 vs 5.5 隞餃????脣漲蝞∠?嚗頛芾?銝?頛迎?
 
 ### 5.3 ?舐?亙銵?- ?格?嚗雁?????鞈迎??撽?????啗?銝?頛?P0 seed ?游???- ?嗅?????祈憚??閬??柴歇蝯?嚗ollow-up ?芾蕭頩斗陸??/ ?圈收?芸?鞈??湔嚗??芸??芸???撌脩宏??`doc/east-asia-expansion-plan.md`??

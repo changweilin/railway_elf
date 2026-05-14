@@ -93,6 +93,7 @@ const VISUALS = {
 
   "singapore|SG-MRT-North-South|NSL": { shape: "metro", body: "#f8fafc", accent: "#d42e12", band: "#d42e12" },
   "singapore|SG-MRT-East-West|EWL": { shape: "metro", body: "#f8fafc", accent: "#009645", band: "#009645" },
+  "singapore|SG-MRT-North-East|NEL": { shape: "metro", body: "#f8fafc", accent: "#9900aa", band: "#9900aa" },
   "singapore|SG-MRT-Circle|CCL": { shape: "metro", body: "#f8fafc", accent: "#ff9900", band: "#ff9900" },
 
   "malaysia|KL-Kelana-Jaya|LRT": { shape: "metro", body: "#f8fafc", accent: "#dc2626", band: "#dc2626" },

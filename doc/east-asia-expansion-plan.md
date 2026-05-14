@@ -227,8 +227,8 @@ Backlog 執行原則：
 
 | 優先 | 狀態 | 類型 | id | 線名 | 起終點 / 範圍 | 5.3 責任 | 5.5 責任 |
 |---|---|---|---|---|---|---|---|
-| P0-TH-1 | □ seed | Metro | `BKK-BTS-Silom` | BTS สายสีลม | National Stadium ⇄ Bang Wa | 補站表、BTS train template、OSM relation、沿用/新增 BTS 綠線圖示 | 無阻塞；只需確認是否與 Sukhumvit 共用 train icon |
-| P0-TH-2 | □ seed | Metro | `BKK-MRT-Purple` | MRT สายสีม่วง | Khlong Bang Phai ⇄ Tao Poon | 補站表、MRT heavy-rail template、OSM relation、BEM purple icon | 無阻塞；若與未來南延伸合併，另開 extension pass |
+| P0-TH-1 | ☑ A ☑ B | Metro | `BKK-BTS-Silom` | BTS สายสีลม | National Stadium ⇄ Bang Wa | 已補站表、BTS train template、OSM relation、沿用 BTS 綠線圖示；本輪修正 route relation 與 stop-node 座標 | 無阻塞；若未來與 Sukhumvit 共用圖示策略改變，另開 icon pass |
+| P0-TH-2 | ☑ A ☑ B | Metro | `BKK-MRT-Purple` | MRT สายสีม่วง | Khlong Bang Phai ⇄ Tao Poon | 已補站表、MRT heavy-rail template、OSM relation、BEM purple icon；本輪修正 route relation 與 stop-node 座標 | 無阻塞；若與未來南延伸合併，另開 extension pass |
 | P0-TH-3 | □ seed | Monorail / AGT | `BKK-MRT-Yellow` | MRT สายสีเหลือง | Lat Phrao ⇄ Samrong（30.4 km / 23 站） | 補站表、straddle monorail template、OSM relation、Yellow Line 圖示 | 決定 `Monorail` 還是 `Metro` category 顯示規則 |
 | P0-TH-4 | □ seed | Monorail / AGT | `BKK-MRT-Pink` | MRT สายสีชมพู | Nonthaburi Civic Center ⇄ Min Buri（34.5 km / 30 站） | 補站表、straddle monorail template、OSM relation、Pink Line 圖示 | Muang Thong Thani 支線若納入，需 branch/extension 規則 |
 | P0-TH-5 | □ seed | Commuter | `BKK-SRT-Dark-Red` | SRT Dark Red Line | Krung Thep Aphiwat ⇄ Rangsit / Don Mueang corridor | 補站表、commuter EMU template、OSM relation、SRT Red Line 圖示 | 與 Light Red 共用 trunk / transfer 呈現先定義 |
@@ -240,7 +240,7 @@ Backlog 執行原則：
 
 | 優先 | 狀態 | 類型 | id | 線名 | 起終點 / 範圍 | 5.3 責任 | 5.5 責任 |
 |---|---|---|---|---|---|---|---|
-| P0-SG-1 | □ seed | Metro | `SG-MRT-North-East` | North East Line | HarbourFront ⇄ Punggol Coast（22 km / 17 站） | 補站表、driverless heavy metro template、OSM relation、NEL purple icon | 無阻塞；Punggol Coast 已營運時納入 current baseline |
+| P0-SG-1 | ☑ A ☑ B | Metro | `SG-MRT-North-East` | North East Line | HarbourFront ⇄ Punggol Coast（22 km / 17 站） | 已補站表、driverless heavy metro template、OSM relation、NEL purple icon | 無阻塞；Punggol Coast 已納入 current baseline |
 | P0-SG-2 | □ seed | Metro | `SG-MRT-Downtown` | Downtown Line | Bukit Panjang ⇄ Expo（42 km / 35 站，含 Hume） | 補站表、driverless metro template、OSM relation、DTL blue icon | DTL3e 若 2026 後續開通，作 extension pass |
 | P0-SG-3 | □ seed | Metro | `SG-MRT-Thomson-East-Coast` | Thomson-East Coast Line | Woodlands North ⇄ Bayshore current segment（40.6 km / 27 站） | 補現行營運段站表、TEL template、OSM relation、brown icon | 未完工東段與 future extension 不提前進 `RAIL_DATA` |
 | P0-SG-4 | □ backlog | AGT / LRT | `SG-LRT-Bukit-Panjang` | Bukit Panjang LRT | Choa Chu Kang ⇄ Bukit Panjang loop network | 等 loop 規則確認後 seed | 決定 LRT loop / service pattern 在 line object 中如何表示 |
@@ -462,7 +462,7 @@ Backlog 執行原則：
 2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Vietnam 各區批次）。
 3. [x] 維護資料源（以 OSM 為主）並更新 `OSM_LINE_MAP`、`rail-data`、`trainTemplates` 的常規新增流程。
 4. [x] 針對高誤差路段執行 station-to-station/stop-node 對站修正（已完成：多條南韓與東南亞主要線路）。
-5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；下一輪首選 `BKK-BTS-Silom`，之後依 `P0-TH`、`P0-MY`、`P0-SG` 清單輪替。
+5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；下一輪首選 `BKK-MRT-Yellow`，之後依 `P0-TH`、`P0-MY`、`P0-SG` 清單輪替。
 6. [ ] 泰國 / 新馬 P0 seed 執行：每條線都補 `rail-data`、train template、OSM relation、train icon，並跑 `npm run build:rail-data`、`npm run check:shapes`、`npm run check:timing`、`npm run test:smoke`。
 7. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
 
