@@ -3702,6 +3702,37 @@ export const RAIL_DATA = {
           { name: "Sengkang",     lat: 1.391743, lng: 103.895509, km: 9.5, dwellSec: 30 },
         ],
       },
+      {
+        id: "SG-LRT-Punggol",
+        name: "Punggol LRT",
+        nameEn: "Punggol LRT",
+        color: "#748477",
+        category: "LRT",
+        directions: { up: "Clockwise loop", down: "Anti-clockwise loop" },
+        // Punggol LRT: current automated guideway network with Teck Lee open.
+        // This seed models the east loop followed by the west loop as one
+        // explicit station-order pattern; repeated Punggol anchors are
+        // intentional until a branch/loop runtime model exists.
+        stations: [
+          { name: "Punggol",       lat: 1.405277, lng: 103.902307, km: 0.0, dwellSec: 30 },
+          { name: "Damai",         lat: 1.405273, lng: 103.908651, km: 0.7 },
+          { name: "Oasis",         lat: 1.402310, lng: 103.912764, km: 1.3 },
+          { name: "Kadaloor",      lat: 1.399585, lng: 103.916537, km: 1.8 },
+          { name: "Riviera",       lat: 1.394503, lng: 103.916188, km: 2.4 },
+          { name: "Coral Edge",    lat: 1.393822, lng: 103.912633, km: 2.8 },
+          { name: "Meridian",      lat: 1.396910, lng: 103.908856, km: 3.3 },
+          { name: "Cove",          lat: 1.399428, lng: 103.905743, km: 3.7 },
+          { name: "Punggol",       lat: 1.405090, lng: 103.902506, km: 4.5, dwellSec: 30 },
+          { name: "Soo Teck",      lat: 1.405336, lng: 103.897208, km: 5.1 },
+          { name: "Sumang",        lat: 1.408506, lng: 103.898539, km: 5.4 },
+          { name: "Nibong",        lat: 1.411907, lng: 103.900331, km: 5.9 },
+          { name: "Samudera",      lat: 1.415955, lng: 103.902146, km: 6.4 },
+          { name: "Punggol Point", lat: 1.416887, lng: 103.906679, km: 6.9 },
+          { name: "Teck Lee",      lat: 1.412740, lng: 103.906605, km: 7.3 },
+          { name: "Sam Kee",       lat: 1.409702, lng: 103.904929, km: 7.7 },
+          { name: "Punggol",       lat: 1.405090, lng: 103.902506, km: 8.3, dwellSec: 30 },
+        ],
+      },
     ],
     trainTemplates: [
       { line: "SG-MRT-North-South",  type: "NSL",  badge: "NSL", badgeColor: "#d42e12", speed: 38, interval: 3, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
@@ -3712,6 +3743,7 @@ export const RAIL_DATA = {
       { line: "SG-MRT-Thomson-East-Coast", type: "TEL", badge: "TEL", badgeColor: "#734538", speed: 35, interval: 3, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "SG-LRT-Bukit-Panjang", type: "BPLRT", badge: "BPLRT", badgeColor: "#748477", speed: 35, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 20 },
       { line: "SG-LRT-Sengkang", type: "SKLRT", badge: "SKLRT", badgeColor: "#748477", speed: 35, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 20 },
+      { line: "SG-LRT-Punggol", type: "PGLRT", badge: "PGLRT", badgeColor: "#748477", speed: 35, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 20 },
     ],
   },
 

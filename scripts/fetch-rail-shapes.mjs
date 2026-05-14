@@ -645,6 +645,13 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationKmByIndexOverrides: { 6: 4.391 },
   },
+  "SG-LRT-Punggol": {
+    name: "Punggol LRT clockwise loop seed (Punggol East Loop then West Loop)",
+    relationIds: [1146942, 2312984],
+    loopAnchor: { lat: 1.405277, lng: 103.902307 },
+    corridor: { corridorKm: 0.8, sampleKm: 0.03 },
+    orderStationKms: true,
+  },
 
   // Kuala Lumpur.
   "KL-Kelana-Jaya": {

@@ -244,7 +244,7 @@ Backlog 執行原則：
 | P0-SG-2 | ☑ A ☑ B | Metro | `SG-MRT-Downtown` | Downtown Line | Bukit Panjang ⇄ Expo（42 km / 35 站，含 Hume） | 已補站表、driverless metro template、OSM relation `2313458`、DTL blue icon | 無阻塞；DTL3e 保留 extension pass；shape maxOffset 0.004 km |
 | P0-SG-3 | ☑ A ☑ B | Metro | `SG-MRT-Thomson-East-Coast` | Thomson-East Coast Line | Woodlands North ⇄ Bayshore current segment（40.6 km / 27 站） | 已補站表、TEL template、OSM relation `2383439`、TEL brown icon；shape maxOffset 0.005 km | 未完工東段與 future extension 不提前進 `RAIL_DATA` |
 | P0-SG-4 | ☑ A ☑ B | AGT / LRT | `SG-LRT-Bukit-Panjang` | Bukit Panjang LRT | Choa Chu Kang ⇄ Bukit Panjang loop network | 已補 19-stop clockwise loop 站序、`BPLRT` template、OSM relation `1159434`、BPLRT grey icon、Singapore generated shape | 無阻塞；repeated loop stations 保留 indexed km；shape maxOffset 0.508 km |
-| P0-SG-5 | ☑ Sengkang / □ Punggol | AGT / LRT | `SG-LRT-Sengkang` / `SG-LRT-Punggol` | Sengkang / Punggol LRT | 各 14 站、東西 loops | `SG-LRT-Sengkang` 已完成 16-stop explicit East+West loop seed、`SKLRT` template、OSM relations `2312985` + `1146941`、Singapore generated shape 與 SKLRT icon；下一個 5.3 可接 `SG-LRT-Punggol` | 5.5 已決定 loop 以站序與 `loopAnchor`/indexed km 表示，不合併成多分支 schema |
+| P0-SG-5 | ☑ Sengkang ☑ Punggol | AGT / LRT | `SG-LRT-Sengkang` / `SG-LRT-Punggol` | Sengkang / Punggol LRT | 東西 loops | `SG-LRT-Sengkang` 已完成 16-stop explicit East+West loop seed；`SG-LRT-Punggol` 已完成 17-stop explicit East+West loop seed with Teck Lee、`PGLRT` template、OSM relations `1146942` + `2312984`、Singapore generated shape 與 PGLRT icon | 5.5 已決定 loop 以站序與 `loopAnchor`/indexed km 表示，不合併成多分支 schema |
 | P0-SG-6 | □ monitor | Cross-border LRT | `SG-MY-RTS-Link` | Johor Bahru-Singapore RTS Link | Woodlands North ⇄ Bukit Chagar（4 km / 2 站，目標 2026 年底） | 載客前不建正式 pass；載客後以 `sg-my` cross-border region seed，補 2 站、RTS template、OSM relation、CIQ 提示與圖示 | 5.5 已決定載客前 monitor；不放入單一 `singapore` 或 `malaysia` region |
 | P0-SG-7 | □ monitor | Metro | `SG-MRT-Cross-Island` | Cross Island Line | future stages | 不執行 | 待載客段開通與 LTA current line list 更新 |
 
@@ -276,10 +276,10 @@ Backlog 執行原則：
 5.3 可直接執行：
 
 1. 依 P0-TH-1 → P0-TH-5 順序補曼谷已營運線，每條線都完成 Phase A + Phase B、train icon、`check:timing`、`check:shapes`、`test:smoke`。
-2. 泰國前 2 條 monorail seed、`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit` 與 `SG-LRT-Sengkang` 已完成；下一個 5.3 seed 可接 `SG-LRT-Punggol`，之後再做其他 cleared seeds。Dark / Light Red 完成後不批量補完整曼谷，改依 P0 放行狀態在 Malaysia / Singapore cleared seeds 間輪替。
+2. 泰國前 2 條 monorail seed、`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit`、`SG-LRT-Sengkang` 與 `SG-LRT-Punggol` 已完成；下一個 5.3 seed 可接 `ERL-KLIA-Ekspres`，之後再做其他 cleared seeds。Dark / Light Red 完成後不批量補完整曼谷，改依 P0 放行狀態在 Malaysia / Singapore cleared seeds 間輪替。
 3. 馬來西亞 LRT / KTM / ERL 採「先獨立 line object，後續再合併 branch 模型」策略，避免 branch 規則尚未定案時阻塞站表與 shape 回灌。
-4. 新加坡 MRT 補完先做重軌 MRT（North East / Downtown / Thomson-East-Coast current segment），Bukit Panjang LRT loop 與 Sengkang LRT loop 已完成；Punggol LRT loop 可接續下放，RTS Link 載客前仍不下放。
-5. `ERL-KLIA-Transit` all-stop local airport service 已完成；KTM Komuter 長線與 `ERL-KLIA-Ekspres` 暫不搶先。
+4. 新加坡 MRT 補完先做重軌 MRT（North East / Downtown / Thomson-East-Coast current segment），Bukit Panjang LRT loop、Sengkang LRT loop 與 Punggol LRT loop 已完成；RTS Link 載客前仍不下放。
+5. `ERL-KLIA-Transit` all-stop local airport service 已完成；`ERL-KLIA-Ekspres` regular-hours 3-station seed 可接續下放，KTM Komuter 長線仍暫不搶先。
 
 5.5 需要先決策：
 
@@ -467,7 +467,7 @@ Backlog 執行原則：
 2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Vietnam 各區批次）。
 3. [x] 維護資料源（以 OSM 為主）並更新 `OSM_LINE_MAP`、`rail-data`、`trainTemplates` 的常規新增流程。
 4. [x] 針對高誤差路段執行 station-to-station/stop-node 對站修正（已完成：多條南韓與東南亞主要線路）。
-5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow`、`BKK-MRT-Pink` 主線、`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit` 與 `SG-LRT-Sengkang` 已完成，下一個 5.3 seed 可接 `SG-LRT-Punggol`。
+5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow`、`BKK-MRT-Pink` 主線、`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit`、`SG-LRT-Sengkang` 與 `SG-LRT-Punggol` 已完成，下一個 5.3 seed 可接 `ERL-KLIA-Ekspres`。
 6. [ ] 泰國 / 新馬 P0 seed 執行：每條線都補 `rail-data`、train template、OSM relation、train icon，並跑 `npm run build:rail-data`、`npm run check:shapes`、`npm run check:timing`、`npm run test:smoke`。
 7. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
 
@@ -485,7 +485,7 @@ Backlog 執行原則：
 7. [x] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
 8. [x] 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed：先下放 `JKT-MRT-North-South` 的 Jakarta MRT Phase 1 現行營運段。
 9. [x] 決定 `BKK-BTS-Gold` 小型 feeder：可納入 rail network 作 optional AGT/APM seed，但不計為必須完成的 trunk/P0 coverage gate。
-10. [x] 決定 Malaysia airport/commuter gate：下一個 cleared seed 為 `ERL-KLIA-Transit`；`ERL-KLIA-Ekspres` 與 KTM Komuter 先保留阻塞。
+10. [x] 決定 Malaysia airport/commuter gate：下一個 cleared seed 為 `ERL-KLIA-Transit`；`ERL-KLIA-Ekspres` 曾保留至後續 regular-hours gate，KTM Komuter 仍先保留阻塞。
 11. [x] 決定 `BKK-SRT-Light-Red` current segment：只 seed Krung Thep Aphiwat ⇄ Taling Chan 現行 4 站；future extensions 維持 monitor。
 12. [x] 決定 `BKK-MRT-Pink-Muang-Thong-Thani` branch：可作獨立 3-station branch seed；不改 branch schema、不重寫主線。
 13. [x] 決定 `ERL-KLIA-Ekspres` regular-hours express：可作獨立 3-station Airport seed；晚間 all-stations 服務型態另開 runtime pass。
@@ -547,11 +547,11 @@ Backlog 執行原則：
 #### 2026-05-15 5.5 決策：P0 seed cadence
 
 - `decision`: approved + downscope。後續 P0 擴張維持「每輪 1 條完整 seed」作為硬規則：同一輪必須完成站表、train template、OSM/shape mapping、line-aware icon、generated outputs 與最小檢查後才開下一條。不採同城市一次補完；原先「泰國 2 條 → 馬來西亞 1 條 → 新加坡 1 條」只保留為早期 bootstrapping 參考，現在改用 cleared P0 queue + blocker fallback。
-- `scope`: Asia P0 seed order and handoff policy. `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, and `SG-LRT-Sengkang` were completed in 2026-05-15 5.3 rounds; the current 5.3 next target can move to `SG-LRT-Punggol` before additional optional / monitor items. KTM Komuter and remaining SG LRT loops follow only after their existing 5.5 constraints are respected.
+- `scope`: Asia P0 seed order and handoff policy. `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`, and `SG-LRT-Punggol` were completed in 2026-05-15 5.3 rounds; the current 5.3 next target can move to `ERL-KLIA-Ekspres` before additional optional / monitor items. KTM Komuter follows only after existing 5.5 constraints are respected.
 - `source`: Current repo backlog shows `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `KL-MRT-Putrajaya`, `KL-Monorail`, `SG-MRT-North-East`, `SG-MRT-Downtown`, and `SG-MRT-Thomson-East-Coast` completed. Existing check history demonstrates each seed has non-trivial icon, generated-shape, timing, and smoke-test work, so batching multiple lines in one round increases conflict and verification risk.
 - `constraints`: Do not start a second seed in the same 5.3 round before the first seed's icon/template/shape/checks are complete and committed. Do not force a strict country cycle when the next same-country candidate is monitor-only, future-service, or has an unresolved branch/skip-stop blocker. Do not let this cadence decision override the separate RTS Link, ERL Ekspres, SRT Light Red, or Pink branch gates.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For future 5.3 seeds, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` when new PNG assets are generated.
-- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 seed cadence 決策。`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit` 與 `SG-LRT-Sengkang` 已於 2026-05-15 5.3 seed 完成；下一個可下放 seed 轉 `SG-LRT-Punggol`。
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 seed cadence 決策。`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit`、`SG-LRT-Sengkang` 與 `SG-LRT-Punggol` 已於 2026-05-15 5.3 seed 完成；下一個可下放 seed 轉 `ERL-KLIA-Ekspres`。
 
 #### 2026-05-15 5.5 決策：P0 launch-gate reconciliation
 
@@ -591,7 +591,7 @@ Backlog 執行原則：
 
 #### 2026-05-15 5.5 決策：Malaysia airport/commuter next seed
 
-- `decision`: approved + downscope。`KL-LRT-Sri-Petaling` 完成後，下一個 Malaysia cleared seed 選 `ERL-KLIA-Transit`，只做 KL Sentral ⇄ KLIA T2 的 all-stop local airport service。`ERL-KLIA-Ekspres` 暫時 blocked，因為常態 non-stop 與 late-night all-stations behavior 需要 skip-stop / service-pattern runtime 與 UI 標示；KTM Komuter 兩條長線暫時 deferred，等 short-turn / partial-service policy 後再做。
+- `decision`: approved + downscope。`KL-LRT-Sri-Petaling` 完成後，下一個 Malaysia cleared seed 選 `ERL-KLIA-Transit`，只做 KL Sentral ⇄ KLIA T2 的 all-stop local airport service。`ERL-KLIA-Ekspres` regular-hours express 已由後續 5.5 gate 放行為獨立 3-station seed；late-night all-stations behavior 與 KTM Komuter 兩條長線暫時 deferred，等 service-pattern / short-turn policy 後再做。
 - `scope`: `ERL-KLIA-Transit` only, station order `KL Sentral` ⇄ `Bandar Tasik Selatan` ⇄ `Putrajaya & Cyberjaya` ⇄ `Salak Tinggi` ⇄ `KLIA T1` ⇄ `KLIA T2`; future Spark owned files are `src/rail-data.js`, `scripts/fetch-rail-shapes.mjs`, `src/train-icon-registry.js`, train icon scripts/assets, generated Malaysia shape outputs, and narrow docs. `app-core.js` / `app-map.js` skip-stop or service-pattern work is explicitly out of scope for the Transit seed.
 - `source`: KLIA Ekspres official materials describe KLIA Transit as stopping at the intermediate stations Bandar Tasik Selatan, Putrajaya & Cyberjaya, and Salak Tinggi, with current timetable columns for KL Sentral, Bandar Tasik Selatan, Putrajaya & Cyberjaya, Salak Tinggi, KLIA T1, and KLIA T2. The same official site describes KLIA Ekspres as regular non-stop service, with late-night trains stopping at all stations, so Ekspres is not a simple all-stop or contiguous endpoint-trim template. Sources: https://www.kliaekspres.com/about-us/, https://www.kliaekspres.com/products-fares/klia-transit/, https://www.kliaekspres.com/products-fares/klia-ekspres/
 - `constraints`: Do not model KLIA Ekspres with `stationIdxStart` / `stationIdxEnd`; that field cannot skip intermediate stations. Do not mix Transit and Ekspres services inside one line object. Do not start KTM Komuter before accepting a long-line/short-turn policy and terminal naming pass. For `ERL-KLIA-Transit`, keep airport terminal naming aligned with current official labels (`KLIA T1`, `KLIA T2`) while preserving any OSM/generated shape matching keys needed by scripts.
@@ -605,7 +605,7 @@ Backlog 執行原則：
 - `source`: KLIA Ekspres official product page says the service runs every 20 minutes, regular non-stop service remains unchanged during regular operating hours, and only trains from 23:00 stop at all stations; the official schedule page currently reports service status as normal. The downloadable Ekspres schedule lists KL Sentral, KLIA T1, and KLIA T2 timing with 28 minutes between KL Sentral and KLIA T1 plus 3 minutes between KLIA T1 and KLIA T2. Sources: https://www.kliaekspres.com/products-fares/klia-ekspres/, https://www.kliaekspres.com/schedule/, https://www.kliaekspres.com/media/4dkinl1y/klia-ekspres-dec-2025.pdf
 - `constraints`: Do not model the 23:00+ all-stations period or maintenance combined-service notices in `RAIL_DATA` until the app has explicit service-pattern/runtime labels. Do not include Bandar Tasik Selatan, Putrajaya & Cyberjaya, or Salak Tinggi in the Ekspres station list; those belong to `ERL-KLIA-Transit`. Do not use `stationIdxStart` / `stationIdxEnd` to fake non-contiguous stop patterns. Keep current official terminal labels `KLIA T1` / `KLIA T2`, with script-side aliases if OSM still exposes older `KLIA` / `KLIA2` names.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md`. For the future Ekspres data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if a new Ekspres PNG/contact sheet is generated.
-- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 KLIA Ekspres regular-hours gate。`ERL-KLIA-Ekspres` can be scheduled as an independent 3-station Airport seed after the active `SG-LRT-Punggol` 5.3 work or another cleared queue item; blocked remains：late-night all-stations service-pattern runtime, KTM Komuter long-line/short-turn policy, and RTS Link passenger-service monitor.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 KLIA Ekspres regular-hours gate。`ERL-KLIA-Ekspres` can be scheduled as the next independent 3-station Airport seed after the completed `SG-LRT-Punggol` 5.3 work or another cleared queue item; blocked remains：late-night all-stations service-pattern runtime, KTM Komuter long-line/short-turn policy, and RTS Link passenger-service monitor.
 
 #### 2026-05-15 5.5 決策：SRT Light Red current segment
 
