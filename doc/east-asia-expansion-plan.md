@@ -229,7 +229,7 @@ Backlog 執行原則：
 |---|---|---|---|---|---|---|---|
 | P0-TH-1 | ☑ A ☑ B | Metro | `BKK-BTS-Silom` | BTS สายสีลม | National Stadium ⇄ Bang Wa | 已補站表、BTS train template、OSM relation、沿用 BTS 綠線圖示；本輪修正 route relation 與 stop-node 座標 | 無阻塞；若未來與 Sukhumvit 共用圖示策略改變，另開 icon pass |
 | P0-TH-2 | ☑ A ☑ B | Metro | `BKK-MRT-Purple` | MRT สายสีม่วง | Khlong Bang Phai ⇄ Tao Poon | 已補站表、MRT heavy-rail template、OSM relation、BEM purple icon；本輪修正 route relation 與 stop-node 座標 | 無阻塞；若與未來南延伸合併，另開 extension pass |
-| P0-TH-3 | □ seed | Monorail / AGT | `BKK-MRT-Yellow` | MRT สายสีเหลือง | Lat Phrao ⇄ Samrong（30.4 km / 23 站） | 補站表、straddle monorail template、OSM relation、Yellow Line 圖示 | 已決定以 `Monorail` 顯示，不併入 `Metro`；可交 5.3 seed |
+| P0-TH-3 | ☑ A ☑ B | Monorail / AGT | `BKK-MRT-Yellow` | MRT สายสีเหลือง | Lat Phrao ⇄ Samrong（30.4 km / 23 站） | 已補站表、`Monorail` template、OSM relation `15806897`、Yellow Line monorail icon、Thailand generated shape | 無阻塞；若未來與 Pink Line 共用 monorail 圖示策略改變，另開 icon pass |
 | P0-TH-4 | □ seed | Monorail / AGT | `BKK-MRT-Pink` | MRT สายสีชมพู | Nonthaburi Civic Center ⇄ Min Buri（34.5 km / 30 站） | 補站表、straddle monorail template、OSM relation、Pink Line 圖示 | 主線以 `Monorail` 顯示；Muang Thong Thani 支線另開 branch/extension pass，不阻塞主線 seed |
 | P0-TH-5 | □ seed | Commuter | `BKK-SRT-Dark-Red` | SRT Dark Red Line | Krung Thep Aphiwat ⇄ Rangsit / Don Mueang corridor | 補站表、commuter EMU template、OSM relation、SRT Red Line 圖示 | 5.5 已決定以獨立 line object seed；與 Light Red 共線不合併成單一 branch graph |
 | P0-TH-6 | □ backlog | Commuter | `BKK-SRT-Light-Red` | SRT Light Red Line | Krung Thep Aphiwat ⇄ Taling Chan / west corridor | 等 5.5 確認營運段後 seed | 共線模型已決定為獨立 line object；仍需另確認當前服務段與延伸站 |
@@ -462,7 +462,7 @@ Backlog 執行原則：
 2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Vietnam 各區批次）。
 3. [x] 維護資料源（以 OSM 為主）並更新 `OSM_LINE_MAP`、`rail-data`、`trainTemplates` 的常規新增流程。
 4. [x] 針對高誤差路段執行 station-to-station/stop-node 對站修正（已完成：多條南韓與東南亞主要線路）。
-5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow` / `BKK-MRT-Pink` 已由 5.5 放行為 `Monorail` seed，`BKK-SRT-Dark-Red` 已由 5.5 放行為獨立 Red Line seed，若泰國 queue 暫停則接 `KL-Monorail`。
+5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow` 已完成，`BKK-MRT-Pink` 已由 5.5 放行為 `Monorail` seed，`BKK-SRT-Dark-Red` 已由 5.5 放行為獨立 Red Line seed，若泰國 queue 暫停則接 `KL-Monorail`。
 6. [ ] 泰國 / 新馬 P0 seed 執行：每條線都補 `rail-data`、train template、OSM relation、train icon，並跑 `npm run build:rail-data`、`npm run check:shapes`、`npm run check:timing`、`npm run test:smoke`。
 7. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
 
@@ -486,7 +486,7 @@ Backlog 執行原則：
 - `source`: repo 既有 category taxonomy 已包含 `Monorail` / `AGT`，且 `Tokyo-Monorail`、`Daegu-Metro-3` 已驗證 monorail display 與 line-aware icon path。Yellow / Pink 官方定位雖掛 MRT brand，但車輛與基礎設施是 straddle monorail；用 `Monorail` 可避免把低運量單軌與重軌 MRT 混在同一 UI bucket。
 - `constraints`: Do not change the category taxonomy or add a new `StraddleMonorail` type in this pass. `BKK-MRT-Pink` 先只 seed Nonthaburi Civic Center ⇄ Min Buri 主線；Muang Thong Thani branch is a separate future extension pass after branch/extension policy is settled. If a future UI wants MRT-branded grouping, use line name/brand copy rather than changing the category.
 - `checks`: For this policy-only docs pass, run `git diff --check`. For future 5.3 seeds, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if new Yellow/Pink PNG assets are generated.
-- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 Bangkok monorail category 決策；下一個可下放 seed 是 `BKK-MRT-Yellow`，接著是 `BKK-MRT-Pink` 主線。
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 Bangkok monorail category 決策；`BKK-MRT-Yellow` 已於 2026-05-15 5.3 seed 完成，下一個可下放 seed 是 `BKK-MRT-Pink` 主線。
 
 #### 2026-05-14 5.5 決策：i18n sync policy
 

@@ -482,6 +482,10 @@
       "icon": "assets/train-icons/thailand-bkk-mrt-purple-mrt.png",
       "kind": "metro"
     },
+    "thailand|BKK-MRT-Yellow|YL": {
+      "icon": "assets/train-icons/thailand-bkk-mrt-yellow-yl.png",
+      "kind": "monorail"
+    },
     "thailand|BKK-MRT-Blue|MRT": {
       "icon": "assets/train-icons/thailand-bkk-mrt-blue-mrt.png",
       "kind": "metro"

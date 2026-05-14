@@ -665,6 +665,12 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationStops: {},
   },
+  "BKK-MRT-Yellow": {
+    name: "MRT Yellow Line (Lat Phrao→Samrong)",
+    relationIds: [15806897],
+    orderStationKms: true,
+    snapStationCoordsOverKm: 0.05,
+  },
   "BKK-MRT-Blue": {
     name: "MRT Blue Line (Tha Phra→Lak Song)",
     relationIds: [444659],

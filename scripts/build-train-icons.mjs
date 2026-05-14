@@ -103,6 +103,7 @@ const VISUALS = {
   "malaysia|KL-MRT-Putrajaya|PYL": { shape: "metro", body: "#f8fafc", accent: "#ffcc00", band: "#ffcc00" },
 
   "thailand|BKK-BTS-Sukhumvit|BTS": { shape: "metro", body: "#f8fafc", accent: "#16a34a", band: "#16a34a" },
+  "thailand|BKK-MRT-Yellow|YL": { shape: "monorail", body: "#fefce8", accent: "#ffd400", band: "#ca8a04" },
   "thailand|BKK-MRT-Blue|MRT": { shape: "metro", body: "#f8fafc", accent: "#1d4ed8", band: "#1d4ed8" },
   "thailand|BKK-Airport-Rail|ARL": { shape: "express", body: "#f8fafc", accent: "#dc2626", accent2: "#7f1d1d" },
 
