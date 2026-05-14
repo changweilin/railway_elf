@@ -23,6 +23,12 @@
 - [x] Cleaned the completed 5.5 option by marking the i18n strategy / `i18n-sync` cadence item done in `doc/east-asia-expansion-plan.md`.
 - [x] No 5.3 seed/data files were edited in this round; `follow-up-plan.md` was updated only after confirming the worktree was clean.
 
+## 2026-05-14 5.5 Level-2 / Level-4 data-source gate
+
+- [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records the government API / paid data-source gate in the SOP 5.5 handoff format.
+- [x] Cleaned the completed 5.5 option by marking the Level-2 / Level-4 source policy item done in `doc/east-asia-expansion-plan.md`.
+- [x] No 5.3 seed/data files were edited in this round; `follow-up-plan.md` was updated only after confirming there was no concurrent local diff.
+
 
 ?湔?交?嚗?026-05-12
 

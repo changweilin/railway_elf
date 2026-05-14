@@ -477,7 +477,7 @@ Backlog 執行原則：
 4. [ ] 決定 RTS Link 載客後的 region 歸屬、CIQ 提示、跨境線是否新增 `sg-my` region；載客前只監控，不交給 5.3 建正式資料。
 5. [x] 規劃多 region UI 與地區切換體驗（12+ region 規模）是否改版為下拉/群組，以免後續擴展衝突。
 6. [x] i18n 策略決定（中文、日文、韓文、泰文、馬來文、印尼文、越南文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
-7. [ ] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
+7. [x] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
 
 #### 2026-05-14 5.5 決策：i18n sync policy
 
@@ -487,6 +487,15 @@ Backlog 執行原則：
 - `constraints`: Do not rename station `name` values just to force English consistency; station names remain the shape/snapshot matching key unless generated index fallback is explicitly used. Do not add broad i18n runtime infrastructure before a concrete UI need. New regions must add `REGION_NOMINATIM_LANG` and `REGION_NAME_TAG_PREFS` in the same seed or in a same-round follow-up, and directions must stay consistent with station order.
 - `checks`: For pure label preference changes, run `git diff --check` plus the narrow data check relevant to changed files. For any `src/rail-data.js` name/direction update, run `npm.cmd run check:timing`; if station names or generated shape mapping are touched, also run `npm.cmd run build:rail-data` and `npm.cmd run check:shapes`.
 - `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 i18n policy 決策；下一個可下放文件 seed 是「為新增 Indonesia/Philippines region 預先填入 Nominatim language/name tag preference」。
+
+#### 2026-05-14 5.5 決策：Level-2 / Level-4 data-source gate
+
+- `decision`: approved + blocked-by-default。未來輪次不主動納入政府 API、付費資料、需帳號或 API key 的 Level-2 / Level-4 source；除非用戶明確指定資料源且授權、成本、配額、重現性都可接受。OSM、手寫官方站表、已快取的 script output 繼續作為預設資料路徑。
+- `scope`: data-source admission policy for route geometry, station facts, timetables, fares, occupancy, alerts, and any deeper service level. This does not change current `RAIL_DATA`, generated shapes, or train templates.
+- `source`: repo 現況已用 `scripts/fetch-rail-shapes.mjs` 統一 TDX/OSM geometry flow，並以 generated chunk + snapshot 保持可重現；目前 app 也沒有 secret management 或 runtime API fetch policy for paid sources。
+- `constraints`: Do not commit API keys, paid payloads, license-restricted raw data, or generated artifacts that cannot be rebuilt by documented scripts. If a future source requires credentials, keep it behind `.env`, document cache fallback behavior, and require a public/licensed summary in docs before generated outputs are accepted. Legal/cost judgment remains GPT-5.5/user-owned and is not downlisted to 5.3.
+- `checks`: For policy-only docs, run `git diff --check`. For any future data-source integration, require source-specific dry run, cache fallback proof, `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, and a short license/cost note in the same commit.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 data-source gate 決策；future seed 可 only prepare adapters, not fetch restricted data, until explicit approval.
 
 #### 2026-05-14 5.5 決策：12+ region selector
 
