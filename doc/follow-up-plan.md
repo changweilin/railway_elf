@@ -1,9 +1,15 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.3 Sengkang LRT seed
+
+- [x] Completed one 5.3 seed item: `SG-LRT-Sengkang` is now in `RAIL_DATA` with a 16-stop explicit clockwise pattern covering the Sengkang East Loop then West Loop, an `SKLRT` LRT train template, OSM route relations `2312985` and `1146941`, generated Singapore shape data, and a line-aware SKLRT icon.
+- [x] Cleaned the completed 5.3 option by marking `SG-LRT-Sengkang` done in the 5.3 backlog and updating the Singapore LRT follow-up notes; the next cleared candidate is `SG-LRT-Punggol` as the sibling Singapore LRT loop seed.
+- [x] No concurrent 5.5 diff was detected before editing `follow-up-plan.md`; this round only reconciles the completed 5.3 seed and its downstream docs.
+
 ## 2026-05-15 5.3 SRT Light Red seed
 
 - [x] Completed one 5.3 seed item: `BKK-SRT-Light-Red` is now in `RAIL_DATA` with the 4-station current segment from Krung Thep Aphiwat to Taling Chan, an `LR` commuter train template, OSM route relation `13178788`, generated Thailand shape data, and a line-aware Light Red commuter icon.
-- [x] Cleaned the completed 5.3 option by marking `BKK-SRT-Light-Red` done in the 5.3 backlog and `P0-TH-6` done in `doc/east-asia-expansion-plan.md`; the next cleared candidate is `SG-LRT-Sengkang` as the first remaining Singapore LRT loop seed.
+- [x] Cleaned the completed 5.3 option by marking `BKK-SRT-Light-Red` done in the 5.3 backlog and `P0-TH-6` done in `doc/east-asia-expansion-plan.md`; the then-cleared candidate was `SG-LRT-Sengkang` as the first remaining Singapore LRT loop seed.
 - [x] No concurrent 5.5 diff was detected before editing `follow-up-plan.md`; this round only reconciles the completed 5.3 seed and its downstream docs.
 
 ## 2026-05-15 5.3 KLIA Transit seed
@@ -166,7 +172,8 @@
 | 13 | `KL-Monorail` | done | KL Monorail: 11 stations, `Monorail` template, OSM relation `2546881`, generated Malaysia shape, line-aware MRL monorail icon | done (shape maxOffset 0.005 km) |
 | 14 | `ERL-KLIA-Transit` | done | KLIA Transit: 6 stations, `ERL` airport template, OSM relation `8119876`, generated Malaysia shape, line-aware ERL icon | done (shape maxOffset 0.234 km); `ERL-KLIA-Ekspres` skip-stop and KTM short-turn policy remain blocked |
 | 15 | `BKK-SRT-Light-Red` | done | SRT Light Red: 4 stations, `LR` Commuter template, OSM relation `13178788`, generated Thailand shape, line-aware Light Red commuter icon | done (shape maxOffset 0.004 km); future Salaya / Siriraj extensions remain blocked |
-| 16 | `SG-LRT-Sengkang` | pending | Sengkang LRT loop seed with stable direction/order and `loopAnchor` / indexed km | Keep Punggol as a sibling seed; do not merge east/west loops into a branch graph |
+| 16 | `SG-LRT-Sengkang` | done | Sengkang LRT: 16-stop explicit clockwise pattern, `SKLRT` template, OSM relations `2312985` + `1146941`, generated Singapore shape, line-aware SKLRT icon | done (shape maxOffset 0.111 km; repeated Sengkang anchors retained by index) |
+| 17 | `SG-LRT-Punggol` | pending | Punggol LRT sibling loop seed with stable direction/order and `loopAnchor` / indexed km | Keep Sengkang done as a sibling seed; do not merge east/west loops into a branch graph |
 
 ### 5.5 ???Ⅱ隤?
 1. 蝣箄?蝚砌?頛芣?行?陸??2 璇???擐砌?镼蹂? 1 璇????啣???1 璇儐?堆???銝甈∟?摰靚瑯?2. 蝣箄? `BKK-MRT-Yellow` / `BKK-MRT-Pink` ??UI 銝剝＊蝷箇 `Monorail`?AGT` ??? `Metro` ????3. 撠?`BKK-SRT-Dark-Red`?KL-LRT-Ampang` / `KL-LRT-Sri-Petaling`?ERL-KLIA-Transit` ?∩?摰蝡?蝑嚗蝺蝺xpress/local 璅∪?銝憛?銵刻? shape ????
@@ -178,7 +185,7 @@
 餈??芸???瘜啣? / ?圈收 P0 seed 撠?賢嚗銵??桐誑銝??銝頛芾???啜皞?
 撌脩宏??follow-up嚗okaido relation ?踵??極蝔? maxOffset 蝎曆耨???/ ??摰閬??ranch/short-turn ?瑟?璅∪??TS Link 頝典? region?evel-2/4 鞈?皞? region UI ??i18n 蝑嚗絞銝餈質馱??`doc/east-asia-expansion-plan.md`??
 ## 撱箄降銝?甇?
-1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`. 2. Next 5.3 seed priority moves to `SG-LRT-Sengkang` as the first remaining SG LRT loop seed; KTM Komuter remains deferred.
+1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`. 2. Next 5.3 seed priority moves to `SG-LRT-Punggol` as the remaining SG LRT sibling loop seed; KTM Komuter remains deferred.
 ## 5.3 vs 5.5 隞餃????脣漲蝞∠?嚗頛芾?銝?頛迎?
 
 ### 5.3 ?舐?亙銵?- ?格?嚗雁?????鞈迎??撽?????啗?銝?頛?P0 seed ?游???- ?嗅?????祈憚??閬??柴歇蝯?嚗ollow-up ?芾蕭頩斗陸??/ ?圈收?芸?鞈??湔嚗??芸??芸???撌脩宏??`doc/east-asia-expansion-plan.md`??

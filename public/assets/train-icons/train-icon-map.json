@@ -462,6 +462,10 @@
       "icon": "assets/train-icons/singapore-sg-lrt-bukit-panjang-bplrt.png",
       "kind": "lrt"
     },
+    "singapore|SG-LRT-Sengkang|SKLRT": {
+      "icon": "assets/train-icons/singapore-sg-lrt-sengkang-sklrt.png",
+      "kind": "lrt"
+    },
     "malaysia|KL-Kelana-Jaya|LRT": {
       "icon": "assets/train-icons/malaysia-kl-kelana-jaya-lrt.png",
       "kind": "metro"

@@ -3672,6 +3672,36 @@ export const RAIL_DATA = {
           { name: "Choa Chu Kang",  lat: 1.384708, lng: 103.744501, km: 10.9, dwellSec: 30 },
         ],
       },
+      {
+        id: "SG-LRT-Sengkang",
+        name: "Sengkang LRT",
+        nameEn: "Sengkang LRT",
+        color: "#748477",
+        category: "LRT",
+        directions: { up: "Clockwise loop", down: "Anti-clockwise loop" },
+        // Sengkang LRT: current 14-station automated guideway network.
+        // This seed models the east loop followed by the west loop as one
+        // explicit station-order pattern; repeated Sengkang anchors are
+        // intentional until a branch/loop runtime model exists.
+        stations: [
+          { name: "Sengkang",     lat: 1.391512, lng: 103.895303, km: 0.0, dwellSec: 30 },
+          { name: "Compassvale",  lat: 1.394563, lng: 103.900452, km: 0.7 },
+          { name: "Rumbia",       lat: 1.391505, lng: 103.906030, km: 1.4 },
+          { name: "Bakau",        lat: 1.388080, lng: 103.905388, km: 1.8 },
+          { name: "Kangkar",      lat: 1.383926, lng: 103.902250, km: 2.3 },
+          { name: "Ranggung",     lat: 1.384022, lng: 103.897330, km: 2.9 },
+          { name: "Sengkang",     lat: 1.391743, lng: 103.895509, km: 3.8, dwellSec: 30 },
+          { name: "Renjong",      lat: 1.386678, lng: 103.890518, km: 4.6 },
+          { name: "Tongkang",     lat: 1.389365, lng: 103.885803, km: 5.2 },
+          { name: "Layar",        lat: 1.392072, lng: 103.880010, km: 5.9 },
+          { name: "Fernvale",     lat: 1.391897, lng: 103.876265, km: 6.3 },
+          { name: "Thanggam",     lat: 1.397354, lng: 103.875585, km: 6.9 },
+          { name: "Kupang",       lat: 1.398281, lng: 103.881247, km: 7.5 },
+          { name: "Farmway",      lat: 1.397246, lng: 103.889227, km: 8.4 },
+          { name: "Cheng Lim",    lat: 1.396356, lng: 103.893804, km: 9.0 },
+          { name: "Sengkang",     lat: 1.391743, lng: 103.895509, km: 9.5, dwellSec: 30 },
+        ],
+      },
     ],
     trainTemplates: [
       { line: "SG-MRT-North-South",  type: "NSL",  badge: "NSL", badgeColor: "#d42e12", speed: 38, interval: 3, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
@@ -3681,6 +3711,7 @@ export const RAIL_DATA = {
       { line: "SG-MRT-Downtown",     type: "DTL",  badge: "DTL", badgeColor: "#005ec4", speed: 35, interval: 3, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "SG-MRT-Thomson-East-Coast", type: "TEL", badge: "TEL", badgeColor: "#734538", speed: 35, interval: 3, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "SG-LRT-Bukit-Panjang", type: "BPLRT", badge: "BPLRT", badgeColor: "#748477", speed: 35, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 20 },
+      { line: "SG-LRT-Sengkang", type: "SKLRT", badge: "SKLRT", badgeColor: "#748477", speed: 35, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 20 },
     ],
   },
 

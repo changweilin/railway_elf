@@ -637,6 +637,14 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "SG-LRT-Sengkang": {
+    name: "Sengkang LRT clockwise loop seed (Sengkang East Loop then West Loop)",
+    relationIds: [2312985, 1146941],
+    loopAnchor: { lat: 1.391512, lng: 103.895303 },
+    corridor: { corridorKm: 0.8, sampleKm: 0.03 },
+    orderStationKms: true,
+    stationKmByIndexOverrides: { 6: 4.391 },
+  },
 
   // Kuala Lumpur.
   "KL-Kelana-Jaya": {
