@@ -454,6 +454,10 @@
       "icon": "assets/train-icons/singapore-sg-mrt-downtown-dtl.png",
       "kind": "metro"
     },
+    "singapore|SG-MRT-Thomson-East-Coast|TEL": {
+      "icon": "assets/train-icons/singapore-sg-mrt-thomson-east-coast-tel.png",
+      "kind": "metro"
+    },
     "malaysia|KL-Kelana-Jaya|LRT": {
       "icon": "assets/train-icons/malaysia-kl-kelana-jaya-lrt.png",
       "kind": "metro"

@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-14 5.3 TEL seed
+
+- [x] Completed one 5.3 seed item: `SG-MRT-Thomson-East-Coast` is now in `RAIL_DATA` with 27 current-segment stations from Woodlands North to Bayshore, TEL train template, OSM route relation `2383439`, generated Singapore shape data, and a line-aware brown TEL icon.
+- [x] Cleaned the completed 5.3 option by marking `SG-MRT-Thomson-East-Coast` done in the 5.3 backlog and `P0-SG-3` done in `doc/east-asia-expansion-plan.md`.
+- [x] No 5.5 task files were edited concurrently; `follow-up-plan.md` was updated only after confirming the local diff belonged to this 5.3 round.
+
 ## 2026-05-12 5.5 route supervision update
 
 - [x] Current route coverage audit: `src/rail-data.js`, `src/rail-data.generated.js`, and `scripts/line-shape-snapshot.json` all cover 103 current line ids; no currently modeled railway is missing a generated route.
@@ -51,7 +57,7 @@
 | 6 | `KL-MRT-Putrajaya` | done | Putrajaya Line: station/template/OSM relation/PYL yellow icon | done (OSM relation 11313578 / shape maxOffset 0.080 km) |
 | 7 | `SG-MRT-North-East` | done | North East Line: driverless metro template, OSM relation, NEL purple icon | done (Punggol Coast current baseline / shape maxOffset 0.004 km) |
 | 8 | `SG-MRT-Downtown` | done | Downtown Line: station/template/OSM relation/DTL blue icon | done (OSM relation 2313458 / shape maxOffset 0.004 km) |
-| 9 | `SG-MRT-Thomson-East-Coast` | ?啣???| 鋆?TEL ?曇???畾萇?銵具emplate?SM relation?rown icon | ?芸?撌交畾萎?????`RAIL_DATA` |
+| 9 | `SG-MRT-Thomson-East-Coast` | done | TEL current segment: 27 stations, template, OSM relation `2383439`, generated shape, brown TEL icon | done (shape maxOffset 0.005 km) |
 | 10 | `KL-LRT-Ampang` / `KL-LRT-Sri-Petaling` | 擐砌?镼蹂? | ?誑?函? line object 鋆?銵具emplate?SM relation | branch 璅∪??芸?獢?銝?雿?|
 | 11 | `KL-Monorail` | 擐砌?镼蹂? | 鋆?monorail 蝡”?emplate?SM relation?L Monorail icon | ?臭??勗?鈭?monorail icon 蝭? |
 | 12 | KTM Komuter / `ERL-KLIA-Transit` | 擐砌?镼蹂? | 鋆?KTM ?瑁????KLIA Transit local service seed | ?剜???express ???策敺?璅∪? |
@@ -66,7 +72,7 @@
 餈??芸???瘜啣? / ?圈收 P0 seed 撠?賢嚗銵??桐誑銝??銝頛芾???啜皞?
 撌脩宏??follow-up嚗okaido relation ?踵??極蝔? maxOffset 蝎曆耨???/ ??摰閬??ranch/short-turn ?瑟?璅∪??TS Link 頝典? region?evel-2/4 鞈?皞? region UI ??i18n 蝑嚗絞銝餈質馱??`doc/east-asia-expansion-plan.md`??
 ## 撱箄降銝?甇?
-1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`. 2. Next 5.3 seed priority: skip blocked `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red` until 5.5 clears them; continue with `SG-MRT-Thomson-East-Coast` or `KL-Monorail` if still blocked.
+1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`. 2. Next 5.3 seed priority: skip blocked `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red` until 5.5 clears them; continue with `KL-Monorail` if still blocked.
 ## 5.3 vs 5.5 隞餃????脣漲蝞∠?嚗頛芾?銝?頛迎?
 
 ### 5.3 ?舐?亙銵?- ?格?嚗雁?????鞈迎??撽?????啗?銝?頛?P0 seed ?游???- ?嗅?????祈憚??閬??柴歇蝯?嚗ollow-up ?芾蕭頩斗陸??/ ?圈收?芸?鞈??湔嚗??芸??芸???撌脩宏??`doc/east-asia-expansion-plan.md`??
