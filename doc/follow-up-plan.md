@@ -17,6 +17,12 @@
 - [x] Cleaned the completed 5.5 option by marking the multi-region UI / region switcher planning item done in `doc/east-asia-expansion-plan.md`.
 - [x] No 5.3 seed/data files were edited in this round; `follow-up-plan.md` was only updated after the 5.5 documentation change.
 
+## 2026-05-14 5.5 i18n policy decision
+
+- [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records the i18n sync policy in the SOP 5.5 handoff format.
+- [x] Cleaned the completed 5.5 option by marking the i18n strategy / `i18n-sync` cadence item done in `doc/east-asia-expansion-plan.md`.
+- [x] No 5.3 seed/data files were edited in this round; `follow-up-plan.md` was updated only after confirming the worktree was clean.
+
 
 ?湔?交?嚗?026-05-12
 

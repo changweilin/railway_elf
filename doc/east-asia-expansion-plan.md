@@ -476,8 +476,17 @@ Backlog 執行原則：
 3. [ ] 評估 loop/複線/共線的策略模板（`loopAnchor`、`corridor`、branch/short-turn）在 `app-core` 與 `app-map` 的長期維運性；優先用於 SG LRT、KL Ampang/Sri Petaling、SRT Red Lines、ERL express/local。
 4. [ ] 決定 RTS Link 載客後的 region 歸屬、CIQ 提示、跨境線是否新增 `sg-my` region；載客前只監控，不交給 5.3 建正式資料。
 5. [x] 規劃多 region UI 與地區切換體驗（12+ region 規模）是否改版為下拉/群組，以免後續擴展衝突。
-6. [ ] i18n 策略決定（中文、日文、韓文、泰文、馬來文、印尼文、越南文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
+6. [x] i18n 策略決定（中文、日文、韓文、泰文、馬來文、印尼文、越南文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
 7. [ ] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
+
+#### 2026-05-14 5.5 決策：i18n sync policy
+
+- `decision`: approved + downscope。近期不新增完整 i18n layer，也不為每個 station 建多語欄位。`src/rail-data.js` 維持 `name` 作為當地/官方主要站名、`nameEn` 作為 line 的英文/拉丁顯示；搜尋與反向地理編碼繼續由 `src/app-core.js` 的 `REGION_NOMINATIM_LANG` 與 `REGION_NAME_TAG_PREFS` 控制。只有當 UI 需要同時顯示兩種語言、或同一 region 內出現同名/異名衝突時，才另開 `i18n-sync` patch。
+- `scope`: region-level language preference、station/line display naming policy、future `i18n-sync` cadence。owned files for future Spark work are `src/app-core.js` language preference constants, `src/rail-data.js` labels/directions, and any focused doc note; no generated shapes or train icon assets are part of this decision.
+- `source`: repo 現況已覆蓋 Taiwan/Japan/Korea/Hong Kong/China/Singapore/Malaysia/Thailand/Vietnam 的 Nominatim language preferences and OSM `name:<lang>` priority. Current data uses local scripts for `name`, English/Latin for most `nameEn`, and region-specific direction labels.
+- `constraints`: Do not rename station `name` values just to force English consistency; station names remain the shape/snapshot matching key unless generated index fallback is explicitly used. Do not add broad i18n runtime infrastructure before a concrete UI need. New regions must add `REGION_NOMINATIM_LANG` and `REGION_NAME_TAG_PREFS` in the same seed or in a same-round follow-up, and directions must stay consistent with station order.
+- `checks`: For pure label preference changes, run `git diff --check` plus the narrow data check relevant to changed files. For any `src/rail-data.js` name/direction update, run `npm.cmd run check:timing`; if station names or generated shape mapping are touched, also run `npm.cmd run build:rail-data` and `npm.cmd run check:shapes`.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 i18n policy 決策；下一個可下放文件 seed 是「為新增 Indonesia/Philippines region 預先填入 Nominatim language/name tag preference」。
 
 #### 2026-05-14 5.5 決策：12+ region selector
 
