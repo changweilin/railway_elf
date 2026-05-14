@@ -671,6 +671,12 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     snapStationCoordsOverKm: 0.05,
   },
+  "BKK-MRT-Pink": {
+    name: "MRT Pink Line (Nonthaburi Civic Center→Min Buri)",
+    relationIds: [16740886],
+    orderStationKms: true,
+    stationStops: {},
+  },
   "BKK-MRT-Blue": {
     name: "MRT Blue Line (Tha Phra→Lak Song)",
     relationIds: [444659],
