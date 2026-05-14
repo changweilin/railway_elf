@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.3 Dark Red seed
+
+- [x] Completed one 5.3 seed item: `BKK-SRT-Dark-Red` is now in `RAIL_DATA` with 10 stations from Krung Thep Aphiwat to Rangsit, a `Commuter` Dark Red train template, OSM route relation `13058384`, generated Thailand shape data, and a line-aware SRT Red commuter icon.
+- [x] Cleaned the completed 5.3 option by marking `BKK-SRT-Dark-Red` done in the 5.3 backlog and `P0-TH-5` done in `doc/east-asia-expansion-plan.md`.
+- [x] No concurrent 5.5 diff was detected before editing `follow-up-plan.md`; this round only reconciles the completed 5.3 seed and its downstream docs.
+
 ## 2026-05-15 5.5 seed cadence decision
 
 - [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records the one-complete-seed cadence and current P0 fallback queue in the SOP 5.5 handoff format.
@@ -83,7 +89,7 @@
 | 2 | `BKK-MRT-Purple` | done | MRT Purple: heavy-rail template + OSM relation + shape mapping + BEM purple icon; fixed route relation and stop-node coords this round | done (shape maxOffset 0.003 km) |
 | 3 | `BKK-MRT-Yellow` | done | Yellow Line: 23 stations, `Monorail` template, OSM relation `15806897`, generated Thailand shape, line-aware yellow monorail icon | done (shape maxOffset 0.003 km) |
 | 4 | `BKK-MRT-Pink` | done | Pink Line: 30 main-line stations, `Monorail` template, OSM relation `16740886`, generated Thailand shape, line-aware pink monorail icon | done (shape maxOffset 0.003 km); Muang Thong Thani branch separate pass |
-| 5 | `BKK-SRT-Dark-Red` | todo | SRT Dark Red: commuter EMU template, OSM relation, SRT Red Line icon | 5.5 done: independent Red Line object; ready for Dark Red seed |
+| 5 | `BKK-SRT-Dark-Red` | done | SRT Dark Red: 10 stations, `Commuter` template, OSM relation `13058384`, generated Thailand shape, line-aware SRT Red commuter icon | done (shape maxOffset 0.002 km); Light Red remains separate future seed |
 | 6 | `KL-MRT-Putrajaya` | done | Putrajaya Line: station/template/OSM relation/PYL yellow icon | done (OSM relation 11313578 / shape maxOffset 0.080 km) |
 | 7 | `SG-MRT-North-East` | done | North East Line: driverless metro template, OSM relation, NEL purple icon | done (Punggol Coast current baseline / shape maxOffset 0.004 km) |
 | 8 | `SG-MRT-Downtown` | done | Downtown Line: station/template/OSM relation/DTL blue icon | done (OSM relation 2313458 / shape maxOffset 0.004 km) |
@@ -102,7 +108,7 @@
 餈??芸???瘜啣? / ?圈收 P0 seed 撠?賢嚗銵??桐誑銝??銝頛芾???啜皞?
 撌脩宏??follow-up嚗okaido relation ?踵??極蝔? maxOffset 蝎曆耨???/ ??摰閬??ranch/short-turn ?瑟?璅∪??TS Link 頝典? region?evel-2/4 鞈?皞? region UI ??i18n 蝑嚗絞銝餈質馱??`doc/east-asia-expansion-plan.md`??
 ## 撱箄降銝?甇?
-1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`. 2. Next 5.3 seed priority: `BKK-SRT-Dark-Red` is 5.5-cleared for an independent Red Line seed; continue with `KL-Monorail` if the Thailand queue pauses.
+1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`. 2. Next 5.3 seed priority: `KL-Monorail`; continue with `SG-LRT-Bukit-Panjang` if Malaysia monorail work blocks.
 ## 5.3 vs 5.5 隞餃????脣漲蝞∠?嚗頛芾?銝?頛迎?
 
 ### 5.3 ?舐?亙銵?- ?格?嚗雁?????鞈迎??撽?????啗?銝?頛?P0 seed ?游???- ?嗅?????祈憚??閬??柴歇蝯?嚗ollow-up ?芾蕭頩斗陸??/ ?圈收?芸?鞈??湔嚗??芸??芸???撌脩宏??`doc/east-asia-expansion-plan.md`??

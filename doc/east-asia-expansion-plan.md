@@ -231,7 +231,7 @@ Backlog 執行原則：
 | P0-TH-2 | ☑ A ☑ B | Metro | `BKK-MRT-Purple` | MRT สายสีม่วง | Khlong Bang Phai ⇄ Tao Poon | 已補站表、MRT heavy-rail template、OSM relation、BEM purple icon；本輪修正 route relation 與 stop-node 座標 | 無阻塞；若與未來南延伸合併，另開 extension pass |
 | P0-TH-3 | ☑ A ☑ B | Monorail / AGT | `BKK-MRT-Yellow` | MRT สายสีเหลือง | Lat Phrao ⇄ Samrong（30.4 km / 23 站） | 已補站表、`Monorail` template、OSM relation `15806897`、Yellow Line monorail icon、Thailand generated shape | 無阻塞；若未來與 Pink Line 共用 monorail 圖示策略改變，另開 icon pass |
 | P0-TH-4 | ☑ A ☑ B | Monorail / AGT | `BKK-MRT-Pink` | MRT สายสีชมพู | Nonthaburi Civic Center ⇄ Min Buri（34.5 km / 30 站） | 已補主線站表、`Monorail` template、OSM relation `16740886`、Pink Line monorail icon、Thailand generated shape | 主線完成；Muang Thong Thani 支線另開 branch/extension pass，不併入本次 seed |
-| P0-TH-5 | □ seed | Commuter | `BKK-SRT-Dark-Red` | SRT Dark Red Line | Krung Thep Aphiwat ⇄ Rangsit / Don Mueang corridor | 補站表、commuter EMU template、OSM relation、SRT Red Line 圖示 | 5.5 已決定以獨立 line object seed；與 Light Red 共線不合併成單一 branch graph |
+| P0-TH-5 | ☑ A ☑ B | Commuter | `BKK-SRT-Dark-Red` | SRT Dark Red Line | Krung Thep Aphiwat ⇄ Rangsit / Don Mueang corridor | 已補站表、`Commuter` template、OSM relation `13058384`、SRT Red commuter icon、Thailand generated shape | Dark Red 完成；Light Red 仍保留為獨立 future seed，不合併成單一 branch graph |
 | P0-TH-6 | □ backlog | Commuter | `BKK-SRT-Light-Red` | SRT Light Red Line | Krung Thep Aphiwat ⇄ Taling Chan / west corridor | 等 5.5 確認營運段後 seed | 共線模型已決定為獨立 line object；仍需另確認當前服務段與延伸站 |
 | P0-TH-7 | □ optional | AGT | `BKK-BTS-Gold` | BTS Gold Line | Krung Thon Buri ⇄ Khlong San | 可作小型 APM seed，補 3 站與 Gold Line 圖示 | 決定小型 feeder 是否納入主路網統計 |
 | P0-TH-8 | □ monitor | Metro | `BKK-MRT-Orange` | MRT Orange Line | 待完整載客段確認 | 不執行 | 只在正式營運段、站名與 OSM relation 穩定後下放 |
@@ -276,7 +276,7 @@ Backlog 執行原則：
 5.3 可直接執行：
 
 1. 依 P0-TH-1 → P0-TH-5 順序補曼谷已營運線，每條線都完成 Phase A + Phase B、train icon、`check:timing`、`check:shapes`、`test:smoke`。
-2. 泰國前 2 條 monorail seed 已完成；下一個 5.3 seed 維持 `BKK-SRT-Dark-Red`，若 Thailand queue 遇到資料、shape 或 icon 阻塞則切 `KL-Monorail`。Dark Red 完成後不批量補完整曼谷，改依 P0 放行狀態在 Malaysia / Singapore cleared seeds 間輪替。
+2. 泰國前 2 條 monorail seed 與 `BKK-SRT-Dark-Red` 已完成；下一個 5.3 seed 轉 `KL-Monorail`，若 Malaysia monorail 遇到資料、shape 或 icon 阻塞則切 `SG-LRT-Bukit-Panjang`。Dark Red 完成後不批量補完整曼谷，改依 P0 放行狀態在 Malaysia / Singapore cleared seeds 間輪替。
 3. 馬來西亞 LRT / KTM / ERL 採「先獨立 line object，後續再合併 branch 模型」策略，避免 branch 規則尚未定案時阻塞站表與 shape 回灌。
 4. 新加坡 MRT 補完先做重軌 MRT（North East / Downtown / Thomson-East-Coast current segment），LRT loop 與 RTS Link 暫不下放。
 
@@ -462,7 +462,7 @@ Backlog 執行原則：
 2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Vietnam 各區批次）。
 3. [x] 維護資料源（以 OSM 為主）並更新 `OSM_LINE_MAP`、`rail-data`、`trainTemplates` 的常規新增流程。
 4. [x] 針對高誤差路段執行 station-to-station/stop-node 對站修正（已完成：多條南韓與東南亞主要線路）。
-5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow`、`BKK-MRT-Pink` 主線已完成，`BKK-SRT-Dark-Red` 已由 5.5 放行為獨立 Red Line seed，若泰國 queue 暫停則接 `KL-Monorail`。
+5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow`、`BKK-MRT-Pink` 主線與 `BKK-SRT-Dark-Red` 已完成，下一個 5.3 seed 接 `KL-Monorail`，若 Malaysia monorail 阻塞則切 `SG-LRT-Bukit-Panjang`。
 6. [ ] 泰國 / 新馬 P0 seed 執行：每條線都補 `rail-data`、train template、OSM relation、train icon，並跑 `npm run build:rail-data`、`npm run check:shapes`、`npm run check:timing`、`npm run test:smoke`。
 7. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
 
@@ -522,7 +522,7 @@ Backlog 執行原則：
 - `source`: 現有 app already treats train movement as a canonical km along one ordered station chain: `TrainGen.generate` builds directional stops and kinematic segments from line station order, `app-core.js` computes pass time / live position from those segments, and `app-map.js` renders per-line shapes and markers without needing branch topology. Existing examples already cover loop anchors (`Seoul-Metro-2`, `Beijing-Subway-2`, `BKK-MRT-Blue`), duplicated loop station handling (`Seoul-Metro-6` with indexed generated km), corridor reconstruction for noisy multi-relation HSR/metro lines, and contiguous short-turn templates (`Gyeongui-Jungang`, `Gyeongchun`).
 - `constraints`: Do not deduplicate repeated start/end stations on loop lines. Do not model a public branch network by packing multiple non-contiguous patterns into one line object. Do not add `branches`, `services`, `stopPattern`, or route graph fields until a concrete UI/runtime pass is accepted. For shared trunks, duplicated station rows and overlapping shapes are acceptable if each line object has stable directions, templates, icons, and shape checks. For express services, `stationIdxStart` / `stationIdxEnd` may only trim endpoints; it must not pretend to skip intermediate stations.
 - `checks`: For this policy-only docs pass, run `git diff --check`. For future loop/shared-trunk seeds, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` when new PNG assets are generated. A future skip-stop/express runtime change must also run `npm.cmd run build` and browser smoke for the train sheet / modal labels.
-- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 loop/branch/shared-trunk 模型決策。下一個可下放 seeds：`BKK-SRT-Dark-Red` 可作獨立 Red Line seed；`KL-LRT-Ampang` / `KL-LRT-Sri-Petaling` 可各自 seed；`ERL-KLIA-Transit` 可先作 local all-stop seed；SG LRT 可先挑一條 loop 以 explicit station order seed。仍保留阻塞：`ERL-KLIA-Ekspres` skip-stop、BKK Pink branch、SRT Light Red current segment、RTS Link region。
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 loop/branch/shared-trunk 模型決策。`BKK-SRT-Dark-Red` 已於 2026-05-15 5.3 seed 完成；`KL-LRT-Ampang` / `KL-LRT-Sri-Petaling` 可各自 seed；`ERL-KLIA-Transit` 可先作 local all-stop seed；SG LRT 可先挑一條 loop 以 explicit station order seed。仍保留阻塞：`ERL-KLIA-Ekspres` skip-stop、BKK Pink branch、SRT Light Red current segment、RTS Link region。
 
 #### 2026-05-15 5.5 決策：RTS Link cross-border region
 
@@ -536,11 +536,11 @@ Backlog 執行原則：
 #### 2026-05-15 5.5 決策：P0 seed cadence
 
 - `decision`: approved + downscope。後續 P0 擴張維持「每輪 1 條完整 seed」作為硬規則：同一輪必須完成站表、train template、OSM/shape mapping、line-aware icon、generated outputs 與最小檢查後才開下一條。不採同城市一次補完；原先「泰國 2 條 → 馬來西亞 1 條 → 新加坡 1 條」只保留為早期 bootstrapping 參考，現在改用 cleared P0 queue + blocker fallback。
-- `scope`: Asia P0 seed order and handoff policy. Current 5.3 next target remains `BKK-SRT-Dark-Red`; if Thailand data, shape, or icon work blocks the round, switch to `KL-Monorail`. After Dark Red, prefer `KL-Monorail` and `SG-LRT-Bukit-Panjang` before returning to additional Thailand optional / monitor items. Malaysia shared-trunk LRT, ERL local service, and SG LRT loops follow only after their existing 5.5 constraints are respected.
+- `scope`: Asia P0 seed order and handoff policy. `BKK-SRT-Dark-Red` was completed in the 2026-05-15 5.3 round; the current 5.3 next target is `KL-Monorail`. If Malaysia monorail data, shape, or icon work blocks the round, switch to `SG-LRT-Bukit-Panjang` before returning to additional Thailand optional / monitor items. Malaysia shared-trunk LRT, ERL local service, and SG LRT loops follow only after their existing 5.5 constraints are respected.
 - `source`: Current repo backlog shows `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `KL-MRT-Putrajaya`, `SG-MRT-North-East`, `SG-MRT-Downtown`, and `SG-MRT-Thomson-East-Coast` completed. Existing check history demonstrates each seed has non-trivial icon, generated-shape, timing, and smoke-test work, so batching multiple lines in one round increases conflict and verification risk.
 - `constraints`: Do not start a second seed in the same 5.3 round before the first seed's icon/template/shape/checks are complete and committed. Do not force a strict country cycle when the next same-country candidate is monitor-only, future-service, or has an unresolved branch/skip-stop blocker. Do not let this cadence decision override the separate RTS Link, ERL Ekspres, SRT Light Red, or Pink branch gates.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For future 5.3 seeds, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` when new PNG assets are generated.
-- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 seed cadence 決策。下一個可下放 seed：`BKK-SRT-Dark-Red`；blocked fallback：`KL-Monorail`。
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 seed cadence 決策。`BKK-SRT-Dark-Red` 已於 2026-05-15 5.3 seed 完成；下一個可下放 seed：`KL-Monorail`；blocked fallback：`SG-LRT-Bukit-Panjang`。
 
 ### 每 1 輪管理規則（共用）
 - 5.3 工作可按 `seed` 粒度收斂：每輪至少完成 1 條完整 seed（A+B）並出具 smoke + shape + timing 驗證。

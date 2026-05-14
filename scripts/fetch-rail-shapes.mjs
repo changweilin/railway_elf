@@ -677,6 +677,12 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationStops: {},
   },
+  "BKK-SRT-Dark-Red": {
+    name: "SRT Dark Red Line (Krung Thep Aphiwat→Rangsit)",
+    relationIds: [13058384],
+    orderStationKms: true,
+    stationStops: { includeUnroledStopNodes: true },
+  },
   "BKK-MRT-Blue": {
     name: "MRT Blue Line (Tha Phra→Lak Song)",
     relationIds: [444659],
@@ -1504,8 +1510,12 @@ async function fetchOsmShape(internalId, cfg, stations) {
     let stopMembers = [];
     for (const rel of relations) {
       if (!relationIds.has(Number(rel.id))) continue;
+      const includeUnroledStopNodes = Boolean(cfg.stationStops.includeUnroledStopNodes);
       const members = rel.members
-        .filter(m => m.type === "node" && /stop|station|platform/.test(m.role || ""))
+        .filter(m => (
+          m.type === "node" &&
+          (/stop|station|platform/.test(m.role || "") || (includeUnroledStopNodes && !m.role))
+        ))
         .map(m => nodes.get(m.ref))
         .filter(Boolean);
       if (members.length > stopMembers.length) stopMembers = members;

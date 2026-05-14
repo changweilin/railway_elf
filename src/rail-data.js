@@ -3994,6 +3994,28 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "BKK-SRT-Dark-Red",
+        name: "รถไฟฟ้าชานเมืองสายสีแดงเข้ม",
+        nameEn: "SRT Dark Red Line",
+        color: "#b91c1c",
+        category: "Commuter",
+        directions: { up: "Krung Thep Aphiwat bound", down: "Rangsit bound" },
+        // SRT Dark Red Line: Krung Thep Aphiwat to Rangsit, 10 stations / 26 km.
+        // Light Red remains a separate future seed per the shared-trunk policy.
+        stations: [
+          { name: "Krung Thep Aphiwat", lat: 13.804043, lng: 100.541316, km: 0.0, dwellSec: 45 },
+          { name: "Chatuchak",          lat: 13.826645, lng: 100.549424, km: 3.1 },
+          { name: "Wat Samian Nari",    lat: 13.841626, lng: 100.557449, km: 5.3 },
+          { name: "Bang Khen",          lat: 13.849392, lng: 100.561619, km: 6.4 },
+          { name: "Thung Song Hong",    lat: 13.860232, lng: 100.567479, km: 8.0 },
+          { name: "Lak Si",             lat: 13.886341, lng: 100.581886, km: 11.9, dwellSec: 30 },
+          { name: "Kan Kheha",          lat: 13.898683, lng: 100.588823, km: 13.7 },
+          { name: "Don Muang",          lat: 13.914752, lng: 100.597757, km: 16.1, dwellSec: 30 },
+          { name: "Lak Hok",            lat: 13.965721, lng: 100.605355, km: 22.8 },
+          { name: "Rangsit",            lat: 13.990543, lng: 100.602140, km: 26.0, dwellSec: 45 },
+        ],
+      },
+      {
         id: "BKK-MRT-Blue",
         name: "MRT สายสีน้ำเงิน",
         nameEn: "MRT Blue Line",
@@ -4069,6 +4091,7 @@ export const RAIL_DATA = {
       { line: "BKK-MRT-Purple",    type: "MRT",   badge: "MRT", badgeColor: "#a855f7", speed: 38, interval: 6, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "BKK-MRT-Yellow",    type: "YL",    badge: "YL",  badgeColor: "#ffd400", speed: 40, interval: 5, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "BKK-MRT-Pink",      type: "PK",    badge: "PK",  badgeColor: "#e76589", speed: 40, interval: 5, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "BKK-SRT-Dark-Red",  type: "DR",    badge: "DR",  badgeColor: "#b91c1c", speed: 90, interval: 12, accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 30 },
       { line: "BKK-MRT-Blue",      type: "MRT",   badge: "MRT", badgeColor: "#1d4ed8", speed: 38, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "BKK-Airport-Rail",  type: "ARL",   badge: "ARL", badgeColor: "#dc2626", speed: 100, interval: 12, accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 30 },
     ],

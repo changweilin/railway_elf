@@ -507,7 +507,8 @@ npm.cmd run check:timing
 6. [x] `SG-MRT-Thomson-East-Coast` 已完成：`src/rail-data.js`（line / station / TEL template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `2383439`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/singapore-sg-mrt-thomson-east-coast-tel.png`（TEL brown icon）。
 7. [x] `BKK-MRT-Yellow` 已完成：`src/rail-data.js`（line / station / YL template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `15806897`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/thailand-bkk-mrt-yellow-yl.png`（Yellow monorail icon）。
 8. [x] `BKK-MRT-Pink` 主線已完成：`src/rail-data.js`（line / 30 stations / PK template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `16740886`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/thailand-bkk-mrt-pink-pk.png`（Pink monorail icon）。
-9. [ ] 下一輪 5.3 預計接續：`BKK-SRT-Dark-Red` 已由 5.5 放行為獨立 Red Line seed；若泰國 queue 暫停，接 `KL-Monorail`。
+9. [x] `BKK-SRT-Dark-Red` 已完成：`src/rail-data.js`（line / 10 stations / DR template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `13058384`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/thailand-bkk-srt-dark-red-dr.png`（SRT Red commuter icon）。
+10. [ ] 下一輪 5.3 預計接續：`KL-Monorail`；若 Malaysia monorail 的資料、shape 或 icon 阻塞，接 `SG-LRT-Bukit-Panjang`。
 
 ## 發布前檢查
 
