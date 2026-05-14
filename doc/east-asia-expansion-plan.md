@@ -245,7 +245,7 @@ Backlog 執行原則：
 | P0-SG-3 | ☑ A ☑ B | Metro | `SG-MRT-Thomson-East-Coast` | Thomson-East Coast Line | Woodlands North ⇄ Bayshore current segment（40.6 km / 27 站） | 已補站表、TEL template、OSM relation `2383439`、TEL brown icon；shape maxOffset 0.005 km | 未完工東段與 future extension 不提前進 `RAIL_DATA` |
 | P0-SG-4 | □ seed | AGT / LRT | `SG-LRT-Bukit-Panjang` | Bukit Panjang LRT | Choa Chu Kang ⇄ Bukit Panjang loop network | 以可驗證的代表 loop / service pattern 建獨立 line object，必要時用 repeated stations、`loopAnchor`、indexed km | 5.5 已決定不新增 branch graph；先用單一可跑站序 seed |
 | P0-SG-5 | □ seed | AGT / LRT | `SG-LRT-Sengkang` / `SG-LRT-Punggol` | Sengkang / Punggol LRT | 各 14 站、東西 loops | 拆成穩定方向/loop 的 line object seed；避免把 east/west loop 混成不可驗證站序 | 5.5 已決定 loop 以站序與 `loopAnchor`/indexed km 表示，不合併成多分支 schema |
-| P0-SG-6 | □ monitor | Cross-border LRT | `SG-MY-RTS-Link` | Johor Bahru-Singapore RTS Link | Woodlands North ⇄ Bukit Chagar（4 km / 2 站，目標 2026 年底） | 不在載客前建正式 pass；可先備 icon / region strategy | 決定跨 region、CIQ、票制與 `singapore` / `malaysia` / `sg-my` 歸屬 |
+| P0-SG-6 | □ monitor | Cross-border LRT | `SG-MY-RTS-Link` | Johor Bahru-Singapore RTS Link | Woodlands North ⇄ Bukit Chagar（4 km / 2 站，目標 2026 年底） | 載客前不建正式 pass；載客後以 `sg-my` cross-border region seed，補 2 站、RTS template、OSM relation、CIQ 提示與圖示 | 5.5 已決定載客前 monitor；不放入單一 `singapore` 或 `malaysia` region |
 | P0-SG-7 | □ monitor | Metro | `SG-MRT-Cross-Island` | Cross Island Line | future stages | 不執行 | 待載客段開通與 LTA current line list 更新 |
 
 ### P0：馬來西亞補完
@@ -284,7 +284,7 @@ Backlog 執行原則：
 
 1. 確認每輪實作順序是否維持「泰國 2 條 seed → 馬來西亞 1 條 seed → 新加坡 1 條 seed」循環，或一次把同城市補完。
 2. 已定義 loop / branch / shared trunk / express service 的資料模型邊界：SG LRT 可用可驗證 loop 站序 seed，KL Ampang / Sri Petaling 與 SRT Red Lines 以獨立 line object 表示共線，ERL KLIA Transit 可先 seed，Ekspres 等 skip-stop template。
-3. 決定 RTS Link 載客後的 region 歸屬與 UI 呈現：`singapore`、`malaysia`、或新增 `sg-my` cross-border region。
+3. 已決定 RTS Link 載客後新增 `sg-my` cross-border region；載客前維持 monitor，不交 5.3 建正式資料。
 4. 決定是否排除非鐵路 BRT（例如 Sunway BRT）；除非新增非 rail category，預設不列入本鐵道路網計畫。
 5. 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed；多 region UI 已決定維持原生 select，12+ regions 時改為群組化 select。
 
@@ -474,7 +474,7 @@ Backlog 執行原則：
 1. [x] 確認「完成」與「可選 backlog」邊界（目前結論：必要項目已無）並固定為每輪 1 類型 1 seed 的擴張策略。
 2. [x] 決定亞洲其他區域下一輪優先順序：泰國曼谷補完 → 新加坡 / 馬來西亞補完與新馬 RTS Link 監控 → 印尼 / 菲律賓 / 越南補完。
 3. [x] 評估 loop/複線/共線的策略模板（`loopAnchor`、`corridor`、branch/short-turn）在 `app-core` 與 `app-map` 的長期維運性；優先用於 SG LRT、KL Ampang/Sri Petaling、SRT Red Lines、ERL express/local。
-4. [ ] 決定 RTS Link 載客後的 region 歸屬、CIQ 提示、跨境線是否新增 `sg-my` region；載客前只監控，不交給 5.3 建正式資料。
+4. [x] 決定 RTS Link 載客後的 region 歸屬、CIQ 提示、跨境線是否新增 `sg-my` region；載客前只監控，不交給 5.3 建正式資料。
 5. [x] 規劃多 region UI 與地區切換體驗（12+ region 規模）是否改版為下拉/群組，以免後續擴展衝突。
 6. [x] i18n 策略決定（中文、日文、韓文、泰文、馬來文、印尼文、越南文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
 7. [x] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
@@ -523,6 +523,15 @@ Backlog 執行原則：
 - `constraints`: Do not deduplicate repeated start/end stations on loop lines. Do not model a public branch network by packing multiple non-contiguous patterns into one line object. Do not add `branches`, `services`, `stopPattern`, or route graph fields until a concrete UI/runtime pass is accepted. For shared trunks, duplicated station rows and overlapping shapes are acceptable if each line object has stable directions, templates, icons, and shape checks. For express services, `stationIdxStart` / `stationIdxEnd` may only trim endpoints; it must not pretend to skip intermediate stations.
 - `checks`: For this policy-only docs pass, run `git diff --check`. For future loop/shared-trunk seeds, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` when new PNG assets are generated. A future skip-stop/express runtime change must also run `npm.cmd run build` and browser smoke for the train sheet / modal labels.
 - `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 loop/branch/shared-trunk 模型決策。下一個可下放 seeds：`BKK-SRT-Dark-Red` 可作獨立 Red Line seed；`KL-LRT-Ampang` / `KL-LRT-Sri-Petaling` 可各自 seed；`ERL-KLIA-Transit` 可先作 local all-stop seed；SG LRT 可先挑一條 loop 以 explicit station order seed。仍保留阻塞：`ERL-KLIA-Ekspres` skip-stop、BKK Pink branch、SRT Light Red current segment、RTS Link region。
+
+#### 2026-05-15 5.5 決策：RTS Link cross-border region
+
+- `decision`: approved + blocked-until-service。`SG-MY-RTS-Link` 載客前維持 `monitor`，不建正式 `RAIL_DATA` line、train template 或 generated shape。載客後新增 `sg-my` cross-border region，不放進既有 `singapore` 或 `malaysia` region，也不在兩個 region 重複建線。region label 建議為 `新馬跨境 Singapore-Malaysia`，初始 center 取 Woodlands North / Bukit Chagar 中點、zoom 12-13，未來若有更多跨境服務再一起納入同 region。
+- `scope`: Woodlands North ⇄ Bukit Chagar 2-station LRT shuttle, cross-border region ownership, CIQ user hint, and post-service seed gates. Future Spark owned files after passenger service are `src/rail-data.js`, `scripts/fetch-rail-shapes.mjs`, `src/train-icon-registry.js`, generated shape/icon outputs, and narrow docs. `app-core.js` / `app-map.js` should only be touched if a small CIQ notice UI is explicitly implemented in the same future pass.
+- `source`: Singapore LTA describes RTS Link as a standalone 4 km LRT between Woodlands North and Bukit Chagar, with end-2026 passenger-service target, about 5 minutes journey time, and co-located CIQ where passengers clear both authorities at departure. Singapore MOT's 2026 written reply says fares will be commercially determined by RTS Operations Pte Ltd and announced later, so fare/ticketing behavior is not a data-seed input yet. Sources: https://www.lta.gov.sg/content/ltagov/en/upcoming_projects/rail_expansion/JB-Singapore_RTS_link.html and https://www.mot.gov.sg/news-resources/newsroom/assessment-of-expected-fare-range-for-upcoming-johor-bahru-singapore-rts-link-and-measures-to-ensure-fare-affordability-for-commuters/
+- `constraints`: Do not create `sg-my` before official passenger service begins and the station/source geometry is stable. Do not duplicate the same line under both Singapore and Malaysia. Do not model fare, immigration queue time, or ticketing integration until official operator data exists. CIQ hint should be concise and factual: "Clear both Singapore and Malaysia authorities at departure; no second clearance at arrival." If no generic line-notice UI exists at seed time, document the CIQ note in the expansion plan and defer runtime UI to a separate focused patch.
+- `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md`. For future RTS data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build` and browser smoke if a CIQ notice UI is added.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 RTS Link region / CIQ 策略決策。仍保留 monitor：正式載客前不交 5.3 建資料；載客後第一個可下放 seed 是 `sg-my` region + `SG-MY-RTS-Link` 2-station shuttle。
 
 ### 每 1 輪管理規則（共用）
 - 5.3 工作可按 `seed` 粒度收斂：每輪至少完成 1 條完整 seed（A+B）並出具 smoke + shape + timing 驗證。
