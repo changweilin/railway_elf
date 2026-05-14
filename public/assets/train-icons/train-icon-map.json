@@ -466,6 +466,10 @@
       "icon": "assets/train-icons/malaysia-kl-kelana-jaya-lrt.png",
       "kind": "metro"
     },
+    "malaysia|KL-LRT-Ampang|AGL": {
+      "icon": "assets/train-icons/malaysia-kl-lrt-ampang-agl.png",
+      "kind": "metro"
+    },
     "malaysia|KL-MRT-Kajang|MRT": {
       "icon": "assets/train-icons/malaysia-kl-mrt-kajang-mrt.png",
       "kind": "metro"

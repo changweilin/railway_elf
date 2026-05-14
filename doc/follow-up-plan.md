@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.3 Ampang LRT seed
+
+- [x] Completed one 5.3 seed item: `KL-LRT-Ampang` is now in `RAIL_DATA` with 18 stations from Sentul Timur to Ampang, an `AGL` LRT train template, OSM route relation `4466552`, generated Malaysia shape data, and a line-aware Ampang LRT icon.
+- [x] Cleaned the completed 5.3 option by splitting the shared KL LRT backlog row: `KL-LRT-Ampang` is done, while `KL-LRT-Sri-Petaling` remains the next 5.3 target.
+- [x] No concurrent 5.5 diff was detected before editing `follow-up-plan.md`; this round only reconciles the completed 5.3 seed and its downstream docs.
+
 ## 2026-05-15 5.5 P1 first seed decision
 
 - [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records `JKT-MRT-North-South` / Jakarta MRT North-South Phase 1 as the first P1 Indonesia / Philippines / Vietnam seed, limited to the current Lebak Bulus ⇄ Bundaran HI operating segment.
@@ -125,9 +131,10 @@
 | 8 | `SG-MRT-Downtown` | done | Downtown Line: station/template/OSM relation/DTL blue icon | done (OSM relation 2313458 / shape maxOffset 0.004 km) |
 | 9 | `SG-MRT-Thomson-East-Coast` | done | TEL current segment: 27 stations, template, OSM relation `2383439`, generated shape, brown TEL icon | done (shape maxOffset 0.005 km) |
 | 10 | `SG-LRT-Bukit-Panjang` | done | Bukit Panjang LRT: 19-stop clockwise loop pattern, `BPLRT` template, OSM relation `1159434`, generated Singapore shape, line-aware BPLRT icon | done (shape maxOffset 0.508 km; repeated loop stations retained by index) |
-| 11 | `KL-LRT-Ampang` / `KL-LRT-Sri-Petaling` | 擐砌?镼蹂? | ?誑?函? line object 鋆?銵具emplate?SM relation | branch 璅∪??芸?獢?銝?雿?|
-| 12 | `KL-Monorail` | done | KL Monorail: 11 stations, `Monorail` template, OSM relation `2546881`, generated Malaysia shape, line-aware MRL monorail icon | done (shape maxOffset 0.005 km) |
-| 13 | KTM Komuter / `ERL-KLIA-Transit` | 擐砌?镼蹂? | 鋆?KTM ?瑁????KLIA Transit local service seed | ?剜???express ???策敺?璅∪? |
+| 11 | `KL-LRT-Ampang` | done | Ampang Line: 18 stations, `AGL` template, OSM relation `4466552`, generated Malaysia shape, line-aware AGL icon | done (shape maxOffset 0.005 km) |
+| 12 | `KL-LRT-Sri-Petaling` | pending | Independent shared-trunk line object, template, OSM relation, line-aware icon | branch model deferred by 5.5; duplicate trunk is acceptable |
+| 13 | `KL-Monorail` | done | KL Monorail: 11 stations, `Monorail` template, OSM relation `2546881`, generated Malaysia shape, line-aware MRL monorail icon | done (shape maxOffset 0.005 km) |
+| 14 | KTM Komuter / `ERL-KLIA-Transit` | 擐砌?镼蹂? | 鋆?KTM ?瑁????KLIA Transit local service seed | ?剜???express ???策敺?璅∪? |
 
 ### 5.5 ???Ⅱ隤?
 1. 蝣箄?蝚砌?頛芣?行?陸??2 璇???擐砌?镼蹂? 1 璇????啣???1 璇儐?堆???銝甈∟?摰靚瑯?2. 蝣箄? `BKK-MRT-Yellow` / `BKK-MRT-Pink` ??UI 銝剝＊蝷箇 `Monorail`?AGT` ??? `Metro` ????3. 撠?`BKK-SRT-Dark-Red`?KL-LRT-Ampang` / `KL-LRT-Sri-Petaling`?ERL-KLIA-Transit` ?∩?摰蝡?蝑嚗蝺蝺xpress/local 璅∪?銝憛?銵刻? shape ????
@@ -139,7 +146,7 @@
 餈??芸???瘜啣? / ?圈收 P0 seed 撠?賢嚗銵??桐誑銝??銝頛芾???啜皞?
 撌脩宏??follow-up嚗okaido relation ?踵??極蝔? maxOffset 蝎曆耨???/ ??摰閬??ranch/short-turn ?瑟?璅∪??TS Link 頝典? region?evel-2/4 鞈?皞? region UI ??i18n 蝑嚗絞銝餈質馱??`doc/east-asia-expansion-plan.md`??
 ## 撱箄降銝?甇?
-1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`. 2. Next 5.3 seed priority: `KL-LRT-Ampang` / `KL-LRT-Sri-Petaling`; SG LRT Bukit Panjang is complete with indexed repeated loop stations.
+1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`. 2. Next 5.3 seed priority: `KL-LRT-Sri-Petaling`; `KL-LRT-Ampang` is complete as an independent shared-trunk line object.
 ## 5.3 vs 5.5 隞餃????脣漲蝞∠?嚗頛芾?銝?頛迎?
 
 ### 5.3 ?舐?亙銵?- ?格?嚗雁?????鞈迎??撽?????啗?銝?頛?P0 seed ?游???- ?嗅?????祈憚??閬??柴歇蝯?嚗ollow-up ?芾蕭頩斗陸??/ ?圈收?芸?鞈??湔嚗??芸??芸???撌脩宏??`doc/east-asia-expansion-plan.md`??

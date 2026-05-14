@@ -3738,6 +3738,37 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "KL-LRT-Ampang",
+        name: "LRT Laluan Ampang",
+        nameEn: "Ampang LRT Line",
+        color: "#e57200",
+        category: "LRT",
+        directions: { up: "Sentul Timur bound", down: "Ampang bound" },
+        // LRT Ampang Line: Sentul Timur to Ampang, 18 stations.
+        // Shared trunk duplication with Sri Petaling is intentional until a
+        // branch-aware route model exists.
+        stations: [
+          { name: "Sentul Timur",  lat: 3.185832, lng: 101.695327, km: 0.0,  dwellSec: 30 },
+          { name: "Sentul",        lat: 3.178586, lng: 101.695506, km: 0.8 },
+          { name: "Titiwangsa",    lat: 3.173587, lng: 101.695253, km: 1.4,  dwellSec: 30 },
+          { name: "PWTC",          lat: 3.166563, lng: 101.693594, km: 2.2 },
+          { name: "Sultan Ismail", lat: 3.161185, lng: 101.694127, km: 2.8 },
+          { name: "Bandaraya",     lat: 3.155547, lng: 101.694446, km: 3.4 },
+          { name: "Masjid Jamek",  lat: 3.149468, lng: 101.696403, km: 4.1,  dwellSec: 30 },
+          { name: "Plaza Rakyat",  lat: 3.144554, lng: 101.701792, km: 4.9 },
+          { name: "Hang Tuah",     lat: 3.139873, lng: 101.706158, km: 5.6,  dwellSec: 30 },
+          { name: "Pudu",          lat: 3.134948, lng: 101.712051, km: 6.5 },
+          { name: "Chan Sow Lin",  lat: 3.127748, lng: 101.715657, km: 7.4,  dwellSec: 30 },
+          { name: "Miharja",       lat: 3.120962, lng: 101.717869, km: 8.2 },
+          { name: "Maluri",        lat: 3.123292, lng: 101.726934, km: 9.2,  dwellSec: 30 },
+          { name: "Pandan Jaya",   lat: 3.130269, lng: 101.738981, km: 10.8 },
+          { name: "Pandan Indah",  lat: 3.134785, lng: 101.746672, km: 11.7 },
+          { name: "Cempaka",       lat: 3.138496, lng: 101.753044, km: 12.6 },
+          { name: "Cahaya",        lat: 3.140658, lng: 101.756598, km: 13.0 },
+          { name: "Ampang",        lat: 3.150510, lng: 101.760168, km: 14.2, dwellSec: 30 },
+        ],
+      },
+      {
         id: "KL-MRT-Kajang",
         name: "MRT Laluan Kajang",
         nameEn: "MRT Kajang Line",
@@ -3852,6 +3883,7 @@ export const RAIL_DATA = {
     ],
     trainTemplates: [
       { line: "KL-Kelana-Jaya",  type: "LRT",  badge: "LRT", badgeColor: "#dc2626", speed: 38, interval: 3, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "KL-LRT-Ampang",   type: "AGL",  badge: "AGL", badgeColor: "#e57200", speed: 38, interval: 6, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "KL-MRT-Kajang",   type: "MRT",  badge: "MRT", badgeColor: "#16a34a", speed: 45, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "KL-MRT-Putrajaya", type: "PYL",  badge: "PYL", badgeColor: "#ffcc00", speed: 45, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "KL-Monorail",     type: "MRL",  badge: "MRL", badgeColor: "#84bd00", speed: 38, interval: 7, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },

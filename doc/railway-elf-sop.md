@@ -510,7 +510,8 @@ npm.cmd run check:timing
 9. [x] `BKK-SRT-Dark-Red` 已完成：`src/rail-data.js`（line / 10 stations / DR template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `13058384`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/thailand-bkk-srt-dark-red-dr.png`（SRT Red commuter icon）。
 10. [x] `KL-Monorail` 已完成：`src/rail-data.js`（line / 11 stations / MRL template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `2546881`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-kl-monorail-mrl.png`（KL Monorail icon）。
 11. [x] `SG-LRT-Bukit-Panjang` 已完成：`src/rail-data.js`（line / 19-stop clockwise loop / BPLRT template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `1159434` + `loopAnchor`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/singapore-sg-lrt-bukit-panjang-bplrt.png`（BPLRT icon）。
-12. [ ] 下一輪 5.3 預計接續：`KL-LRT-Ampang` / `KL-LRT-Sri-Petaling`；依 5.5 shared-trunk 決策各自 seed，不等 branch-aware 模型。
+12. [x] `KL-LRT-Ampang` 已完成：`src/rail-data.js`（line / 18 stations / AGL template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `4466552`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-kl-lrt-ampang-agl.png`（AGL icon）。
+13. [ ] 下一輪 5.3 預計接續：`KL-LRT-Sri-Petaling`；依 5.5 shared-trunk 決策作獨立 line object，不等 branch-aware 模型。
 
 ## 發布前檢查
 

@@ -100,6 +100,7 @@ const VISUALS = {
   "singapore|SG-LRT-Bukit-Panjang|BPLRT": { shape: "metro", body: "#f8fafc", accent: "#748477", band: "#748477" },
 
   "malaysia|KL-Kelana-Jaya|LRT": { shape: "metro", body: "#f8fafc", accent: "#dc2626", band: "#dc2626" },
+  "malaysia|KL-LRT-Ampang|AGL": { shape: "metro", body: "#f8fafc", accent: "#e57200", band: "#e57200" },
   "malaysia|KL-MRT-Kajang|MRT": { shape: "metro", body: "#f8fafc", accent: "#16a34a", band: "#16a34a" },
   "malaysia|KL-MRT-Putrajaya|PYL": { shape: "metro", body: "#f8fafc", accent: "#ffcc00", band: "#ffcc00" },
   "malaysia|KL-Monorail|MRL": { shape: "monorail", body: "#f7fee7", accent: "#84bd00", band: "#4d7c0f" },
