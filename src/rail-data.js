@@ -4166,6 +4166,22 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "BKK-SRT-Light-Red",
+        name: "รถไฟฟ้าชานเมืองสายสีแดงอ่อน",
+        nameEn: "SRT Light Red Line",
+        color: "#fc5353",
+        category: "Commuter",
+        directions: { up: "Krung Thep Aphiwat bound", down: "Taling Chan bound" },
+        // SRT Light Red Line current segment: Krung Thep Aphiwat to Taling Chan,
+        // 4 stations / 15.3 km. Salaya and Siriraj extensions remain future gates.
+        stations: [
+          { name: "Krung Thep Aphiwat", lat: 13.803836, lng: 100.541858, km: 0.0, dwellSec: 45 },
+          { name: "Bang Son",           lat: 13.822113, lng: 100.534211, km: 2.3 },
+          { name: "Bang Bamru",         lat: 13.792139, lng: 100.477465, km: 10.4 },
+          { name: "Taling Chan",        lat: 13.789259, lng: 100.440070, km: 15.3, dwellSec: 45 },
+        ],
+      },
+      {
         id: "BKK-MRT-Blue",
         name: "MRT สายสีน้ำเงิน",
         nameEn: "MRT Blue Line",
@@ -4242,6 +4258,7 @@ export const RAIL_DATA = {
       { line: "BKK-MRT-Yellow",    type: "YL",    badge: "YL",  badgeColor: "#ffd400", speed: 40, interval: 5, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "BKK-MRT-Pink",      type: "PK",    badge: "PK",  badgeColor: "#e76589", speed: 40, interval: 5, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "BKK-SRT-Dark-Red",  type: "DR",    badge: "DR",  badgeColor: "#b91c1c", speed: 90, interval: 12, accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 30 },
+      { line: "BKK-SRT-Light-Red", type: "LR",    badge: "LR",  badgeColor: "#fc5353", speed: 90, interval: 20, accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 30 },
       { line: "BKK-MRT-Blue",      type: "MRT",   badge: "MRT", badgeColor: "#1d4ed8", speed: 38, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "BKK-Airport-Rail",  type: "ARL",   badge: "ARL", badgeColor: "#dc2626", speed: 100, interval: 12, accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 30 },
     ],

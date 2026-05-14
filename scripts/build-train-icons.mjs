@@ -111,6 +111,7 @@ const VISUALS = {
   "thailand|BKK-MRT-Yellow|YL": { shape: "monorail", body: "#fefce8", accent: "#ffd400", band: "#ca8a04" },
   "thailand|BKK-MRT-Pink|PK": { shape: "monorail", body: "#fff1f2", accent: "#e76589", band: "#be185d" },
   "thailand|BKK-SRT-Dark-Red|DR": { shape: "commuter", body: "#f8fafc", accent: "#b91c1c", accent2: "#7f1d1d" },
+  "thailand|BKK-SRT-Light-Red|LR": { shape: "commuter", body: "#f8fafc", accent: "#fc5353", accent2: "#fca5a5" },
   "thailand|BKK-MRT-Blue|MRT": { shape: "metro", body: "#f8fafc", accent: "#1d4ed8", band: "#1d4ed8" },
   "thailand|BKK-Airport-Rail|ARL": { shape: "express", body: "#f8fafc", accent: "#dc2626", accent2: "#7f1d1d" },
 

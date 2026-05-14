@@ -514,6 +514,10 @@
       "icon": "assets/train-icons/thailand-bkk-srt-dark-red-dr.png",
       "kind": "commuter"
     },
+    "thailand|BKK-SRT-Light-Red|LR": {
+      "icon": "assets/train-icons/thailand-bkk-srt-light-red-lr.png",
+      "kind": "commuter"
+    },
     "thailand|BKK-MRT-Blue|MRT": {
       "icon": "assets/train-icons/thailand-bkk-mrt-blue-mrt.png",
       "kind": "metro"

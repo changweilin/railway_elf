@@ -722,6 +722,12 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationStops: { includeUnroledStopNodes: true },
   },
+  "BKK-SRT-Light-Red": {
+    name: "SRT Light Red Line (Krung Thep Aphiwat->Taling Chan)",
+    relationIds: [13178788],
+    orderStationKms: true,
+    stationStops: { includeUnroledStopNodes: true },
+  },
   "BKK-MRT-Blue": {
     name: "MRT Blue Line (Tha Phra→Lak Song)",
     relationIds: [444659],

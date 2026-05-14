@@ -513,7 +513,8 @@ npm.cmd run check:timing
 12. [x] `KL-LRT-Ampang` 已完成：`src/rail-data.js`（line / 18 stations / AGL template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `4466552`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-kl-lrt-ampang-agl.png`（AGL icon）。
 13. [x] `KL-LRT-Sri-Petaling` 已完成：`src/rail-data.js`（line / 29 stations / SPL template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `3374384`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-kl-lrt-sri-petaling-spl.png`（SPL icon）。
 14. [x] `ERL-KLIA-Transit` 已完成：`src/rail-data.js`（line / 6 stations / ERL airport template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `8119876`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-erl-klia-transit-erl.png`（ERL icon）。
-15. [ ] 下一輪 5.3 預計接續：`BKK-SRT-Light-Red` current 4-station commuter seed；Salaya / Siriraj future extensions 仍遵守 5.5 gate。
+15. [x] `BKK-SRT-Light-Red` 已完成：`src/rail-data.js`（line / 4 stations / LR commuter template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `13178788`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/thailand-bkk-srt-light-red-lr.png`（Light Red commuter icon）。
+16. [ ] 下一輪 5.3 預計接續：`SG-LRT-Sengkang` loop seed；Punggol loop 保留為 sibling seed，仍不合併成 branch graph。
 
 ## 發布前檢查
 
