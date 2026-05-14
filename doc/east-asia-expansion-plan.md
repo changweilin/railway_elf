@@ -276,13 +276,13 @@ Backlog 執行原則：
 5.3 可直接執行：
 
 1. 依 P0-TH-1 → P0-TH-5 順序補曼谷已營運線，每條線都完成 Phase A + Phase B、train icon、`check:timing`、`check:shapes`、`test:smoke`。
-2. 泰國前 2 條 seed 完成後，P0-MY-1 `KL-MRT-Putrajaya`、P0-SG-1 `SG-MRT-North-East` 與 P0-SG-2 `SG-MRT-Downtown` 已完成，後續依剩餘泰國 blocker 與 SG/MY 清單輪替。
+2. 泰國前 2 條 monorail seed 已完成；下一個 5.3 seed 維持 `BKK-SRT-Dark-Red`，若 Thailand queue 遇到資料、shape 或 icon 阻塞則切 `KL-Monorail`。Dark Red 完成後不批量補完整曼谷，改依 P0 放行狀態在 Malaysia / Singapore cleared seeds 間輪替。
 3. 馬來西亞 LRT / KTM / ERL 採「先獨立 line object，後續再合併 branch 模型」策略，避免 branch 規則尚未定案時阻塞站表與 shape 回灌。
 4. 新加坡 MRT 補完先做重軌 MRT（North East / Downtown / Thomson-East-Coast current segment），LRT loop 與 RTS Link 暫不下放。
 
 5.5 需要先決策：
 
-1. 確認每輪實作順序是否維持「泰國 2 條 seed → 馬來西亞 1 條 seed → 新加坡 1 條 seed」循環，或一次把同城市補完。
+1. 已決定 seed cadence：每輪只做 1 條完整 seed，完成 icon/template/shape/checks 後才交下一條；不採同城市一次補完，固定「泰國 2 → 馬來西亞 1 → 新加坡 1」只作早期 bootstrapping，不再作硬性循環。
 2. 已定義 loop / branch / shared trunk / express service 的資料模型邊界：SG LRT 可用可驗證 loop 站序 seed，KL Ampang / Sri Petaling 與 SRT Red Lines 以獨立 line object 表示共線，ERL KLIA Transit 可先 seed，Ekspres 等 skip-stop template。
 3. 已決定 RTS Link 載客後新增 `sg-my` cross-border region；載客前維持 monitor，不交 5.3 建正式資料。
 4. 決定是否排除非鐵路 BRT（例如 Sunway BRT）；除非新增非 rail category，預設不列入本鐵道路網計畫。
@@ -532,6 +532,15 @@ Backlog 執行原則：
 - `constraints`: Do not create `sg-my` before official passenger service begins and the station/source geometry is stable. Do not duplicate the same line under both Singapore and Malaysia. Do not model fare, immigration queue time, or ticketing integration until official operator data exists. CIQ hint should be concise and factual: "Clear both Singapore and Malaysia authorities at departure; no second clearance at arrival." If no generic line-notice UI exists at seed time, document the CIQ note in the expansion plan and defer runtime UI to a separate focused patch.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md`. For future RTS data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build` and browser smoke if a CIQ notice UI is added.
 - `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 RTS Link region / CIQ 策略決策。仍保留 monitor：正式載客前不交 5.3 建資料；載客後第一個可下放 seed 是 `sg-my` region + `SG-MY-RTS-Link` 2-station shuttle。
+
+#### 2026-05-15 5.5 決策：P0 seed cadence
+
+- `decision`: approved + downscope。後續 P0 擴張維持「每輪 1 條完整 seed」作為硬規則：同一輪必須完成站表、train template、OSM/shape mapping、line-aware icon、generated outputs 與最小檢查後才開下一條。不採同城市一次補完；原先「泰國 2 條 → 馬來西亞 1 條 → 新加坡 1 條」只保留為早期 bootstrapping 參考，現在改用 cleared P0 queue + blocker fallback。
+- `scope`: Asia P0 seed order and handoff policy. Current 5.3 next target remains `BKK-SRT-Dark-Red`; if Thailand data, shape, or icon work blocks the round, switch to `KL-Monorail`. After Dark Red, prefer `KL-Monorail` and `SG-LRT-Bukit-Panjang` before returning to additional Thailand optional / monitor items. Malaysia shared-trunk LRT, ERL local service, and SG LRT loops follow only after their existing 5.5 constraints are respected.
+- `source`: Current repo backlog shows `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `KL-MRT-Putrajaya`, `SG-MRT-North-East`, `SG-MRT-Downtown`, and `SG-MRT-Thomson-East-Coast` completed. Existing check history demonstrates each seed has non-trivial icon, generated-shape, timing, and smoke-test work, so batching multiple lines in one round increases conflict and verification risk.
+- `constraints`: Do not start a second seed in the same 5.3 round before the first seed's icon/template/shape/checks are complete and committed. Do not force a strict country cycle when the next same-country candidate is monitor-only, future-service, or has an unresolved branch/skip-stop blocker. Do not let this cadence decision override the separate RTS Link, ERL Ekspres, SRT Light Red, or Pink branch gates.
+- `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For future 5.3 seeds, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` when new PNG assets are generated.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 seed cadence 決策。下一個可下放 seed：`BKK-SRT-Dark-Red`；blocked fallback：`KL-Monorail`。
 
 ### 每 1 輪管理規則（共用）
 - 5.3 工作可按 `seed` 粒度收斂：每輪至少完成 1 條完整 seed（A+B）並出具 smoke + shape + timing 驗證。
