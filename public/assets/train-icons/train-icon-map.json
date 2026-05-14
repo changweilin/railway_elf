@@ -458,6 +458,10 @@
       "icon": "assets/train-icons/singapore-sg-mrt-thomson-east-coast-tel.png",
       "kind": "metro"
     },
+    "singapore|SG-LRT-Bukit-Panjang|BPLRT": {
+      "icon": "assets/train-icons/singapore-sg-lrt-bukit-panjang-bplrt.png",
+      "kind": "lrt"
+    },
     "malaysia|KL-Kelana-Jaya|LRT": {
       "icon": "assets/train-icons/malaysia-kl-kelana-jaya-lrt.png",
       "kind": "metro"

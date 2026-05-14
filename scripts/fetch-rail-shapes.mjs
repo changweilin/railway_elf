@@ -629,6 +629,14 @@ const OSM_LINE_MAP = {
   "SG-MRT-Circle":      { name: "MRT Circle Line (Dhoby Ghaut→HarbourFront)", relationIds: [7981669] },
   "SG-MRT-Downtown":    { name: "MRT Downtown Line (Bukit Panjang→Expo)", relationIds: [2313458], orderStationKms: true, stationStops: {} },
   "SG-MRT-Thomson-East-Coast": { name: "MRT Thomson-East Coast Line (Woodlands North→Bayshore)", relationIds: [2383439], orderStationKms: true, stationStops: {} },
+  "SG-LRT-Bukit-Panjang": {
+    name: "Bukit Panjang LRT clockwise loop (Choa Chu Kang→Bukit Panjang→Fajar→Pending→Choa Chu Kang)",
+    relationIds: [1159434],
+    loopAnchor: { lat: 1.38471, lng: 103.74458 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // Kuala Lumpur.
   "KL-Kelana-Jaya": {

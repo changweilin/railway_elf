@@ -3640,6 +3640,38 @@ export const RAIL_DATA = {
           { name: "Bayshore",            lat: 1.3130, lng: 103.9418, km: 40.6, dwellSec: 30 },
         ],
       },
+      {
+        id: "SG-LRT-Bukit-Panjang",
+        name: "Bukit Panjang LRT",
+        nameEn: "Bukit Panjang LRT",
+        color: "#748477",
+        category: "LRT",
+        directions: { up: "Counter-clockwise loop", down: "Clockwise loop" },
+        // Bukit Panjang LRT: current 13-station automated guideway network.
+        // This seed models the OSM clockwise loop relation as one runnable
+        // service pattern; repeated stem stations are intentional.
+        stations: [
+          { name: "Choa Chu Kang",  lat: 1.384710, lng: 103.744577, km: 0.0,  dwellSec: 30 },
+          { name: "South View",     lat: 1.380289, lng: 103.745290, km: 0.7 },
+          { name: "Keat Hong",      lat: 1.378613, lng: 103.749044, km: 1.2 },
+          { name: "Teck Whye",      lat: 1.376680, lng: 103.753633, km: 1.8 },
+          { name: "Phoenix",        lat: 1.378620, lng: 103.757991, km: 2.4 },
+          { name: "Bukit Panjang",  lat: 1.377940, lng: 103.763081, km: 3.0,  dwellSec: 30 },
+          { name: "Senja",          lat: 1.382676, lng: 103.762366, km: 3.7 },
+          { name: "Jelapang",       lat: 1.386706, lng: 103.764498, km: 4.3 },
+          { name: "Segar",          lat: 1.387803, lng: 103.769586, km: 4.9 },
+          { name: "Fajar",          lat: 1.384586, lng: 103.770891, km: 5.5 },
+          { name: "Bangkit",        lat: 1.380037, lng: 103.772667, km: 6.1 },
+          { name: "Pending",        lat: 1.376142, lng: 103.771288, km: 6.7 },
+          { name: "Petir",          lat: 1.377753, lng: 103.766621, km: 7.3 },
+          { name: "Bukit Panjang",  lat: 1.377895, lng: 103.763098, km: 7.9,  dwellSec: 30 },
+          { name: "Phoenix",        lat: 1.378598, lng: 103.757998, km: 8.5 },
+          { name: "Teck Whye",      lat: 1.376651, lng: 103.753635, km: 9.1 },
+          { name: "Keat Hong",      lat: 1.378578, lng: 103.749034, km: 9.7 },
+          { name: "South View",     lat: 1.380263, lng: 103.745279, km: 10.2 },
+          { name: "Choa Chu Kang",  lat: 1.384708, lng: 103.744501, km: 10.9, dwellSec: 30 },
+        ],
+      },
     ],
     trainTemplates: [
       { line: "SG-MRT-North-South",  type: "NSL",  badge: "NSL", badgeColor: "#d42e12", speed: 38, interval: 3, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
@@ -3648,6 +3680,7 @@ export const RAIL_DATA = {
       { line: "SG-MRT-Circle",       type: "CCL",  badge: "CCL", badgeColor: "#ff9900", speed: 35, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "SG-MRT-Downtown",     type: "DTL",  badge: "DTL", badgeColor: "#005ec4", speed: 35, interval: 3, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "SG-MRT-Thomson-East-Coast", type: "TEL", badge: "TEL", badgeColor: "#734538", speed: 35, interval: 3, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "SG-LRT-Bukit-Panjang", type: "BPLRT", badge: "BPLRT", badgeColor: "#748477", speed: 35, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 20 },
     ],
   },
 
