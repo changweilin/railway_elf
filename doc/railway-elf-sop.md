@@ -517,6 +517,7 @@ npm.cmd run check:timing
 16. [x] `SG-LRT-Sengkang` 已完成：`src/rail-data.js`（line / 16-stop explicit East+West loop pattern / `SKLRT` LRT template）、`scripts/fetch-rail-shapes.mjs`（OSM relations `2312985` + `1146941` with corridor + index override）、`src/train-icon-registry.js` 與 `public/assets/train-icons/singapore-sg-lrt-sengkang-sklrt.png`（SKLRT icon）。
 17. [x] `SG-LRT-Punggol` 已完成：`src/rail-data.js`（line / 17-stop explicit East+West loop pattern with Teck Lee / `PGLRT` LRT template）、`scripts/fetch-rail-shapes.mjs`（OSM relations `1146942` + `2312984` with corridor）、`src/train-icon-registry.js` 與 `public/assets/train-icons/singapore-sg-lrt-punggol-pglrt.png`（PGLRT icon）。
 18. [ ] 下一輪 5.3 預計接續：`ERL-KLIA-Ekspres` regular-hours 3-station Airport seed；23:00 後 all-stations 與 maintenance combined service-pattern 仍不納入。
+19. [ ] `ERL-KLIA-Ekspres` 後可接 KTM Komuter full-corridor seed：先 `KTM-Komuter-Batu-Caves-Pulau-Sebang`，再 `KTM-Komuter-Tanjung-Malim-Port-Klang`；短折、缺站班次與施工期 timetable 仍不納入。
 
 ## 發布前檢查
 

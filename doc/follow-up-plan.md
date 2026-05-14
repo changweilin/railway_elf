@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.5 KTM Komuter long-corridor gate
+
+- [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now clears `KTM-Komuter-Batu-Caves-Pulau-Sebang` and `KTM-Komuter-Tanjung-Malim-Port-Klang` as independent full-corridor commuter seeds after `ERL-KLIA-Ekspres`.
+- [x] Cleaned the completed 5.5 option by marking the KTM Komuter long-line / short-turn blocker resolved in `doc/east-asia-expansion-plan.md` and updating `doc/railway-elf-sop.md` next-round handoff notes.
+- [x] No concurrent uncommitted 5.3 diff was present; the Sengkang and Punggol LRT 5.3 work was already committed before this 5.5 docs pass.
+
 ## 2026-05-15 5.3 Punggol LRT seed
 
 - [x] Completed one 5.3 seed item: `SG-LRT-Punggol` is now in `RAIL_DATA` with a 17-stop explicit clockwise pattern covering the Punggol East Loop then West Loop, a `PGLRT` LRT train template, OSM route relations `1146942` and `2312984`, generated Singapore shape data, and a line-aware PGLRT icon.
@@ -192,7 +198,7 @@
 餈??芸???瘜啣? / ?圈收 P0 seed 撠?賢嚗銵??桐誑銝??銝頛芾???啜皞?
 撌脩宏??follow-up嚗okaido relation ?踵??極蝔? maxOffset 蝎曆耨???/ ??摰閬??ranch/short-turn ?瑟?璅∪??TS Link 頝典? region?evel-2/4 鞈?皞? region UI ??i18n 蝑嚗絞銝餈質馱??`doc/east-asia-expansion-plan.md`??
 ## 撱箄降銝?甇?
-1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`, `SG-LRT-Punggol`. 2. Next 5.3 seed priority moves to `ERL-KLIA-Ekspres` as the cleared regular-hours express seed; KTM Komuter remains deferred.
+1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`, `SG-LRT-Punggol`. 2. Next 5.3 seed priority moves to `ERL-KLIA-Ekspres` as the cleared regular-hours express seed; KTM Komuter full-corridor seeds are cleared after Ekspres, while non-canonical short-turn/partial timetable runtime remains deferred.
 ## 5.3 vs 5.5 隞餃????脣漲蝞∠?嚗頛芾?銝?頛迎?
 
 ### 5.3 ?舐?亙銵?- ?格?嚗雁?????鞈迎??撽?????啗?銝?頛?P0 seed ?游???- ?嗅?????祈憚??閬??柴歇蝯?嚗ollow-up ?芾蕭頩斗陸??/ ?圈收?芸?鞈??湔嚗??芸??芸???撌脩宏??`doc/east-asia-expansion-plan.md`??
