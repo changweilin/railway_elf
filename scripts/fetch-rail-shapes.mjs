@@ -645,6 +645,13 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     snapStationCoordsOverKm: 1.5,
   },
+  "KL-Monorail": {
+    name: "KL Monorail Line (KL Sentral→Titiwangsa)",
+    relationIds: [2546881],
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // Bangkok.
   "BKK-BTS-Sukhumvit": {

@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.3 KL Monorail seed
+
+- [x] Completed one 5.3 seed item: `KL-Monorail` is now in `RAIL_DATA` with 11 stations from KL Sentral to Titiwangsa, a `Monorail` MRL train template, OSM route relation `2546881`, generated Malaysia shape data, and a line-aware KL Monorail icon.
+- [x] Cleaned the completed 5.3 option by marking `KL-Monorail` done in the 5.3 backlog and `P0-MY-4` done in `doc/east-asia-expansion-plan.md`.
+- [x] No concurrent 5.5 diff was detected before editing `follow-up-plan.md`; this round only reconciles the completed 5.3 seed and its downstream docs.
+
 ## 2026-05-15 5.5 launch-gate reconciliation
 
 - [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records the Bangkok monorail category and KL / ERL / SRT Red conservative independent-line launch-gate reconciliation in the SOP 5.5 handoff format.
@@ -101,7 +107,7 @@
 | 8 | `SG-MRT-Downtown` | done | Downtown Line: station/template/OSM relation/DTL blue icon | done (OSM relation 2313458 / shape maxOffset 0.004 km) |
 | 9 | `SG-MRT-Thomson-East-Coast` | done | TEL current segment: 27 stations, template, OSM relation `2383439`, generated shape, brown TEL icon | done (shape maxOffset 0.005 km) |
 | 10 | `KL-LRT-Ampang` / `KL-LRT-Sri-Petaling` | 擐砌?镼蹂? | ?誑?函? line object 鋆?銵具emplate?SM relation | branch 璅∪??芸?獢?銝?雿?|
-| 11 | `KL-Monorail` | 擐砌?镼蹂? | 鋆?monorail 蝡”?emplate?SM relation?L Monorail icon | ?臭??勗?鈭?monorail icon 蝭? |
+| 11 | `KL-Monorail` | done | KL Monorail: 11 stations, `Monorail` template, OSM relation `2546881`, generated Malaysia shape, line-aware MRL monorail icon | done (shape maxOffset 0.005 km) |
 | 12 | KTM Komuter / `ERL-KLIA-Transit` | 擐砌?镼蹂? | 鋆?KTM ?瑁????KLIA Transit local service seed | ?剜???express ???策敺?璅∪? |
 
 ### 5.5 ???Ⅱ隤?
@@ -114,7 +120,7 @@
 餈??芸???瘜啣? / ?圈收 P0 seed 撠?賢嚗銵??桐誑銝??銝頛芾???啜皞?
 撌脩宏??follow-up嚗okaido relation ?踵??極蝔? maxOffset 蝎曆耨???/ ??摰閬??ranch/short-turn ?瑟?璅∪??TS Link 頝典? region?evel-2/4 鞈?皞? region UI ??i18n 蝑嚗絞銝餈質馱??`doc/east-asia-expansion-plan.md`??
 ## 撱箄降銝?甇?
-1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`. 2. Next 5.3 seed priority: `KL-Monorail`; continue with `SG-LRT-Bukit-Panjang` if Malaysia monorail work blocks.
+1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`. 2. Next 5.3 seed priority: `SG-LRT-Bukit-Panjang`; continue with `KL-LRT-Ampang` / `KL-LRT-Sri-Petaling` after the SG LRT loop seed if its station-order model remains clear.
 ## 5.3 vs 5.5 隞餃????脣漲蝞∠?嚗頛芾?銝?頛迎?
 
 ### 5.3 ?舐?亙銵?- ?格?嚗雁?????鞈迎??撽?????啗?銝?頛?P0 seed ?游???- ?嗅?????祈憚??閬??柴歇蝯?嚗ollow-up ?芾蕭頩斗陸??/ ?圈收?芸?鞈??湔嚗??芸??芸???撌脩宏??`doc/east-asia-expansion-plan.md`??
