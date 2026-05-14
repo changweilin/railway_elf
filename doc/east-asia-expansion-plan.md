@@ -542,6 +542,15 @@ Backlog 執行原則：
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For future 5.3 seeds, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` when new PNG assets are generated.
 - `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 seed cadence 決策。`BKK-SRT-Dark-Red` 已於 2026-05-15 5.3 seed 完成；下一個可下放 seed：`KL-Monorail`；blocked fallback：`SG-LRT-Bukit-Panjang`。
 
+#### 2026-05-15 5.5 決策：P0 launch-gate reconciliation
+
+- `decision`: approved + downscope。啟動前檢查已收斂：Bangkok Yellow / Pink 主線 category 顯示固定用既有 `Monorail`，不新增 `StraddleMonorail`，也不改成 `Metro`；KL Ampang / Sri Petaling、SRT Red Lines、ERL KLIA Transit 的保守策略維持「可驗證站序的獨立 line object」，不等 branch graph 或 skip-stop runtime。這個項目不再阻塞 5.3。
+- `scope`: This reconciles the older follow-up 5.5 launch checklist only. It covers `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, and `ERL-KLIA-Ekspres`. Future Spark work may edit `src/rail-data.js`, `scripts/fetch-rail-shapes.mjs`, `src/train-icon-registry.js`, generated shape/icon outputs, and narrow docs; no `app-core.js` / `app-map.js` schema work is authorized by this reconciliation.
+- `source`: Repo-local decisions already record Bangkok monorail category policy, loop / branch / shared-trunk boundaries, and P0 seed cadence. Subsequent 5.3 seeds proved the category and icon path with `BKK-MRT-Yellow`, `BKK-MRT-Pink`, and `BKK-SRT-Dark-Red` completed as independent, line-aware data seeds.
+- `constraints`: Do not merge shared-trunk services into a single branch graph. Do not implement non-contiguous skip-stop or express stopping patterns in the existing `stationIdxStart` / `stationIdxEnd` fields. `ERL-KLIA-Ekspres`, BKK Pink Muang Thong Thani branch, and SRT Light Red current-service confirmation remain separate future gates; this pass only confirms they no longer block `KL-Monorail`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, or SG LRT local loop seeds.
+- `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For future seeds touched by this decision, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` when new PNG assets are generated.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 launch-gate reconciliation。下一個可下放 seed 維持 `KL-Monorail`；若 Malaysia monorail 阻塞，fallback `SG-LRT-Bukit-Panjang`。
+
 ### 每 1 輪管理規則（共用）
 - 5.3 工作可按 `seed` 粒度收斂：每輪至少完成 1 條完整 seed（A+B）並出具 smoke + shape + timing 驗證。
 - 5.5 工作完成後才更新 `doc/east-asia-expansion-plan.md` 的「完成/待辦」欄位，避免前後矛盾。
