@@ -642,6 +642,18 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationStops: {},
   },
+  "BKK-BTS-Silom": {
+    name: "BTS Silom Line (National Stadium→Bang Wa)",
+    relationIds: [7989387],
+    orderStationKms: true,
+    stationStops: {},
+  },
+  "BKK-MRT-Purple": {
+    name: "MRT Purple Line (Khlong Bang Phai→Tao Poon)",
+    relationIds: [7725058],
+    orderStationKms: true,
+    stationStops: {},
+  },
   "BKK-MRT-Blue": {
     name: "MRT Blue Line (Tha Phra→Lak Song)",
     relationIds: [444659],

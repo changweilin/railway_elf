@@ -1,4 +1,4 @@
-# Railway Elf 進度報告
+# Railway Elf ?脣漲?勗?
 
 ## 2026-05-12 5.5 route supervision update
 
@@ -12,151 +12,50 @@
 - [x] Long-running supervision completed: heartbeat `railway-elf-5-5-route-supervision` was stopped after the 5.5 route-minimization blocker checks went green.
 
 
-更新日期：2026-05-12
+?湔?交?嚗?026-05-12
 
-## 目前結論
+## ?桀?蝯?
 
-2026-05-12 live rebuild 後，本段舊結論僅保留為歷史狀態；最新可執行清單以下方「下一輪資料更新」為準。
-
-沒有尚未完成的必要修復項目；大東亞擴張 Phase B 已完成 34/34 條 OSM 形狀回灌，snapshot 已更新到 103 條線，且沒有 0 km fallback 或需阻塞上線的資料缺口。下一輪資料更新改以「其他大東亞國家」為主，短期優先序為泰國曼谷補完，接著新加坡 / 馬來西亞補完與新馬跨境監控。日本 / 南韓剩餘完整覆蓋、工程級精度、資料源策略與 UI / i18n 等未完成但優先度較低的工作，已集中移回 `doc/east-asia-expansion-plan.md` 的長期 backlog。
-
-## 2026-05-12 路線與誤差稽核
-
-- [x] 現有資料線 route 覆蓋檢查：`src/rail-data.js` 可掃到 103 條 line id，`src/rail-data.generated.js` 有 103 條 generated route，`scripts/line-shape-snapshot.json` 也有 103 條 snapshot；目前沒有「已在資料檔中、但尚未建立 generated route」的鐵道。
-- [x] 長期擴張 backlog 分流：未建立 route 的項目屬於可選擴張，不是現有資料缺口。日本仍有 Intercity、JR 都會圈、民鐵、其餘 Metro、成田/京成/京急/南海等機場線、其餘 Tram / Monorail / AGT、Regional、Heritage、Freight；南韓仍有一般列車幹線、AREX 直通 / 金海機場銜接、Daejeon Line 2 營運後納入、Regional、Heritage、Freight。
-- [x] 修復 `src/rail-data.js` 的內容語法錯誤；runtime 已可載入資料並重新計算 maxOffset，後續改以 5.5 route supervision update 的 live rebuild 阻塞清單追蹤。
-- [x] 低優先品質清單已移入 `doc/east-asia-expansion-plan.md`，不再列為 follow-up 的未完成工作。
-
-## 下一輪資料更新（泰國 / 新馬優先）
-
-此區塊從 `doc/east-asia-expansion-plan.md` 的 P0/P1 backlog 摘出，作為 follow-up 的近期執行入口。每條 seed 都要完成 Phase A + Phase B、train icon、`npm run build:rail-data`、`npm run check:shapes`、`npm run check:timing` 與 `npm run test:smoke`。
-
-### 5.3 可直接下放
-
-| 順序 | id | 區域 | 更新內容 | 備註 |
+2026-05-12 live rebuild 敺??祆挾??隢?靽??箸風?脩?????啣?瑁?皜隞乩??嫘?銝頛芾???啜皞?
+瘝?撠摰???閬耨敺拚??殷?憭扳鈭撘?Phase B 撌脣???34/34 璇?OSM 敶Ｙ???嚗napshot 撌脫?啣 103 璇?嚗?瘝? 0 km fallback ???餃?銝????撩???銝頛芾???唳隞乓隞之?曹??振?銝鳴??剜??芸?摨瘜啣??潸健鋆?嚗?? / 擐砌?镼蹂?鋆??擐祈楊憓?扼??/ ???拚?摰閬??極蝔?蝎曉漲????蝑??UI / i18n 蝑摰?雿?漲頛??極雿?撌脤?銝剔宏??`doc/east-asia-expansion-plan.md` ???backlog??
+## 2026-05-12 頝舐??炊撌桃里??
+- [x] ?暹?鞈?蝺?route 閬?瑼Ｘ嚗src/rail-data.js` ?舀???103 璇?line id嚗src/rail-data.generated.js` ??103 璇?generated route嚗scripts/line-shape-snapshot.json` 銋? 103 璇?snapshot嚗???歇?刻???銝准?撠撱箇? generated route???菟???- [x] ?瑟??游撐 backlog ??嚗撱箇? route ???桀惇?澆?豢撘蛛?銝?暹?鞈?蝻箏??砌???Intercity?R ?賣????萸擗?Metro????鈭祆?/鈭祆??絲蝑??渡??擗?Tram / Monorail / AGT?egional?eritage?reight嚗??????砍?頠凳蝺REX ?湧?/ ?絲璈??aejeon Line 2 ??敺??乓egional?eritage?reight??- [x] 靽桀儔 `src/rail-data.js` ?摰寡?瘜隤歹?runtime 撌脣頛鞈?銝阡??啗?蝞?maxOffset嚗?蝥隞?5.5 route supervision update ??live rebuild ?餃?皜餈質馱??- [x] 雿??鞈芣??桀歇蝘餃 `doc/east-asia-expansion-plan.md`嚗?????follow-up ?摰?撌乩???
+## 銝?頛芾???堆?瘜啣? / ?圈收?芸?嚗?
+甇文?憛? `doc/east-asia-expansion-plan.md` ??P0/P1 backlog ?嚗???follow-up ???銵???璇?seed ?質?摰? Phase A + Phase B?rain icon?npm run build:rail-data`?npm run check:shapes`?npm run check:timing` ??`npm run test:smoke`??
+### 5.3 ?舐?乩???
+| ?? | id | ???| ?湔?批捆 | ?酉 |
 |---|---|---|---|---|
-| 1 | `BKK-BTS-Silom` | 泰國 | 補 BTS Silom Line 站表、BTS train template、OSM relation、綠線圖示 | 下一輪首選；確認是否沿用 Sukhumvit 圖示 |
-| 2 | `BKK-MRT-Purple` | 泰國 | 補 MRT Purple Line 站表、heavy-rail template、OSM relation、紫線圖示 | 先做現行營運段，未來南延伸另開 pass |
-| 3 | `BKK-MRT-Yellow` | 泰國 | 補 Yellow Line 站表、straddle monorail template、OSM relation、圖示 | 類型顯示先依 `Monorail / AGT` 記錄 |
-| 4 | `BKK-MRT-Pink` | 泰國 | 補 Pink Line 主線站表、monorail template、OSM relation、圖示 | Muang Thong Thani 支線先不納入 |
-| 5 | `BKK-SRT-Dark-Red` | 泰國 | 補 SRT Dark Red Line 站表、commuter EMU template、OSM relation、SRT Red Line 圖示 | 與 Light Red 共線呈現先保守處理 |
-| 6 | `KL-MRT-Putrajaya` | 馬來西亞 | 補 Putrajaya Line 站表、MRT template、OSM relation、PYL yellow icon | 長線站距需優先 shape 對站 |
-| 7 | `SG-MRT-North-East` | 新加坡 | 補 North East Line 站表、driverless metro template、OSM relation、NEL purple icon | Punggol Coast 納入 current baseline |
-| 8 | `SG-MRT-Downtown` | 新加坡 | 補 Downtown Line 站表、driverless metro template、OSM relation、DTL blue icon | 後續 extension 另開 pass |
-| 9 | `SG-MRT-Thomson-East-Coast` | 新加坡 | 補 TEL 現行營運段站表、template、OSM relation、brown icon | 未完工東段不提前進 `RAIL_DATA` |
-| 10 | `KL-LRT-Ampang` / `KL-LRT-Sri-Petaling` | 馬來西亞 | 先以獨立 line object 補站表、template、OSM relation | branch 模型未定案前不合併 |
-| 11 | `KL-Monorail` | 馬來西亞 | 補 monorail 站表、template、OSM relation、KL Monorail icon | 可作東南亞 monorail icon 範例 |
-| 12 | KTM Komuter / `ERL-KLIA-Transit` | 馬來西亞 | 補 KTM 長距通勤與 KLIA Transit local service seed | 短折與 express 服務留給後續模型 |
+| 1 | `BKK-BTS-Silom` | 瘜啣? | 鋆?BTS Silom Line 蝡”?TS train template?SM relation??蝺?蝷?| 銝?頛芷??賂?蝣箄??臬瘝輻 Sukhumvit ?內 |
+| 2 | `BKK-MRT-Purple` | 已完成 | MRT Purple Line（heavy-rail template + OSM relation + shape 映射） | 已完成（line/station/template/shape/icon） |
+| 3 | `BKK-MRT-Yellow` | 瘜啣? | 鋆?Yellow Line 蝡”?traddle monorail template?SM relation??蝷?| 憿?憿舐內?? `Monorail / AGT` 閮? |
+| 4 | `BKK-MRT-Pink` | 瘜啣? | 鋆?Pink Line 銝餌?蝡”?onorail template?SM relation??蝷?| Muang Thong Thani ?舐???蝝 |
+| 5 | `BKK-SRT-Dark-Red` | 瘜啣? | 鋆?SRT Dark Red Line 蝡”?ommuter EMU template?SM relation?RT Red Line ?內 | ??Light Red ?梁????摰???|
+| 6 | `KL-MRT-Putrajaya` | 擐砌?镼蹂? | 鋆?Putrajaya Line 蝡”?RT template?SM relation?YL yellow icon | ?瑞?蝡???芸? shape 撠? |
+| 7 | `SG-MRT-North-East` | ?啣???| 鋆?North East Line 蝡”?riverless metro template?SM relation?EL purple icon | Punggol Coast 蝝 current baseline |
+| 8 | `SG-MRT-Downtown` | ?啣???| 鋆?Downtown Line 蝡”?riverless metro template?SM relation?TL blue icon | 敺? extension ?阡? pass |
+| 9 | `SG-MRT-Thomson-East-Coast` | ?啣???| 鋆?TEL ?曇???畾萇?銵具emplate?SM relation?rown icon | ?芸?撌交畾萎?????`RAIL_DATA` |
+| 10 | `KL-LRT-Ampang` / `KL-LRT-Sri-Petaling` | 擐砌?镼蹂? | ?誑?函? line object 鋆?銵具emplate?SM relation | branch 璅∪??芸?獢?銝?雿?|
+| 11 | `KL-Monorail` | 擐砌?镼蹂? | 鋆?monorail 蝡”?emplate?SM relation?L Monorail icon | ?臭??勗?鈭?monorail icon 蝭? |
+| 12 | KTM Komuter / `ERL-KLIA-Transit` | 擐砌?镼蹂? | 鋆?KTM ?瑁????KLIA Transit local service seed | ?剜???express ???策敺?璅∪? |
 
-### 5.5 啟動前確認
+### 5.5 ???Ⅱ隤?
+1. 蝣箄?蝚砌?頛芣?行?陸??2 璇???擐砌?镼蹂? 1 璇????啣???1 璇儐?堆???銝甈∟?摰靚瑯?2. 蝣箄? `BKK-MRT-Yellow` / `BKK-MRT-Pink` ??UI 銝剝＊蝷箇 `Monorail`?AGT` ??? `Metro` ????3. 撠?`BKK-SRT-Dark-Red`?KL-LRT-Ampang` / `KL-LRT-Sri-Petaling`?ERL-KLIA-Transit` ?∩?摰蝡?蝑嚗蝺蝺xpress/local 璅∪?銝憛?銵刻? shape ????
+## ?祆活摰?
 
-1. 確認第一輪是否採「泰國 2 條 → 馬來西亞 1 條 → 新加坡 1 條」循環，或先一次補完曼谷。
-2. 確認 `BKK-MRT-Yellow` / `BKK-MRT-Pink` 在 UI 中顯示為 `Monorail`、`AGT` 或保留在 `Metro` 分組。
-3. 對 `BKK-SRT-Dark-Red`、`KL-LRT-Ampang` / `KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit` 採保守獨立線策略；共線、支線、express/local 模型不阻塞站表與 shape 回灌。
+- Bundle ??嚗 `vite.config.js` ??`manualChunks`嚗? `rail-data.generated`?leaflet`?react`?react-dom` ??函???chunk嚗?雿?main bundle (89.6 kB / gzip 31 kB) 銝西?鞈? chunk ?舐蝡?cache??- 蝣箄? React production build嚗uild output 銝?`react-dom` 134 kB嚗ev ?? >1 MB嚗 `jsxDEV`嚗development` 摮見嚗Ⅱ隤 production minified bundle??- ?函蔡??霅?`npm run build`?check:timing`?check:shapes`?test:smoke`嚗?6 passed / 2 skipped嚗?????- PWA / 蝷曄黎??嚗憓?`scripts/build-pwa-images.mjs`嚗 Playwright Chromium 皜脫? SVG嚗??Ｗ `public/apple-touch-icon.png` (180?180) ??`public/og-image.png` (1200?630)嚗index.html` 鋆?`apple-touch-icon` link?og:image` / `twitter:image` meta嚗witter card ????`summary_large_image`嚗manifest.webmanifest` ? PNG icon?憓?npm script `build:pwa-images` ?嫣噶?亙??????- Service Worker / ?Ｙ?璅∪?嚗憓?`public/sw.js`嚗recache app shell + 銝惜敹怠?蝑嚗ashed asset cache-first?avigation network-first?隞?stale-while-revalidate嚗楊靘?隢?銝敺銵? OSM tile / Nominatim 銝◤?嚗src/main.js` ??production build ?酉??SW嚗?僕??Vite HMR?憓?`tests/service-worker.spec.mjs` 撽? SW 閮餃?敺???`activated` ???- SW ???內 UX嚗宏??install ?挾??`skipWaiting`嚗?曹蝙?刻蜓?孛?潦 SW install 摰?敺?main.js ?菜葫??waiting worker?? `window` event `sw:update-ready` ? React App嚗oticeStack ?舀 `action` ??嚗??冽??notice 璅?? + ??`.notice-action` CSS嚗?暺??啗??乓? `postMessage({type:"SKIP_WAITING"})` 蝯?waiting worker 銝血 `controllerchange` ??reload?皜祈岫閬??憿舐內 ??暺? ??瘣曄 `sw:apply-update` ?璇?頝荔?desktop / mobile ??嚗?- 憭扳鈭?Phase B嚗? `doc/east-asia-expansion-plan.md` 鋆??交????皜胯葉???收靘正鈭陸??? 34 璇?OSM relation 敶Ｙ?嚗src/rail-data.generated.js` ??`scripts/line-shape-snapshot.json` 撌脫?堆?瘝? 0 km fallback??- ?交 HSR seed嚗憓?`Nishi-Kyushu-Shinkansen` all-stop `???嚗郎?萱瘜????瑕?嚗? 蝡? ??train template?SM relation `7356208` corridor + stop nodes?ine-aware `??? ?內嚗?頠?蝷箏?瑼Ｘ?交?Ｘ??啣凳蝺?蝷箏?蝣箄??∪????? / ??鋆?`??? PNG ?舀窒?剁??憓?`japan-nishi-kyushu-shinkansen-kamome.png`??- ?交 Airport / Monorail seed嚗憓?`Tokyo-Monorail` all-stop嚗??潦瘚????蝢賜蝛箸葛蝚??踴???恬?11 蝡? ???train template?SM relation `3417174`?ine-aware Tokyo Monorail ?內嚗?頠?蝷箏?瑼Ｘ?交?Ｘ??內敺Ⅱ隤??????monorail PNG ?舀窒?剁??憓?`japan-tokyo-monorail-local.png`??- ?交 Tram / LRT seed嚗憓?`Utsunomiya-Lightline` all-stop嚗??賢悅擏?????唾??駁??寞甜撌交平??嚗?9 蝡? ??`?押??扎` train template?SM relation `12419659`?ine-aware Utsunomiya Lightline ?內嚗?頠?蝷箏?瑼Ｘ?交?Ｘ?雿? LRT / tram ?內敺Ⅱ隤??????Lightline / HU300 PNG ?舀窒?剁??憓?`japan-utsunomiya-lightline-lightline.png`??- 鞈?靽格迤嚗耨甇?JR-Sobu-Local ??蝡舐?暺漣璅?銝血 `kinematicProfile` 鋆??拍?暺蝡??葉暺??踹??剛??Ｙ???inverse timing 隤文??- 擃炊撌株??伐?靽格迤 `JR-Yamanote` loop/corridor ????56 km ?舫摨艾KHH-LRT` ?函蝺炊憟 13 蝡?畾萸Busan-Metro-1` 敺挾?蔣瞍宏嚗葉??HSR?YMRT?lishan??菜蝺?擃蝝?頛????宏撌脩 generated OSM shape ?賊?靽格迤??- OSM stop member 撠?嚗TPE-Brown`?KHH-Orange`?Busan-Metro-1`?Daegu-Metro-1/2`?Daejeon-Metro-1`?Gwangju-Metro-1`?Beijing-Subway-1`?Shanghai-Metro-1/2`?KL-Kelana-Jaya`?BKK-BTS-Sukhumvit`?BKK-MRT-Blue`?HCMC-Metro-1`?Hanoi-Metro-2A` ?寧 relation stop/platform node ?‵ stationCoords嚗?瘚?1/2?之??1/2?之??1??撌?1?敹? 1?眾??2A ?靚?BTS 銝餉?蝡?撌脤??啣撠箇??宏??- ?? Airport seed嚗憓?`AREX` all-stop嚗??賄 ???賄?窸蛭2?圉站??14 蝡? ??train template?SM relation `7919000`?ine-aware AREX ?內嚗蒂??`doc/east-asia-expansion-plan.md` 皜? Airport backlog ???- ?? LRT/AGT seed嚗憓?`Gimpo-Goldline` all-stop嚗?黕???篧?禹陬?哨?10 蝡? ??train template?SM relation `10092720`?ine-aware Gimpo Goldline ?內嚗蒂??`doc/east-asia-expansion-plan.md` 皜? LRT/AGT backlog ???- ?? Monorail seed嚗憓?`Daegu-Metro-3` all-stop嚗?窸㏒祭?貐? ???拖?嚗?0 蝡? ??train template?SM relation `7685727`?ine-aware Daegu monorail ?內嚗蒂??`doc/east-asia-expansion-plan.md` 皜? Monorail backlog ???- ?? HSR seed嚗憓?`SRT-Gyeongbu`嚗?????賱?堆?12 蝡? ??SRT train template?SM relation `6096884` + `6094351` corridor?ine-aware SRT badge ?內嚗蒂??`doc/east-asia-expansion-plan.md` 皜? HSR backlog ???- ?? HSR seed嚗憓?`SRT-Honam`嚗?????諈拗嚗?1 蝡? ??SRT train template?SM relation `6096884` + `6094351` + `6095809` + `6094787` corridor嚗?頠?蝷箏?瑼Ｘ??????瘝輻?Ｘ? SRT PNG嚗??啣? PNG??- ?? HSR seed嚗憓?`SRT-Jeolla`嚗??????科?EXPO嚗?4 蝡? ??SRT train template?SM relation `6096884` + `6094351` + `6095809` + `6096342` corridor嚗?頠?蝷箏?瑼Ｘ??????瘝輻?Ｘ? SRT PNG嚗??啣? PNG??- ?? HSR seed嚗憓?`SRT-Gyeongjeon`嚗?????鴔ˉ嚗?5 蝡? ??SRT train template?SM relation `6096884` + `6094351` + `8842494` + `8839114` corridor嚗?頠?蝷箏?瑼Ｘ??????瘝輻?Ｘ? SRT PNG嚗??啣? PNG??- ?? HSR seed嚗憓?`SRT-Donghae`嚗??????秒嚗?0 蝡? ??SRT train template?SM relation `6096884` + `6094351` + `8840839` + `8835676` corridor嚗?頠?蝷箏?瑼Ｘ??????瘝輻?Ｘ? SRT PNG嚗??啣? PNG??- ?? HSR seed嚗憓?`KTX-Honam`嚗????諈拗嚗?0 蝡? ??KTX / KTX-?域? train templates?SM relation `11214334` + `6095809` + `6094787` corridor嚗?頠?蝷箏?瑼Ｘ??????瘝輻?Ｘ? KTX / KTX-?域? PNG嚗??啣? PNG??- ?? HSR seed嚗憓?`KTX-Jeolla`嚗?????科?EXPO嚗?3 蝡? ??KTX / KTX-?域? train templates?SM relation `11214334` + `6095809` + `6096342` corridor嚗?頠?蝷箏?瑼Ｘ??????瘝輻?Ｘ? KTX / KTX-?域? PNG嚗??啣? PNG??- ?? HSR seed嚗憓?`KTX-Gyeongjeon`嚗?????鴔ˉ嚗?4 蝡? ??KTX / KTX-?域? train templates?SM relation `11214334` + `8839114` corridor嚗?頠?蝷箏?瑼Ｘ??????瘝輻?Ｘ? KTX / KTX-?域? PNG嚗??啣? PNG??- ?? HSR seed嚗憓?`KTX-Gangneung`嚗?????穈?嚗?1 蝡? ??KTX-?渥? train template?SM relation `8842494` + `8817574` + `8821065` + `8825878` corridor嚗?頠?蝷箏?瑼Ｘ???????? KTX-?渥? PNG ?憓?line-aware KTX-?渥? ?內??- ?? HSR seed嚗憓?`KTX-Donghae`嚗??????秒嚗? 蝡? ??KTX / KTX-?域? train templates?SM relation `11214334` + `8840839` + `8835676` corridor嚗?頠?蝷箏?瑼Ｘ??????瘝輻?Ｘ? KTX / KTX-?域? PNG嚗??啣? PNG??- ?? HSR seed嚗憓?`KTX-Jungang`嚗?????賱??16 蝡? ??KTX-?渥? train template?SM relation `8842494` + `8817574` + `8821065` + `8880536` + `8880709` + `8835676` + `8879475` corridor嚗?頠?蝷箏?瑼Ｘ??????瘝輻?Ｘ? KTX-?渥? PNG嚗??啣? PNG??- ?? HSR seed嚗憓?`KTX-Jungbu-Naeryuk`嚗?窱???諡資祭嚗?0 蝡? ??KTX-?渥? train template?SM relation `8824194` + `12351758` corridor嚗?頠?蝷箏?瑼Ｘ??????瘝輻?Ｘ? KTX-?渥? PNG嚗??啣? PNG??- ?? Intercity seed嚗憓?`ITX-Cheongchun`嚗????黺?嚗?4 蝡? ??ITX-麮原? train template?SM relation `8817574` + `8821065` + `8817669` corridor嚗?頠?蝷箏?瑼Ｘ???????? ITX-麮原? PNG ?憓?line-aware ITX-麮原? ?內??- ?? Commuter / Metro seed嚗憓?`Seoul-Metro-3`嚗??????曰?嚗?4 蝡? ??3?賄? train template?SM relation `443803` + `4729445` corridor嚗?頠?蝷箏?瑼Ｘ??????蝣箄??Ｘ? `Daegu-Metro-3|3?賄?` ?臬頠??????啣? line-aware 擐??3 ?? metro ?內??- ?? Commuter / Metro seed嚗憓?`Seoul-Metro-4`嚗??????木??51 蝡? ??4?賄? train template?SM relation `13675921` + `2718884` + `4744311` corridor嚗?頠?蝷箏?瑼Ｘ???????? `4?賄?` PNG ?憓?line-aware 擐??4 ?? metro ?內??- ?? Commuter / Metro seed嚗憓?`Seoul-Metro-5`嚗骨?????窶?到 銝餌?嚗?9 蝡? ??5?賄? train template?SM relation `12497486`嚗?頠?蝷箏?瑼Ｘ???????? `5?賄?` PNG ?憓?line-aware 擐??5 ?? metro ?內嚗?麮?branch ??蝥?branch-aware pass??- ?? Commuter / Metro seed嚗憓?`Seoul-Metro-7`嚗?????嚗?3 蝡? ??7?賄? train template?SM relation `12746493`嚗?頠?蝷箏?瑼Ｘ???????? `7?賄?` PNG ?憓?line-aware 擐??7 ?? metro ?內??- ?? Commuter / Metro seed嚗憓?`Seoul-Metro-8`嚗?????諈刺?嚗?4 蝡? ??8?賄? train template?SM relation `2718901`嚗?頠?蝷箏?瑼Ｘ???????? `8?賄?` PNG ?憓?line-aware 擐??8 ?? metro ?內嚗oute_master `7919019` 隞????剔? relation嚗遣瑼摰 `貐 ??諈刺?` route??- ?? Commuter / Metro seed嚗憓?`Seoul-Metro-9`嚗?????鴗?貐渣?貐?嚗?8 蝡? ??9?賄? train template?SM relation `2718888`嚗?頠?蝷箏?瑼Ｘ???????? `9?賄?` PNG ?憓?line-aware 擐??9 ?? metro ?內嚗SM route stop members 撠?`??`嚗?甇?shape mapping 銝蝙??`stationStops` 隞仿??stop/station ?臭?嚗亥? skip-stop relation ??蝥?template ?舀敺?鋆?- ?? Commuter / Metro seed嚗憓?`Seoul-Metro-6`嚗????????嚗?0 ??蝡?隞?/ 39 unique stations?? ??6?賄? train template?SM relation `12080315`嚗?頠?蝷箏?瑼Ｘ???????? `6?賄?` PNG ?憓?line-aware 擐??6 ?? metro ?內嚗靽? ?? one-way loop ??銴???generated station km ?啣? `stationKmsByIndex`??- ?? Commuter / Metro seed嚗憓?`Shinbundang`嚗?????窵?嚗?6 蝡? ?????寢? train template?SM route_master `7728256` / relation `6060963`嚗?頠?蝷箏?瑼Ｘ???????? `???寢?` PNG ?憓?line-aware Shinbundang metro ?內??- ?? Commuter / Metro seed嚗憓?`Suin-Bundang`嚗痍?收 ???賄?嚗?3 蝡? ???賱??train template?SM route_master `11619514` / relation `11625556`嚗?頠?蝷箏?瑼Ｘ???????? `?賱? PNG ?憓?line-aware Suin-Bundang commuter ?內??- ?? Commuter / Metro seed嚗憓?`Gyeongui-Jungang`嚗爰?????拘爰 銝餌?嚗?2 蝡? ??窶趣?鴗???train template?SM route_master `8667957` / relation `5993212`嚗?頠?蝷箏?瑼Ｘ???????? `窶趣?鴗?? PNG ?憓?line-aware Gyeongui-Jungang commuter ?內???賄 / ??穈?/ ???/ 鴔??????蝥?branch/short-turn ?舀??- ?? Commuter / Metro seed嚗憓?`Gyeongchun`嚗痍?收 ??黺? 銝餌?嚗?4 蝡? ??窶趣???train template?SM route_master `8656365` / relation `8656357`嚗?頠?蝷箏?瑼Ｘ???????? `窶趣?? PNG ?憓?line-aware Gyeongchun commuter ?內??賵?/ 窵? variants ??蝥?branch/short-turn ?舀??- ?? Commuter / Metro seed嚗憓?`Gyeonggang`嚗?窱????科ˉ 銝餌?嚗?2 蝡? ??窶赭???train template?SM route_master `8735483` / relation `6462562`嚗elation `6462562` ??stop members 撠撩 `?梵`嚗hape mapping 銝蝙??`stationStops`??頠?蝷箏?瑼Ｘ???????? `窶赭?? / Class 371000 撠? PNG ?憓?line-aware Gyeonggang commuter ?內??諻?short-turn ?靘辣隡貊?敺? branch/extension ?舀??- ?? Commuter / Metro seed嚗憓?`Seohae`嚗?????? all-stop嚗?1 蝡? ?????train template?SM route_master `8725316` / relation `16244688`嚗elation `16244688` ??stop members ?臬??游?朣?21 蝡?shape mapping 雿輻 `stationStops`??頠?蝷箏?瑼Ｘ???????? `?? / Class 391000 撠? PNG ?憓?line-aware Seohae commuter ?內??窸?short-turn ?靘?撱嗡撓??蝥?branch/extension ?舀??- ?? Commuter / Metro seed嚗憓?`Incheon-Metro-1`嚗?赬??陬????窶?刮?陬??all-stop嚗?3 蝡? ??1?賄? train template?SM route_master `7854149` / relation `19425646`嚗elation `19425646` ??stop members ?臬??游?朣?33 蝡?shape mapping 雿輻 `stationStops`??頠?蝷箏?瑼Ｘ??????蝣箄? Seoul/Busan ?Ｘ? `1?賄?` PNG ?箔?????憛?敺憓?line-aware Incheon Metro 1 ?內??025-06-28 窶??extension 撌脩??伐??芯? branch/extension ?舀??蝥?- ?? LRT/AGT seed嚗憓?`Incheon-Metro-2`嚗??到諝????渥 all-stop嚗?7 蝡? ??2?賄? train template?SM relation `7527496`嚗elation `7527496` ??stop members ?臬??游?朣?27 蝡?shape mapping 雿輻 `stationStops`??頠?蝷箏?瑼Ｘ??????蝣箄??Ｘ? Gimpo Goldline ?箔?????憛?敺憓?line-aware Incheon Metro 2 ?內??- ?? LRT/AGT seed嚗憓?`Ui-LRT`嚗???域 ?????13 蝡? ???域???train template?SM relation `7533582`嚗elation stop members ?臬??游?朣?13 蝡?shape mapping 雿輻 `stationStops`嚗蒂隞?stationKms ?‵?神蝡???頠?蝷箏?瑼Ｘ?? LRT/AGT ?Ｘ? Gimpo Goldline / Incheon 2嚗Ⅱ隤?Hyundai Rotem UL000 ???圉赬?鋆?舐?交窒?典??啣? line-aware Ui-Sinseol ?內??- ?? LRT/AGT seed嚗憓?`Sillim-LRT`嚗?穈???窵?嚗?1 蝡? ???汝??train template?SM relation `14191877`嚗elation stop members ?臬??游?朣?11 蝡?shape mapping 雿輻 `stationStops`嚗蒂隞?stationKms ?‵?神蝡???頠?蝷箏?瑼Ｘ?? LRT/AGT ?Ｘ? Gimpo Goldline / Incheon 2 / Ui LRT嚗Ⅱ隤?Woojin SL000 / K-AGT ??????鋆?舐?交窒?典??啣? line-aware Sillim ?內??- ?? LRT/AGT seed嚗憓?`Uijeongbu-LRT`嚗?窸???麆刺?篣域????實??伐?16 蝡? ??U Line train template?SM relation `13738410`嚗elation stop members ?臬??游?朣?16 蝡?shape mapping 雿輻 `stationStops`嚗蒂隞?stationKms ?‵?神蝡???頠?蝷箏?瑼Ｘ?? LRT/AGT ?Ｘ? Gimpo Goldline / Incheon 2 / Ui LRT / Sillim嚗Ⅱ隤?VAL 208 / U Line 璈憛??∪?湔瘝輻敺憓?line-aware Uijeongbu ?內??- ?? LRT/AGT seed嚗憓?`Yongin-EverLine`嚗萼??????繚????嚗?5 蝡? ??EverLine train template?SM relation `6064093`嚗elation stop members ?臬??游?朣?15 蝡?shape mapping 雿輻 `stationStops`嚗蒂隞?stationKms ?‵?神蝡???頠?蝷箏?瑼Ｘ?? LRT/AGT ?Ｘ? Gimpo Goldline / Incheon 2 / Ui LRT / Sillim / Uijeongbu嚗Ⅱ隤?Bombardier Innovia ART / EverLine 蝬憛??∪?湔瘝輻敺憓?line-aware Yongin EverLine ?內??- ?? LRT/AGT seed嚗憓?`Busan-Gimhae-LRT`嚗????穈?潺?嚗?1 蝡? ??BGL train template?SM relation `2204611`嚗elation stop members ?臬??游?朣?21 蝡?shape mapping 雿輻 `stationStops`嚗蒂隞?stationKms ?‵?神蝡???頠?蝷箏?瑼Ｘ?? LRT/AGT ?Ｘ? Gimpo Goldline / Incheon 2 / Ui LRT / Sillim / Uijeongbu / Yongin嚗Ⅱ隤?BGL 蝝怨憛????蝷箔????啣? line-aware Busan-Gimhae LRT ?內??- ?????賢? Metro seed嚗憓?`Busan-Metro-2`嚗????? all-stop嚗?3 蝡? ??2?賄? train template?SM route_master `8258658` / relation `2194999`嚗elation `2194999` ??stop members ?臬??游?朣?43 蝡?shape mapping 雿輻 `stationStops`??頠?蝷箏?瑼Ｘ??????蝣箄??Ｘ? Busan 1 ??Incheon 2 ?箔?????憛?敺憓?line-aware Busan Metro 2 ?內??- ?????賢? Metro seed嚗憓?`Busan-Metro-3`嚗??????? all-stop嚗?7 蝡? ??3?賄? train template?SM route_master `8247017` / relation `2195014`嚗elation `2195014` ??stop members ?臬??游?朣?17 蝡?shape mapping 雿輻 `stationStops`??頠?蝷箏?瑼Ｘ??????蝣箄??Ｘ? Seoul 3 ??Daegu 3 ?箔?????蝟餌絞敺憓?line-aware Busan Metro 3 ?內??- ?????賢? Metro seed嚗憓?`Busan-Metro-4`嚗站?????? all-stop嚗?4 蝡? ??4?賄? train template?SM route_master `8258702` / relation `2205952`嚗elation `2205952` ??stop members ?臬??游?朣?14 蝡?shape mapping 雿輻 `stationStops`??頠?蝷箏?瑼Ｘ??????蝣箄??Ｘ? Seoul 4 ?箔?????憛?敺憓?line-aware Busan Metro 4 rubber-tyred light metro ?內??- ?????賢? Metro seed嚗憓?`Daegu-Metro-1`嚗??窸????? all-stop嚗?5 蝡? ??1?賄? train template?SM route_master `7845971` / relation `7685464`嚗elation `7685464` ??stop members ?臬??游?朣?35 蝡?shape mapping 雿輻 `stationStops`??頠?蝷箏?瑼Ｘ??????蝣箄??Ｘ? Seoul/Busan/Incheon `1?賄?` ??Daegu 3 ?株??內??????憛?敺憓?line-aware Daegu Metro 1 ?內??- ?????賢? Metro seed嚗憓?`Daegu-Metro-2`嚗爰?????? all-stop嚗?9 蝡? ??2?賄? train template?SM route_master `7845969` / relation `7685783`嚗elation `7685783` ??stop members ?臬??游?朣?29 蝡?shape mapping 雿輻 `stationStops`??頠?蝷箏?瑼Ｘ??????蝣箄? Busan/Incheon ?Ｘ? `2?賄?` ??Daegu 1/3 ?內??????憛?敺憓?line-aware Daegu Metro 2 ?內??- ?????賢? Metro seed嚗憓?`Daejeon-Metro-1`嚗?????諻? all-stop嚗?2 蝡? ??1?賄? train template?SM route_master `7792528` / relation `7792527`嚗elation `7792527` ??stop members ?臬??游?朣?22 蝡?shape mapping 雿輻 `stationStops`??頠?蝷箏?瑼Ｘ??????蝣箄? Seoul/Busan/Incheon/Daegu ?Ｘ? `1?賄?` ??????憛?敺憓?line-aware Daejeon Metro 1 ?內??- ?????賢? Metro seed嚗憓?`Gwangju-Metro-1`嚗?????? all-stop嚗?0 蝡? ??1?賄? train template?SM route_master `13538911` / relation `13463725`嚗elation `13463725` ??stop members ?臬??游?朣?20 蝡?shape mapping 雿輻 `stationStops`??頠?蝷箏?瑼Ｘ??????蝣箄? Seoul/Busan/Incheon/Daegu/Daejeon ?Ｘ? `1?賄?` ??????憛?敺憓?line-aware Gwangju Metro 1 ?內??
+## ?芸???
+敹??嚗??
+餈??芸???瘜啣? / ?圈收 P0 seed 撠?賢嚗銵??桐誑銝??銝頛芾???啜皞?
+撌脩宏??follow-up嚗okaido relation ?踵??極蝔? maxOffset 蝎曆耨???/ ??摰閬??ranch/short-turn ?瑟?璅∪??TS Link 頝典? region?evel-2/4 鞈?皞? region UI ??i18n 蝑嚗絞銝餈質馱??`doc/east-asia-expansion-plan.md`??
+## 撱箄降銝?甇?
+1. ?? `BKK-BTS-Silom` Phase A+B嚗???icon / speed profile / shape pipeline??2. ?亥???`BKK-MRT-Purple`嚗Ⅱ隤靚琿?頠?MRT template ??BEM icon 璅????3. 瘜啣???2 璇?seed 蝛拙?敺?????`KL-MRT-Putrajaya` ??`SG-MRT-North-East`嚗Ⅱ靽擐?region ?澆???????氬?
+## 5.3 vs 5.5 隞餃????脣漲蝞∠?嚗頛芾?銝?頛迎?
 
-## 本次完成
-
-- Bundle 拆分：在 `vite.config.js` 加 `manualChunks`，把 `rail-data.generated`、`leaflet`、`react`、`react-dom` 各自獨立成 chunk，降低 main bundle (89.6 kB / gzip 31 kB) 並讓資料 chunk 可獨立 cache。
-- 確認 React production build：build output 中 `react-dom` 134 kB（dev 版會 >1 MB）、無 `jsxDEV`／`development` 字樣，確認是 production minified bundle。
-- 部署前驗證：`npm run build`、`check:timing`、`check:shapes`、`test:smoke`（26 passed / 2 skipped）皆通過。
-- PWA / 社群圖像：新增 `scripts/build-pwa-images.mjs`（用 Playwright Chromium 渲染 SVG），產出 `public/apple-touch-icon.png` (180×180) 與 `public/og-image.png` (1200×630)；`index.html` 補 `apple-touch-icon` link、`og:image` / `twitter:image` meta，twitter card 升級為 `summary_large_image`；`manifest.webmanifest` 加入 PNG icon。新增 npm script `build:pwa-images` 方便日後重新生成。
-- Service Worker / 離線模式：新增 `public/sw.js`（precache app shell + 三層快取策略：hashed asset cache-first、navigation network-first、其他 stale-while-revalidate；跨來源請求一律放行讓 OSM tile / Nominatim 不被攔截）。`src/main.js` 在 production build 才註冊 SW，避免干擾 Vite HMR。新增 `tests/service-worker.spec.mjs` 驗證 SW 註冊後達到 `activated` 狀態。
-- SW 升級提示 UX：移除 install 階段的 `skipWaiting`，改由使用者主動觸發。新 SW install 完成後 main.js 偵測到 waiting worker、透過 `window` event `sw:update-ready` 通知 React App；NoticeStack 支援 `action` 按鈕（複用既有 notice 樣式 + 新 `.notice-action` CSS），點「重新載入」會 `postMessage({type:"SKIP_WAITING"})` 給 waiting worker 並在 `controllerchange` 時 reload。新測試覆蓋通知顯示 → 點擊 → 派發 `sw:apply-update` 的整條鏈路（desktop / mobile 皆通過）。
-- 大東亞 Phase B：依 `doc/east-asia-expansion-plan.md` 補齊日本、南韓、香港、中國、新加坡、馬來西亞、泰國、越南共 34 條 OSM relation 形狀；`src/rail-data.generated.js` 與 `scripts/line-shape-snapshot.json` 已更新，沒有 0 km fallback。
-- 日本 HSR seed：新增 `Nishi-Kyushu-Shinkansen` all-stop `かもめ`（武雄温泉 ⇄ 長崎）5 站、1 個 train template、OSM relation `7356208` corridor + stop nodes、line-aware `かもめ` 圖示；列車圖示先檢查日本既有新幹線圖示後確認無同國同型號 / 同塗裝 `かもめ` PNG 可沿用，才新增 `japan-nishi-kyushu-shinkansen-kamome.png`。
-- 日本 Airport / Monorail seed：新增 `Tokyo-Monorail` all-stop（モノレール浜松町 ⇄ 羽田空港第2ターミナル）11 站、1 個普通 train template、OSM relation `3417174`、line-aware Tokyo Monorail 圖示；列車圖示先檢查日本既有圖示後確認無同國同型號 monorail PNG 可沿用，才新增 `japan-tokyo-monorail-local.png`。
-- 日本 Tram / LRT seed：新增 `Utsunomiya-Lightline` all-stop（宇都宮駅東口 ⇄ 芳賀・高根沢工業団地）19 站、1 個 `ライトライン` train template、OSM relation `12419659`、line-aware Utsunomiya Lightline 圖示；列車圖示先檢查日本既有低床 LRT / tram 圖示後確認無同國同型號 Lightline / HU300 PNG 可沿用，才新增 `japan-utsunomiya-lightline-lightline.png`。
-- 資料修正：修正 JR-Sobu-Local 千葉端站點座標，並在 `kinematicProfile` 補上兩節點短站距的中點，避免短距離站間 inverse timing 誤報。
-- 高誤差複查：修正 `JR-Yamanote` loop/corridor 造成的 56 km 錯長度、`KHH-LRT` 全環線誤套到 13 站區段、`Busan-Metro-1` 後段投影漂移；中國 HSR、TYMRT、Alishan、台鐵支線與高捷紅/輕軌的高偏移已用 generated OSM shape 吸附修正。
-- OSM stop member 對站：`TPE-Brown`、`KHH-Orange`、`Busan-Metro-1`、`Daegu-Metro-1/2`、`Daejeon-Metro-1`、`Gwangju-Metro-1`、`Beijing-Subway-1`、`Shanghai-Metro-1/2`、`KL-Kelana-Jaya`、`BKK-BTS-Sukhumvit`、`BKK-MRT-Blue`、`HCMC-Metro-1`、`Hanoi-Metro-2A` 改用 relation stop/platform node 回填 stationCoords；上海 1/2、大邱 1/2、大田 1、光州 1、胡志明 1、河內 2A 與曼谷 BTS 主要站點已降到公尺級偏移。
-- 南韓 Airport seed：新增 `AREX` all-stop（서울역 ⇄ 인천공항2터미널）14 站、1 個 train template、OSM relation `7919000`、line-aware AREX 圖示，並在 `doc/east-asia-expansion-plan.md` 清理 Airport backlog 狀態。
-- 南韓 LRT/AGT seed：新增 `Gimpo-Goldline` all-stop（양촌 ⇄ 김포공항）10 站、1 個 train template、OSM relation `10092720`、line-aware Gimpo Goldline 圖示，並在 `doc/east-asia-expansion-plan.md` 清理 LRT/AGT backlog 狀態。
-- 南韓 Monorail seed：新增 `Daegu-Metro-3` all-stop（칠곡경대병원 ⇄ 용지）30 站、1 個 train template、OSM relation `7685727`、line-aware Daegu monorail 圖示，並在 `doc/east-asia-expansion-plan.md` 清理 Monorail backlog 狀態。
-- 南韓 HSR seed：新增 `SRT-Gyeongbu`（수서 ⇄ 부산）12 站、1 個 SRT train template、OSM relation `6096884` + `6094351` corridor、line-aware SRT badge 圖示，並在 `doc/east-asia-expansion-plan.md` 清理 HSR backlog 狀態。
-- 南韓 HSR seed：新增 `SRT-Honam`（수서 ⇄ 목포）11 站、1 個 SRT train template、OSM relation `6096884` + `6094351` + `6095809` + `6094787` corridor；列車圖示先檢查同國同型號後沿用既有 SRT PNG，不新增 PNG。
-- 南韓 HSR seed：新增 `SRT-Jeolla`（수서 ⇄ 여수EXPO）14 站、1 個 SRT train template、OSM relation `6096884` + `6094351` + `6095809` + `6096342` corridor；列車圖示先檢查同國同型號後沿用既有 SRT PNG，不新增 PNG。
-- 南韓 HSR seed：新增 `SRT-Gyeongjeon`（수서 ⇄ 진주）15 站、1 個 SRT train template、OSM relation `6096884` + `6094351` + `8842494` + `8839114` corridor；列車圖示先檢查同國同型號後沿用既有 SRT PNG，不新增 PNG。
-- 南韓 HSR seed：新增 `SRT-Donghae`（수서 ⇄ 포항）10 站、1 個 SRT train template、OSM relation `6096884` + `6094351` + `8840839` + `8835676` corridor；列車圖示先檢查同國同型號後沿用既有 SRT PNG，不新增 PNG。
-- 南韓 HSR seed：新增 `KTX-Honam`（용산 ⇄ 목포）10 站、2 個 KTX / KTX-산천 train templates、OSM relation `11214334` + `6095809` + `6094787` corridor；列車圖示先檢查同國同型號後沿用既有 KTX / KTX-산천 PNG，不新增 PNG。
-- 南韓 HSR seed：新增 `KTX-Jeolla`（용산 ⇄ 여수EXPO）13 站、2 個 KTX / KTX-산천 train templates、OSM relation `11214334` + `6095809` + `6096342` corridor；列車圖示先檢查同國同型號後沿用既有 KTX / KTX-산천 PNG，不新增 PNG。
-- 南韓 HSR seed：新增 `KTX-Gyeongjeon`（서울 ⇄ 진주）14 站、2 個 KTX / KTX-산천 train templates、OSM relation `11214334` + `8839114` corridor；列車圖示先檢查同國同型號後沿用既有 KTX / KTX-산천 PNG，不新增 PNG。
-- 南韓 HSR seed：新增 `KTX-Gangneung`（서울 ⇄ 강릉）11 站、1 個 KTX-이음 train template、OSM relation `8842494` + `8817574` + `8821065` + `8825878` corridor；列車圖示先檢查同國同型號，因目前無 KTX-이음 PNG 而新增 line-aware KTX-이음 圖示。
-- 南韓 HSR seed：新增 `KTX-Donghae`（서울 ⇄ 포항）8 站、2 個 KTX / KTX-산천 train templates、OSM relation `11214334` + `8840839` + `8835676` corridor；列車圖示先檢查同國同型號後沿用既有 KTX / KTX-산천 PNG，不新增 PNG。
-- 南韓 HSR seed：新增 `KTX-Jungang`（서울 ⇄ 부전）16 站、1 個 KTX-이음 train template、OSM relation `8842494` + `8817574` + `8821065` + `8880536` + `8880709` + `8835676` + `8879475` corridor；列車圖示先檢查同國同型號後沿用既有 KTX-이음 PNG，不新增 PNG。
-- 南韓 HSR seed：新增 `KTX-Jungbu-Naeryuk`（판교 ⇄ 문경）10 站、1 個 KTX-이음 train template、OSM relation `8824194` + `12351758` corridor；列車圖示先檢查同國同型號後沿用既有 KTX-이음 PNG，不新增 PNG。
-- 南韓 Intercity seed：新增 `ITX-Cheongchun`（용산 ⇄ 춘천）14 站、1 個 ITX-청춘 train template、OSM relation `8817574` + `8821065` + `8817669` corridor；列車圖示先檢查同國同型號，因目前無 ITX-청춘 PNG 而新增 line-aware ITX-청춘 圖示。
-- 南韓 Commuter / Metro seed：新增 `Seoul-Metro-3`（대화 ⇄ 오금）44 站、1 個 3호선 train template、OSM relation `443803` + `4729445` corridor；列車圖示先檢查同國同型號，確認既有 `Daegu-Metro-3|3호선` 是單軌不同型號後新增 line-aware 首都圈 3 號線 metro 圖示。
-- 南韓 Commuter / Metro seed：新增 `Seoul-Metro-4`（진접 ⇄ 오이도）51 站、1 個 4호선 train template、OSM relation `13675921` + `2718884` + `4744311` corridor；列車圖示先檢查同國同型號，因目前無 `4호선` PNG 而新增 line-aware 首都圈 4 號線 metro 圖示。
-- 南韓 Commuter / Metro seed：新增 `Seoul-Metro-5`（방화 ⇄ 하남검단산 主線）49 站、1 個 5호선 train template、OSM relation `12497486`；列車圖示先檢查同國同型號，因目前無 `5호선` PNG 而新增 line-aware 首都圈 5 號線 metro 圖示，마천 branch 留後續 branch-aware pass。
-- 南韓 Commuter / Metro seed：新增 `Seoul-Metro-7`（장암 ⇄ 석남）53 站、1 個 7호선 train template、OSM relation `12746493`；列車圖示先檢查同國同型號，因目前無 `7호선` PNG 而新增 line-aware 首都圈 7 號線 metro 圖示。
-- 南韓 Commuter / Metro seed：新增 `Seoul-Metro-8`（별내 ⇄ 모란）24 站、1 個 8호선 train template、OSM relation `2718901`；列車圖示先檢查同國同型號，因目前無 `8호선` PNG 而新增 line-aware 首都圈 8 號線 metro 圖示；route_master `7919019` 仍保留舊短線 relation，建檔採完整 `별내 → 모란` route。
-- 南韓 Commuter / Metro seed：新增 `Seoul-Metro-9`（개화 ⇄ 중앙보훈병원）38 站、1 個 9호선 train template、OSM relation `2718888`；列車圖示先檢查同國同型號，因目前無 `9호선` PNG 而新增 line-aware 首都圈 9 號線 metro 圖示；OSM route stop members 少 `동작`，因此 shape mapping 不使用 `stationStops` 以避免 stop/station 錯位，急行 skip-stop relation 留後續 template 支援後再補。
-- 南韓 Commuter / Metro seed：新增 `Seoul-Metro-6`（응암순환 ⇄ 신내）40 個停站事件 / 39 unique stations、1 個 6호선 train template、OSM relation `12080315`；列車圖示先檢查同國同型號，因目前無 `6호선` PNG 而新增 line-aware 首都圈 6 號線 metro 圖示；為保留 응암 one-way loop 的重複站名，generated station km 新增 `stationKmsByIndex`。
-- 南韓 Commuter / Metro seed：新增 `Shinbundang`（신사 ⇄ 광교）16 站、1 個 신분당선 train template、OSM route_master `7728256` / relation `6060963`；列車圖示先檢查同國同型號，因目前無 `신분당선` PNG 而新增 line-aware Shinbundang metro 圖示。
-- 南韓 Commuter / Metro seed：新增 `Suin-Bundang`（청량리 ⇄ 인천）63 站、1 個 수인분당선 train template、OSM route_master `11619514` / relation `11625556`；列車圖示先檢查同國同型號，因目前無 `수인분당선` PNG 而新增 line-aware Suin-Bundang commuter 圖示。
-- 南韓 Commuter / Metro seed：新增 `Gyeongui-Jungang`（문산 ⇄ 용문 主線）52 站、1 個 경의중앙선 train template、OSM route_master `8667957` / relation `5993212`；列車圖示先檢查同國同型號，因目前無 `경의중앙선` PNG 而新增 line-aware Gyeongui-Jungang commuter 圖示。서울역 / 임진강 / 도라산 / 지평 服務留後續 branch/short-turn 支援。
-- 南韓 Commuter / Metro seed：新增 `Gyeongchun`（청량리 ⇄ 춘천 主線）24 站、1 個 경춘선 train template、OSM route_master `8656365` / relation `8656357`；列車圖示先檢查同國同型號，因目前無 `경춘선` PNG 而新增 line-aware Gyeongchun commuter 圖示。상봉 / 광운대 variants 留後續 branch/short-turn 支援。
-- 南韓 Commuter / Metro seed：新增 `Gyeonggang`（판교 ⇄ 여주 主線）12 站、1 個 경강선 train template、OSM route_master `8735483` / relation `6462562`；relation `6462562` 的 stop members 尚缺 `성남`，shape mapping 不使用 `stationStops`。列車圖示先檢查同國同型號，因目前無 `경강선` / Class 371000 對應 PNG 而新增 line-aware Gyeonggang commuter 圖示。부발 short-turn 與未來延伸留後續 branch/extension 支援。
-- 南韓 Commuter / Metro seed：新增 `Seohae`（일산 ⇄ 원시 all-stop）21 站、1 個 서해선 train template、OSM route_master `8725316` / relation `16244688`；relation `16244688` 的 stop members 可完整對齊 21 站，shape mapping 使用 `stationStops`。列車圖示先檢查同國同型號，因目前無 `서해선` / Class 391000 對應 PNG 而新增 line-aware Seohae commuter 圖示。대곡 short-turn 與未來南延伸留後續 branch/extension 支援。
-- 南韓 Commuter / Metro seed：新增 `Incheon-Metro-1`（송도달빛축제공원 ⇄ 검단호수공원 all-stop）33 站、1 個 1호선 train template、OSM route_master `7854149` / relation `19425646`；relation `19425646` 的 stop members 可完整對齊 33 站，shape mapping 使用 `stationStops`。列車圖示先檢查同國同型號，確認 Seoul/Busan 既有 `1호선` PNG 為不同車型/塗裝後新增 line-aware Incheon Metro 1 圖示。2025-06-28 검단 extension 已納入；未來 branch/extension 支援留後續。
-- 南韓 LRT/AGT seed：新增 `Incheon-Metro-2`（검단오류 ⇄ 운연 all-stop）27 站、1 個 2호선 train template、OSM relation `7527496`；relation `7527496` 的 stop members 可完整對齊 27 站，shape mapping 使用 `stationStops`。列車圖示先檢查同國同型號，確認既有 Gimpo Goldline 為不同車型/塗裝後新增 line-aware Incheon Metro 2 圖示。
-- 南韓 LRT/AGT seed：新增 `Ui-LRT`（북한산우이 ⇄ 신설동）13 站、1 個 우이신설선 train template、OSM relation `7533582`；relation stop members 可完整對齊 13 站，shape mapping 使用 `stationStops`，並以 stationKms 回填手寫站距。列車圖示先檢查同國 LRT/AGT 既有 Gimpo Goldline / Incheon 2，確認 Hyundai Rotem UL000 與 연둣빛塗裝無可直接沿用後新增 line-aware Ui-Sinseol 圖示。
-- 南韓 LRT/AGT seed：新增 `Sillim-LRT`（샛강 ⇄ 관악산）11 站、1 個 신림선 train template、OSM relation `14191877`；relation stop members 可完整對齊 11 站，shape mapping 使用 `stationStops`，並以 stationKms 回填手寫站距。列車圖示先檢查同國 LRT/AGT 既有 Gimpo Goldline / Incheon 2 / Ui LRT，確認 Woojin SL000 / K-AGT 與 파란색塗裝無可直接沿用後新增 line-aware Sillim 圖示。
-- 南韓 LRT/AGT seed：新增 `Uijeongbu-LRT`（발곡 ⇄ 차량기지임시승강장）16 站、1 個 U Line train template、OSM relation `13738410`；relation stop members 可完整對齊 16 站，shape mapping 使用 `stationStops`，並以 stationKms 回填手寫站距。列車圖示先檢查同國 LRT/AGT 既有 Gimpo Goldline / Incheon 2 / Ui LRT / Sillim，確認 VAL 208 / U Line 橘色塗裝無可直接沿用後新增 line-aware Uijeongbu 圖示。
-- 南韓 LRT/AGT seed：新增 `Yongin-EverLine`（기흥 ⇄ 전대·에버랜드）15 站、1 個 EverLine train template、OSM relation `6064093`；relation stop members 可完整對齊 15 站，shape mapping 使用 `stationStops`，並以 stationKms 回填手寫站距。列車圖示先檢查同國 LRT/AGT 既有 Gimpo Goldline / Incheon 2 / Ui LRT / Sillim / Uijeongbu，確認 Bombardier Innovia ART / EverLine 綠色塗裝無可直接沿用後新增 line-aware Yongin EverLine 圖示。
-- 南韓 LRT/AGT seed：新增 `Busan-Gimhae-LRT`（사상 ⇄ 가야대）21 站、1 個 BGL train template、OSM relation `2204611`；relation stop members 可完整對齊 21 站，shape mapping 使用 `stationStops`，並以 stationKms 回填手寫站距。列車圖示先檢查同國 LRT/AGT 既有 Gimpo Goldline / Incheon 2 / Ui LRT / Sillim / Uijeongbu / Yongin，確認 BGL 紫色塗裝與既有圖示不同後新增 line-aware Busan-Gimhae LRT 圖示。
-- 南韓非首都圈 Metro seed：新增 `Busan-Metro-2`（장산 ⇄ 양산 all-stop）43 站、1 個 2호선 train template、OSM route_master `8258658` / relation `2194999`；relation `2194999` 的 stop members 可完整對齊 43 站，shape mapping 使用 `stationStops`。列車圖示先檢查同國同型號，確認既有 Busan 1 與 Incheon 2 為不同車型/塗裝後新增 line-aware Busan Metro 2 圖示。
-- 南韓非首都圈 Metro seed：新增 `Busan-Metro-3`（수영 ⇄ 대저 all-stop）17 站、1 個 3호선 train template、OSM route_master `8247017` / relation `2195014`；relation `2195014` 的 stop members 可完整對齊 17 站，shape mapping 使用 `stationStops`。列車圖示先檢查同國同型號，確認既有 Seoul 3 與 Daegu 3 為不同車型/系統後新增 line-aware Busan Metro 3 圖示。
-- 南韓非首都圈 Metro seed：新增 `Busan-Metro-4`（미남 ⇄ 안평 all-stop）14 站、1 個 4호선 train template、OSM route_master `8258702` / relation `2205952`；relation `2205952` 的 stop members 可完整對齊 14 站，shape mapping 使用 `stationStops`。列車圖示先檢查同國同型號，確認既有 Seoul 4 為不同車型/塗裝後新增 line-aware Busan Metro 4 rubber-tyred light metro 圖示。
-- 南韓非首都圈 Metro seed：新增 `Daegu-Metro-1`（설화명곡 ⇄ 하양 all-stop）35 站、1 個 1호선 train template、OSM route_master `7845971` / relation `7685464`；relation `7685464` 的 stop members 可完整對齊 35 站，shape mapping 使用 `stationStops`。列車圖示先檢查同國同型號，確認既有 Seoul/Busan/Incheon `1호선` 與 Daegu 3 單軌圖示皆非同型號/塗裝後新增 line-aware Daegu Metro 1 圖示。
-- 南韓非首都圈 Metro seed：新增 `Daegu-Metro-2`（문양 ⇄ 영남대 all-stop）29 站、1 個 2호선 train template、OSM route_master `7845969` / relation `7685783`；relation `7685783` 的 stop members 可完整對齊 29 站，shape mapping 使用 `stationStops`。列車圖示先檢查同國同型號，確認 Busan/Incheon 既有 `2호선` 與 Daegu 1/3 圖示皆非同車型/塗裝後新增 line-aware Daegu Metro 2 圖示。
-- 南韓非首都圈 Metro seed：新增 `Daejeon-Metro-1`（판암 ⇄ 반석 all-stop）22 站、1 個 1호선 train template、OSM route_master `7792528` / relation `7792527`；relation `7792527` 的 stop members 可完整對齊 22 站，shape mapping 使用 `stationStops`。列車圖示先檢查同國同型號，確認 Seoul/Busan/Incheon/Daegu 既有 `1호선` 皆非同車型/塗裝後新增 line-aware Daejeon Metro 1 圖示。
-- 南韓非首都圈 Metro seed：新增 `Gwangju-Metro-1`（녹동 ⇄ 평동 all-stop）20 站、1 個 1호선 train template、OSM route_master `13538911` / relation `13463725`；relation `13463725` 的 stop members 可完整對齊 20 站，shape mapping 使用 `stationStops`。列車圖示先檢查同國同型號，確認 Seoul/Busan/Incheon/Daegu/Daejeon 既有 `1호선` 皆非同車型/塗裝後新增 line-aware Gwangju Metro 1 圖示。
-
-## 未完成
-
-必要項目：無。
-
-近期未完成：泰國 / 新馬 P0 seed 尚未落地，執行清單以上方「下一輪資料更新」為準。
-
-已移出 follow-up：Tokaido relation 替換、工程級 maxOffset 精修、日本 / 南韓完整覆蓋、branch/short-turn 長期模型、RTS Link 跨境 region、Level-2/4 資料源、多 region UI 與 i18n 策略，統一追蹤於 `doc/east-asia-expansion-plan.md`。
-
-## 建議下一步
-
-1. 先做 `BKK-BTS-Silom` Phase A+B，完成 icon / speed profile / shape pipeline。
-2. 接著推 `BKK-MRT-Purple`，確認曼谷重軌 MRT template 與 BEM icon 樣式。
-3. 泰國前 2 條 seed 穩定後，再啟動 `KL-MRT-Putrajaya` 與 `SG-MRT-North-East`，確保新馬 region 格式與既有資料一致。
-
-## 5.3 vs 5.5 任務拆分與進度管理（本輪與下一輪）
-
-### 5.3 可直接執行
-- 目標：維持既有完成品質，做可驗證的資料更新與下一輪 P0 seed 擴展。
-- 當前狀態：本輪「必要項目」已結束，follow-up 只追蹤泰國 / 新馬優先資料更新；低優先未完成項已移至 `doc/east-asia-expansion-plan.md`。
-
-#### 5.3 進度看板
-1. [x] 完成本輪必要項目（0 未完成）。
-2. [x] 完成 34/34 Phase A 與 Phase B，並更新 `src/rail-data.generated.js`、`scripts/line-shape-snapshot.json`。
-3. [x] 34/34 完成後建置與測試通過：`npm run build` / `npm run check:timing` / `npm run check:shapes` / `npm run test:smoke`（26 passed / 2 skipped）。
-4. [x] Service Worker、PWA 圖片、bundle 拆分完成並回歸。
-5. [x] 本輪可選精修：將 `maxOffset 0.75–1.0 km` 清單中的 `Beijing-Shanghai-HSR`、`Beijing-Guangzhou-HSR`、`Tokaido` 壓低至 `0.75 km` 以下。
-   - [x] Beijing-Shanghai-HSR 已壓低到 0.680 km（< 0.75）。
-   - [x] Beijing-Guangzhou-HSR 已壓低到 0.597 km（< 0.75）。
-   - [x] Tokaido-Shinkansen 已壓低到 0.131 km，並沿用既有 icon：`japan-` 系列；`check:train-icons`、`check:shapes`、`check:timing` 通過。
-6. [x] 本輪可選精修：完成已標註待補關係的支線/變體（如 Line 9 快慢法、Gyeongui short-turn、Gyeongchun variants）所需 template 支援。
-7. [ ] 下一輪亞洲其他區域 seed：先做 `BKK-BTS-Silom` Phase A+B，再依序推 `BKK-MRT-Purple`、`BKK-MRT-Yellow`、`BKK-MRT-Pink`、`BKK-SRT-Dark-Red`、`KL-MRT-Putrajaya`、`SG-MRT-North-East`。
-
-### 5.5 需要策略決策
-- 目標：在再擴張前定義下一輪大方向，避免資源重工。
-- 建議由 5.5 負責每輪啟動前的節點決策，5.3 只負責落地執行。
-
-#### 5.5 進度看板
-1. [x] 已完成「本輪必要項目判定」：回報無阻塞項目，將 backlog 轉為可選。
-2. [x] 決定下一輪首選區域：泰國曼谷補完優先，新加坡 / 馬來西亞補完第二，印尼 / 菲律賓 / 越南第三，日本 / 南韓剩餘完整覆蓋暫列可選。
-3. [ ] 決定 seed 擴展節奏：每輪固定 1 代表線→先驗證 icon/speed/shape→再擴張同網絡；建議先跑「泰國 2 條 → 馬來西亞 1 條 → 新加坡 1 條」循環。
-4. [ ] 啟動前確認曼谷 monorail 類別顯示，以及 KL / ERL / SRT Red 先以獨立線落地的保守策略。
-5. [x] 將 branch/short-turn 長期模型、RTS Link region、資料源與 UI/i18n 等低優先未完成項移入 `doc/east-asia-expansion-plan.md`。
-
-### 下一步行事曆（建議）
-- 每輪開始：5.5 完成 P0 seed 排序與必要模型確認。
-- 每輪執行：5.3 以 seed 粒度完成 A/B + script 更新。
-- 每輪結束：5.5 檢視 `maxOffset`、回傳下一輪 P0 優先修正清單、更新兩份文檔的進度條。
+### 5.3 ?舐?亙銵?- ?格?嚗雁?????鞈迎??撽?????啗?銝?頛?P0 seed ?游???- ?嗅?????祈憚??閬??柴歇蝯?嚗ollow-up ?芾蕭頩斗陸??/ ?圈收?芸?鞈??湔嚗??芸??芸???撌脩宏??`doc/east-asia-expansion-plan.md`??
+#### 5.3 ?脣漲?
+1. [x] 摰??祈憚敹??嚗? ?芸?????2. [x] 摰? 34/34 Phase A ??Phase B嚗蒂?湔 `src/rail-data.generated.js`?scripts/line-shape-snapshot.json`??3. [x] 34/34 摰?敺遣蝵株?皜祈岫??嚗npm run build` / `npm run check:timing` / `npm run check:shapes` / `npm run test:smoke`嚗?6 passed / 2 skipped嚗?4. [x] Service Worker?WA ???undle ??摰?銝血?甇詻?5. [x] ?祈憚?舫蝎曆耨嚗? `maxOffset 0.75??.0 km` 皜銝剔? `Beijing-Shanghai-HSR`?Beijing-Guangzhou-HSR`?Tokaido` 憯???`0.75 km` 隞乩???   - [x] Beijing-Shanghai-HSR 撌脣?雿 0.680 km嚗? 0.75嚗?   - [x] Beijing-Guangzhou-HSR 撌脣?雿 0.597 km嚗? 0.75嚗?   - [x] Tokaido-Shinkansen 撌脣?雿 0.131 km嚗蒂瘝輻?Ｘ? icon嚗japan-` 蝟餃?嚗check:train-icons`?check:shapes`?check:timing` ????6. [x] ?祈憚?舫蝎曆耨嚗??歇璅酉敺????蝺?霈?嚗? Line 9 敹急瘜yeongui short-turn?yeongchun variants嚗?? template ?舀??7. [x] 摰? 5.3 擐?seed嚗BKK-BTS-Silom` Phase A+B嚗ine/stations?rain template?SM shape?con registry嚗?銝頛芷?閮?鋆?`BKK-MRT-Purple`?BKK-MRT-Yellow`?BKK-MRT-Pink`?BKK-SRT-Dark-Red`?KL-MRT-Putrajaya`?SG-MRT-North-East`??
+### 5.5 ?閬??交捱蝑?- ?格?嚗?撘萄?摰儔銝?頛芸之?孵?嚗??皞?撌乓?- 撱箄降??5.5 鞎痊瘥憚????蝭暺捱蝑?5.3 ?芾?鞎祈?啣銵?
+#### 5.5 ?脣漲?
+1. [x] 撌脣??頛芸?閬??桀摰???⊿憛??殷?撠?backlog 頧?舫??2. [x] 瘙箏?銝?頛芷??詨???瘜啣??潸健鋆??芸?嚗? / 擐砌?镼蹂?鋆?蝚砌?嚗撠?/ ?脣?鞈?/ 頞?蝚砌?嚗??/ ???拚?摰閬??怠??舫??3. [ ] 瘙箏? seed ?游?蝭憟?瘥憚?箏? 1 隞?”蝺???霅?icon/speed/shape???游撐?雯蝯∴?撱箄降???陸??2 璇???擐砌?镼蹂? 1 璇????啣???1 璇儐?啜?4. [ ] ???Ⅱ隤靚?monorail 憿憿舐內嚗誑??KL / ERL / SRT Red ?誑?函?蝺?啁?靽?蝑??5. [x] 撠?branch/short-turn ?瑟?璅∪??TS Link region??????UI/i18n 蝑??芸??芸???蝘餃 `doc/east-asia-expansion-plan.md`??
+### 銝?甇亥?鈭?嚗遣霅堆?
+- 瘥憚??嚗?.5 摰? P0 seed ????閬芋?Ⅱ隤?- 瘥憚?瑁?嚗?.3 隞?seed 蝎漲摰? A/B + script ?湔??- 瘥憚蝯?嚗?.5 瑼Ｚ? `maxOffset`???喃?銝頛?P0 ?芸?靽格迤皜??啣隞賣?瑼??脣漲璇?
