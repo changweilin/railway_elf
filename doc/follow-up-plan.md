@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.5 P1 first seed decision
+
+- [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records `JKT-MRT-North-South` / Jakarta MRT North-South Phase 1 as the first P1 Indonesia / Philippines / Vietnam seed, limited to the current Lebak Bulus ⇄ Bundaran HI operating segment.
+- [x] Cleaned the completed 5.5 option by marking the P1 first-seed decision done in `doc/east-asia-expansion-plan.md`.
+- [x] No concurrent uncommitted 5.3 diff was present; the existing Bukit Panjang LRT 5.3 work was already committed before this 5.5 docs pass.
+
 ## 2026-05-15 5.3 Bukit Panjang LRT seed
 
 - [x] Completed one 5.3 seed item: `SG-LRT-Bukit-Panjang` is now in `RAIL_DATA` with a 19-stop clockwise loop pattern from Choa Chu Kang back to Choa Chu Kang, a `BPLRT` LRT train template, OSM route relation `1159434`, generated Singapore shape data, and a line-aware BPLRT icon.

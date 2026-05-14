@@ -266,7 +266,7 @@ Backlog 執行原則：
 
 | 優先 | 區域 | 候選線群 | 5.3 可先做 | 5.5 先判斷 |
 |---|---|---|---|---|
-| P1-ID | 印尼 | Jakarta MRT North-South Phase 1、LRT Jakarta、LRT Jabodebek、KAI Commuter Bogor / Cikarang / Rangkasbitung / Tangerang、Soekarno-Hatta Airport Rail Link | Jakarta MRT Phase 1 可作第一條 seed | KAI Commuter 多分支與長線直通需 branch/short-turn 規則 |
+| P1-ID | 印尼 | Jakarta MRT North-South Phase 1、LRT Jakarta、LRT Jabodebek、KAI Commuter Bogor / Cikarang / Rangkasbitung / Tangerang、Soekarno-Hatta Airport Rail Link | Jakarta MRT Phase 1 已決定為第一條 P1 seed，先做 Lebak Bulus ⇄ Bundaran HI 現行營運段 | KAI Commuter 多分支與長線直通需 branch/short-turn 規則；LRT Jabodebek / Airport Rail Link 後續另排 |
 | P1-PH | 菲律賓 | Manila LRT-1、LRT-2、MRT-3、PNR / NSCR future corridor | LRT-2 或 MRT-3 可作第一條 seed | LRT-1 extension 與 NSCR 未來段需確認 current baseline |
 | P1-VN | 越南 | HCMC Line 1（已完成）、Hanoi 2A（已完成）、Hanoi Line 3 elevated segment、HCMC Line 2 future | Hanoi Line 3 current service 可作補完 seed | 未全線營運段與 future HCMC extensions 不提前建正式資料 |
 | P2-SA | 南亞 / 西亞 | Delhi / Mumbai / Bengaluru / Bangkok-scale 以外大型都會鐵路、Dubai Metro、Doha Metro 等 | 暫不進 5.3 | 需另開大型 region selector、語系與資料量策略 |
@@ -286,7 +286,7 @@ Backlog 執行原則：
 2. 已定義 loop / branch / shared trunk / express service 的資料模型邊界：SG LRT 可用可驗證 loop 站序 seed，KL Ampang / Sri Petaling 與 SRT Red Lines 以獨立 line object 表示共線，ERL KLIA Transit 可先 seed，Ekspres 等 skip-stop template。
 3. 已決定 RTS Link 載客後新增 `sg-my` cross-border region；載客前維持 monitor，不交 5.3 建正式資料。
 4. 已決定排除非鐵路 BRT（例如 Sunway BRT）；除非未來新增明確 non-rail transit category，預設不列入本鐵道路網計畫。
-5. 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed；多 region UI 已決定維持原生 select，12+ regions 時改為群組化 select。
+5. 已決定 P1 第一條 seed：印尼 `JKT-MRT-North-South`（Jakarta MRT North-South Phase 1，Lebak Bulus ⇄ Bundaran HI）；多 region UI 已決定維持原生 select，12+ regions 時改為群組化 select。
 
 ## 批次 5 — 香港：MTR（4 條）
 
@@ -478,6 +478,7 @@ Backlog 執行原則：
 5. [x] 規劃多 region UI 與地區切換體驗（12+ region 規模）是否改版為下拉/群組，以免後續擴展衝突。
 6. [x] i18n 策略決定（中文、日文、韓文、泰文、馬來文、印尼文、越南文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
 7. [x] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
+8. [x] 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed：先下放 `JKT-MRT-North-South` 的 Jakarta MRT Phase 1 現行營運段。
 
 #### 2026-05-14 5.5 決策：Bangkok straddle monorail category
 
@@ -559,6 +560,15 @@ Backlog 執行原則：
 - `constraints`: Do not overload existing `AGT`, `LRT`, `Monorail`, `Metro`, or `Airport` categories to represent bus services. Do not add bus icons, bus timetables, bus stop naming rules, or bus-specific routing behavior in a rail seed. If a future non-rail feature is approved, isolate it as a separate product/schema decision instead of slipping it into a rail-data pass.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. No data, generated shape, timing, icon, or smoke checks are required because this pass changes no runtime files. A future non-rail feature would require a new 5.5 UX/data-model decision plus `npm.cmd run build` and browser smoke before any data seed.
 - `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 non-rail BRT exclusion 決策。Sunway BRT 不下放 5.3；下一個 rail seed 維持 `KL-LRT-Ampang` / `KL-LRT-Sri-Petaling`。
+
+#### 2026-05-15 5.5 決策：P1 first seed
+
+- `decision`: approved + downscope。P1 印尼 / 菲律賓 / 越南的第一條 seed 選 `JKT-MRT-North-South`，也就是 Jakarta MRT North-South Phase 1 的現行營運段；先只建 Lebak Bulus ⇄ Bundaran HI 這條單一路線，不把 Phase 2、KAI Commuter、LRT Jabodebek、LRT Jakarta 或 Soekarno-Hatta Airport Rail Link 併進同一輪。
+- `scope`: 新增 future `indonesia` region 的第一條 rail seed、Jakarta MRT Phase 1 站序、Metro category、MRT Jakarta train template、OSM relation/shape mapping、line-aware icon 與 region name-tag preference。future Spark owned files are `src/rail-data.js`, `scripts/fetch-rail-shapes.mjs`, `src/train-icon-registry.js`, train icon scripts/assets, generated shape outputs, and narrow docs.
+- `source`: MRT Jakarta official Phase 1 page describes the first corridor as a 16 km Lebak Bulus to Bundaran HI line with 13 stations, and the official station list currently exposes the Phase 1 station set. Phase 2 is documented as an extension beyond Bundaran HI toward Ancol Barat, so it is out of scope until the opened passenger-service segment and station naming are stable. Sources: https://jakartamrt.co.id/id/proyek/fase-1, https://www.jakartamrt.co.id/daftar-stasiun, https://www.jakartamrt.co.id/id/proyek/fase-2
+- `constraints`: Do not start with KAI Commuter because its branch/short-turn/long-distance service patterns need a separate branch policy. Do not include future or under-construction MRT extensions in the Phase 1 seed. Use sponsor-free canonical station names where possible, but preserve official/current names if they are needed for OSM/generated shape matching; add Indonesian Nominatim/name-tag preference in the same 5.3 seed per the i18n policy.
+- `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For the future Indonesia data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if a new Jakarta MRT PNG/contact sheet is generated.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 P1 first seed 決策。下一個可下放 P1 seed 是 `JKT-MRT-North-South`；若 Jakarta official/OSM mapping 阻塞，fallback 依序評估 `PH-LRT-2` / `PH-MRT-3` 或 `Hanoi-Line-3` current-service segment。
 
 ### 每 1 輪管理規則（共用）
 - 5.3 工作可按 `seed` 粒度收斂：每輪至少完成 1 條完整 seed（A+B）並出具 smoke + shape + timing 驗證。
