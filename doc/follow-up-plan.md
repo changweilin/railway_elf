@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.5 Bangkok Gold Line feeder decision
+
+- [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records `BKK-BTS-Gold` as an optional AGT/APM rail feeder seed, limited to the current 3-station Krung Thon Buri ⇄ Khlong San segment.
+- [x] Cleaned the completed 5.5 option by marking the Gold Line feeder inclusion decision done in `doc/east-asia-expansion-plan.md`; it no longer blocks trunk/P0 cleared seeds.
+- [x] No concurrent uncommitted 5.3 diff was present; the existing Ampang LRT 5.3 work was already committed before this 5.5 docs pass.
+
 ## 2026-05-15 5.3 Ampang LRT seed
 
 - [x] Completed one 5.3 seed item: `KL-LRT-Ampang` is now in `RAIL_DATA` with 18 stations from Sentul Timur to Ampang, an `AGL` LRT train template, OSM route relation `4466552`, generated Malaysia shape data, and a line-aware Ampang LRT icon.

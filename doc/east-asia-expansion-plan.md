@@ -233,7 +233,7 @@ Backlog 執行原則：
 | P0-TH-4 | ☑ A ☑ B | Monorail / AGT | `BKK-MRT-Pink` | MRT สายสีชมพู | Nonthaburi Civic Center ⇄ Min Buri（34.5 km / 30 站） | 已補主線站表、`Monorail` template、OSM relation `16740886`、Pink Line monorail icon、Thailand generated shape | 主線完成；Muang Thong Thani 支線另開 branch/extension pass，不併入本次 seed |
 | P0-TH-5 | ☑ A ☑ B | Commuter | `BKK-SRT-Dark-Red` | SRT Dark Red Line | Krung Thep Aphiwat ⇄ Rangsit / Don Mueang corridor | 已補站表、`Commuter` template、OSM relation `13058384`、SRT Red commuter icon、Thailand generated shape | Dark Red 完成；Light Red 仍保留為獨立 future seed，不合併成單一 branch graph |
 | P0-TH-6 | □ backlog | Commuter | `BKK-SRT-Light-Red` | SRT Light Red Line | Krung Thep Aphiwat ⇄ Taling Chan / west corridor | 等 5.5 確認營運段後 seed | 共線模型已決定為獨立 line object；仍需另確認當前服務段與延伸站 |
-| P0-TH-7 | □ optional | AGT | `BKK-BTS-Gold` | BTS Gold Line | Krung Thon Buri ⇄ Khlong San | 可作小型 APM seed，補 3 站與 Gold Line 圖示 | 決定小型 feeder 是否納入主路網統計 |
+| P0-TH-7 | □ optional seed | AGT | `BKK-BTS-Gold` | BTS Gold Line | Krung Thon Buri ⇄ Khlong San | 可作小型 APM seed，補 3 站、Gold Line APM template、OSM relation 與 Gold Line 圖示 | 5.5 已決定可納入 rail network，但列為低優先 feeder，不阻塞 trunk/P0 cleared seeds |
 | P0-TH-8 | □ monitor | Metro | `BKK-MRT-Orange` | MRT Orange Line | 待完整載客段確認 | 不執行 | 只在正式營運段、站名與 OSM relation 穩定後下放 |
 
 ### P0：新加坡 / 新馬補完
@@ -479,6 +479,7 @@ Backlog 執行原則：
 6. [x] i18n 策略決定（中文、日文、韓文、泰文、馬來文、印尼文、越南文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
 7. [x] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
 8. [x] 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed：先下放 `JKT-MRT-North-South` 的 Jakarta MRT Phase 1 現行營運段。
+9. [x] 決定 `BKK-BTS-Gold` 小型 feeder：可納入 rail network 作 optional AGT/APM seed，但不計為必須完成的 trunk/P0 coverage gate。
 
 #### 2026-05-14 5.5 決策：Bangkok straddle monorail category
 
@@ -569,6 +570,15 @@ Backlog 執行原則：
 - `constraints`: Do not start with KAI Commuter because its branch/short-turn/long-distance service patterns need a separate branch policy. Do not include future or under-construction MRT extensions in the Phase 1 seed. Use sponsor-free canonical station names where possible, but preserve official/current names if they are needed for OSM/generated shape matching; add Indonesian Nominatim/name-tag preference in the same 5.3 seed per the i18n policy.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For the future Indonesia data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if a new Jakarta MRT PNG/contact sheet is generated.
 - `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 P1 first seed 決策。下一個可下放 P1 seed 是 `JKT-MRT-North-South`；若 Jakarta official/OSM mapping 阻塞，fallback 依序評估 `PH-LRT-2` / `PH-MRT-3` 或 `Hanoi-Line-3` current-service segment。
+
+#### 2026-05-15 5.5 決策：Bangkok Gold Line feeder inclusion
+
+- `decision`: approved + downscope。`BKK-BTS-Gold` 可納入 Railway Elf rail network，category 使用既有 `AGT` / small APM，不新增 `Feeder` 或 `PeopleMover` taxonomy。它是 optional low-priority seed：可在 trunk / cleared P0 seeds 之後補 3 站資料，但不列為泰國或東南亞必要 coverage gate，也不拿來取代 `KL-LRT-Sri-Petaling`、ERL/KTM 或 SG LRT loop 等較高優先 rail seeds。
+- `scope`: Bangkok Gold Line current 3-station segment only, `Krung Thon Buri` ⇄ `Charoen Nakhon` ⇄ `Khlong San`; future Spark owned files are `src/rail-data.js`, `scripts/fetch-rail-shapes.mjs`, `src/train-icon-registry.js`, train icon scripts/assets, generated Thailand shape outputs, and narrow docs. No `app-core.js` / `app-map.js` category work is authorized by this decision.
+- `source`: BTS official Gold Line page says the first phase is part of Bangkok Rail Mass Rapid Transit System, uses an Automated People Mover system, and currently has 3 stations between Krung Thon Buri and Khlong San over 1.8 km. Source: https://www.bts.co.th/eng/info/GoldLine-info-history.html
+- `constraints`: Seed only the current 3-station APM segment; do not include future Prajadhipok / other extension concepts until passenger service and official station names are stable. Do not include buses, ferries, ICONSIAM shuttle routing, or non-rail feeder services in this pass. Keep the route as a standalone AGT/APM line object with its own Gold Line icon/template; do not merge it into BTS Silom or treat it as a branch graph.
+- `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For a future Gold Line data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if a new Gold Line PNG/contact sheet is generated.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 Bangkok Gold Line feeder inclusion 決策。`BKK-BTS-Gold` 可下放為 optional AGT/APM seed，但下一個主線 seed 仍維持 `KL-LRT-Sri-Petaling`。
 
 ### 每 1 輪管理規則（共用）
 - 5.3 工作可按 `seed` 粒度收斂：每輪至少完成 1 條完整 seed（A+B）並出具 smoke + shape + timing 驗證。
