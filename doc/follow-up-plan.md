@@ -35,6 +35,12 @@
 - [x] Cleaned the completed 5.5 option by marking the Level-2 / Level-4 source policy item done in `doc/east-asia-expansion-plan.md`.
 - [x] No 5.3 seed/data files were edited in this round; `follow-up-plan.md` was updated only after confirming there was no concurrent local diff.
 
+## 2026-05-14 5.5 Bangkok monorail category decision
+
+- [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records the Bangkok straddle monorail category decision in the SOP 5.5 handoff format.
+- [x] Cleaned the completed 5.5 option by marking `BKK-MRT-Yellow` / `BKK-MRT-Pink` category blockers resolved and removing the Pink main line from the branch/extension blocker path.
+- [x] No 5.3 seed/data files were edited in this round; `follow-up-plan.md` was updated only after confirming the worktree had no concurrent local diff.
+
 
 ?湔?交?嚗?026-05-12
 
@@ -51,8 +57,8 @@
 |---|---|---|---|---|
 | 1 | `BKK-BTS-Silom` | done | BTS Silom: station/template/OSM relation/icon; fixed route relation and stop-node coords this round | done (shape maxOffset 0.006 km) |
 | 2 | `BKK-MRT-Purple` | done | MRT Purple: heavy-rail template + OSM relation + shape mapping + BEM purple icon; fixed route relation and stop-node coords this round | done (shape maxOffset 0.003 km) |
-| 3 | `BKK-MRT-Yellow` | todo | Yellow Line: station table, straddle monorail template, OSM relation, Yellow Line icon | needs Monorail / AGT display rule |
-| 4 | `BKK-MRT-Pink` | todo | Pink Line: station table, monorail template, OSM relation, Pink Line icon | Muang Thong Thani branch should be separate pass |
+| 3 | `BKK-MRT-Yellow` | todo | Yellow Line: station table, straddle monorail template, OSM relation, Yellow Line icon | 5.5 done: use `Monorail`; ready for seed |
+| 4 | `BKK-MRT-Pink` | todo | Pink Line: station table, monorail template, OSM relation, Pink Line icon | 5.5 done: main line ready; Muang Thong Thani branch separate pass |
 | 5 | `BKK-SRT-Dark-Red` | todo | SRT Dark Red: commuter EMU template, OSM relation, SRT Red Line icon | Light Red / shared trunk rule pending |
 | 6 | `KL-MRT-Putrajaya` | done | Putrajaya Line: station/template/OSM relation/PYL yellow icon | done (OSM relation 11313578 / shape maxOffset 0.080 km) |
 | 7 | `SG-MRT-North-East` | done | North East Line: driverless metro template, OSM relation, NEL purple icon | done (Punggol Coast current baseline / shape maxOffset 0.004 km) |

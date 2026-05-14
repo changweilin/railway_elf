@@ -229,8 +229,8 @@ Backlog 執行原則：
 |---|---|---|---|---|---|---|---|
 | P0-TH-1 | ☑ A ☑ B | Metro | `BKK-BTS-Silom` | BTS สายสีลม | National Stadium ⇄ Bang Wa | 已補站表、BTS train template、OSM relation、沿用 BTS 綠線圖示；本輪修正 route relation 與 stop-node 座標 | 無阻塞；若未來與 Sukhumvit 共用圖示策略改變，另開 icon pass |
 | P0-TH-2 | ☑ A ☑ B | Metro | `BKK-MRT-Purple` | MRT สายสีม่วง | Khlong Bang Phai ⇄ Tao Poon | 已補站表、MRT heavy-rail template、OSM relation、BEM purple icon；本輪修正 route relation 與 stop-node 座標 | 無阻塞；若與未來南延伸合併，另開 extension pass |
-| P0-TH-3 | □ seed | Monorail / AGT | `BKK-MRT-Yellow` | MRT สายสีเหลือง | Lat Phrao ⇄ Samrong（30.4 km / 23 站） | 補站表、straddle monorail template、OSM relation、Yellow Line 圖示 | 決定 `Monorail` 還是 `Metro` category 顯示規則 |
-| P0-TH-4 | □ seed | Monorail / AGT | `BKK-MRT-Pink` | MRT สายสีชมพู | Nonthaburi Civic Center ⇄ Min Buri（34.5 km / 30 站） | 補站表、straddle monorail template、OSM relation、Pink Line 圖示 | Muang Thong Thani 支線若納入，需 branch/extension 規則 |
+| P0-TH-3 | □ seed | Monorail / AGT | `BKK-MRT-Yellow` | MRT สายสีเหลือง | Lat Phrao ⇄ Samrong（30.4 km / 23 站） | 補站表、straddle monorail template、OSM relation、Yellow Line 圖示 | 已決定以 `Monorail` 顯示，不併入 `Metro`；可交 5.3 seed |
+| P0-TH-4 | □ seed | Monorail / AGT | `BKK-MRT-Pink` | MRT สายสีชมพู | Nonthaburi Civic Center ⇄ Min Buri（34.5 km / 30 站） | 補站表、straddle monorail template、OSM relation、Pink Line 圖示 | 主線以 `Monorail` 顯示；Muang Thong Thani 支線另開 branch/extension pass，不阻塞主線 seed |
 | P0-TH-5 | □ seed | Commuter | `BKK-SRT-Dark-Red` | SRT Dark Red Line | Krung Thep Aphiwat ⇄ Rangsit / Don Mueang corridor | 補站表、commuter EMU template、OSM relation、SRT Red Line 圖示 | 與 Light Red 共用 trunk / transfer 呈現先定義 |
 | P0-TH-6 | □ backlog | Commuter | `BKK-SRT-Light-Red` | SRT Light Red Line | Krung Thep Aphiwat ⇄ Taling Chan / west corridor | 等 5.5 確認營運段後 seed | 確認當前服務段、延伸站與是否獨立 line object |
 | P0-TH-7 | □ optional | AGT | `BKK-BTS-Gold` | BTS Gold Line | Krung Thon Buri ⇄ Khlong San | 可作小型 APM seed，補 3 站與 Gold Line 圖示 | 決定小型 feeder 是否納入主路網統計 |
@@ -283,7 +283,7 @@ Backlog 執行原則：
 5.5 需要先決策：
 
 1. 確認每輪實作順序是否維持「泰國 2 條 seed → 馬來西亞 1 條 seed → 新加坡 1 條 seed」循環，或一次把同城市補完。
-2. 定義 loop / branch / shared trunk / express service 的資料模型邊界：SG LRT、KL Ampang / Sri Petaling、SRT Red Lines、ERL KLIA Transit / Ekspres、BKK Pink branch 都依此規則下放。
+2. 定義 loop / branch / shared trunk / express service 的資料模型邊界：SG LRT、KL Ampang / Sri Petaling、SRT Red Lines、ERL KLIA Transit / Ekspres 都依此規則下放；BKK Pink 主線已可先 seed，Muang Thong Thani 支線另開 extension pass。
 3. 決定 RTS Link 載客後的 region 歸屬與 UI 呈現：`singapore`、`malaysia`、或新增 `sg-my` cross-border region。
 4. 決定是否排除非鐵路 BRT（例如 Sunway BRT）；除非新增非 rail category，預設不列入本鐵道路網計畫。
 5. 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed；多 region UI 已決定維持原生 select，12+ regions 時改為群組化 select。
@@ -462,7 +462,7 @@ Backlog 執行原則：
 2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Vietnam 各區批次）。
 3. [x] 維護資料源（以 OSM 為主）並更新 `OSM_LINE_MAP`、`rail-data`、`trainTemplates` 的常規新增流程。
 4. [x] 針對高誤差路段執行 station-to-station/stop-node 對站修正（已完成：多條南韓與東南亞主要線路）。
-5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；已依指示跳過仍待 5.5 的 `BKK-MRT-Yellow` / `BKK-MRT-Pink` / `BKK-SRT-Dark-Red`，且 `SG-MRT-Thomson-East-Coast` 已完成，下一輪若仍未放行則接 `KL-Monorail`。
+5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow` / `BKK-MRT-Pink` 已由 5.5 放行為 `Monorail` seed，`BKK-SRT-Dark-Red` 仍等 shared trunk 決策，若泰國 queue 暫停則接 `KL-Monorail`。
 6. [ ] 泰國 / 新馬 P0 seed 執行：每條線都補 `rail-data`、train template、OSM relation、train icon，並跑 `npm run build:rail-data`、`npm run check:shapes`、`npm run check:timing`、`npm run test:smoke`。
 7. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
 
@@ -478,6 +478,15 @@ Backlog 執行原則：
 5. [x] 規劃多 region UI 與地區切換體驗（12+ region 規模）是否改版為下拉/群組，以免後續擴展衝突。
 6. [x] i18n 策略決定（中文、日文、韓文、泰文、馬來文、印尼文、越南文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
 7. [x] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
+
+#### 2026-05-14 5.5 決策：Bangkok straddle monorail category
+
+- `decision`: approved + downscope。`BKK-MRT-Yellow` 與 `BKK-MRT-Pink` 主線在 `RAIL_DATA` 中使用既有 `Monorail` 類型，不為曼谷 straddle monorail 另建新 category，也不降級顯示為 `Metro`。5.3 可先補兩條主線的站表、template、OSM relation 與 line-aware icon。
+- `scope`: 泰國曼谷 Yellow / Pink 主線的 UI category、train template 類型與 icon kind；owned files for future Spark work are `src/rail-data.js`, `scripts/fetch-rail-shapes.mjs`, `src/train-icon-registry.js`, `scripts/build-train-icons.mjs`, and generated shape/icon outputs from the documented scripts.
+- `source`: repo 既有 category taxonomy 已包含 `Monorail` / `AGT`，且 `Tokyo-Monorail`、`Daegu-Metro-3` 已驗證 monorail display 與 line-aware icon path。Yellow / Pink 官方定位雖掛 MRT brand，但車輛與基礎設施是 straddle monorail；用 `Monorail` 可避免把低運量單軌與重軌 MRT 混在同一 UI bucket。
+- `constraints`: Do not change the category taxonomy or add a new `StraddleMonorail` type in this pass. `BKK-MRT-Pink` 先只 seed Nonthaburi Civic Center ⇄ Min Buri 主線；Muang Thong Thani branch is a separate future extension pass after branch/extension policy is settled. If a future UI wants MRT-branded grouping, use line name/brand copy rather than changing the category.
+- `checks`: For this policy-only docs pass, run `git diff --check`. For future 5.3 seeds, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if new Yellow/Pink PNG assets are generated.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 Bangkok monorail category 決策；下一個可下放 seed 是 `BKK-MRT-Yellow`，接著是 `BKK-MRT-Pink` 主線。
 
 #### 2026-05-14 5.5 決策：i18n sync policy
 
