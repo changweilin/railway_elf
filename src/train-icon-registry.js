@@ -168,6 +168,7 @@ const lineOverrideSpecs = [
   ["singapore", "SG-MRT-East-West", 0, "singapore-sg-mrt-east-west-ewl.png", "metro"],
   ["singapore", "SG-MRT-North-East", 0, "singapore-sg-mrt-north-east-nel.png", "metro"],
   ["singapore", "SG-MRT-Circle", 0, "singapore-sg-mrt-circle-ccl.png", "metro"],
+  ["singapore", "SG-MRT-Downtown", 0, "singapore-sg-mrt-downtown-dtl.png", "metro"],
 
   ["malaysia", "KL-Kelana-Jaya", 0, "malaysia-kl-kelana-jaya-lrt.png", "metro"],
   ["malaysia", "KL-MRT-Kajang", 0, "malaysia-kl-mrt-kajang-mrt.png", "metro"],

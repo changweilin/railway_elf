@@ -450,6 +450,10 @@
       "icon": "assets/train-icons/singapore-sg-mrt-circle-ccl.png",
       "kind": "metro"
     },
+    "singapore|SG-MRT-Downtown|DTL": {
+      "icon": "assets/train-icons/singapore-sg-mrt-downtown-dtl.png",
+      "kind": "metro"
+    },
     "malaysia|KL-Kelana-Jaya|LRT": {
       "icon": "assets/train-icons/malaysia-kl-kelana-jaya-lrt.png",
       "kind": "metro"

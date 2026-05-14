@@ -241,7 +241,7 @@ Backlog 執行原則：
 | 優先 | 狀態 | 類型 | id | 線名 | 起終點 / 範圍 | 5.3 責任 | 5.5 責任 |
 |---|---|---|---|---|---|---|---|
 | P0-SG-1 | ☑ A ☑ B | Metro | `SG-MRT-North-East` | North East Line | HarbourFront ⇄ Punggol Coast（22 km / 17 站） | 已補站表、driverless heavy metro template、OSM relation、NEL purple icon | 無阻塞；Punggol Coast 已納入 current baseline |
-| P0-SG-2 | □ seed | Metro | `SG-MRT-Downtown` | Downtown Line | Bukit Panjang ⇄ Expo（42 km / 35 站，含 Hume） | 補站表、driverless metro template、OSM relation、DTL blue icon | DTL3e 若 2026 後續開通，作 extension pass |
+| P0-SG-2 | ☑ A ☑ B | Metro | `SG-MRT-Downtown` | Downtown Line | Bukit Panjang ⇄ Expo（42 km / 35 站，含 Hume） | 已補站表、driverless metro template、OSM relation `2313458`、DTL blue icon | 無阻塞；DTL3e 保留 extension pass；shape maxOffset 0.004 km |
 | P0-SG-3 | □ seed | Metro | `SG-MRT-Thomson-East-Coast` | Thomson-East Coast Line | Woodlands North ⇄ Bayshore current segment（40.6 km / 27 站） | 補現行營運段站表、TEL template、OSM relation、brown icon | 未完工東段與 future extension 不提前進 `RAIL_DATA` |
 | P0-SG-4 | □ backlog | AGT / LRT | `SG-LRT-Bukit-Panjang` | Bukit Panjang LRT | Choa Chu Kang ⇄ Bukit Panjang loop network | 等 loop 規則確認後 seed | 決定 LRT loop / service pattern 在 line object 中如何表示 |
 | P0-SG-5 | □ backlog | AGT / LRT | `SG-LRT-Sengkang` / `SG-LRT-Punggol` | Sengkang / Punggol LRT | 各 14 站、東西 loops | 等 loop 規則確認後 seed | 決定兩組 loop 是拆線、合併，或用 repeated station/loopAnchor |
@@ -276,7 +276,7 @@ Backlog 執行原則：
 5.3 可直接執行：
 
 1. 依 P0-TH-1 → P0-TH-5 順序補曼谷已營運線，每條線都完成 Phase A + Phase B、train icon、`check:timing`、`check:shapes`、`test:smoke`。
-2. 泰國前 2 條 seed 完成後，P0-MY-1 `KL-MRT-Putrajaya` 與 P0-SG-1 `SG-MRT-North-East` 已完成，後續依剩餘泰國 blocker 與 SG/MY 清單輪替。
+2. 泰國前 2 條 seed 完成後，P0-MY-1 `KL-MRT-Putrajaya`、P0-SG-1 `SG-MRT-North-East` 與 P0-SG-2 `SG-MRT-Downtown` 已完成，後續依剩餘泰國 blocker 與 SG/MY 清單輪替。
 3. 馬來西亞 LRT / KTM / ERL 採「先獨立 line object，後續再合併 branch 模型」策略，避免 branch 規則尚未定案時阻塞站表與 shape 回灌。
 4. 新加坡 MRT 補完先做重軌 MRT（North East / Downtown / Thomson-East-Coast current segment），LRT loop 與 RTS Link 暫不下放。
 
@@ -420,7 +420,7 @@ Backlog 執行原則：
 | 工程級精度 | 若要把門檻從 0.75 km 壓到 0.50 km，可依序檢查 `KHH-LRT`、`Beijing-Subway-1`、`KL-MRT-Kajang`、`TRA-Jiji`、`Alishan-Forest`、`Beijing-Subway-2`、`Hankyu-Kobe`、`Seoul-Metro-9`、`KL-Kelana-Jaya`、`BKK-Airport-Rail`、`TRA-Neiwan`、`TRA-Pingxi` | 第二優先品質清單 |
 | 日本 / 南韓完整覆蓋 | 日本剩餘新幹線 / JR 都會圈 / 民鐵 / 其餘 Metro / 機場線 / Regional / Heritage / Freight；南韓一般列車、Regional、Heritage、Freight | 已有各類代表線 seed；下一批建議改挑 Regional / Heritage 作範例 |
 | 支線與快慢車模型 | AREX 直通、Seoul Line 9 急行、Gyeongui-Jungang 支線/短折、Gyeongchun 상봉 / 광운대 variants、Gyeonggang 부발 short-turn、Seohae 대곡 short-turn | 等 skip-stop 或 branch/short-turn template 成熟後再補 |
-| 泰國 / 新馬策略 | SG LRT loops、KL Ampang / Sri Petaling 共線、ERL KLIA Transit / Ekspres、BKK Pink branch、SRT Red Lines 共線 | 先不阻塞 `BKK-BTS-Silom`、`BKK-MRT-Purple`、`KL-MRT-Putrajaya`、`SG-MRT-North-East` 等 P0 seed |
+| 泰國 / 新馬策略 | SG LRT loops、KL Ampang / Sri Petaling 共線、ERL KLIA Transit / Ekspres、BKK Pink branch、SRT Red Lines 共線 | 先不阻塞 `BKK-BTS-Silom`、`BKK-MRT-Purple`、`KL-MRT-Putrajaya`、`SG-MRT-North-East`、`SG-MRT-Downtown` 等 P0 seed |
 | 跨境與未營運線 | `SG-MY-RTS-Link` region 歸屬、CIQ 提示、跨境票制；`Penang-Mutiara-LRT`、`SG-MRT-Cross-Island`、`BKK-MRT-Orange` 等未完整載客項 | monitor；正式載客與資料穩定前不建正式 pass |
 | UI / i18n | 多 region selector 改版、12+ region 分組、泰文 / 馬來文 / 印尼文 / 越南文站名與 zh-TW 字串同步 | 等 P0 seed 量增加後再評估是否需要 UI 改版 |
 | 資料源策略 | Level-2 政府 API 與 Level-4 付費資料是否納入、授權上限、更新週期與維護成本 | 需用戶授權與成本判準後才啟動 |
@@ -462,7 +462,7 @@ Backlog 執行原則：
 2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Vietnam 各區批次）。
 3. [x] 維護資料源（以 OSM 為主）並更新 `OSM_LINE_MAP`、`rail-data`、`trainTemplates` 的常規新增流程。
 4. [x] 針對高誤差路段執行 station-to-station/stop-node 對站修正（已完成：多條南韓與東南亞主要線路）。
-5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；下一輪首選 `BKK-MRT-Yellow`（待 5.5 monorail 顯示規則），之後依 `P0-TH`、`P0-MY`、`P0-SG` 清單輪替。
+5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；已依指示跳過仍待 5.5 的 `BKK-MRT-Yellow` / `BKK-MRT-Pink` / `BKK-SRT-Dark-Red`，下一輪若仍未放行則接 `SG-MRT-Thomson-East-Coast` 或 `KL-Monorail`。
 6. [ ] 泰國 / 新馬 P0 seed 執行：每條線都補 `rail-data`、train template、OSM relation、train icon，並跑 `npm run build:rail-data`、`npm run check:shapes`、`npm run check:timing`、`npm run test:smoke`。
 7. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
 

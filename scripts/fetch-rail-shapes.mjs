@@ -627,6 +627,7 @@ const OSM_LINE_MAP = {
   "SG-MRT-East-West":   { name: "MRT East-West Line (Pasir Ris→Tuas Link)", relationIds: [2312796] },
   "SG-MRT-North-East":  { name: "MRT North East Line (HarbourFront→Punggol Coast)", relationIds: [2293545], orderStationKms: true, stationStops: {} },
   "SG-MRT-Circle":      { name: "MRT Circle Line (Dhoby Ghaut→HarbourFront)", relationIds: [7981669] },
+  "SG-MRT-Downtown":    { name: "MRT Downtown Line (Bukit Panjang→Expo)", relationIds: [2313458], orderStationKms: true, stationStops: {} },
 
   // Kuala Lumpur.
   "KL-Kelana-Jaya": {
