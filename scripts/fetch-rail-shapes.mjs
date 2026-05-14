@@ -588,6 +588,14 @@ const OSM_LINE_MAP = {
     corridor: { corridorKm: 14.0, sampleKm: 1.2 },
     snapStationCoordsOverKm: 1.5,
   },
+  "KL-MRT-Putrajaya": {
+    name: "Putrajaya Line (Kwasa Damansara to Putrajaya Sentral)",
+    relationIds: [11313578],
+    corridor: { corridorKm: 2.0, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "Beijing-Subway-1": {
     name: "Beijing Subway Line 1 / Batong (Gucheng→Universal Resort)",
     relationIds: [1667140],

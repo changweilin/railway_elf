@@ -30,7 +30,7 @@
 | 3 | `BKK-MRT-Yellow` | todo | Yellow Line: station table, straddle monorail template, OSM relation, Yellow Line icon | needs Monorail / AGT display rule |
 | 4 | `BKK-MRT-Pink` | todo | Pink Line: station table, monorail template, OSM relation, Pink Line icon | Muang Thong Thani branch should be separate pass |
 | 5 | `BKK-SRT-Dark-Red` | todo | SRT Dark Red: commuter EMU template, OSM relation, SRT Red Line icon | Light Red / shared trunk rule pending |
-| 6 | `KL-MRT-Putrajaya` | candidate | Putrajaya Line: MRT template, OSM relation, PYL yellow icon | verify shape source |
+| 6 | `KL-MRT-Putrajaya` | done | Putrajaya Line: station/template/OSM relation/PYL yellow icon | done (OSM relation 11313578 / shape maxOffset 0.080 km) |
 | 7 | `SG-MRT-North-East` | done | North East Line: driverless metro template, OSM relation, NEL purple icon | done (Punggol Coast current baseline / shape maxOffset 0.004 km) |
 | 8 | `SG-MRT-Downtown` | ?啣???| 鋆?Downtown Line 蝡”?riverless metro template?SM relation?TL blue icon | 敺? extension ?阡? pass |
 | 9 | `SG-MRT-Thomson-East-Coast` | ?啣???| 鋆?TEL ?曇???畾萇?銵具emplate?SM relation?rown icon | ?芸?撌交畾萎?????`RAIL_DATA` |
@@ -48,7 +48,7 @@
 餈??芸???瘜啣? / ?圈收 P0 seed 撠?賢嚗銵??桐誑銝??銝頛芾???啜皞?
 撌脩宏??follow-up嚗okaido relation ?踵??極蝔? maxOffset 蝎曆耨???/ ??摰閬??ranch/short-turn ?瑟?璅∪??TS Link 頝典? region?evel-2/4 鞈?皞? region UI ??i18n 蝑嚗絞銝餈質馱??`doc/east-asia-expansion-plan.md`??
 ## 撱箄降銝?甇?
-1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `SG-MRT-North-East`. 2. Next 5.3 seed priority: `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `KL-MRT-Putrajaya`.
+1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`. 2. Next 5.3 seed priority: `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red` after their 5.5 blockers are cleared.
 ## 5.3 vs 5.5 隞餃????脣漲蝞∠?嚗頛芾?銝?頛迎?
 
 ### 5.3 ?舐?亙銵?- ?格?嚗雁?????鞈迎??撽?????啗?銝?頛?P0 seed ?游???- ?嗅?????祈憚??閬??柴歇蝯?嚗ollow-up ?芾蕭頩斗陸??/ ?圈收?芸?鞈??湔嚗??芸??芸???撌脩宏??`doc/east-asia-expansion-plan.md`??

@@ -252,7 +252,7 @@ Backlog 執行原則：
 
 | 優先 | 狀態 | 類型 | id | 線名 | 起終點 / 範圍 | 5.3 責任 | 5.5 責任 |
 |---|---|---|---|---|---|---|---|
-| P0-MY-1 | □ seed | Metro | `KL-MRT-Putrajaya` | MRT Putrajaya Line | Kwasa Damansara ⇄ Putrajaya Sentral（57.7 km / 36 站） | 補站表、MRT train template、OSM relation、PYL yellow icon | 無阻塞；長線站距需優先 shape 對站 |
+| P0-MY-1 | ☑ A ☑ B | Metro | `KL-MRT-Putrajaya` | MRT Putrajaya Line | Kwasa Damansara ⇄ Putrajaya Sentral（57.7 km / 36 站） | 已補站表、PYL MRT template、OSM relation `11313578`、PYL yellow icon | 無阻塞；shape maxOffset 0.080 km |
 | P0-MY-2 | □ seed | Metro / LRT | `KL-LRT-Ampang` | LRT Ampang Line | Sentul Timur ⇄ Ampang | 以獨立 line object 補站表、template、OSM relation | 與 Sri Petaling 共用 trunk 是否需要 branch-aware 模型 |
 | P0-MY-3 | □ seed | Metro / LRT | `KL-LRT-Sri-Petaling` | LRT Sri Petaling Line | Sentul Timur ⇄ Putra Heights | 以獨立 line object 補站表、template、OSM relation | 若未來合併為 branch network，需 app-core/app-map 表示策略 |
 | P0-MY-4 | □ seed | Monorail | `KL-Monorail` | KL Monorail | KL Sentral ⇄ Titiwangsa（11 站） | 補站表、monorail template、OSM relation、KL Monorail icon | 無阻塞；可作東南亞 monorail icon 範例 |
@@ -276,7 +276,7 @@ Backlog 執行原則：
 5.3 可直接執行：
 
 1. 依 P0-TH-1 → P0-TH-5 順序補曼谷已營運線，每條線都完成 Phase A + Phase B、train icon、`check:timing`、`check:shapes`、`test:smoke`。
-2. 泰國前 2 條 seed 完成後，平行展開 P0-MY-1 `KL-MRT-Putrajaya` 與 P0-SG-1 `SG-MRT-North-East`，確保新馬資料與既有 SG/MY region 格式一致。
+2. 泰國前 2 條 seed 完成後，P0-MY-1 `KL-MRT-Putrajaya` 與 P0-SG-1 `SG-MRT-North-East` 已完成，後續依剩餘泰國 blocker 與 SG/MY 清單輪替。
 3. 馬來西亞 LRT / KTM / ERL 採「先獨立 line object，後續再合併 branch 模型」策略，避免 branch 規則尚未定案時阻塞站表與 shape 回灌。
 4. 新加坡 MRT 補完先做重軌 MRT（North East / Downtown / Thomson-East-Coast current segment），LRT loop 與 RTS Link 暫不下放。
 
@@ -462,7 +462,7 @@ Backlog 執行原則：
 2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Vietnam 各區批次）。
 3. [x] 維護資料源（以 OSM 為主）並更新 `OSM_LINE_MAP`、`rail-data`、`trainTemplates` 的常規新增流程。
 4. [x] 針對高誤差路段執行 station-to-station/stop-node 對站修正（已完成：多條南韓與東南亞主要線路）。
-5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；下一輪首選 `BKK-MRT-Yellow`，之後依 `P0-TH`、`P0-MY`、`P0-SG` 清單輪替。
+5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；下一輪首選 `BKK-MRT-Yellow`（待 5.5 monorail 顯示規則），之後依 `P0-TH`、`P0-MY`、`P0-SG` 清單輪替。
 6. [ ] 泰國 / 新馬 P0 seed 執行：每條線都補 `rail-data`、train template、OSM relation、train icon，並跑 `npm run build:rail-data`、`npm run check:shapes`、`npm run check:timing`、`npm run test:smoke`。
 7. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
 

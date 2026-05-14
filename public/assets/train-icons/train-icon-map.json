@@ -458,6 +458,10 @@
       "icon": "assets/train-icons/malaysia-kl-mrt-kajang-mrt.png",
       "kind": "metro"
     },
+    "malaysia|KL-MRT-Putrajaya|PYL": {
+      "icon": "assets/train-icons/malaysia-kl-mrt-putrajaya-pyl.png",
+      "kind": "metro"
+    },
     "thailand|BKK-BTS-Sukhumvit|BTS": {
       "icon": "assets/train-icons/thailand-bkk-bts-sukhumvit-bts.png",
       "kind": "metro"
