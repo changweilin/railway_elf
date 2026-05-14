@@ -4003,6 +4003,21 @@ export const RAIL_DATA = {
           { name: "KLIA T2",                lat: 2.744480, lng: 101.685208, km: 56.2, dwellSec: 45 },
         ],
       },
+      {
+        id: "ERL-KLIA-Ekspres",
+        name: "KLIA Ekspres",
+        nameEn: "KLIA Ekspres",
+        color: "#7c3aed",
+        category: "Airport",
+        directions: { up: "KL Sentral bound", down: "KLIA T2 bound" },
+        // KLIA Ekspres regular-hours express service only: KL Sentral to KLIA T2.
+        // 23:00+ all-stations operation remains deferred until service-pattern runtime exists.
+        stations: [
+          { name: "KL Sentral", lat: 3.133871, lng: 101.686645, km: 0.0,  dwellSec: 45 },
+          { name: "KLIA T1",    lat: 2.754550, lng: 101.704527, km: 53.8 },
+          { name: "KLIA T2",    lat: 2.744480, lng: 101.685208, km: 56.2, dwellSec: 45 },
+        ],
+      },
     ],
     trainTemplates: [
       { line: "KL-Kelana-Jaya",  type: "LRT",  badge: "LRT", badgeColor: "#dc2626", speed: 38, interval: 3, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
@@ -4012,6 +4027,7 @@ export const RAIL_DATA = {
       { line: "KL-MRT-Putrajaya", type: "PYL",  badge: "PYL", badgeColor: "#ffcc00", speed: 45, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "KL-Monorail",     type: "MRL",  badge: "MRL", badgeColor: "#84bd00", speed: 38, interval: 7, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "ERL-KLIA-Transit", type: "ERL",  badge: "ERL", badgeColor: "#7c3aed", speed: 90, interval: 20, accel: 0.80, decel: 0.90, aLat: 0.85, dwellSec: 45 },
+      { line: "ERL-KLIA-Ekspres", type: "ERL",  badge: "ERL", badgeColor: "#7c3aed", speed: 120, interval: 20, accel: 0.80, decel: 0.90, aLat: 0.85, dwellSec: 45 },
     ],
   },
 

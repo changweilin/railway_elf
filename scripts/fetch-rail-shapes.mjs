@@ -699,6 +699,16 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "ERL-KLIA-Ekspres": {
+    name: "KLIA Ekspres (KL Sentral to KLIA T2)",
+    relationIds: [8119878],
+    // Only three passenger stops are modeled, so keep a wider station-chain
+    // corridor to preserve the ERL alignment through Putrajaya/Salak Tinggi.
+    corridor: { corridorKm: 3.0, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // Bangkok.
   "BKK-BTS-Sukhumvit": {
