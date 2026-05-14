@@ -654,6 +654,14 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "KL-LRT-Sri-Petaling": {
+    name: "Sri Petaling Line (Sentul Timur→Putra Heights)",
+    relationIds: [3374384],
+    corridor: { corridorKm: 1.5, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
   "KL-MRT-Kajang":  {
     name: "Kajang Line (Kwasa Damansara→Kajang)",
     relationIds: [5690837],
