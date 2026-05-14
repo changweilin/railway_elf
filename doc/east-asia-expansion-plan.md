@@ -286,7 +286,7 @@ Backlog 執行原則：
 2. 定義 loop / branch / shared trunk / express service 的資料模型邊界：SG LRT、KL Ampang / Sri Petaling、SRT Red Lines、ERL KLIA Transit / Ekspres、BKK Pink branch 都依此規則下放。
 3. 決定 RTS Link 載客後的 region 歸屬與 UI 呈現：`singapore`、`malaysia`、或新增 `sg-my` cross-border region。
 4. 決定是否排除非鐵路 BRT（例如 Sunway BRT）；除非新增非 rail category，預設不列入本鐵道路網計畫。
-5. 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed，並先評估多 region UI 是否足以承受 12+ regions。
+5. 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed；多 region UI 已決定維持原生 select，12+ regions 時改為群組化 select。
 
 ## 批次 5 — 香港：MTR（4 條）
 
@@ -475,9 +475,18 @@ Backlog 執行原則：
 2. [x] 決定亞洲其他區域下一輪優先順序：泰國曼谷補完 → 新加坡 / 馬來西亞補完與新馬 RTS Link 監控 → 印尼 / 菲律賓 / 越南補完。
 3. [ ] 評估 loop/複線/共線的策略模板（`loopAnchor`、`corridor`、branch/short-turn）在 `app-core` 與 `app-map` 的長期維運性；優先用於 SG LRT、KL Ampang/Sri Petaling、SRT Red Lines、ERL express/local。
 4. [ ] 決定 RTS Link 載客後的 region 歸屬、CIQ 提示、跨境線是否新增 `sg-my` region；載客前只監控，不交給 5.3 建正式資料。
-5. [ ] 規劃多 region UI 與地區切換體驗（12+ region 規模）是否改版為下拉/群組，以免後續擴展衝突。
+5. [x] 規劃多 region UI 與地區切換體驗（12+ region 規模）是否改版為下拉/群組，以免後續擴展衝突。
 6. [ ] i18n 策略決定（中文、日文、韓文、泰文、馬來文、印尼文、越南文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
 7. [ ] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
+
+#### 2026-05-14 5.5 決策：12+ region selector
+
+- `decision`: approved + downscope。近期維持 `src/app-core.js` `Toolbar` 內現有的原生 `<select>`；目前 `RAIL_DATA` 為 9 個 region，未達必須改版門檻。當 region 數量達 12 時，改為同一個原生 select 的群組化選項（`optgroup` 或等價資料驅動 render），先不要改成 modal、map overlay 或搜尋式 command menu。搜尋式選單只在 18+ regions、跨境 region 增多、或使用者回報難以掃描時再開新 5.5 UI 決策。
+- `scope`: 本輪只完成策略文件與看板清理。未來實作若觸發，owned files 以 `src/app-core.js` 的 `Toolbar` region option source 與對應 CSS 為主；`src/app-map.js` 不需要改，除非 region 切換 lifecycle 出現實測 bug。
+- `source`: repo 現況顯示 `Toolbar` 已使用原生 select，`RAIL_DATA` 目前有 9 個 region（Taiwan、Japan、Korea、Hong Kong、China、Singapore、Malaysia、Thailand、Vietnam）。P0/P1 backlog 會把 region 推向 12+，但短期仍可用現有 control 承載。
+- `constraints`: 保留既有 region key 與 `switchRegion` 流程；不要引入 JSX/TypeScript；不要為此新增 `RAIL_DATA` schema 欄位。若未來新增 `sg-my`，先等 RTS Link 5.5 歸屬決策完成，再放入 `Cross-border / monitor` 群組。
+- `checks`: 本輪為文件決策，最小檢查為 `git diff --check`。未來若實作 UI，需跑 `npm.cmd run build`、`npm.cmd run test:smoke`，並用 browser testing 檢查桌面與手機寬度的 toolbar/select 不溢出。
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 UI 策略決策；下一個可下放 UI seed 是「12+ regions 時將 hard-coded region list 抽為 grouped option data」。
 
 ### 每 1 輪管理規則（共用）
 - 5.3 工作可按 `seed` 粒度收斂：每輪至少完成 1 條完整 seed（A+B）並出具 smoke + shape + timing 驗證。

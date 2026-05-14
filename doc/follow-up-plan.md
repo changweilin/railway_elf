@@ -11,6 +11,12 @@
 - [x] Verification status: `check:train-icons`, `check:shapes`, `check:timing`, and production `build` all passed after the indexed station-coordinate fix.
 - [x] Long-running supervision completed: heartbeat `railway-elf-5-5-route-supervision` was stopped after the 5.5 route-minimization blocker checks went green.
 
+## 2026-05-14 5.5 region selector decision
+
+- [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records the 12+ region selector decision in the SOP 5.5 handoff format.
+- [x] Cleaned the completed 5.5 option by marking the multi-region UI / region switcher planning item done in `doc/east-asia-expansion-plan.md`.
+- [x] No 5.3 seed/data files were edited in this round; `follow-up-plan.md` was only updated after the 5.5 documentation change.
+
 
 ?湔?交?嚗?026-05-12
 
