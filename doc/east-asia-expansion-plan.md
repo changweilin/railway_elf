@@ -231,8 +231,8 @@ Backlog 執行原則：
 | P0-TH-2 | ☑ A ☑ B | Metro | `BKK-MRT-Purple` | MRT สายสีม่วง | Khlong Bang Phai ⇄ Tao Poon | 已補站表、MRT heavy-rail template、OSM relation、BEM purple icon；本輪修正 route relation 與 stop-node 座標 | 無阻塞；若與未來南延伸合併，另開 extension pass |
 | P0-TH-3 | □ seed | Monorail / AGT | `BKK-MRT-Yellow` | MRT สายสีเหลือง | Lat Phrao ⇄ Samrong（30.4 km / 23 站） | 補站表、straddle monorail template、OSM relation、Yellow Line 圖示 | 已決定以 `Monorail` 顯示，不併入 `Metro`；可交 5.3 seed |
 | P0-TH-4 | □ seed | Monorail / AGT | `BKK-MRT-Pink` | MRT สายสีชมพู | Nonthaburi Civic Center ⇄ Min Buri（34.5 km / 30 站） | 補站表、straddle monorail template、OSM relation、Pink Line 圖示 | 主線以 `Monorail` 顯示；Muang Thong Thani 支線另開 branch/extension pass，不阻塞主線 seed |
-| P0-TH-5 | □ seed | Commuter | `BKK-SRT-Dark-Red` | SRT Dark Red Line | Krung Thep Aphiwat ⇄ Rangsit / Don Mueang corridor | 補站表、commuter EMU template、OSM relation、SRT Red Line 圖示 | 與 Light Red 共用 trunk / transfer 呈現先定義 |
-| P0-TH-6 | □ backlog | Commuter | `BKK-SRT-Light-Red` | SRT Light Red Line | Krung Thep Aphiwat ⇄ Taling Chan / west corridor | 等 5.5 確認營運段後 seed | 確認當前服務段、延伸站與是否獨立 line object |
+| P0-TH-5 | □ seed | Commuter | `BKK-SRT-Dark-Red` | SRT Dark Red Line | Krung Thep Aphiwat ⇄ Rangsit / Don Mueang corridor | 補站表、commuter EMU template、OSM relation、SRT Red Line 圖示 | 5.5 已決定以獨立 line object seed；與 Light Red 共線不合併成單一 branch graph |
+| P0-TH-6 | □ backlog | Commuter | `BKK-SRT-Light-Red` | SRT Light Red Line | Krung Thep Aphiwat ⇄ Taling Chan / west corridor | 等 5.5 確認營運段後 seed | 共線模型已決定為獨立 line object；仍需另確認當前服務段與延伸站 |
 | P0-TH-7 | □ optional | AGT | `BKK-BTS-Gold` | BTS Gold Line | Krung Thon Buri ⇄ Khlong San | 可作小型 APM seed，補 3 站與 Gold Line 圖示 | 決定小型 feeder 是否納入主路網統計 |
 | P0-TH-8 | □ monitor | Metro | `BKK-MRT-Orange` | MRT Orange Line | 待完整載客段確認 | 不執行 | 只在正式營運段、站名與 OSM relation 穩定後下放 |
 
@@ -243,8 +243,8 @@ Backlog 執行原則：
 | P0-SG-1 | ☑ A ☑ B | Metro | `SG-MRT-North-East` | North East Line | HarbourFront ⇄ Punggol Coast（22 km / 17 站） | 已補站表、driverless heavy metro template、OSM relation、NEL purple icon | 無阻塞；Punggol Coast 已納入 current baseline |
 | P0-SG-2 | ☑ A ☑ B | Metro | `SG-MRT-Downtown` | Downtown Line | Bukit Panjang ⇄ Expo（42 km / 35 站，含 Hume） | 已補站表、driverless metro template、OSM relation `2313458`、DTL blue icon | 無阻塞；DTL3e 保留 extension pass；shape maxOffset 0.004 km |
 | P0-SG-3 | ☑ A ☑ B | Metro | `SG-MRT-Thomson-East-Coast` | Thomson-East Coast Line | Woodlands North ⇄ Bayshore current segment（40.6 km / 27 站） | 已補站表、TEL template、OSM relation `2383439`、TEL brown icon；shape maxOffset 0.005 km | 未完工東段與 future extension 不提前進 `RAIL_DATA` |
-| P0-SG-4 | □ backlog | AGT / LRT | `SG-LRT-Bukit-Panjang` | Bukit Panjang LRT | Choa Chu Kang ⇄ Bukit Panjang loop network | 等 loop 規則確認後 seed | 決定 LRT loop / service pattern 在 line object 中如何表示 |
-| P0-SG-5 | □ backlog | AGT / LRT | `SG-LRT-Sengkang` / `SG-LRT-Punggol` | Sengkang / Punggol LRT | 各 14 站、東西 loops | 等 loop 規則確認後 seed | 決定兩組 loop 是拆線、合併，或用 repeated station/loopAnchor |
+| P0-SG-4 | □ seed | AGT / LRT | `SG-LRT-Bukit-Panjang` | Bukit Panjang LRT | Choa Chu Kang ⇄ Bukit Panjang loop network | 以可驗證的代表 loop / service pattern 建獨立 line object，必要時用 repeated stations、`loopAnchor`、indexed km | 5.5 已決定不新增 branch graph；先用單一可跑站序 seed |
+| P0-SG-5 | □ seed | AGT / LRT | `SG-LRT-Sengkang` / `SG-LRT-Punggol` | Sengkang / Punggol LRT | 各 14 站、東西 loops | 拆成穩定方向/loop 的 line object seed；避免把 east/west loop 混成不可驗證站序 | 5.5 已決定 loop 以站序與 `loopAnchor`/indexed km 表示，不合併成多分支 schema |
 | P0-SG-6 | □ monitor | Cross-border LRT | `SG-MY-RTS-Link` | Johor Bahru-Singapore RTS Link | Woodlands North ⇄ Bukit Chagar（4 km / 2 站，目標 2026 年底） | 不在載客前建正式 pass；可先備 icon / region strategy | 決定跨 region、CIQ、票制與 `singapore` / `malaysia` / `sg-my` 歸屬 |
 | P0-SG-7 | □ monitor | Metro | `SG-MRT-Cross-Island` | Cross Island Line | future stages | 不執行 | 待載客段開通與 LTA current line list 更新 |
 
@@ -253,13 +253,13 @@ Backlog 執行原則：
 | 優先 | 狀態 | 類型 | id | 線名 | 起終點 / 範圍 | 5.3 責任 | 5.5 責任 |
 |---|---|---|---|---|---|---|---|
 | P0-MY-1 | ☑ A ☑ B | Metro | `KL-MRT-Putrajaya` | MRT Putrajaya Line | Kwasa Damansara ⇄ Putrajaya Sentral（57.7 km / 36 站） | 已補站表、PYL MRT template、OSM relation `11313578`、PYL yellow icon | 無阻塞；shape maxOffset 0.080 km |
-| P0-MY-2 | □ seed | Metro / LRT | `KL-LRT-Ampang` | LRT Ampang Line | Sentul Timur ⇄ Ampang | 以獨立 line object 補站表、template、OSM relation | 與 Sri Petaling 共用 trunk 是否需要 branch-aware 模型 |
-| P0-MY-3 | □ seed | Metro / LRT | `KL-LRT-Sri-Petaling` | LRT Sri Petaling Line | Sentul Timur ⇄ Putra Heights | 以獨立 line object 補站表、template、OSM relation | 若未來合併為 branch network，需 app-core/app-map 表示策略 |
+| P0-MY-2 | □ seed | Metro / LRT | `KL-LRT-Ampang` | LRT Ampang Line | Sentul Timur ⇄ Ampang | 以獨立 line object 補站表、template、OSM relation | 5.5 已決定 trunk duplication 可接受；不等 branch-aware 模型 |
+| P0-MY-3 | □ seed | Metro / LRT | `KL-LRT-Sri-Petaling` | LRT Sri Petaling Line | Sentul Timur ⇄ Putra Heights | 以獨立 line object 補站表、template、OSM relation | 5.5 已決定 trunk duplication 可接受；未來若合併再另開 UI/schema pass |
 | P0-MY-4 | □ seed | Monorail | `KL-Monorail` | KL Monorail | KL Sentral ⇄ Titiwangsa（11 站） | 補站表、monorail template、OSM relation、KL Monorail icon | 無阻塞；可作東南亞 monorail icon 範例 |
 | P0-MY-5 | □ seed | Commuter | `KTM-Komuter-Batu-Caves-Pulau-Sebang` | KTM Komuter Batu Caves - Pulau Sebang | Batu Caves ⇄ Pulau Sebang（135 km） | 補長距通勤站表、KTM EMU template、OSM relation | 長線班距與部分短折服務先不建，等 template 支援 |
 | P0-MY-6 | □ seed | Commuter | `KTM-Komuter-Tanjung-Malim-Port-Klang` | KTM Komuter Tanjung Malim - Port Klang | Tanjung Malim ⇄ Pelabuhan Klang（131 km） | 補站表、KTM EMU template、OSM relation | 同上；確認 terminal name 與英/馬來文 labels |
-| P0-MY-7 | □ seed | Airport | `ERL-KLIA-Transit` | KLIA Transit | KL Sentral ⇄ KLIA2 local stops | 補 local airport service 站表、ERL template、OSM relation | 與 KLIA Ekspres 共線時先以 local 為 seed |
-| P0-MY-8 | □ backlog | Airport | `ERL-KLIA-Ekspres` | KLIA Ekspres | KL Sentral ⇄ KLIA / KLIA2 express | 等 skip-stop / express template 確認後補 | 決定 express 同 corridor pass prediction 與 UI 呈現 |
+| P0-MY-7 | □ seed | Airport | `ERL-KLIA-Transit` | KLIA Transit | KL Sentral ⇄ KLIA2 local stops | 補 local airport service 站表、ERL template、OSM relation | 5.5 已決定 all-stop/local 可先 seed；與 Ekspres 共線不阻塞 |
+| P0-MY-8 | □ backlog | Airport | `ERL-KLIA-Ekspres` | KLIA Ekspres | KL Sentral ⇄ KLIA / KLIA2 express | 等 skip-stop / express template 確認後補 | 非連續停站的 pass prediction / UI 標示仍待後續 template 支援 |
 | P0-MY-9 | □ monitor | LRT | `Penang-Mutiara-LRT` | Penang Mutiara Line | future operational segment | 不執行 | 待正式載客與 OSM/官方站表穩定 |
 
 ### P1：其他亞洲候選池（泰國 / 新馬之後）
@@ -283,7 +283,7 @@ Backlog 執行原則：
 5.5 需要先決策：
 
 1. 確認每輪實作順序是否維持「泰國 2 條 seed → 馬來西亞 1 條 seed → 新加坡 1 條 seed」循環，或一次把同城市補完。
-2. 定義 loop / branch / shared trunk / express service 的資料模型邊界：SG LRT、KL Ampang / Sri Petaling、SRT Red Lines、ERL KLIA Transit / Ekspres 都依此規則下放；BKK Pink 主線已可先 seed，Muang Thong Thani 支線另開 extension pass。
+2. 已定義 loop / branch / shared trunk / express service 的資料模型邊界：SG LRT 可用可驗證 loop 站序 seed，KL Ampang / Sri Petaling 與 SRT Red Lines 以獨立 line object 表示共線，ERL KLIA Transit 可先 seed，Ekspres 等 skip-stop template。
 3. 決定 RTS Link 載客後的 region 歸屬與 UI 呈現：`singapore`、`malaysia`、或新增 `sg-my` cross-border region。
 4. 決定是否排除非鐵路 BRT（例如 Sunway BRT）；除非新增非 rail category，預設不列入本鐵道路網計畫。
 5. 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed；多 region UI 已決定維持原生 select，12+ regions 時改為群組化 select。
@@ -420,7 +420,7 @@ Backlog 執行原則：
 | 工程級精度 | 若要把門檻從 0.75 km 壓到 0.50 km，可依序檢查 `KHH-LRT`、`Beijing-Subway-1`、`KL-MRT-Kajang`、`TRA-Jiji`、`Alishan-Forest`、`Beijing-Subway-2`、`Hankyu-Kobe`、`Seoul-Metro-9`、`KL-Kelana-Jaya`、`BKK-Airport-Rail`、`TRA-Neiwan`、`TRA-Pingxi` | 第二優先品質清單 |
 | 日本 / 南韓完整覆蓋 | 日本剩餘新幹線 / JR 都會圈 / 民鐵 / 其餘 Metro / 機場線 / Regional / Heritage / Freight；南韓一般列車、Regional、Heritage、Freight | 已有各類代表線 seed；下一批建議改挑 Regional / Heritage 作範例 |
 | 支線與快慢車模型 | AREX 直通、Seoul Line 9 急行、Gyeongui-Jungang 支線/短折、Gyeongchun 상봉 / 광운대 variants、Gyeonggang 부발 short-turn、Seohae 대곡 short-turn | 等 skip-stop 或 branch/short-turn template 成熟後再補 |
-| 泰國 / 新馬策略 | SG LRT loops、KL Ampang / Sri Petaling 共線、ERL KLIA Transit / Ekspres、BKK Pink branch、SRT Red Lines 共線 | 先不阻塞 `BKK-BTS-Silom`、`BKK-MRT-Purple`、`KL-MRT-Putrajaya`、`SG-MRT-North-East`、`SG-MRT-Downtown` 等 P0 seed |
+| 泰國 / 新馬策略 | SG LRT loops、KL Ampang / Sri Petaling 共線、ERL KLIA Transit / Ekspres、BKK Pink branch、SRT Red Lines 共線 | 基本 loop / shared-trunk 邊界已決定；Ekspres skip-stop、Pink branch 與 Light Red current segment 仍需後續 pass |
 | 跨境與未營運線 | `SG-MY-RTS-Link` region 歸屬、CIQ 提示、跨境票制；`Penang-Mutiara-LRT`、`SG-MRT-Cross-Island`、`BKK-MRT-Orange` 等未完整載客項 | monitor；正式載客與資料穩定前不建正式 pass |
 | UI / i18n | 多 region selector 改版、12+ region 分組、泰文 / 馬來文 / 印尼文 / 越南文站名與 zh-TW 字串同步 | 等 P0 seed 量增加後再評估是否需要 UI 改版 |
 | 資料源策略 | Level-2 政府 API 與 Level-4 付費資料是否納入、授權上限、更新週期與維護成本 | 需用戶授權與成本判準後才啟動 |
@@ -462,7 +462,7 @@ Backlog 執行原則：
 2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Vietnam 各區批次）。
 3. [x] 維護資料源（以 OSM 為主）並更新 `OSM_LINE_MAP`、`rail-data`、`trainTemplates` 的常規新增流程。
 4. [x] 針對高誤差路段執行 station-to-station/stop-node 對站修正（已完成：多條南韓與東南亞主要線路）。
-5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow` / `BKK-MRT-Pink` 已由 5.5 放行為 `Monorail` seed，`BKK-SRT-Dark-Red` 仍等 shared trunk 決策，若泰國 queue 暫停則接 `KL-Monorail`。
+5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow` / `BKK-MRT-Pink` 已由 5.5 放行為 `Monorail` seed，`BKK-SRT-Dark-Red` 已由 5.5 放行為獨立 Red Line seed，若泰國 queue 暫停則接 `KL-Monorail`。
 6. [ ] 泰國 / 新馬 P0 seed 執行：每條線都補 `rail-data`、train template、OSM relation、train icon，並跑 `npm run build:rail-data`、`npm run check:shapes`、`npm run check:timing`、`npm run test:smoke`。
 7. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
 
@@ -473,7 +473,7 @@ Backlog 執行原則：
 #### 進度看板（5.5）
 1. [x] 確認「完成」與「可選 backlog」邊界（目前結論：必要項目已無）並固定為每輪 1 類型 1 seed 的擴張策略。
 2. [x] 決定亞洲其他區域下一輪優先順序：泰國曼谷補完 → 新加坡 / 馬來西亞補完與新馬 RTS Link 監控 → 印尼 / 菲律賓 / 越南補完。
-3. [ ] 評估 loop/複線/共線的策略模板（`loopAnchor`、`corridor`、branch/short-turn）在 `app-core` 與 `app-map` 的長期維運性；優先用於 SG LRT、KL Ampang/Sri Petaling、SRT Red Lines、ERL express/local。
+3. [x] 評估 loop/複線/共線的策略模板（`loopAnchor`、`corridor`、branch/short-turn）在 `app-core` 與 `app-map` 的長期維運性；優先用於 SG LRT、KL Ampang/Sri Petaling、SRT Red Lines、ERL express/local。
 4. [ ] 決定 RTS Link 載客後的 region 歸屬、CIQ 提示、跨境線是否新增 `sg-my` region；載客前只監控，不交給 5.3 建正式資料。
 5. [x] 規劃多 region UI 與地區切換體驗（12+ region 規模）是否改版為下拉/群組，以免後續擴展衝突。
 6. [x] i18n 策略決定（中文、日文、韓文、泰文、馬來文、印尼文、越南文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
@@ -514,6 +514,15 @@ Backlog 執行原則：
 - `constraints`: 保留既有 region key 與 `switchRegion` 流程；不要引入 JSX/TypeScript；不要為此新增 `RAIL_DATA` schema 欄位。若未來新增 `sg-my`，先等 RTS Link 5.5 歸屬決策完成，再放入 `Cross-border / monitor` 群組。
 - `checks`: 本輪為文件決策，最小檢查為 `git diff --check`。未來若實作 UI，需跑 `npm.cmd run build`、`npm.cmd run test:smoke`，並用 browser testing 檢查桌面與手機寬度的 toolbar/select 不溢出。
 - `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 UI 策略決策；下一個可下放 UI seed 是「12+ regions 時將 hard-coded region list 抽為 grouped option data」。
+
+#### 2026-05-15 5.5 決策：loop / branch / shared-trunk template
+
+- `decision`: approved + downscope。近期維持 runtime 的單一路線模型：每個 `RAIL_DATA` line object 代表一條可驗證、可排序、可投影的站序；不在 `app-core.js` / `app-map.js` 新增 branch graph、service graph 或 multi-route schema。複線、共線與 shared trunk 以多個獨立 line object 重複共線區間處理；loop 以 explicit station order、必要時 repeated station、`loopAnchor` 與 generated indexed km 處理；短折只使用現有 `stationIdxStart` / `stationIdxEnd` 表示連續子區間。非連續 skip-stop / express 不在本決策下放，需等 `TrainGen` 停站 pattern 與 UI 標示另開實作。
+- `scope`: SG LRT Bukit Panjang / Sengkang / Punggol loop seeds、KL Ampang / Sri Petaling shared trunk、SRT Dark / Light Red shared trunk、ERL KLIA Transit / Ekspres local-vs-express；future Spark owned files are `src/rail-data.js`, `scripts/fetch-rail-shapes.mjs`, `src/train-icon-registry.js`, generated shape/icon outputs, and narrow docs. `src/app-core.js` / `src/app-map.js` are explicitly out of scope unless a future UI bug is reproduced.
+- `source`: 現有 app already treats train movement as a canonical km along one ordered station chain: `TrainGen.generate` builds directional stops and kinematic segments from line station order, `app-core.js` computes pass time / live position from those segments, and `app-map.js` renders per-line shapes and markers without needing branch topology. Existing examples already cover loop anchors (`Seoul-Metro-2`, `Beijing-Subway-2`, `BKK-MRT-Blue`), duplicated loop station handling (`Seoul-Metro-6` with indexed generated km), corridor reconstruction for noisy multi-relation HSR/metro lines, and contiguous short-turn templates (`Gyeongui-Jungang`, `Gyeongchun`).
+- `constraints`: Do not deduplicate repeated start/end stations on loop lines. Do not model a public branch network by packing multiple non-contiguous patterns into one line object. Do not add `branches`, `services`, `stopPattern`, or route graph fields until a concrete UI/runtime pass is accepted. For shared trunks, duplicated station rows and overlapping shapes are acceptable if each line object has stable directions, templates, icons, and shape checks. For express services, `stationIdxStart` / `stationIdxEnd` may only trim endpoints; it must not pretend to skip intermediate stations.
+- `checks`: For this policy-only docs pass, run `git diff --check`. For future loop/shared-trunk seeds, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` when new PNG assets are generated. A future skip-stop/express runtime change must also run `npm.cmd run build` and browser smoke for the train sheet / modal labels.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 loop/branch/shared-trunk 模型決策。下一個可下放 seeds：`BKK-SRT-Dark-Red` 可作獨立 Red Line seed；`KL-LRT-Ampang` / `KL-LRT-Sri-Petaling` 可各自 seed；`ERL-KLIA-Transit` 可先作 local all-stop seed；SG LRT 可先挑一條 loop 以 explicit station order seed。仍保留阻塞：`ERL-KLIA-Ekspres` skip-stop、BKK Pink branch、SRT Light Red current segment、RTS Link region。
 
 ### 每 1 輪管理規則（共用）
 - 5.3 工作可按 `seed` 粒度收斂：每輪至少完成 1 條完整 seed（A+B）並出具 smoke + shape + timing 驗證。

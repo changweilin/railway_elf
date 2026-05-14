@@ -505,7 +505,7 @@ npm.cmd run check:timing
 4. [x] `KL-MRT-Putrajaya` 已完成：`src/rail-data.js`（line / station / PYL MRT template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `11313578`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-kl-mrt-putrajaya-pyl.png`（PYL yellow icon）。
 5. [x] `SG-MRT-Downtown` 已完成：`src/rail-data.js`（line / station / DTL template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `2313458`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/singapore-sg-mrt-downtown-dtl.png`（DTL blue icon）。
 6. [x] `SG-MRT-Thomson-East-Coast` 已完成：`src/rail-data.js`（line / station / TEL template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `2383439`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/singapore-sg-mrt-thomson-east-coast-tel.png`（TEL brown icon）。
-7. [ ] 下一輪 5.3 預計接續：跳過仍待 5.5 的 `BKK-MRT-Yellow`、`BKK-MRT-Pink`、`BKK-SRT-Dark-Red`；若尚未放行，接 `KL-Monorail`。
+7. [ ] 下一輪 5.3 預計接續：`BKK-MRT-Yellow`、`BKK-MRT-Pink` 主線與 `BKK-SRT-Dark-Red` 已由 5.5 放行；若泰國 queue 暫停，接 `KL-Monorail`。
 
 ## 發布前檢查
 
