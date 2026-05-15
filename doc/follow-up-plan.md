@@ -68,6 +68,13 @@
   - station-to-station 風險：高密度都會線上的多站距離短，可能放大 `maxOffset` 導致誤吸附；需以 1–2 條都會線與 1 條長途線分別檢查 `maxOffset` 門檻。
   - 5.3 風險邊界：先不進行 route 分段服務細節建模（夜間/快慢車/短線），僅測站序對位與幾何可行性是否可交付代表 seed baseline。
   - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
+- **2026-05-16 完成 P2-9 瑞典/挪威（5.3 feasibility note）**
+  - 候選線：先各選一條都會高密度線路（斯德哥爾摩、哥德堡）與一條跨區長途幹線（如斯德哥爾摩—奧斯陸）做 representative seed；同時評估是採 shared Nordic 還是 split region。
+  - 來源：Sweden / Norway rail operator station 公開站表、Jernbanekontoret / Trafikverket / Entur 對應站序資源、OpenStreetMap route relation / station nodes、季節性運行公告（北歐高緯度班次調整）。
+  - OSM 對位風險：北歐站名存在多語字元與歷史字形差異，`name` / `name:en` / `name:sv` / `name:no` 並存，且有季節性替代名稱；需建立北歐區 shared alias 鏈。
+  - station-to-station 風險：跨境長距段時區與通勤服務切分可能造成站序不一致；需以官方站序為主，輔以 OSM 幾何核對，避免 snap 跨邊界錯配。
+  - 5.3 風險邊界：先不做冬季/夏季時刻變更與特殊節慶服務展開；本輪僅完成 shared-vs-split 的可行性定位。
+  - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
 
 ### 5.3 可行性研究待辦
 
@@ -76,7 +83,6 @@
 
 | 狀態 | 候選 | 5.3 待完成 |
 |---|---|---|
-| [ ] | P2-9 瑞典 / 挪威 | 評估 `shared Nordic` 或 split region；用都會 + 長途各 1 條 representative seed 做可行性測試。 |
 
 ### 5.5 Gate 待判斷
 
