@@ -47,6 +47,13 @@
   - OSM 對位風險：Zone 與票價區邊界與站務站序混用同名站點時，站序可能偏移；`zone` / `public_transport` 標籤與官方站名格式差異大，需先用 alias 鏈保護。
   - station-to-station 風險：分流服務（分支、晚高峰快慢車、夜間關停）不能直接用來推斷一條穩定 base route，需在 note 中先固定為平峰全程可進出節點順序。
   - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
+- **2026-05-16 完成 P2-6 俄羅斯（5.3 feasibility note）**
+  - 候選線：先做莫斯科圈層級幹線與一條長距區間幹線 representative seed（含近郊與高速客流段），以驗證跨行政區 station 命名與序列對位。
+  - 來源：俄羅斯鐵路官方站務入口（RZD）站表、區域公開路網/時刻檔、OpenStreetMap route relation / station nodes。
+  - OSM 對位風險：跨區站名漢字/俄文 translit 與中文/英譯名差異大，`name`、`name:en`、`name:ru` 混用時需採保守 alias；地名重名時需人工去重後才做對位。
+  - station-to-station 風險：長距路段存在暫時性施工改線與站務更名，且 OSM/官方更新頻率不一致，須先做「站名對位＋幾何偏離」雙條件 dry run，不直接調整 snap 參數。
+  - 5.3 風險邊界：先不下放 5.3 seed，先完成可行性與維運穩定性評估；合規 / 地緣風險納入 5.5 gate。
+  - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
 
 ### 5.3 可行性研究待辦
 
@@ -55,7 +62,6 @@
 
 | 狀態 | 候選 | 5.3 待完成 |
 |---|---|---|
-| [ ] | P2-6 俄羅斯 | 研究現有 OSM 對位與長期維運穩定性；暫不安排具體 seed 實作。 |
 | [ ] | P2-7 印度 | 比對主要城市鐵道與長途運輸官方 station list 的名詞版差；建立多語 station alias 原型。 |
 | [ ] | P2-8 荷蘭 | 測 1–2 條高密度都會線 + 1 條長途連線的 OSM 對位與 maxOffset 控制。 |
 | [ ] | P2-9 瑞典 / 挪威 | 評估 `shared Nordic` 或 split region；用都會 + 長途各 1 條 representative seed 做可行性測試。 |
