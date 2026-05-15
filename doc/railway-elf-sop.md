@@ -518,8 +518,9 @@ npm.cmd run check:timing
 17. [x] `SG-LRT-Punggol` 已完成：`src/rail-data.js`（line / 17-stop explicit East+West loop pattern with Teck Lee / `PGLRT` LRT template）、`scripts/fetch-rail-shapes.mjs`（OSM relations `1146942` + `2312984` with corridor）、`src/train-icon-registry.js` 與 `public/assets/train-icons/singapore-sg-lrt-punggol-pglrt.png`（PGLRT icon）。
 18. [x] `ERL-KLIA-Ekspres` 已完成：`src/rail-data.js`（line / 3 stations / regular-hours express-only `ERL` airport template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `8119878` with widened corridor）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-erl-klia-ekspres-erl.png`（ERL Ekspres icon）。
 19. [x] `KTM-Komuter-Batu-Caves-Pulau-Sebang` 已完成：`src/rail-data.js`（line / 27 stations / canonical full-corridor `KTM` commuter template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `8390976`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-ktm-komuter-batu-caves-pulau-sebang-ktm.png`（KTM Komuter icon）。
-20. [ ] 下一輪 5.3 預計接續：`KTM-Komuter-Tanjung-Malim-Port-Klang` full-corridor commuter seed；短折、缺站班次與施工期 timetable 仍不納入。
-21. [ ] `BKK-MRT-Orange` 仍為 monitor：MRTA 官方頁面顯示 east section expected January 2028、west section expected July 2030；正式載客與站名/OSM relation 穩定前不交 5.3。
+20. [x] `KTM-Komuter-Tanjung-Malim-Port-Klang` 已完成：`src/rail-data.js`（line / 34 stations / canonical full-corridor `KTM` commuter template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `2565937`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-ktm-komuter-tanjung-malim-port-klang-ktm.png`（KTM Komuter icon）。
+21. [ ] 下一輪 5.3 可接 `BKK-BTS-Gold` optional AGT/APM feeder seed；先補 3 站、Gold Line APM template、OSM relation 與 Gold Line icon，不阻塞 trunk/P0 cleared seeds。
+22. [ ] `BKK-MRT-Orange` 仍為 monitor：MRTA 官方頁面顯示 east section expected January 2028、west section expected July 2030；正式載客與站名/OSM relation 穩定前不交 5.3。
 
 ## 發布前檢查
 

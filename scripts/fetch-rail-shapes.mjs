@@ -717,6 +717,14 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "KTM-Komuter-Tanjung-Malim-Port-Klang": {
+    name: "KTM Komuter Tanjung Malim to Pelabuhan Klang",
+    relationIds: [2565937],
+    corridor: { corridorKm: 2.0, sampleKm: 0.10 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // Bangkok.
   "BKK-BTS-Sukhumvit": {

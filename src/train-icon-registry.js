@@ -183,6 +183,7 @@ const lineOverrideSpecs = [
   ["malaysia", "ERL-KLIA-Transit", 0, "malaysia-erl-klia-transit-erl.png", "express"],
   ["malaysia", "ERL-KLIA-Ekspres", 0, "malaysia-erl-klia-ekspres-erl.png", "express"],
   ["malaysia", "KTM-Komuter-Batu-Caves-Pulau-Sebang", 0, "malaysia-ktm-komuter-batu-caves-pulau-sebang-ktm.png", "commuter"],
+  ["malaysia", "KTM-Komuter-Tanjung-Malim-Port-Klang", 0, "malaysia-ktm-komuter-tanjung-malim-port-klang-ktm.png", "commuter"],
 
   ["thailand", "BKK-BTS-Sukhumvit", 0, "thailand-bkk-bts-sukhumvit-bts.png", "metro"],
   ["thailand", "BKK-BTS-Silom", 0, "thailand-bkk-bts-sukhumvit-bts.png", "metro"],

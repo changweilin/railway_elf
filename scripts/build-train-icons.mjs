@@ -110,6 +110,7 @@ const VISUALS = {
   "malaysia|ERL-KLIA-Transit|ERL": { shape: "express", body: "#f8fafc", accent: "#7c3aed", accent2: "#22d3ee" },
   "malaysia|ERL-KLIA-Ekspres|ERL": { shape: "express", body: "#f8fafc", accent: "#7c3aed", accent2: "#22d3ee" },
   "malaysia|KTM-Komuter-Batu-Caves-Pulau-Sebang|KTM": { shape: "commuter", body: "#f8fafc", accent: "#1964b7", accent2: "#60a5fa" },
+  "malaysia|KTM-Komuter-Tanjung-Malim-Port-Klang|KTM": { shape: "commuter", body: "#f8fafc", accent: "#d71920", accent2: "#f87171" },
 
   "thailand|BKK-BTS-Sukhumvit|BTS": { shape: "metro", body: "#f8fafc", accent: "#16a34a", band: "#16a34a" },
   "thailand|BKK-MRT-Yellow|YL": { shape: "monorail", body: "#fefce8", accent: "#ffd400", band: "#ca8a04" },

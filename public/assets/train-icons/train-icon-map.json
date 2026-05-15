@@ -506,6 +506,10 @@
       "icon": "assets/train-icons/malaysia-ktm-komuter-batu-caves-pulau-sebang-ktm.png",
       "kind": "commuter"
     },
+    "malaysia|KTM-Komuter-Tanjung-Malim-Port-Klang|KTM": {
+      "icon": "assets/train-icons/malaysia-ktm-komuter-tanjung-malim-port-klang-ktm.png",
+      "kind": "commuter"
+    },
     "thailand|BKK-BTS-Sukhumvit|BTS": {
       "icon": "assets/train-icons/thailand-bkk-bts-sukhumvit-bts.png",
       "kind": "metro"
