@@ -61,6 +61,13 @@
   - station-to-station 風險：都會線與長途線站牌語系切換頻繁，易出現同一站中文拼寫差異、站名更新滯後；須先做 station-to-station 清洗並保留「停用站」例外。
   - 5.3 風險邊界：短期不做運行圖模式展開（分段快慢車、通勤時段分流）與 full station alias 清洗，僅先驗證是否具備 canonical base route 對齊條件。
   - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
+- **2026-05-16 完成 P2-8 荷蘭（5.3 feasibility note）**
+  - 候選線：以阿姆斯特丹地區高密度幹線（含地鐵與區域捷運）＋一條長距跨城（如 Schiphol—鹿特丹）當作 representative seed，做都會與長距混合風險比對。
+  - 來源：NS official 站表與時刻頁、荷蘭 9292/地方交通資料、OpenStreetMap route relation / station nodes、官方路線圖的 station alias 資訊。
+  - OSM 對位風險：station names 的停站縮寫與多種語系顯示差異（Dutch / English）導致 alias 需雙向映射；同名站在轉乘 hub 易與鄰近站混淆。
+  - station-to-station 風險：高密度都會線上的多站距離短，可能放大 `maxOffset` 導致誤吸附；需以 1–2 條都會線與 1 條長途線分別檢查 `maxOffset` 門檻。
+  - 5.3 風險邊界：先不進行 route 分段服務細節建模（夜間/快慢車/短線），僅測站序對位與幾何可行性是否可交付代表 seed baseline。
+  - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
 
 ### 5.3 可行性研究待辦
 
@@ -69,7 +76,6 @@
 
 | 狀態 | 候選 | 5.3 待完成 |
 |---|---|---|
-| [ ] | P2-8 荷蘭 | 測 1–2 條高密度都會線 + 1 條長途連線的 OSM 對位與 maxOffset 控制。 |
 | [ ] | P2-9 瑞典 / 挪威 | 評估 `shared Nordic` 或 split region；用都會 + 長途各 1 條 representative seed 做可行性測試。 |
 
 ### 5.5 Gate 待判斷
