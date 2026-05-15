@@ -204,6 +204,7 @@ const lineOverrideSpecs = [
 
   ["vietnam", "HCMC-Metro-1", 0, "vietnam-hcmc-metro-1-metro-1.png", "metro"],
   ["vietnam", "Hanoi-Metro-2A", 0, "vietnam-hanoi-metro-2a-metro-2a.png", "metro"],
+  ["vietnam", "Hanoi-Metro-3", 0, "vietnam-hanoi-metro-3-metro-3.png", "metro"],
 ];
 
 export const TRAIN_ICON_REGISTRY = {

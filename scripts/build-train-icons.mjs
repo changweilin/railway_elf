@@ -129,6 +129,7 @@ const VISUALS = {
 
   "vietnam|HCMC-Metro-1|Metro 1": { shape: "metro", body: "#f8fafc", accent: "#dc2626", band: "#dc2626" },
   "vietnam|Hanoi-Metro-2A|Metro 2A": { shape: "metro", body: "#f8fafc", accent: "#16a34a", band: "#16a34a" },
+  "vietnam|Hanoi-Metro-3|Metro 3": { shape: "metro", body: "#f8fafc", accent: "#f59e0b", band: "#f59e0b" },
 };
 
 const outline = "#1f2937";

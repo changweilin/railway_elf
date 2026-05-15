@@ -4587,6 +4587,25 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "Hanoi-Metro-3",
+        name: "Hanoi Metro Line 3",
+        nameEn: "Hanoi Metro Line 3",
+        color: "#f59e0b",
+        category: "Metro",
+        directions: { up: "Nhon bound", down: "Cau Giay bound" },
+        // Hanoi Metro Line 3 elevated segment (Nhon -> Cau Giay), 8.5 km, 8 stations.
+        stations: [
+          { name: "Nhon",             lat: 21.0472, lng: 105.7831, km: 0.0,  dwellSec: 30 },
+          { name: "Minh Khai",        lat: 21.0442, lng: 105.7884, km: 1.3 },
+          { name: "Phu Dien",         lat: 21.0404, lng: 105.7913, km: 2.6 },
+          { name: "Cau Dien",         lat: 21.0380, lng: 105.7899, km: 3.8 },
+          { name: "Le Duc Tho",       lat: 21.0348, lng: 105.7897, km: 5.0 },
+          { name: "DH Quoc Gia Ha Noi", lat: 21.0314, lng: 105.7936, km: 6.0 },
+          { name: "Chua Ha",          lat: 21.0291, lng: 105.7952, km: 7.3 },
+          { name: "Cau Giay",         lat: 21.0246, lng: 105.7978, km: 8.5 },
+        ],
+      },
+      {
         id: "Hanoi-Metro-2A",
         name: "Tuyến số 2A",
         nameEn: "Hà Nội Metro Line 2A",
@@ -4613,6 +4632,7 @@ export const RAIL_DATA = {
     ],
     trainTemplates: [
       { line: "HCMC-Metro-1",  type: "Metro 1",  badge: "M1", badgeColor: "#dc2626", speed: 40, interval: 5, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "Hanoi-Metro-3", type: "Metro 3", badge: "3", badgeColor: "#f59e0b", speed: 36, interval: 6, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "Hanoi-Metro-2A", type: "Metro 2A", badge: "2A", badgeColor: "#16a34a", speed: 35, interval: 6, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
     ],
   },

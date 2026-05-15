@@ -573,6 +573,11 @@
     "vietnam|Hanoi-Metro-2A|Metro 2A": {
       "icon": "assets/train-icons/vietnam-hanoi-metro-2a-metro-2a.png",
       "kind": "metro"
+    },
+    "vietnam|Hanoi-Metro-3|Metro 3": {
+      "icon": "assets/train-icons/vietnam-hanoi-metro-3-metro-3.png",
+      "kind": "metro"
     }
   }
 }
+

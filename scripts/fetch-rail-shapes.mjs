@@ -826,6 +826,12 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationStops: {},
   },
+  "Hanoi-Metro-3": {
+    name: "Hanoi Metro Line 3 (Nhon to Cau Giay)",
+    relationIds: [11899105],
+    orderStationKms: true,
+    stationStops: {},
+  },
   "Hanoi-Metro-2A": {
     name: "Hanoi Metro Line 2A (Cat Linh→Yen Nghia)",
     relationIds: [9684066],

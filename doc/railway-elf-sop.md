@@ -528,7 +528,7 @@ npm.cmd run check:timing
 27. [x] 下一輪 5.3 current-service seed 已由 5.5 指定為 `MNL-LRT-2` Manila LRT-2：沿用 `philippines` region、Recto ⇄ Antipolo 13-station current line、LRT-2 template/icon、OSM relation/shape 與 Philippines name-tag preference。
 28. [x] `MNL-LRT-2` Manila LRT-2 seed 已完成：`src/rail-data.js`（Recto ⇄ Antipolo 13 stations / `LRT-2` template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `8000264` + corridor shape）、`src/train-icon-registry.js` 與 `public/assets/train-icons/philippines-mnl-lrt-2-lrt-2.png`（LRT-2 purple icon）。
 29. [x] 下一輪 5.3 current-service seed 已由 5.5 指定為 `Hanoi-Metro-3` Hanoi Metro Line 3：沿用 `vietnam` region、只建 Nhổn ⇄ Cầu Giấy current elevated 8-station passenger segment、Metro Line 3 template/icon、OSM relation/shape 與 Vietnam name-tag preference；不要併入 Cầu Giấy ⇄ Ga Hà Nội 地下段、Hanoi future lines、HCMC Line 2 或 future extension。
-30. [ ] `Hanoi-Metro-3` 完成前，暫不再指定下一個 5.3 seed；完成後再由後續 5.5 gate 選下一條 current-service seed。
+30. [x] `Hanoi-Metro-3` 完成前，暫不再指定下一個 5.3 seed；完成後再由後續 5.5 gate 選下一條 current-service seed。
 31. [ ] Monitor items reopen only after passenger service / official station data changes: `BKK-MRT-Orange`、`Penang-Mutiara-LRT`、`SG-MRT-Cross-Island`、`SG-MY-RTS-Link` must get a fresh 5.5 gate before any 5.3 seed。
 
 ## 發布前檢查
