@@ -534,6 +534,10 @@
       "icon": "assets/train-icons/thailand-bkk-mrt-pink-pk.png",
       "kind": "monorail"
     },
+    "thailand|BKK-MRT-Pink-Muang-Thong-Thani|PK": {
+      "icon": "assets/train-icons/thailand-bkk-mrt-pink-pk.png",
+      "kind": "monorail"
+    },
     "thailand|BKK-SRT-Dark-Red|DR": {
       "icon": "assets/train-icons/thailand-bkk-srt-dark-red-dr.png",
       "kind": "commuter"

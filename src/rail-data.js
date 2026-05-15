@@ -4324,6 +4324,20 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "BKK-MRT-Pink-Muang-Thong-Thani",
+        name: "MRT สายสีชมพู เมืองทองธานี",
+        nameEn: "MRT Pink Line Muang Thong Thani Branch",
+        color: "#e76589",
+        category: "Monorail",
+        directions: { up: "Muang Thong Thani bound", down: "Lake Muang Thong Thani bound" },
+        // Pink Line Muang Thong Thani branch: PK10 to MT02, 3 stations / 3.0 km.
+        stations: [
+          { name: "Muang Thong Thani",        lat: 13.897541, lng: 100.548487, km: 0.0, dwellSec: 30 },
+          { name: "Impact Muang Thong Thani", lat: 13.910445, lng: 100.544248, km: 1.6 },
+          { name: "Lake Muang Thong Thani",   lat: 13.918379, lng: 100.545652, km: 3.0, dwellSec: 30 },
+        ],
+      },
+      {
         id: "BKK-SRT-Dark-Red",
         name: "รถไฟฟ้าชานเมืองสายสีแดงเข้ม",
         nameEn: "SRT Dark Red Line",
@@ -4438,6 +4452,7 @@ export const RAIL_DATA = {
       { line: "BKK-MRT-Purple",    type: "MRT",   badge: "MRT", badgeColor: "#a855f7", speed: 38, interval: 6, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "BKK-MRT-Yellow",    type: "YL",    badge: "YL",  badgeColor: "#ffd400", speed: 40, interval: 5, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "BKK-MRT-Pink",      type: "PK",    badge: "PK",  badgeColor: "#e76589", speed: 40, interval: 5, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "BKK-MRT-Pink-Muang-Thong-Thani", type: "PK", badge: "PK", badgeColor: "#e76589", speed: 40, interval: 10, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "BKK-SRT-Dark-Red",  type: "DR",    badge: "DR",  badgeColor: "#b91c1c", speed: 90, interval: 12, accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 30 },
       { line: "BKK-SRT-Light-Red", type: "LR",    badge: "LR",  badgeColor: "#fc5353", speed: 90, interval: 20, accel: 0.85, decel: 0.95, aLat: 0.85, dwellSec: 30 },
       { line: "BKK-MRT-Blue",      type: "MRT",   badge: "MRT", badgeColor: "#1d4ed8", speed: 38, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },

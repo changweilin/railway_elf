@@ -765,6 +765,13 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationStops: {},
   },
+  "BKK-MRT-Pink-Muang-Thong-Thani": {
+    name: "MRT Pink Line Muang Thong Thani Branch (Muang Thong Thani→Lake Muang Thong Thani)",
+    relationIds: [19149752],
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 0.1,
+  },
   "BKK-SRT-Dark-Red": {
     name: "SRT Dark Red Line (Krung Thep Aphiwat→Rangsit)",
     relationIds: [13058384],
