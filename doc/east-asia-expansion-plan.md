@@ -247,7 +247,7 @@ Backlog 執行原則：
 | P0-SG-3 | ☑ A ☑ B | Metro | `SG-MRT-Thomson-East-Coast` | Thomson-East Coast Line | Woodlands North ⇄ Bayshore current segment（40.6 km / 27 站） | 已補站表、TEL template、OSM relation `2383439`、TEL brown icon；shape maxOffset 0.005 km | 未完工東段與 future extension 不提前進 `RAIL_DATA` |
 | P0-SG-4 | ☑ A ☑ B | AGT / LRT | `SG-LRT-Bukit-Panjang` | Bukit Panjang LRT | Choa Chu Kang ⇄ Bukit Panjang loop network | 已補 19-stop clockwise loop 站序、`BPLRT` template、OSM relation `1159434`、BPLRT grey icon、Singapore generated shape | 無阻塞；repeated loop stations 保留 indexed km；shape maxOffset 0.508 km |
 | P0-SG-5 | ☑ Sengkang ☑ Punggol | AGT / LRT | `SG-LRT-Sengkang` / `SG-LRT-Punggol` | Sengkang / Punggol LRT | 東西 loops | `SG-LRT-Sengkang` 已完成 16-stop explicit East+West loop seed；`SG-LRT-Punggol` 已完成 17-stop explicit East+West loop seed with Teck Lee、`PGLRT` template、OSM relations `1146942` + `2312984`、Singapore generated shape 與 PGLRT icon | 5.5 已決定 loop 以站序與 `loopAnchor`/indexed km 表示，不合併成多分支 schema |
-| P0-SG-6 | □ monitor | Cross-border LRT | `SG-MY-RTS-Link` | Johor Bahru-Singapore RTS Link | Woodlands North ⇄ Bukit Chagar（4 km / 2 站，目標 2026 年底） | 載客前不建正式 pass；載客後以 `sg-my` cross-border region seed，補 2 站、RTS template、OSM relation、CIQ 提示與圖示 | 5.5 已決定載客前 monitor；不放入單一 `singapore` 或 `malaysia` region |
+| P0-SG-6 | □ monitor | Cross-border LRT | `SG-MY-RTS-Link` | Johor Bahru-Singapore RTS Link | Woodlands North ⇄ Bukit Chagar（4 km / 2 站，目標 2026 年底 / 2026-12-31） | 載客前不建正式 pass；載客後以 `sg-my` cross-border region seed，補 2 站、RTS template、OSM relation、CIQ 提示與圖示 | 2026-05-15 已重查 LTA / MOT / MRT Corp：仍為 upcoming / construction-final-phase，fare 未公布，正式載客與站名/OSM relation 穩定前不下放 |
 | P0-SG-7 | □ monitor | Metro | `SG-MRT-Cross-Island` | Cross Island Line | future stages | 不執行 | 2026-05-15 已重查 LTA：CRL1 target 2030、CRL2 / Punggol Extension target 2032、CRL3 late 2030s，仍等正式載客與站名/OSM relation 穩定後下放 |
 
 ### P0：馬來西亞補完
@@ -491,7 +491,7 @@ Backlog 執行原則：
 2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Indonesia/Vietnam 各區批次）。
 3. [x] 維護資料源（以 OSM 為主）並更新 `OSM_LINE_MAP`、`rail-data`、`trainTemplates` 的常規新增流程。
 4. [x] 針對高誤差路段執行 station-to-station/stop-node 對站修正（已完成：多條南韓與東南亞主要線路）。
-5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow`、`BKK-MRT-Pink` 主線、`BKK-MRT-Pink-Muang-Thong-Thani` branch、`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`BKK-BTS-Gold`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit`、`SG-LRT-Sengkang`、`SG-LRT-Punggol`、`ERL-KLIA-Ekspres`、`KTM-Komuter-Batu-Caves-Pulau-Sebang`、`KTM-Komuter-Tanjung-Malim-Port-Klang`、`JKT-MRT-North-South`、`MNL-MRT-3` 與 `MNL-LRT-2` 已完成；下一個明確 5.3 seed 暫無指定，`BKK-MRT-Orange`、`Penang-Mutiara-LRT`、`SG-MRT-Cross-Island`、`SG-MY-RTS-Link` 仍為 monitor。
+5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow`、`BKK-MRT-Pink` 主線、`BKK-MRT-Pink-Muang-Thong-Thani` branch、`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`BKK-BTS-Gold`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit`、`SG-LRT-Sengkang`、`SG-LRT-Punggol`、`ERL-KLIA-Ekspres`、`KTM-Komuter-Batu-Caves-Pulau-Sebang`、`KTM-Komuter-Tanjung-Malim-Port-Klang`、`JKT-MRT-North-South`、`MNL-MRT-3` 與 `MNL-LRT-2` 已完成；下一個明確 5.3 seed 已指定為 `Hanoi-Metro-3` current elevated segment，`BKK-MRT-Orange`、`Penang-Mutiara-LRT`、`SG-MRT-Cross-Island`、`SG-MY-RTS-Link` 仍為 monitor。
 6. [ ] 泰國 / 新馬 P0 seed 執行：每條線都補 `rail-data`、train template、OSM relation、train icon，並跑 `npm run build:rail-data`、`npm run check:shapes`、`npm run check:timing`、`npm run test:smoke`。
 7. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
 
@@ -520,6 +520,7 @@ Backlog 執行原則：
 18. [x] 指定並完成 P1 下一條 current-service seed：`MNL-MRT-3` Manila MRT-3（North Avenue ⇄ Taft Avenue，13 站）；LRT-1 extension、LRT-2 west extension、PNR / NSCR future corridor 仍另案。
 19. [x] 指定並完成 P1 下一條 current-service seed：`MNL-LRT-2` Manila LRT-2（Recto ⇄ Antipolo，13 站）；LRT-1 extension、LRT-2 west extension、PNR / NSCR future corridor 仍另案。
 20. [x] 指定 P1 下一條 current-service seed：`Hanoi-Metro-3` Hanoi Metro Line 3，只下放已載客的 Nhổn ⇄ Cầu Giấy 高架 8 站；Cầu Giấy ⇄ Ga Hà Nội 地下段、future Hanoi / HCMC extensions 不併入本 seed。
+21. [x] 重查 `SG-MY-RTS-Link` monitor：LTA 仍列 passenger-service target as end-2026，MRT Corp Malaysia 2026-01 release 仍指向 2026-12-31，MOT 2026-04 fare reply 顯示 fare 尚待 RTSO 公布；正式載客前維持 monitor，不交 5.3。
 
 #### 2026-05-14 5.5 決策：Bangkok straddle monorail category
 
@@ -574,6 +575,15 @@ Backlog 執行原則：
 - `constraints`: Do not create `sg-my` before official passenger service begins and the station/source geometry is stable. Do not duplicate the same line under both Singapore and Malaysia. Do not model fare, immigration queue time, or ticketing integration until official operator data exists. CIQ hint should be concise and factual: "Clear both Singapore and Malaysia authorities at departure; no second clearance at arrival." If no generic line-notice UI exists at seed time, document the CIQ note in the expansion plan and defer runtime UI to a separate focused patch.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md`. For future RTS data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build` and browser smoke if a CIQ notice UI is added.
 - `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 RTS Link region / CIQ 策略決策。仍保留 monitor：正式載客前不交 5.3 建資料；載客後第一個可下放 seed 是 `sg-my` region + `SG-MY-RTS-Link` 2-station shuttle。
+
+#### 2026-05-15 5.5 決策：RTS Link monitor recheck
+
+- `decision`: blocked-until-service。`SG-MY-RTS-Link` 仍維持 `monitor`，不交 5.3 建 `RAIL_DATA` line、train template、OSM relation 或 generated shape。等正式載客開始、passenger-facing station labels / relation data 穩定、fare / CIQ passenger guidance 明確後，再重開 `sg-my` 2-station seed gate。
+- `scope`: Johor Bahru-Singapore RTS Link passenger-service readiness only: Woodlands North ⇄ Bukit Chagar, cross-border region timing, fare readiness, and construction / systems status. No runtime files are authorized by this monitor recheck.
+- `source`: LTA still describes the RTS Link as a standalone 4 km LRT between Woodlands North and Bukit Chagar, with end-2026 passenger-service target and co-located CIQ. MOT's 2026-04-07 written reply says fares will be determined commercially by RTS Operations Pte Ltd and announced later. MRT Corp Malaysia's 2026-01 media release says Bukit Chagar station façade works are a construction milestone and the project is on track for service on 2026-12-31. Sources: https://www.lta.gov.sg/content/ltagov/en/upcoming_projects/rail_expansion/JB-Singapore_RTS_link.html, https://www.mot.gov.sg/news-resources/newsroom/assessment-of-expected-fare-range-for-upcoming-johor-bahru-singapore-rts-link-and-measures-to-ensure-fare-affordability-for-commuters/, https://www.mymrt.com.my/wp-content/uploads/2026/01/MRTC-FOR-IMMEDIATE-RELEASE-RTS-LINK-TAKES-SHAPE-WITH-COMPLETION-OF-MAJOR-FACADE-STEEL-WORKS-WEBSITE-1.pdf
+- `constraints`: Do not create `sg-my` or `SG-MY-RTS-Link` before passenger service opens. Do not model construction progress, fare speculation, Shuttle Tebrau replacement behavior, or CIQ operational detail as route data. Keep future data seed to the 2-station cross-border shuttle unless a later official operating pattern says otherwise.
+- `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md doc/railway-elf-sop.md`. No data, generated shape, timing, icon, build, or smoke checks are required because no runtime files change.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 RTS Link monitor recheck。blocked remains：RTS Link passenger-service monitor; no 5.3 seed before official operation.
 
 #### 2026-05-15 5.5 決策：P0 seed cadence
 
