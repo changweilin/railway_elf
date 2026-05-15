@@ -739,6 +739,14 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationStops: {},
   },
+  "BKK-BTS-Gold": {
+    name: "BTS Gold Line (Krung Thon Buri to Khlong San)",
+    relationIds: [11681439],
+    corridor: { corridorKm: 0.8, sampleKm: 0.03 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 0.2,
+  },
   "BKK-MRT-Purple": {
     name: "MRT Purple Line (Khlong Bang Phai→Tao Poon)",
     relationIds: [6988563],

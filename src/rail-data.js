@@ -4207,6 +4207,20 @@ export const RAIL_DATA = {
         ],
       },
       {
+        id: "BKK-BTS-Gold",
+        name: "BTS Gold Line",
+        nameEn: "BTS Gold Line",
+        color: "#a58704",
+        category: "AGT",
+        directions: { up: "Krung Thon Buri bound", down: "Khlong San bound" },
+        // Gold Line APM: Krung Thon Buri to Khlong San, 3 stations / 1.8 km.
+        stations: [
+          { name: "Krung Thon Buri", lat: 13.721106, lng: 100.503715, km: 0.0, dwellSec: 25 },
+          { name: "Charoen Nakhon",  lat: 13.726462, lng: 100.509069, km: 0.9 },
+          { name: "Khlong San",      lat: 13.730307, lng: 100.507721, km: 1.8, dwellSec: 25 },
+        ],
+      },
+      {
         id: "BKK-MRT-Purple",
         name: "MRT สายสีม่วง",
         nameEn: "MRT Purple Line",
@@ -4420,6 +4434,7 @@ export const RAIL_DATA = {
     trainTemplates: [
       { line: "BKK-BTS-Sukhumvit", type: "BTS",   badge: "BTS", badgeColor: "#16a34a", speed: 40, interval: 3, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "BKK-BTS-Silom",     type: "BTS",   badge: "BTS", badgeColor: "#16a34a", speed: 40, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+      { line: "BKK-BTS-Gold",      type: "GL",    badge: "GL",  badgeColor: "#a58704", speed: 35, interval: 6, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "BKK-MRT-Purple",    type: "MRT",   badge: "MRT", badgeColor: "#a855f7", speed: 38, interval: 6, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "BKK-MRT-Yellow",    type: "YL",    badge: "YL",  badgeColor: "#ffd400", speed: 40, interval: 5, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
       { line: "BKK-MRT-Pink",      type: "PK",    badge: "PK",  badgeColor: "#e76589", speed: 40, interval: 5, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },

@@ -518,6 +518,10 @@
       "icon": "assets/train-icons/thailand-bkk-bts-sukhumvit-bts.png",
       "kind": "metro"
     },
+    "thailand|BKK-BTS-Gold|GL": {
+      "icon": "assets/train-icons/thailand-bkk-bts-gold-gl.png",
+      "kind": "metro"
+    },
     "thailand|BKK-MRT-Purple|MRT": {
       "icon": "assets/train-icons/thailand-bkk-mrt-purple-mrt.png",
       "kind": "metro"

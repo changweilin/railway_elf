@@ -113,6 +113,7 @@ const VISUALS = {
   "malaysia|KTM-Komuter-Tanjung-Malim-Port-Klang|KTM": { shape: "commuter", body: "#f8fafc", accent: "#d71920", accent2: "#f87171" },
 
   "thailand|BKK-BTS-Sukhumvit|BTS": { shape: "metro", body: "#f8fafc", accent: "#16a34a", band: "#16a34a" },
+  "thailand|BKK-BTS-Gold|GL": { shape: "metro", body: "#fefce8", accent: "#a58704", band: "#a58704" },
   "thailand|BKK-MRT-Yellow|YL": { shape: "monorail", body: "#fefce8", accent: "#ffd400", band: "#ca8a04" },
   "thailand|BKK-MRT-Pink|PK": { shape: "monorail", body: "#fff1f2", accent: "#e76589", band: "#be185d" },
   "thailand|BKK-SRT-Dark-Red|DR": { shape: "commuter", body: "#f8fafc", accent: "#b91c1c", accent2: "#7f1d1d" },
