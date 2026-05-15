@@ -1,4 +1,4 @@
-# 大東亞路網擴張計畫
+﻿# 大東亞路網擴張計畫
 
 更新日期：2026-05-12
 
@@ -272,6 +272,21 @@ Backlog 執行原則：
 | P1-PH | 菲律賓 | Manila LRT-1、LRT-2、MRT-3、PNR / NSCR future corridor | `MNL-MRT-3` 與 `MNL-LRT-2` 已完成；下一條 current-service seed 暫無明確指定 | LRT-1 extension、LRT-2 west extension、PNR / NSCR future corridor 需確認 current baseline；PNR / NSCR 類長線不併入本 seed |
 | P1-VN | 越南 | HCMC Line 1（已完成）、Hanoi 2A（已完成）、Hanoi Line 3 elevated segment、HCMC Line 2 future | `Hanoi-Metro-3` Hanoi Line 3 elevated current-service seed 已由 5.5 指定（Nhổn ⇄ Cầu Giấy，8 站） | 地下段 Cầu Giấy ⇄ Ga Hà Nội 仍施工 / 2027 目標，不提前建正式資料；future HCMC extensions 另案 |
 | P2-SA | 南亞 / 西亞 | Delhi / Mumbai / Bengaluru / Bangkok-scale 以外大型都會鐵路、Dubai Metro、Doha Metro 等 | 暫不進 5.3 | 需另開大型 region selector、語系與資料量策略 |
+
+### P2：全球候選池（2~9）—將路線研究納入本專案可行性待完成清單
+
+上述 2~9 候選（瑞士、德國、法國、英國、俄羅斯、印度、荷蘭、瑞典/挪威）先列入「可行性研究」而非即時 5.3 實作；每國先以代表 seed 風險切割，待 5.5 決策確認後再決定第一條 5.3 線。
+
+| 優先 | 國家 | 5.3 可行性研究 | 5.5 先決策 | 可行性結論（第一輪） |
+|---|---|---|---|---|
+| P2-2 | 瑞士 | 先盤點 OSM 主幹與都會軌道的 station-to-station 對位品質；確認中德法三語站名在 `name`/`nameEn` 的映射策略 | 決定 `Switzerland` 是否採單 region；先不進入通行費/票制模型 | 技術可行性高，資料品質與多語管理中等，建議列入 `monitor+ready for 5.5` |
+| P2-3 | 德國 | 先驗證 `OSM + DB/地方運輸` 的 station 名稱一致性，避免單城市長程共線造成大量 snap 假異常 | 決定 `Commuter / Regional` 是否同類建模；先不建 express/short-turn pass | 可行性高，網路規模較大，建議分批做「1 條高速 + 1 條 S-Bahn 代表線」 |
+| P2-4 | 法國 | 先做 RER / 大城都會 + 一條長途幹線代表 seed 的 station/km 對位測試 | 決定是否允許 `官方 GTFS / rail op` 作為 Level-2 輔助來源 | 技術可行性高，運營命名與時刻複雜度中，建議保留後續 5.5 gate 後啟動 |
+| P2-5 | 英國 | 先測 OSM station 對齊與 zone / branch 站序邏輯，避免一次塞入大量 fare pattern 異常 | 決定是否先採「核心都會網」再擴展 intercity，以降低 5.3 單輪風險 | 可行性中高，需分階段控制 zone、夜間與分流服務，建議先 5.5 風險定義 |
+| P2-6 | 俄羅斯 | 先研究現有 OSM 對位與長期維運穩定性；暫不安排具體 seed | 決定是否受政治/合規條件阻斷後續實作 | 技術可行未先行確認；先列 `monitor-blocked`，由 5.5 決策是否暫停 |
+| P2-7 | 印度 | 先比對主要城市鐵道與長途運輸官方 station list 的名詞版差，建立多語 station alias 原型 | 決定 `i18n` 與資料更新頻率節奏，避免 alias 爆炸 | 可行性中高但維運成本高，建議先研究階段，不立即投入多線 seed |
+| P2-8 | 荷蘭 | 先測 1–2 條高密度都會+1 條長途連線的 OSM 對位與 maxOffset 控制 | 決定是否採 `netherlands` 單 region 並共享 icon/模板策略 | 可行性高，區域可控且資料穩定，適合作為中短期第一輪候選 |
+| P2-9 | 瑞典 / 挪威（可拆為 Nordic） | 先評估兩國是否採 `shared Nordic` 或 split region；先做都會 + 長途各 1 條 representative seed 可行性測試 | 決定是否將高緯度 station alias 與季節運作特性納入模板邊界 | 可行性高，資料品質穩定，建議列入 `ready for 5.5` 並先不實作 |
 
 ### 亞洲其他區域 5.3 / 5.5 任務分配
 
