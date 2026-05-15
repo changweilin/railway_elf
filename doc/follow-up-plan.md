@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.5 Hanoi Metro Line 3 next seed decision
+
+- [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now names `Hanoi-Metro-3` / Hanoi Metro Line 3 elevated Nhổn ⇄ Cầu Giấy as the next current-service 5.3 seed after Manila LRT-2.
+- [x] Cleaned the completed 5.5 option by marking the "no explicit approved seed" handoff done in `doc/railway-elf-sop.md`; `Hanoi-Metro-3` is now the explicit next 5.3 target.
+- [x] No concurrent uncommitted 5.3 diff was present; the Manila LRT-2 5.3 seed was already committed before this docs-only 5.5 pass.
+
 ## 2026-05-15 5.3 Manila LRT-2 seed
 
 - [x] Completed one 5.3 seed item: `MNL-LRT-2` is now in `RAIL_DATA` under the existing `philippines` region with the current 13-station Recto to Antipolo line, an `LRT-2` metro template, OSM route relation `8000264`, generated Philippines shape data, and a line-aware Manila LRT-2 icon.
@@ -283,7 +289,7 @@
 餈??芸???瘜啣? / ?圈收 P0 seed 撠?賢嚗銵??桐誑銝??銝頛芾???啜皞?
 撌脩宏??follow-up嚗okaido relation ?踵??極蝔? maxOffset 蝎曆耨???/ ??摰閬??ranch/short-turn ?瑟?璅∪??TS Link 頝典? region?evel-2/4 鞈?皞? region UI ??i18n 蝑嚗絞銝餈質馱??`doc/east-asia-expansion-plan.md`??
 ## 撱箄降銝?甇?
-1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-MRT-Pink-Muang-Thong-Thani`, `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `BKK-BTS-Gold`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`, `SG-LRT-Punggol`, `ERL-KLIA-Ekspres`, `KTM-Komuter-Batu-Caves-Pulau-Sebang`, `KTM-Komuter-Tanjung-Malim-Port-Klang`, `JKT-MRT-North-South`, `MNL-MRT-3`, `MNL-LRT-2`. 2. No explicit next 5.3 seed remains after `MNL-LRT-2`; `BKK-MRT-Orange`, `Penang-Mutiara-LRT`, `SG-MRT-Cross-Island`, `SG-MY-RTS-Link`, and non-canonical KTM short-turn/partial timetable runtime remain deferred until future 5.5 gates.
+1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-MRT-Pink-Muang-Thong-Thani`, `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `BKK-BTS-Gold`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`, `SG-LRT-Punggol`, `ERL-KLIA-Ekspres`, `KTM-Komuter-Batu-Caves-Pulau-Sebang`, `KTM-Komuter-Tanjung-Malim-Port-Klang`, `JKT-MRT-North-South`, `MNL-MRT-3`, `MNL-LRT-2`. 2. Next explicit 5.3 seed after `MNL-LRT-2`: `Hanoi-Metro-3` current elevated Nhổn ⇄ Cầu Giấy 8-station segment; `BKK-MRT-Orange`, `Penang-Mutiara-LRT`, `SG-MRT-Cross-Island`, `SG-MY-RTS-Link`, Hanoi Line 3 underground section, and non-canonical KTM short-turn/partial timetable runtime remain deferred until future 5.5 gates.
 ## 5.3 vs 5.5 隞餃????脣漲蝞∠?嚗頛芾?銝?頛迎?
 
 ### 5.3 ?舐?亙銵?- ?格?嚗雁?????鞈迎??撽?????啗?銝?頛?P0 seed ?游???- ?嗅?????祈憚??閬??柴歇蝯?嚗ollow-up ?芾蕭頩斗陸??/ ?圈收?芸?鞈??湔嚗??芸??芸???撌脩宏??`doc/east-asia-expansion-plan.md`??
