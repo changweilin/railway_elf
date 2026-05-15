@@ -519,6 +519,7 @@ npm.cmd run check:timing
 18. [x] `ERL-KLIA-Ekspres` 已完成：`src/rail-data.js`（line / 3 stations / regular-hours express-only `ERL` airport template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `8119878` with widened corridor）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-erl-klia-ekspres-erl.png`（ERL Ekspres icon）。
 19. [x] `KTM-Komuter-Batu-Caves-Pulau-Sebang` 已完成：`src/rail-data.js`（line / 27 stations / canonical full-corridor `KTM` commuter template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `8390976`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-ktm-komuter-batu-caves-pulau-sebang-ktm.png`（KTM Komuter icon）。
 20. [ ] 下一輪 5.3 預計接續：`KTM-Komuter-Tanjung-Malim-Port-Klang` full-corridor commuter seed；短折、缺站班次與施工期 timetable 仍不納入。
+21. [ ] `BKK-MRT-Orange` 仍為 monitor：MRTA 官方頁面顯示 east section expected January 2028、west section expected July 2030；正式載客與站名/OSM relation 穩定前不交 5.3。
 
 ## 發布前檢查
 

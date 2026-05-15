@@ -234,7 +234,7 @@ Backlog 執行原則：
 | P0-TH-5 | ☑ A ☑ B | Commuter | `BKK-SRT-Dark-Red` | SRT Dark Red Line | Krung Thep Aphiwat ⇄ Rangsit / Don Mueang corridor | 已補站表、`Commuter` template、OSM relation `13058384`、SRT Red commuter icon、Thailand generated shape | Dark Red 完成；Light Red 仍保留為獨立 future seed，不合併成單一 branch graph |
 | P0-TH-6 | ☑ A ☑ B | Commuter | `BKK-SRT-Light-Red` | SRT Light Red Line | Krung Thep Aphiwat ⇄ Taling Chan / west corridor | 已補 current 4-station segment、`LR` commuter template、OSM relation `13178788`、Light Red commuter icon、Thailand generated shape；shape maxOffset 0.004 km | Salaya / Siriraj extensions 維持 monitor；Dark / Light Red 不合併成 branch graph |
 | P0-TH-7 | □ optional seed | AGT | `BKK-BTS-Gold` | BTS Gold Line | Krung Thon Buri ⇄ Khlong San | 可作小型 APM seed，補 3 站、Gold Line APM template、OSM relation 與 Gold Line 圖示 | 5.5 已決定可納入 rail network，但列為低優先 feeder，不阻塞 trunk/P0 cleared seeds |
-| P0-TH-8 | □ monitor | Metro | `BKK-MRT-Orange` | MRT Orange Line | 待完整載客段確認 | 不執行 | 只在正式營運段、站名與 OSM relation 穩定後下放 |
+| P0-TH-8 | □ monitor | Metro | `BKK-MRT-Orange` | MRT Orange Line | Thailand Cultural Centre ⇄ Min Buri east section / Bang Khun Non ⇄ Thailand Cultural Centre west section | 不執行 | 2026-05-15 已重查 MRTA：east section expected January 2028、west section expected July 2030，仍等正式載客與站名/OSM relation 穩定後下放 |
 
 ### P0：新加坡 / 新馬補完
 
@@ -293,6 +293,7 @@ Backlog 執行原則：
 8. 已決定 Pink Line Muang Thong Thani branch：另建獨立 branch line object seed，站序 `Muang Thong Thani` ⇄ `Impact Muang Thong Thani` ⇄ `Lake Muang Thong Thani`；不併入 `BKK-MRT-Pink` 主線或新 branch schema。
 9. 已決定 KLIA Ekspres regular-hours gate：`ERL-KLIA-Ekspres` 可作獨立 3-station Airport express seed；23:00 後 all-stations pattern 與 maintenance combined service 不納入本 seed。
 10. 已決定 KTM Komuter long-corridor gate：`KTM-Komuter-Batu-Caves-Pulau-Sebang` 已完成，`KTM-Komuter-Tanjung-Malim-Port-Klang` 可作下一個獨立 full-corridor commuter seed；短折與臨時/部分班次不納入本輪。
+11. 已重查 Bangkok MRT Orange monitor：MRTA 仍列為 ongoing project，east section 預計 2028-01、west section 預計 2030-07；正式載客前不交 5.3 建資料。
 
 ## 批次 5 — 香港：MTR（4 條）
 
@@ -491,6 +492,7 @@ Backlog 執行原則：
 12. [x] 決定 `BKK-MRT-Pink-Muang-Thong-Thani` branch：可作獨立 3-station branch seed；不改 branch schema、不重寫主線。
 13. [x] 決定 `ERL-KLIA-Ekspres` regular-hours express：可作獨立 3-station Airport seed；晚間 all-stations 服務型態另開 runtime pass。
 14. [x] 決定 KTM Komuter long-corridor / short-turn gate：兩條 Klang Valley full-corridor commuter seeds 可下放；短折、缺站班次與施工期 timetable 另開 service-pattern pass。
+15. [x] 重查 `BKK-MRT-Orange` monitor：MRTA 仍列 east/west sections as ongoing projects；正式載客前維持 monitor，不交 5.3。
 
 #### 2026-05-14 5.5 決策：Bangkok straddle monorail category
 
@@ -590,6 +592,15 @@ Backlog 執行原則：
 - `constraints`: Seed only the current 3-station APM segment; do not include future Prajadhipok / other extension concepts until passenger service and official station names are stable. Do not include buses, ferries, ICONSIAM shuttle routing, or non-rail feeder services in this pass. Keep the route as a standalone AGT/APM line object with its own Gold Line icon/template; do not merge it into BTS Silom or treat it as a branch graph.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For a future Gold Line data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if a new Gold Line PNG/contact sheet is generated.
 - `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 Bangkok Gold Line feeder inclusion 決策。`BKK-BTS-Gold` 可下放為 optional AGT/APM seed；`ERL-KLIA-Transit` 已於後續 5.3 seed 完成。
+
+#### 2026-05-15 5.5 決策：Bangkok MRT Orange monitor recheck
+
+- `decision`: blocked-until-service。`BKK-MRT-Orange` 仍維持 `monitor`，不交 5.3 建 `RAIL_DATA` line、train template、OSM relation 或 generated shape。等至少一段正式載客、站名與 OSM relation 穩定後，再按 current passenger segment 重開 seed gate。
+- `scope`: Bangkok MRT Orange east section `Thailand Cultural Centre` ⇄ `Min Buri (Suwinthawong)` and west section `Bang Khun Non` ⇄ `Thailand Cultural Centre`; current pass is policy/docs only. Future Spark owned files after passenger service are `src/rail-data.js`, `scripts/fetch-rail-shapes.mjs`, `src/train-icon-registry.js`, generated Thailand shape/icon outputs, and narrow docs.
+- `source`: MRTA official project pages still place both Orange Line sections under ongoing projects. The east section is 22.5 km / 17 stations, expected to operate in January 2028, with land acquisition complete, civil works substantially complete, and M&E works 36.20% complete. The west section is 13.4 km / 11 stations, expected to operate in July 2030, with land acquisition 79.21% complete and Phase 1 civil/M&E works 20.55% complete. Sources: https://www.mrta.co.th/en/the-mrt-orange-line-min-buri-suwinthawong and https://www.mrta.co.th/en/the-orange-line
+- `constraints`: Do not seed a partial construction route, test-running route, or planned whole-line route before public passenger operation. Do not combine east and west sections into one current baseline until MRTA/BEM operation begins and published passenger-facing stations are stable. Keep the existing Bangkok completed lines as-is; Orange Line should not be used to force a branch or future-extension schema pass.
+- `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md doc/railway-elf-sop.md`. For a future Orange Line data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if a new Orange Line PNG/contact sheet is generated.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 Bangkok MRT Orange monitor recheck。blocked remains：Orange Line passenger-service monitor; no 5.3 seed until at least one section is officially open.
 
 #### 2026-05-15 5.5 決策：Malaysia airport/commuter next seed
 

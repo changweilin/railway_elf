@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.5 Bangkok MRT Orange monitor recheck
+
+- [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records `BKK-MRT-Orange` as still monitor-only based on current MRTA official project pages.
+- [x] Cleaned the completed 5.5 option by tightening the `P0-TH-8` monitor row and adding a 5.5 progress-board entry; no 5.3 data seed is authorized before passenger service begins.
+- [x] No concurrent uncommitted 5.3 diff was present; the KLIA Ekspres and KTM Batu Caves 5.3 work was already committed before this docs-only 5.5 pass.
+
 ## 2026-05-15 5.3 KTM Komuter Batu Caves-Pulau Sebang seed
 
 - [x] Completed one 5.3 seed item: `KTM-Komuter-Batu-Caves-Pulau-Sebang` is now in `RAIL_DATA` with the 27-station canonical full-corridor pattern from `Batu Caves` to `Pulau Sebang/Tampin`, a `KTM` commuter train template, OSM route relation `8390976`, generated Malaysia shape data, and a line-aware KTM Komuter icon.
