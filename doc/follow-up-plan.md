@@ -1,9 +1,15 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.3 KTM Komuter Batu Caves-Pulau Sebang seed
+
+- [x] Completed one 5.3 seed item: `KTM-Komuter-Batu-Caves-Pulau-Sebang` is now in `RAIL_DATA` with the 27-station canonical full-corridor pattern from `Batu Caves` to `Pulau Sebang/Tampin`, a `KTM` commuter train template, OSM route relation `8390976`, generated Malaysia shape data, and a line-aware KTM Komuter icon.
+- [x] Cleaned the completed 5.3 option by marking `KTM-Komuter-Batu-Caves-Pulau-Sebang` done in the 5.3 backlog and `P0-MY-5` done in `doc/east-asia-expansion-plan.md`; the next cleared candidate is `KTM-Komuter-Tanjung-Malim-Port-Klang` as the second KTM Komuter full-corridor seed.
+- [x] No concurrent 5.5 diff was detected before editing `follow-up-plan.md`; this round only reconciles the completed 5.3 seed and its downstream docs.
+
 ## 2026-05-15 5.3 KLIA Ekspres seed
 
 - [x] Completed one 5.3 seed item: `ERL-KLIA-Ekspres` is now in `RAIL_DATA` with the regular-hours 3-station express pattern from `KL Sentral` to `KLIA T1` and `KLIA T2`, an `ERL` airport train template, OSM route relation `8119878`, generated Malaysia shape data, and a line-aware ERL Ekspres icon.
-- [x] Cleaned the completed 5.3 option by marking `ERL-KLIA-Ekspres` done in the 5.3 backlog and `P0-MY-8` done in `doc/east-asia-expansion-plan.md`; the next cleared candidate is `KTM-Komuter-Batu-Caves-Pulau-Sebang` as the first KTM Komuter full-corridor seed.
+- [x] Cleaned the completed 5.3 option by marking `ERL-KLIA-Ekspres` done in the 5.3 backlog and `P0-MY-8` done in `doc/east-asia-expansion-plan.md`; the then-cleared candidate was `KTM-Komuter-Batu-Caves-Pulau-Sebang` as the first KTM Komuter full-corridor seed.
 - [x] No concurrent 5.5 diff was detected before editing `follow-up-plan.md`; the latest KTM Komuter 5.5 gate was already committed before this 5.3 data pass.
 
 ## 2026-05-15 5.5 KTM Komuter long-corridor gate
@@ -193,7 +199,8 @@
 | 16 | `SG-LRT-Sengkang` | done | Sengkang LRT: 16-stop explicit clockwise pattern, `SKLRT` template, OSM relations `2312985` + `1146941`, generated Singapore shape, line-aware SKLRT icon | done (shape maxOffset 0.111 km; repeated Sengkang anchors retained by index) |
 | 17 | `SG-LRT-Punggol` | done | Punggol LRT: 17-stop explicit clockwise pattern with Teck Lee, `PGLRT` template, OSM relations `1146942` + `2312984`, generated Singapore shape, line-aware PGLRT icon | done (shape maxOffset 0.051 km; repeated Punggol anchors retained by index) |
 | 18 | `ERL-KLIA-Ekspres` | done | KLIA Ekspres regular-hours 3-station airport express seed, `ERL` airport template, OSM relation `8119878`, generated Malaysia shape, line-aware ERL Ekspres icon | done (shape maxOffset 0.094 km); 23:00+ all-stations and maintenance combined-service patterns remain deferred |
-| 19 | `KTM-Komuter-Batu-Caves-Pulau-Sebang` | pending | KTM Komuter full-corridor seed (`Batu Caves` -> `Pulau Sebang`) | Do not include short-turn, skipped-station, peak-only, or maintenance timetable variants |
+| 19 | `KTM-Komuter-Batu-Caves-Pulau-Sebang` | done | KTM Komuter full-corridor seed: 27 stations, `KTM` commuter template, OSM relation `8390976`, generated Malaysia shape, line-aware KTM Komuter icon | done (shape maxOffset 0.007 km); short-turn, skipped-station, peak-only, and maintenance timetable variants remain deferred |
+| 20 | `KTM-Komuter-Tanjung-Malim-Port-Klang` | pending | KTM Komuter full-corridor seed (`Tanjung Malim` -> `Pelabuhan Klang`) | Do not include short-turn, skipped-station, peak-only, or maintenance timetable variants; keep official `Pelabuhan Klang` label with `Port Klang` as alias if needed |
 
 ### 5.5 ???Ⅱ隤?
 1. 蝣箄?蝚砌?頛芣?行?陸??2 璇???擐砌?镼蹂? 1 璇????啣???1 璇儐?堆???銝甈∟?摰靚瑯?2. 蝣箄? `BKK-MRT-Yellow` / `BKK-MRT-Pink` ??UI 銝剝＊蝷箇 `Monorail`?AGT` ??? `Metro` ????3. 撠?`BKK-SRT-Dark-Red`?KL-LRT-Ampang` / `KL-LRT-Sri-Petaling`?ERL-KLIA-Transit` ?∩?摰蝡?蝑嚗蝺蝺xpress/local 璅∪?銝憛?銵刻? shape ????
@@ -205,7 +212,7 @@
 餈??芸???瘜啣? / ?圈收 P0 seed 撠?賢嚗銵??桐誑銝??銝頛芾???啜皞?
 撌脩宏??follow-up嚗okaido relation ?踵??極蝔? maxOffset 蝎曆耨???/ ??摰閬??ranch/short-turn ?瑟?璅∪??TS Link 頝典? region?evel-2/4 鞈?皞? region UI ??i18n 蝑嚗絞銝餈質馱??`doc/east-asia-expansion-plan.md`??
 ## 撱箄降銝?甇?
-1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`, `SG-LRT-Punggol`, `ERL-KLIA-Ekspres`. 2. Next 5.3 seed priority moves to `KTM-Komuter-Batu-Caves-Pulau-Sebang` as the first cleared KTM Komuter full-corridor seed, while non-canonical short-turn/partial timetable runtime remains deferred.
+1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`, `SG-LRT-Punggol`, `ERL-KLIA-Ekspres`, `KTM-Komuter-Batu-Caves-Pulau-Sebang`. 2. Next 5.3 seed priority moves to `KTM-Komuter-Tanjung-Malim-Port-Klang` as the second cleared KTM Komuter full-corridor seed, while non-canonical short-turn/partial timetable runtime remains deferred.
 ## 5.3 vs 5.5 隞餃????脣漲蝞∠?嚗頛芾?銝?頛迎?
 
 ### 5.3 ?舐?亙銵?- ?格?嚗雁?????鞈迎??撽?????啗?銝?頛?P0 seed ?游???- ?嗅?????祈憚??閬??柴歇蝯?嚗ollow-up ?芾蕭頩斗陸??/ ?圈收?芸?鞈??湔嚗??芸??芸???撌脩宏??`doc/east-asia-expansion-plan.md`??

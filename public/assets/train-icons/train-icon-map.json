@@ -502,6 +502,10 @@
       "icon": "assets/train-icons/malaysia-erl-klia-ekspres-erl.png",
       "kind": "express"
     },
+    "malaysia|KTM-Komuter-Batu-Caves-Pulau-Sebang|KTM": {
+      "icon": "assets/train-icons/malaysia-ktm-komuter-batu-caves-pulau-sebang-ktm.png",
+      "kind": "commuter"
+    },
     "thailand|BKK-BTS-Sukhumvit|BTS": {
       "icon": "assets/train-icons/thailand-bkk-bts-sukhumvit-bts.png",
       "kind": "metro"

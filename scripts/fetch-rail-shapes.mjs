@@ -709,6 +709,14 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "KTM-Komuter-Batu-Caves-Pulau-Sebang": {
+    name: "KTM Komuter Batu Caves to Pulau Sebang/Tampin",
+    relationIds: [8390976],
+    corridor: { corridorKm: 2.0, sampleKm: 0.10 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // Bangkok.
   "BKK-BTS-Sukhumvit": {
