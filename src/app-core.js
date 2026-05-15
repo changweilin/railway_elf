@@ -22,6 +22,7 @@ const REGION_NOMINATIM_LANG = {
   singapore: 'en,zh-CN,ms,ta',
   malaysia:  'ms,en,zh-CN',
   thailand:  'th,en',
+  indonesia: 'id,en',
   vietnam:   'vi,en',
 };
 
@@ -37,6 +38,7 @@ const REGION_NAME_TAG_PREFS = {
   singapore: ['name:en', 'name:zh', 'name:ms', 'name:ta'],
   malaysia:  ['name:ms', 'name:en', 'name:zh'],
   thailand:  ['name:th', 'name:en'],
+  indonesia: ['name:id', 'name:en'],
   vietnam:   ['name:vi', 'name:en'],
 };
 
@@ -287,6 +289,7 @@ function App() {
       singapore: { lat: 1.3521,  lng: 103.8198 },
       malaysia:  { lat: 3.1390,  lng: 101.6869 },
       thailand:  { lat: 13.7563, lng: 100.5018 },
+      indonesia: { lat: -6.2000, lng: 106.8167 },
       vietnam:   { lat: 10.8231, lng: 106.6297 },
     };
     if (!location) setLocationAuto(defaults[region]);
@@ -310,6 +313,7 @@ function App() {
       singapore: { lat: 1.3521,  lng: 103.8198 },
       malaysia:  { lat: 3.1390,  lng: 101.6869 },
       thailand:  { lat: 13.7563, lng: 100.5018 },
+      indonesia: { lat: -6.2000, lng: 106.8167 },
       vietnam:   { lat: 10.8231, lng: 106.6297 },
     };
     setLocationAuto(defaults[r]);
@@ -884,6 +888,7 @@ function Toolbar({ region, switchRegion, onMenu, panelOpen, panelCollapsed, togg
     ['singapore', '🇸🇬 新加坡 Singapore'],
     ['malaysia',  '🇲🇾 馬來西亞 Malaysia'],
     ['thailand',  '🇹🇭 泰國 Thailand'],
+    ['indonesia', '🇮🇩 Indonesia'],
     ['vietnam',   '🇻🇳 越南 Vietnam'],
   ];
   return React.createElement("header", { className: "toolbar" },

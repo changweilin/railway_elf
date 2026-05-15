@@ -554,6 +554,10 @@
       "icon": "assets/train-icons/thailand-bkk-airport-rail-arl.png",
       "kind": "express"
     },
+    "indonesia|JKT-MRT-North-South|MRTJ": {
+      "icon": "assets/train-icons/indonesia-jkt-mrt-north-south-mrtj.png",
+      "kind": "metro"
+    },
     "vietnam|HCMC-Metro-1|Metro 1": {
       "icon": "assets/train-icons/vietnam-hcmc-metro-1-metro-1.png",
       "kind": "metro"

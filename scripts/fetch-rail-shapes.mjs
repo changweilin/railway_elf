@@ -792,6 +792,15 @@ const OSM_LINE_MAP = {
   },
   "BKK-Airport-Rail":  { name: "Airport Rail Link (Phaya Thai→Suvarnabhumi)", relationIds: [2148241] },
 
+  // Jakarta.
+  "JKT-MRT-North-South": {
+    name: "Jakarta MRT North-South Line (Lebak Bulus to Bundaran HI)",
+    relationIds: [9677669],
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
+
   // Vietnam.
   "HCMC-Metro-1": {
     name: "HCMC Metro Line 1 (Ben Thanh→Suoi Tien)",

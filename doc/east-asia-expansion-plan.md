@@ -8,6 +8,8 @@
 
 ## 整體進度
 
+- **2026-05-15 P1 update** — `JKT-MRT-North-South` 已完成為 Indonesia 的第一條 current-service seed：13 站、OSM relation `9677669`、generated shape 15.653 km、maxOffset 0.005 km。歷史 34/34 批次數字保留為原 East Asia baseline；新增 Jakarta seed 另列於區域 12。
+
 - **Phase A（手寫站表 + 車種）：完成 34/34 條（100%）** — `npm run check:timing` & `npm run test:smoke` & `npm run build` 全通過
 - **Phase B（OSM relation 對接）：34/34 條完成（100%）** — 批次 1–11 已補 OSM relation 並回灌真實軌道形狀；本輪沒有保留 0 km fallback。2026-05-11 加入日本 / 南韓 backlog seeds 後，103 條線 runtime maxOffset 全部壓到 1.0 km 內。
 - **完整覆蓋 backlog（日本 / 南韓）：已建立規劃事項** — 覆蓋尚未加入的鐵道類型與候選線群；此區塊是後續大型擴張，不列入已完成的 34 條 Phase A/B 統計。
@@ -266,7 +268,7 @@ Backlog 執行原則：
 
 | 優先 | 區域 | 候選線群 | 5.3 可先做 | 5.5 先判斷 |
 |---|---|---|---|---|
-| P1-ID | 印尼 | Jakarta MRT North-South Phase 1、LRT Jakarta、LRT Jabodebek、KAI Commuter Bogor / Cikarang / Rangkasbitung / Tangerang、Soekarno-Hatta Airport Rail Link | Jakarta MRT Phase 1 已決定為第一條 P1 seed，先做 Lebak Bulus ⇄ Bundaran HI 現行營運段 | KAI Commuter 多分支與長線直通需 branch/short-turn 規則；LRT Jabodebek / Airport Rail Link 後續另排 |
+| P1-ID | 印尼 | Jakarta MRT North-South Phase 1、LRT Jakarta、LRT Jabodebek、KAI Commuter Bogor / Cikarang / Rangkasbitung / Tangerang、Soekarno-Hatta Airport Rail Link | `JKT-MRT-North-South` Jakarta MRT Phase 1 current-service seed 已完成（Lebak Bulus ⇄ Bundaran HI，13 站） | KAI Commuter 多分支與長線直通需 branch/short-turn 規則；future MRT extension、LRT Jabodebek / LRT Jakarta / Airport Rail Link 後續另排 |
 | P1-PH | 菲律賓 | Manila LRT-1、LRT-2、MRT-3、PNR / NSCR future corridor | LRT-2 或 MRT-3 可作第一條 seed | LRT-1 extension 與 NSCR 未來段需確認 current baseline |
 | P1-VN | 越南 | HCMC Line 1（已完成）、Hanoi 2A（已完成）、Hanoi Line 3 elevated segment、HCMC Line 2 future | Hanoi Line 3 current service 可作補完 seed | 未全線營運段與 future HCMC extensions 不提前建正式資料 |
 | P2-SA | 南亞 / 西亞 | Delhi / Mumbai / Bengaluru / Bangkok-scale 以外大型都會鐵路、Dubai Metro、Doha Metro 等 | 暫不進 5.3 | 需另開大型 region selector、語系與資料量策略 |
@@ -276,7 +278,7 @@ Backlog 執行原則：
 5.3 可直接執行：
 
 1. 依 P0-TH-1 → P0-TH-5 順序補曼谷已營運線，每條線都完成 Phase A + Phase B、train icon、`check:timing`、`check:shapes`、`test:smoke`。
-2. 泰國前 2 條 monorail seed、`BKK-MRT-Pink-Muang-Thong-Thani` branch、`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`BKK-BTS-Gold`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit`、`SG-LRT-Sengkang`、`SG-LRT-Punggol`、`ERL-KLIA-Ekspres`、`KTM-Komuter-Batu-Caves-Pulau-Sebang` 與 `KTM-Komuter-Tanjung-Malim-Port-Klang` 已完成；下一個明確 5.3 seed 可轉往 5.5 已放行的 P1 `JKT-MRT-North-South`，`BKK-MRT-Orange` 仍維持 monitor。Dark / Light Red 完成後不批量補完整曼谷，改依 P0/P1 放行狀態輪替。
+2. 泰國前 2 條 monorail seed、`BKK-MRT-Pink-Muang-Thong-Thani` branch、`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`BKK-BTS-Gold`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit`、`SG-LRT-Sengkang`、`SG-LRT-Punggol`、`ERL-KLIA-Ekspres`、`KTM-Komuter-Batu-Caves-Pulau-Sebang`、`KTM-Komuter-Tanjung-Malim-Port-Klang` 與 P1 `JKT-MRT-North-South` 已完成；`BKK-MRT-Orange` 仍維持 monitor。Dark / Light Red 完成後不批量補完整曼谷，改依 P0/P1 放行狀態輪替。
 3. 馬來西亞 LRT / KTM / ERL 採「先獨立 line object，後續再合併 branch 模型」策略，避免 branch 規則尚未定案時阻塞站表與 shape 回灌。
 4. 新加坡 MRT 補完先做重軌 MRT（North East / Downtown / Thomson-East-Coast current segment），Bukit Panjang LRT loop、Sengkang LRT loop 與 Punggol LRT loop 已完成；RTS Link 載客前仍不下放。
 5. `ERL-KLIA-Transit` all-stop local airport service、`ERL-KLIA-Ekspres` regular-hours 3-station seed、`KTM-Komuter-Batu-Caves-Pulau-Sebang` 與 `KTM-Komuter-Tanjung-Malim-Port-Klang` full-corridor seeds 已完成；KTM Komuter 非 canonical short-turn / skipped-station / maintenance timetable runtime 仍另案。
@@ -287,7 +289,7 @@ Backlog 執行原則：
 2. 已定義 loop / branch / shared trunk / express service 的資料模型邊界：SG LRT 可用可驗證 loop 站序 seed，KL Ampang / Sri Petaling 與 SRT Red Lines 以獨立 line object 表示共線，ERL KLIA Transit 可先 seed，Ekspres 等 skip-stop template。
 3. 已決定 RTS Link 載客後新增 `sg-my` cross-border region；載客前維持 monitor，不交 5.3 建正式資料。
 4. 已決定排除非鐵路 BRT（例如 Sunway BRT）；除非未來新增明確 non-rail transit category，預設不列入本鐵道路網計畫。
-5. 已決定 P1 第一條 seed：印尼 `JKT-MRT-North-South`（Jakarta MRT North-South Phase 1，Lebak Bulus ⇄ Bundaran HI）；多 region UI 已決定維持原生 select，12+ regions 時改為群組化 select。
+5. P1 第一條 seed 已完成：印尼 `JKT-MRT-North-South`（Jakarta MRT North-South Phase 1，Lebak Bulus ⇄ Bundaran HI）；多 region UI 已決定維持原生 select，12+ regions 時改為群組化 select。
 6. 已完成 Malaysia airport/commuter gate 的 cleared seeds：`ERL-KLIA-Transit`、`ERL-KLIA-Ekspres` regular-hours express、`KTM-Komuter-Batu-Caves-Pulau-Sebang` 與 `KTM-Komuter-Tanjung-Malim-Port-Klang` full-corridor seeds；KTM Komuter 長線 short-turn policy 已放行為 full-corridor seed，非 canonical service-pattern runtime 仍另案。
 7. 已完成 SRT Light Red current segment：`BKK-SRT-Light-Red` 已作為 4-station independent commuter seed 落地；future west/south extensions 不提前建資料。
 8. 已決定 Pink Line Muang Thong Thani branch：另建獨立 branch line object seed，站序 `Muang Thong Thani` ⇄ `Impact Muang Thong Thani` ⇄ `Lake Muang Thong Thani`；不併入 `BKK-MRT-Pink` 主線或新 branch schema。
@@ -364,6 +366,14 @@ Backlog 執行原則：
 |---|---|---|---|---|---|---|
 | ☑ A ☑ B | Metro | OSM | `HCMC-Metro-1` | Tuyến Metro số 1 | Bến Thành ⇄ Suối Tiên | 19.7 km / 14 站 |
 | ☑ A ☑ B | Metro | OSM | `Hanoi-Metro-2A` | Tuyến số 2A | Cát Linh ⇄ Yên Nghĩa | 13.0 km / 12 站 |
+
+## 區域 12 — Indonesia（Jakarta seed）
+
+已新增 `indonesia` region，center `[-6.20, 106.82]`，zoom 11。
+
+| 狀態 | 類型 | 資料來源 | id | 線名 | 範圍 | 距離 / 站數 |
+|---|---|---|---|---|---|---|
+| ☑ A ☑ B | Metro | OSM | `JKT-MRT-North-South` | Jakarta MRT North-South Line | Lebak Bulus ⇄ Bundaran HI | 15.653 km / 13 站 |
 
 ---
 
@@ -450,9 +460,9 @@ Backlog 執行原則：
 
 - **Loop 類**（山手、大阪環状、首爾 2 號、北京 2 號、新加坡 Circle）：用 `loopAnchor` 切開，避免 km 累積錯亂。
 - **HSR 類**（東海道、山陽、西九州、京滬、京廣、滬昆、KTX / SRT）：OSM relation 易包含上下行＋折返線，可能需 `corridor` 重建（參考 Tokaido、Nishi Kyushu 與 KTX-Honam 既有作法）。
-- **多 region 切換 UI**：地區數從 2 → 9，要看 `src/app-core.js` 的 region selector 是否仍適合（例如改下拉式或分組）。
+- **多 region 切換 UI**：地區數從 2 → 10，要看 `src/app-core.js` 的 region selector 是否仍適合（例如改下拉式或分組）。
 - **i18n**：新增日文／韓文／中文簡體／泰文／越南文站名後，要走 `i18n-sync` skill 對齊 zh-TW UI 字串。
-- **站點座標品質**：本輪沒有 0 km fallback；中國 HSR、TYMRT、Alishan、台鐵支線與高捷紅/輕軌、`Utsunomiya-Lightline` 等粗略站點座標已用 generated OSM shape 做 1 km 門檻吸附。`Nishi-Kyushu-Shinkansen`、`Tokyo-Monorail`、`TPE-Brown`、`KHH-Orange`、`Busan-Metro-1/2/3/4`、`Busan-Gimhae-LRT`、`Daegu-Metro-1/2`、`Daejeon-Metro-1`、`Gwangju-Metro-1`、`Beijing-Subway-1`、`Shanghai-Metro-1/2`、`KL-Kelana-Jaya`、`BKK-BTS-Sukhumvit`、`BKK-MRT-Blue`、`HCMC-Metro-1`、`Hanoi-Metro-2A` 已直接採用 OSM relation stop/platform node 對站。
+- **站點座標品質**：本輪沒有 0 km fallback；中國 HSR、TYMRT、Alishan、台鐵支線與高捷紅/輕軌、`Utsunomiya-Lightline` 等粗略站點座標已用 generated OSM shape 做 1 km 門檻吸附。`Nishi-Kyushu-Shinkansen`、`Tokyo-Monorail`、`TPE-Brown`、`KHH-Orange`、`Busan-Metro-1/2/3/4`、`Busan-Gimhae-LRT`、`Daegu-Metro-1/2`、`Daejeon-Metro-1`、`Gwangju-Metro-1`、`Beijing-Subway-1`、`Shanghai-Metro-1/2`、`KL-Kelana-Jaya`、`BKK-BTS-Sukhumvit`、`BKK-MRT-Blue`、`JKT-MRT-North-South`、`HCMC-Metro-1`、`Hanoi-Metro-2A` 已直接採用 OSM relation stop/platform node 對站。
 - **本輪高誤差修正**：`JR-Yamanote` 改用 corridor + loop 起點修正，總長由錯誤的約 56 km 回到約 34.3 km；`KHH-LRT` 改為目前站表列出的 13 站區段（約 7.1 km）；`KHH-Orange`、`Shanghai-Metro-1`、`BKK-BTS-Sukhumvit` 以 stop nodes 移除舊端點外伸/拼接外伸造成的偏移；`Busan-Metro-1` 補 `동대신` 投影 override 並採 stop nodes，避免後段站點 km 被推遲。
 - **build 時間**：批次 6/7 的中國高鐵與都會地鐵已大幅增加 generated shape 與 snapshot 體量，後續若再擴張需持續監控 `scripts/.cache/` 大小與 build 時間。
 
@@ -468,10 +478,10 @@ Backlog 執行原則：
 
 #### 進度看板（5.3）
 1. [x] 完成既有 34 條 Phase A / Phase B（含日本・南韓 seed 完成）且 snapshot 已更新到 103 條線。
-2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Vietnam 各區批次）。
+2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Indonesia/Vietnam 各區批次）。
 3. [x] 維護資料源（以 OSM 為主）並更新 `OSM_LINE_MAP`、`rail-data`、`trainTemplates` 的常規新增流程。
 4. [x] 針對高誤差路段執行 station-to-station/stop-node 對站修正（已完成：多條南韓與東南亞主要線路）。
-5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow`、`BKK-MRT-Pink` 主線、`BKK-MRT-Pink-Muang-Thong-Thani` branch、`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`BKK-BTS-Gold`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit`、`SG-LRT-Sengkang`、`SG-LRT-Punggol`、`ERL-KLIA-Ekspres`、`KTM-Komuter-Batu-Caves-Pulau-Sebang` 與 `KTM-Komuter-Tanjung-Malim-Port-Klang` 已完成；下一個明確 5.3 seed 可接 `JKT-MRT-North-South`，`BKK-MRT-Orange` 仍為 monitor。
+5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow`、`BKK-MRT-Pink` 主線、`BKK-MRT-Pink-Muang-Thong-Thani` branch、`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`BKK-BTS-Gold`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit`、`SG-LRT-Sengkang`、`SG-LRT-Punggol`、`ERL-KLIA-Ekspres`、`KTM-Komuter-Batu-Caves-Pulau-Sebang`、`KTM-Komuter-Tanjung-Malim-Port-Klang` 與 `JKT-MRT-North-South` 已完成；`BKK-MRT-Orange`、`Penang-Mutiara-LRT`、`SG-MRT-Cross-Island`、`SG-MY-RTS-Link` 仍為 monitor。
 6. [ ] 泰國 / 新馬 P0 seed 執行：每條線都補 `rail-data`、train template、OSM relation、train icon，並跑 `npm run build:rail-data`、`npm run check:shapes`、`npm run check:timing`、`npm run test:smoke`。
 7. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
 
@@ -487,7 +497,7 @@ Backlog 執行原則：
 5. [x] 規劃多 region UI 與地區切換體驗（12+ region 規模）是否改版為下拉/群組，以免後續擴展衝突。
 6. [x] i18n 策略決定（中文、日文、韓文、泰文、馬來文、印尼文、越南文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
 7. [x] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
-8. [x] 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed：先下放 `JKT-MRT-North-South` 的 Jakarta MRT Phase 1 現行營運段。
+8. [x] 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed：`JKT-MRT-North-South` 的 Jakarta MRT Phase 1 現行營運段已完成。
 9. [x] 決定 `BKK-BTS-Gold` 小型 feeder：可納入 rail network 作 optional AGT/APM seed，但不計為必須完成的 trunk/P0 coverage gate。
 10. [x] 決定 Malaysia airport/commuter gate：下一個 cleared seed 為 `ERL-KLIA-Transit`；`ERL-KLIA-Ekspres` 與 KTM Komuter 均已由後續 5.5 gates 放行。
 11. [x] 決定 `BKK-SRT-Light-Red` current segment：只 seed Krung Thep Aphiwat ⇄ Taling Chan 現行 4 站；future extensions 維持 monitor。
@@ -511,10 +521,10 @@ Backlog 執行原則：
 
 - `decision`: approved + downscope。近期不新增完整 i18n layer，也不為每個 station 建多語欄位。`src/rail-data.js` 維持 `name` 作為當地/官方主要站名、`nameEn` 作為 line 的英文/拉丁顯示；搜尋與反向地理編碼繼續由 `src/app-core.js` 的 `REGION_NOMINATIM_LANG` 與 `REGION_NAME_TAG_PREFS` 控制。只有當 UI 需要同時顯示兩種語言、或同一 region 內出現同名/異名衝突時，才另開 `i18n-sync` patch。
 - `scope`: region-level language preference、station/line display naming policy、future `i18n-sync` cadence。owned files for future Spark work are `src/app-core.js` language preference constants, `src/rail-data.js` labels/directions, and any focused doc note; no generated shapes or train icon assets are part of this decision.
-- `source`: repo 現況已覆蓋 Taiwan/Japan/Korea/Hong Kong/China/Singapore/Malaysia/Thailand/Vietnam 的 Nominatim language preferences and OSM `name:<lang>` priority. Current data uses local scripts for `name`, English/Latin for most `nameEn`, and region-specific direction labels.
+- `source`: repo 現況已覆蓋 Taiwan/Japan/Korea/Hong Kong/China/Singapore/Malaysia/Thailand/Indonesia/Vietnam 的 Nominatim language preferences and OSM `name:<lang>` priority. Current data uses local scripts for `name`, English/Latin for most `nameEn`, and region-specific direction labels.
 - `constraints`: Do not rename station `name` values just to force English consistency; station names remain the shape/snapshot matching key unless generated index fallback is explicitly used. Do not add broad i18n runtime infrastructure before a concrete UI need. New regions must add `REGION_NOMINATIM_LANG` and `REGION_NAME_TAG_PREFS` in the same seed or in a same-round follow-up, and directions must stay consistent with station order.
 - `checks`: For pure label preference changes, run `git diff --check` plus the narrow data check relevant to changed files. For any `src/rail-data.js` name/direction update, run `npm.cmd run check:timing`; if station names or generated shape mapping are touched, also run `npm.cmd run build:rail-data` and `npm.cmd run check:shapes`.
-- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 i18n policy 決策；下一個可下放文件 seed 是「為新增 Indonesia/Philippines region 預先填入 Nominatim language/name tag preference」。
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 i18n policy 決策；Indonesia preference 已隨 `JKT-MRT-North-South` 5.3 seed 落地，Philippines region preference 留待 future seed。
 
 #### 2026-05-14 5.5 決策：Level-2 / Level-4 data-source gate
 
@@ -527,9 +537,9 @@ Backlog 執行原則：
 
 #### 2026-05-14 5.5 決策：12+ region selector
 
-- `decision`: approved + downscope。近期維持 `src/app-core.js` `Toolbar` 內現有的原生 `<select>`；目前 `RAIL_DATA` 為 9 個 region，未達必須改版門檻。當 region 數量達 12 時，改為同一個原生 select 的群組化選項（`optgroup` 或等價資料驅動 render），先不要改成 modal、map overlay 或搜尋式 command menu。搜尋式選單只在 18+ regions、跨境 region 增多、或使用者回報難以掃描時再開新 5.5 UI 決策。
+- `decision`: approved + downscope。近期維持 `src/app-core.js` `Toolbar` 內現有的原生 `<select>`；目前 `RAIL_DATA` 為 10 個 region，未達必須改版門檻。當 region 數量達 12 時，改為同一個原生 select 的群組化選項（`optgroup` 或等價資料驅動 render），先不要改成 modal、map overlay 或搜尋式 command menu。搜尋式選單只在 18+ regions、跨境 region 增多、或使用者回報難以掃描時再開新 5.5 UI 決策。
 - `scope`: 本輪只完成策略文件與看板清理。未來實作若觸發，owned files 以 `src/app-core.js` 的 `Toolbar` region option source 與對應 CSS 為主；`src/app-map.js` 不需要改，除非 region 切換 lifecycle 出現實測 bug。
-- `source`: repo 現況顯示 `Toolbar` 已使用原生 select，`RAIL_DATA` 目前有 9 個 region（Taiwan、Japan、Korea、Hong Kong、China、Singapore、Malaysia、Thailand、Vietnam）。P0/P1 backlog 會把 region 推向 12+，但短期仍可用現有 control 承載。
+- `source`: repo 現況顯示 `Toolbar` 已使用原生 select，`RAIL_DATA` 目前有 10 個 region（Taiwan、Japan、Korea、Hong Kong、China、Singapore、Malaysia、Thailand、Indonesia、Vietnam）。P0/P1 backlog 會把 region 推向 12+，但短期仍可用現有 control 承載。
 - `constraints`: 保留既有 region key 與 `switchRegion` 流程；不要引入 JSX/TypeScript；不要為此新增 `RAIL_DATA` schema 欄位。若未來新增 `sg-my`，先等 RTS Link 5.5 歸屬決策完成，再放入 `Cross-border / monitor` 群組。
 - `checks`: 本輪為文件決策，最小檢查為 `git diff --check`。未來若實作 UI，需跑 `npm.cmd run build`、`npm.cmd run test:smoke`，並用 browser testing 檢查桌面與手機寬度的 toolbar/select 不溢出。
 - `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 UI 策略決策；下一個可下放 UI seed 是「12+ regions 時將 hard-coded region list 抽為 grouped option data」。
@@ -555,11 +565,11 @@ Backlog 執行原則：
 #### 2026-05-15 5.5 決策：P0 seed cadence
 
 - `decision`: approved + downscope。後續 P0 擴張維持「每輪 1 條完整 seed」作為硬規則：同一輪必須完成站表、train template、OSM/shape mapping、line-aware icon、generated outputs 與最小檢查後才開下一條。不採同城市一次補完；原先「泰國 2 條 → 馬來西亞 1 條 → 新加坡 1 條」只保留為早期 bootstrapping 參考，現在改用 cleared P0 queue + blocker fallback。
-- `scope`: Asia P0 seed order and handoff policy. `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `BKK-BTS-Gold`, `BKK-MRT-Pink-Muang-Thong-Thani`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`, `SG-LRT-Punggol`, `ERL-KLIA-Ekspres`, `KTM-Komuter-Batu-Caves-Pulau-Sebang`, and `KTM-Komuter-Tanjung-Malim-Port-Klang` were completed in 2026-05-15 5.3 rounds; the current 5.3 next target can move to the cleared P1 seed `JKT-MRT-North-South` while monitor items stay blocked.
+- `scope`: Asia P0/P1 seed order and handoff policy. `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `BKK-BTS-Gold`, `BKK-MRT-Pink-Muang-Thong-Thani`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`, `SG-LRT-Punggol`, `ERL-KLIA-Ekspres`, `KTM-Komuter-Batu-Caves-Pulau-Sebang`, `KTM-Komuter-Tanjung-Malim-Port-Klang`, and `JKT-MRT-North-South` were completed in 2026-05-15 5.3 rounds; monitor items stay blocked until a future 5.5 gate nominates the next current-service seed.
 - `source`: Current repo backlog shows `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-SRT-Dark-Red`, `KL-MRT-Putrajaya`, `KL-Monorail`, `SG-MRT-North-East`, `SG-MRT-Downtown`, and `SG-MRT-Thomson-East-Coast` completed. Existing check history demonstrates each seed has non-trivial icon, generated-shape, timing, and smoke-test work, so batching multiple lines in one round increases conflict and verification risk.
 - `constraints`: Do not start a second seed in the same 5.3 round before the first seed's icon/template/shape/checks are complete and committed. Do not force a strict country cycle when the next same-country candidate is monitor-only, future-service, or has an unresolved branch/skip-stop blocker. Do not let this cadence decision override the separate RTS Link, ERL Ekspres, SRT Light Red, or Pink branch gates.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For future 5.3 seeds, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` when new PNG assets are generated.
-- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 seed cadence 決策。`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`BKK-BTS-Gold`、`BKK-MRT-Pink-Muang-Thong-Thani`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit`、`SG-LRT-Sengkang`、`SG-LRT-Punggol`、`ERL-KLIA-Ekspres`、`KTM-Komuter-Batu-Caves-Pulau-Sebang` 與 `KTM-Komuter-Tanjung-Malim-Port-Klang` 已於 2026-05-15 5.3 seed 完成；下一個可下放 seed 為 P1 `JKT-MRT-North-South`。
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 seed cadence 決策。`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`BKK-BTS-Gold`、`BKK-MRT-Pink-Muang-Thong-Thani`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit`、`SG-LRT-Sengkang`、`SG-LRT-Punggol`、`ERL-KLIA-Ekspres`、`KTM-Komuter-Batu-Caves-Pulau-Sebang`、`KTM-Komuter-Tanjung-Malim-Port-Klang` 與 P1 `JKT-MRT-North-South` 已於 2026-05-15 5.3 seed 完成。
 
 #### 2026-05-15 5.5 決策：P0 launch-gate reconciliation
 
@@ -581,12 +591,12 @@ Backlog 執行原則：
 
 #### 2026-05-15 5.5 決策：P1 first seed
 
-- `decision`: approved + downscope。P1 印尼 / 菲律賓 / 越南的第一條 seed 選 `JKT-MRT-North-South`，也就是 Jakarta MRT North-South Phase 1 的現行營運段；先只建 Lebak Bulus ⇄ Bundaran HI 這條單一路線，不把 Phase 2、KAI Commuter、LRT Jabodebek、LRT Jakarta 或 Soekarno-Hatta Airport Rail Link 併進同一輪。
+- `decision`: approved + completed。P1 印尼 / 菲律賓 / 越南的第一條 seed 選 `JKT-MRT-North-South`，也就是 Jakarta MRT North-South Phase 1 的現行營運段；後續 5.3 已只建 Lebak Bulus ⇄ Bundaran HI 這條單一路線，未把 Phase 2、KAI Commuter、LRT Jabodebek、LRT Jakarta 或 Soekarno-Hatta Airport Rail Link 併進同一輪。
 - `scope`: 新增 future `indonesia` region 的第一條 rail seed、Jakarta MRT Phase 1 站序、Metro category、MRT Jakarta train template、OSM relation/shape mapping、line-aware icon 與 region name-tag preference。future Spark owned files are `src/rail-data.js`, `scripts/fetch-rail-shapes.mjs`, `src/train-icon-registry.js`, train icon scripts/assets, generated shape outputs, and narrow docs.
 - `source`: MRT Jakarta official Phase 1 page describes the first corridor as a 16 km Lebak Bulus to Bundaran HI line with 13 stations, and the official station list currently exposes the Phase 1 station set. Phase 2 is documented as an extension beyond Bundaran HI toward Ancol Barat, so it is out of scope until the opened passenger-service segment and station naming are stable. Sources: https://jakartamrt.co.id/id/proyek/fase-1, https://www.jakartamrt.co.id/daftar-stasiun, https://www.jakartamrt.co.id/id/proyek/fase-2
 - `constraints`: Do not start with KAI Commuter because its branch/short-turn/long-distance service patterns need a separate branch policy. Do not include future or under-construction MRT extensions in the Phase 1 seed. Use sponsor-free canonical station names where possible, but preserve official/current names if they are needed for OSM/generated shape matching; add Indonesian Nominatim/name-tag preference in the same 5.3 seed per the i18n policy.
-- `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For the future Indonesia data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if a new Jakarta MRT PNG/contact sheet is generated.
-- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 P1 first seed 決策。下一個可下放 P1 seed 是 `JKT-MRT-North-South`；若 Jakarta official/OSM mapping 阻塞，fallback 依序評估 `PH-LRT-2` / `PH-MRT-3` 或 `Hanoi-Line-3` current-service segment。
+- `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md`. For the completed Indonesia data seed, the later 5.3 pass ran `npm.cmd run build:train-icons`, `node --env-file-if-exists=.env scripts/fetch-rail-shapes.mjs --only-lines=JKT-MRT-North-South`, `npm.cmd run build:rail-data`, `npm.cmd run check:train-icons`, `npm.cmd run check:timing`, `npm.cmd run check:shapes`, `npm.cmd run build`, and `npm.cmd run test:smoke`.
+- `report`: 後續 5.3 seed 新增/修改 region 1、line 1、station 13、train template 1、shape mapping 1、icon override 1；`JKT-MRT-North-South` 已完成為 P1 first seed（shape total 15.653 km, maxOffset 0.005 km）。下一個 P1 / regional current-service seed 需另由 5.5 gate 指定。
 
 #### 2026-05-15 5.5 決策：Bangkok Gold Line feeder inclusion
 
@@ -667,7 +677,7 @@ Backlog 執行原則：
 - `source`: MRTA identifies the Si Rat - Muang Thong Thani extension as a 3.0 km straddle monorail spur from Pink Line station PK10 to two new stations, MT-01 and MT-02. The current Pink Line / Muang Thong Thani Line operator timetable lists PK10 `Muang Thong Thani`, MT01 `Impact Muang Thong Thani`, MT02 `Lake Muang Thong Thani`, and separate Muang Thong Thani Line service intervals. Sources: https://www.mrta.co.th/en/pink-line-extension-si-rat---muang-thong-thani and https://www.ebm.co.th/cms-routemap/WareHouse/TimeTable/PinkLine.pdf
 - `constraints`: Do not duplicate all 30 Pink mainline stations inside the branch object. Do not rename or rewrite existing `BKK-MRT-Pink` mainline data or generated shape output in the branch decision pass. Use current operator-facing English station names; allow script-side aliases for older `Si Rat` / `Muang Thong Thani` naming while keeping PK10 as the branch interchange. Reuse the Pink Line monorail template/icon unless future visual QA shows a distinct branch asset is needed.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md`. For the future branch data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if a new branch PNG/contact sheet is generated.
-- `report`: 後續 5.3 seed 新增/修改 region 0、line 1、station 3、train template 1、shape mapping 1、icon override 1；`BKK-MRT-Pink-Muang-Thong-Thani` 已完成為獨立 3-station branch line，並保持與 `BKK-MRT-Pink` 主線分離。下一個明確可下放 seed 是 `JKT-MRT-North-South`; blocked remains：KLIA Ekspres late-night all-stations service-pattern runtime and RTS Link passenger-service monitor.
+- `report`: 後續 5.3 seed 新增/修改 region 0、line 1、station 3、train template 1、shape mapping 1、icon override 1；`BKK-MRT-Pink-Muang-Thong-Thani` 已完成為獨立 3-station branch line，並保持與 `BKK-MRT-Pink` 主線分離。`JKT-MRT-North-South` 也已於後續 5.3 seed 完成; blocked remains：KLIA Ekspres late-night all-stations service-pattern runtime and RTS Link passenger-service monitor.
 
 ### 每 1 輪管理規則（共用）
 - 5.3 工作可按 `seed` 粒度收斂：每輪至少完成 1 條完整 seed（A+B）並出具 smoke + shape + timing 驗證。

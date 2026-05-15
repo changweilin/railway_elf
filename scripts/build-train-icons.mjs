@@ -122,6 +122,8 @@ const VISUALS = {
   "thailand|BKK-MRT-Blue|MRT": { shape: "metro", body: "#f8fafc", accent: "#1d4ed8", band: "#1d4ed8" },
   "thailand|BKK-Airport-Rail|ARL": { shape: "express", body: "#f8fafc", accent: "#dc2626", accent2: "#7f1d1d" },
 
+  "indonesia|JKT-MRT-North-South|MRTJ": { shape: "metro", body: "#f8fafc", accent: "#ce0037", band: "#ce0037" },
+
   "vietnam|HCMC-Metro-1|Metro 1": { shape: "metro", body: "#f8fafc", accent: "#dc2626", band: "#dc2626" },
   "vietnam|Hanoi-Metro-2A|Metro 2A": { shape: "metro", body: "#f8fafc", accent: "#16a34a", band: "#16a34a" },
 };

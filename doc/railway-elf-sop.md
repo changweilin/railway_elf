@@ -521,8 +521,9 @@ npm.cmd run check:timing
 20. [x] `KTM-Komuter-Tanjung-Malim-Port-Klang` 已完成：`src/rail-data.js`（line / 34 stations / canonical full-corridor `KTM` commuter template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `2565937`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-ktm-komuter-tanjung-malim-port-klang-ktm.png`（KTM Komuter icon）。
 21. [x] `BKK-BTS-Gold` 已完成：`src/rail-data.js`（line / 3 stations / current `AGT` APM segment / `GL` template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `11681439`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/thailand-bkk-bts-gold-gl.png`（Gold Line icon）。
 22. [x] `BKK-MRT-Pink-Muang-Thong-Thani` 已完成：`src/rail-data.js`（independent branch line / 3 stations / `Monorail` / `PK` template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `19149752`）、`src/train-icon-registry.js`（reuse `thailand-bkk-mrt-pink-pk.png` line-aware Pink icon）。
-23. [ ] 下一輪 5.3 可接 `JKT-MRT-North-South` Jakarta MRT Phase 1 seed；先新增 `indonesia` region、13 站 current segment、MRT Jakarta template/icon、OSM relation/shape 與 Indonesian name-tag preference。
+23. [x] `JKT-MRT-North-South` Jakarta MRT Phase 1 seed 已完成：新增 `indonesia` region、13 站 current segment、`MRTJ` template/icon、OSM relation `9677669` / generated Indonesia shape、Indonesian Nominatim/name-tag preference。
 24. [ ] `BKK-MRT-Orange`、`Penang-Mutiara-LRT`、`SG-MRT-Cross-Island`、`SG-MY-RTS-Link` 仍為 monitor：正式載客與站名/OSM relation 穩定前不交 5.3。
+25. [ ] 下一輪 5.3 若無明確 pending seed，先請 5.5 從 P1 Indonesia / Philippines / Vietnam 或其他 cleared backlog 指定下一條 current-service seed。
 
 ## 發布前檢查
 

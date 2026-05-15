@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.3 Jakarta MRT North-South Phase 1 seed
+
+- [x] Completed one 5.3 seed item: `JKT-MRT-North-South` is now in `RAIL_DATA` under the new `indonesia` region with the current 13-station Phase 1 segment from `Lebak Bulus` to `Bundaran HI`, an `MRTJ` metro template, OSM route relation `9677669`, generated Indonesia shape data, and a line-aware MRT Jakarta icon.
+- [x] Cleaned the completed 5.3 option by marking `JKT-MRT-North-South` done in the 5.3 backlog; monitor-only items (`BKK-MRT-Orange`, `Penang-Mutiara-LRT`, `SG-MRT-Cross-Island`, `SG-MY-RTS-Link`) still stay blocked until passenger service and station/OSM data stabilize.
+- [x] No concurrent 5.5 diff was detected before editing `follow-up-plan.md`; this round only reconciles the completed Indonesia seed and its downstream docs.
+
 ## 2026-05-15 5.5 Singapore Cross Island Line monitor recheck
 
 - [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records `SG-MRT-Cross-Island` as still monitor-only based on current LTA official rail expansion and current rail network pages.
@@ -239,7 +245,7 @@
 | 20 | `KTM-Komuter-Tanjung-Malim-Port-Klang` | done | KTM Komuter full-corridor seed: 34 stations, `KTM` commuter template, OSM relation `2565937`, generated Malaysia shape, line-aware KTM Komuter icon | done (shape maxOffset 0.007 km); short-turn, skipped-station, peak-only, and maintenance timetable variants remain deferred |
 | 21 | `BKK-BTS-Gold` | done | Bangkok BTS Gold Line optional AGT/APM feeder seed: 3 stations, `GL` template, OSM relation `11681439`, generated Thailand shape, line-aware Gold Line icon | done (shape maxOffset 0.019 km); future Prajadhipok / other extension concepts and non-rail feeder services remain deferred |
 | 22 | `BKK-MRT-Pink-Muang-Thong-Thani` | done | Bangkok MRT Pink Line Muang Thong Thani independent branch seed: 3 stations, `PK` branch template, OSM relation `19149752`, generated Thailand shape, line-aware Pink Line icon reuse | done (shape maxOffset 0.000 km); remains separate from `BKK-MRT-Pink` mainline and no branch graph/schema work was added |
-| 23 | `JKT-MRT-North-South` | pending | Jakarta MRT North-South Phase 1 current-service seed (`Lebak Bulus` -> `Bundaran HI`) | Cleared by 5.5 as the first P1 Indonesia / Philippines / Vietnam seed; add Indonesia region, 13 stations, MRT Jakarta template/icon, OSM relation/shape, and Indonesian name-tag preference |
+| 23 | `JKT-MRT-North-South` | done | Jakarta MRT North-South Phase 1 current-service seed (`Lebak Bulus` -> `Bundaran HI`), `MRTJ` metro template, OSM relation `9677669`, generated Indonesia shape, line-aware MRT Jakarta icon, Indonesian name-tag preference | done (shape total 15.653 km, maxOffset 0.005 km, 59 pts); future MRT extensions, KAI Commuter, LRT Jabodebek, LRT Jakarta, and Airport Rail Link remain separate future gates |
 
 ### 5.5 ???Ⅱ隤?
 1. 蝣箄?蝚砌?頛芣?行?陸??2 璇???擐砌?镼蹂? 1 璇????啣???1 璇儐?堆???銝甈∟?摰靚瑯?2. 蝣箄? `BKK-MRT-Yellow` / `BKK-MRT-Pink` ??UI 銝剝＊蝷箇 `Monorail`?AGT` ??? `Metro` ????3. 撠?`BKK-SRT-Dark-Red`?KL-LRT-Ampang` / `KL-LRT-Sri-Petaling`?ERL-KLIA-Transit` ?∩?摰蝡?蝑嚗蝺蝺xpress/local 璅∪?銝憛?銵刻? shape ????
@@ -251,7 +257,7 @@
 餈??芸???瘜啣? / ?圈收 P0 seed 撠?賢嚗銵??桐誑銝??銝頛芾???啜皞?
 撌脩宏??follow-up嚗okaido relation ?踵??極蝔? maxOffset 蝎曆耨???/ ??摰閬??ranch/short-turn ?瑟?璅∪??TS Link 頝典? region?evel-2/4 鞈?皞? region UI ??i18n 蝑嚗絞銝餈質馱??`doc/east-asia-expansion-plan.md`??
 ## 撱箄降銝?甇?
-1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-MRT-Pink-Muang-Thong-Thani`, `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `BKK-BTS-Gold`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`, `SG-LRT-Punggol`, `ERL-KLIA-Ekspres`, `KTM-Komuter-Batu-Caves-Pulau-Sebang`, `KTM-Komuter-Tanjung-Malim-Port-Klang`. 2. Next 5.3 seed selection can move to the explicitly cleared P1 seed `JKT-MRT-North-South`, while `BKK-MRT-Orange`, `Penang-Mutiara-LRT`, `SG-MY-RTS-Link`, and non-canonical KTM short-turn/partial timetable runtime remain deferred.
+1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-MRT-Pink-Muang-Thong-Thani`, `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `BKK-BTS-Gold`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`, `SG-LRT-Punggol`, `ERL-KLIA-Ekspres`, `KTM-Komuter-Batu-Caves-Pulau-Sebang`, `KTM-Komuter-Tanjung-Malim-Port-Klang`, `JKT-MRT-North-South`. 2. No explicit cleared 5.3 seed remains in this file after the Jakarta MRT handoff; `BKK-MRT-Orange`, `Penang-Mutiara-LRT`, `SG-MRT-Cross-Island`, `SG-MY-RTS-Link`, and non-canonical KTM short-turn/partial timetable runtime remain deferred until a future 5.5 gate nominates the next current-service seed.
 ## 5.3 vs 5.5 隞餃????脣漲蝞∠?嚗頛芾?銝?頛迎?
 
 ### 5.3 ?舐?亙銵?- ?格?嚗雁?????鞈迎??撽?????啗?銝?頛?P0 seed ?游???- ?嗅?????祈憚??閬??柴歇蝯?嚗ollow-up ?芾蕭頩斗陸??/ ?圈收?芸?鞈??湔嚗??芸??芸???撌脩宏??`doc/east-asia-expansion-plan.md`??

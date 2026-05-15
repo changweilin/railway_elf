@@ -4460,6 +4460,41 @@ export const RAIL_DATA = {
     ],
   },
 
+  indonesia: {
+    label: "Indonesia",
+    center: [-6.2000, 106.8167],
+    zoom: 11,
+    lines: [
+      {
+        id: "JKT-MRT-North-South",
+        name: "MRT Jakarta Lin Utara-Selatan",
+        nameEn: "Jakarta MRT North-South Line",
+        color: "#ce0037",
+        category: "Metro",
+        directions: { up: "Lebak Bulus bound", down: "Bundaran HI bound" },
+        // Jakarta MRT North-South Phase 1 current service: Lebak Bulus to Bundaran HI.
+        stations: [
+          { name: "Lebak Bulus",     lat: -6.289296, lng: 106.774932, km: 0.0, dwellSec: 30 },
+          { name: "Fatmawati",       lat: -6.292471, lng: 106.792463, km: 1.8 },
+          { name: "Cipete Raya",     lat: -6.278372, lng: 106.797342, km: 3.4 },
+          { name: "Haji Nawi",       lat: -6.266696, lng: 106.797345, km: 4.7 },
+          { name: "Blok A",          lat: -6.255787, lng: 106.797172, km: 5.9 },
+          { name: "Blok M",          lat: -6.244423, lng: 106.798239, km: 7.2, dwellSec: 30 },
+          { name: "ASEAN",           lat: -6.238771, lng: 106.798470, km: 7.9 },
+          { name: "Senayan",         lat: -6.226784, lng: 106.802524, km: 9.4 },
+          { name: "Istora",          lat: -6.222442, lng: 106.808665, km: 10.2 },
+          { name: "Bendungan Hilir", lat: -6.215063, lng: 106.817995, km: 11.5 },
+          { name: "Setiabudi",       lat: -6.209095, lng: 106.821762, km: 12.4 },
+          { name: "Dukuh Atas",      lat: -6.200802, lng: 106.822828, km: 13.3, dwellSec: 30 },
+          { name: "Bundaran HI",     lat: -6.191849, lng: 106.823062, km: 14.5, dwellSec: 30 },
+        ],
+      },
+    ],
+    trainTemplates: [
+      { line: "JKT-MRT-North-South", type: "MRTJ", badge: "MRTJ", badgeColor: "#ce0037", speed: 38, interval: 5, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+    ],
+  },
+
   vietnam: {
     label: "Việt Nam Vietnam",
     center: [16.0, 107.0],
@@ -4532,6 +4567,7 @@ const RAIL_SHAPE_LOADERS = {
   singapore: () => import("./rail-shapes/singapore.generated.js"),
   malaysia:  () => import("./rail-shapes/malaysia.generated.js"),
   thailand:  () => import("./rail-shapes/thailand.generated.js"),
+  indonesia: () => import("./rail-shapes/indonesia.generated.js"),
   vietnam:   () => import("./rail-shapes/vietnam.generated.js"),
 };
 
