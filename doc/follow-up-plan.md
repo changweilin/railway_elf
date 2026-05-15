@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.5 Penang Mutiara LRT monitor recheck
+
+- [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records `Penang-Mutiara-LRT` as still monitor-only based on current MRT Corp public inspection / project materials.
+- [x] Cleaned the completed 5.5 option by tightening the `P0-MY-9` monitor row and adding a 5.5 progress-board entry; no 5.3 data seed is authorized before passenger operation begins.
+- [x] No concurrent uncommitted 5.3 diff was present; the KTM Tanjung Malim-Pelabuhan Klang 5.3 work was already committed before this docs-only 5.5 pass.
+
 ## 2026-05-15 5.3 KTM Komuter Tanjung Malim-Pelabuhan Klang seed
 
 - [x] Completed one 5.3 seed item: `KTM-Komuter-Tanjung-Malim-Port-Klang` is now in `RAIL_DATA` with the 34-station canonical full-corridor pattern from `Tanjung Malim` to `Pelabuhan Klang`, a `KTM` commuter train template, OSM route relation `2565937`, generated Malaysia shape data, and a line-aware KTM Komuter icon.

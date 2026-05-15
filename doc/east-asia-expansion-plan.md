@@ -260,7 +260,7 @@ Backlog 執行原則：
 | P0-MY-6 | ☑ A ☑ B | Commuter | `KTM-Komuter-Tanjung-Malim-Port-Klang` | KTM Komuter Tanjung Malim - Pelabuhan Klang | Tanjung Malim ⇄ Pelabuhan Klang（131 km official route seed） | 已補 34 站、`KTM` commuter template、OSM relation `2565937`、KTM Komuter icon、Malaysia generated shape | 無阻塞；shape maxOffset 0.007 km；short-turn / skipped-station / peak-only / maintenance timetable variants 留 service-pattern pass |
 | P0-MY-7 | ☑ A ☑ B | Airport | `ERL-KLIA-Transit` | KLIA Transit | KL Sentral ⇄ KLIA T2 local stops | 已補 6 站、`ERL` airport template、OSM relation `8119876`、ERL icon、Malaysia generated shape | 無阻塞；shape maxOffset 0.234 km |
 | P0-MY-8 | ☑ A ☑ B | Airport | `ERL-KLIA-Ekspres` | KLIA Ekspres | KL Sentral ⇄ KLIA T1 ⇄ KLIA T2 regular-hours express | 已補 3 站、`ERL` airport template、OSM relation `8119878`、ERL Ekspres icon、Malaysia generated shape | 無阻塞；shape maxOffset 0.094 km；23:00 後 all-stations 與 maintenance combined service 留 service-pattern pass |
-| P0-MY-9 | □ monitor | LRT | `Penang-Mutiara-LRT` | Penang Mutiara Line | future operational segment | 不執行 | 待正式載客與 OSM/官方站表穩定 |
+| P0-MY-9 | □ monitor | LRT | `Penang-Mutiara-LRT` | Penang Mutiara Line | Silicon Island / KOMTAR / Penang Sentral revised scheme | 不執行 | 2026-05-15 已重查 MRT Corp：public inspection 2026-02-24→2026-05-24，construction commenced 2025，operations expected 2031-12；正式載客與 OSM/官方站表穩定前不下放 |
 
 ### P1：其他亞洲候選池（泰國 / 新馬之後）
 
@@ -294,6 +294,7 @@ Backlog 執行原則：
 9. 已決定 KLIA Ekspres regular-hours gate：`ERL-KLIA-Ekspres` 可作獨立 3-station Airport express seed；23:00 後 all-stations pattern 與 maintenance combined service 不納入本 seed。
 10. 已決定 KTM Komuter long-corridor gate：`KTM-Komuter-Batu-Caves-Pulau-Sebang` 與 `KTM-Komuter-Tanjung-Malim-Port-Klang` 皆已完成為獨立 full-corridor commuter seed；短折與臨時/部分班次不納入本輪。
 11. 已重查 Bangkok MRT Orange monitor：MRTA 仍列為 ongoing project，east section 預計 2028-01、west section 預計 2030-07；正式載客前不交 5.3 建資料。
+12. 已重查 Penang Mutiara Line monitor：MRT Corp 修訂鐵路方案仍在 public inspection / construction 階段，預計 2031-12 營運；正式載客前不交 5.3 建資料。
 
 ## 批次 5 — 香港：MTR（4 條）
 
@@ -493,6 +494,7 @@ Backlog 執行原則：
 13. [x] 決定 `ERL-KLIA-Ekspres` regular-hours express：可作獨立 3-station Airport seed；晚間 all-stations 服務型態另開 runtime pass。
 14. [x] 決定 KTM Komuter long-corridor / short-turn gate：兩條 Klang Valley full-corridor commuter seeds 可下放；短折、缺站班次與施工期 timetable 另開 service-pattern pass。
 15. [x] 重查 `BKK-MRT-Orange` monitor：MRTA 仍列 east/west sections as ongoing projects；正式載客前維持 monitor，不交 5.3。
+16. [x] 重查 `Penang-Mutiara-LRT` monitor：MRT Corp 仍列為 public inspection / construction-stage project；正式載客前維持 monitor，不交 5.3。
 
 #### 2026-05-14 5.5 決策：Bangkok straddle monorail category
 
@@ -601,6 +603,15 @@ Backlog 執行原則：
 - `constraints`: Do not seed a partial construction route, test-running route, or planned whole-line route before public passenger operation. Do not combine east and west sections into one current baseline until MRTA/BEM operation begins and published passenger-facing stations are stable. Keep the existing Bangkok completed lines as-is; Orange Line should not be used to force a branch or future-extension schema pass.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md doc/railway-elf-sop.md`. For a future Orange Line data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if a new Orange Line PNG/contact sheet is generated.
 - `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 Bangkok MRT Orange monitor recheck。blocked remains：Orange Line passenger-service monitor; no 5.3 seed until at least one section is officially open.
+
+#### 2026-05-15 5.5 決策：Penang Mutiara LRT monitor recheck
+
+- `decision`: blocked-until-service。`Penang-Mutiara-LRT` 仍維持 `monitor`，不交 5.3 建 `RAIL_DATA` line、train template、OSM relation 或 generated shape。等正式載客段、最終 passenger-facing station list、OSM relation 與 official route materials 穩定後，再重開 seed gate。
+- `scope`: Penang LRT Mutiara Line revised scheme, including the island alignment and the cross-sea extension to Seberang Perai / Penang Sentral. Current pass is policy/docs only. Future Spark owned files after passenger service are `src/rail-data.js`, `scripts/fetch-rail-shapes.mjs`, `src/train-icon-registry.js`, generated Malaysia shape/icon outputs, and narrow docs.
+- `source`: MRT Corp's 2026 public inspection release says the revised scheme runs public inspection from 2026-02-24 to 2026-05-24, adds a cross-sea rail link connecting KOMTAR and Penang Sentral, and revises the project to about 29.67 km with 20 stations plus two provisional stations. The same release says construction commenced in 2025 and operations are expected to begin in December 2031. Sources: https://www.mymrt.com.my/wp-content/uploads/2026/02/MRTC-FOR-IMMEDIATE-RELEASE-MRT-CORP-ANNOUNCES-PUBLIC-INSPECTION-FOR-LRT-MUTIARA-LINE-EXTENSION-LINKING-ISLAND-AND-SEBERANG-PERAI_1.pdf and https://laluanmutiara.mymrt.com.my/
+- `constraints`: Do not seed the pre-service or public-inspection alignment as a current railway line. Do not include provisional stations, PSR placeholder segments, construction access details, road closures, parking, or depot-only information in `RAIL_DATA`. Do not use this future line to force a new Malaysia region split or branch schema before passenger service and final station naming are stable.
+- `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md doc/railway-elf-sop.md`. For a future Mutiara Line data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if a new Mutiara Line PNG/contact sheet is generated.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 Penang Mutiara LRT monitor recheck。blocked remains：Mutiara Line passenger-service monitor; no 5.3 seed before official operation.
 
 #### 2026-05-15 5.5 決策：Malaysia airport/commuter next seed
 

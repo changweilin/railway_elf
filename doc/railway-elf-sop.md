@@ -521,6 +521,7 @@ npm.cmd run check:timing
 20. [x] `KTM-Komuter-Tanjung-Malim-Port-Klang` 已完成：`src/rail-data.js`（line / 34 stations / canonical full-corridor `KTM` commuter template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `2565937`）、`src/train-icon-registry.js` 與 `public/assets/train-icons/malaysia-ktm-komuter-tanjung-malim-port-klang-ktm.png`（KTM Komuter icon）。
 21. [ ] 下一輪 5.3 可接 `BKK-BTS-Gold` optional AGT/APM feeder seed；先補 3 站、Gold Line APM template、OSM relation 與 Gold Line icon，不阻塞 trunk/P0 cleared seeds。
 22. [ ] `BKK-MRT-Orange` 仍為 monitor：MRTA 官方頁面顯示 east section expected January 2028、west section expected July 2030；正式載客與站名/OSM relation 穩定前不交 5.3。
+23. [ ] `Penang-Mutiara-LRT` 仍為 monitor：MRT Corp public inspection 2026-02-24→2026-05-24，construction commenced 2025，operations expected December 2031；正式載客與最終站名/OSM relation 穩定前不交 5.3。
 
 ## 發布前檢查
 
