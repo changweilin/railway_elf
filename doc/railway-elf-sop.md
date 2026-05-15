@@ -525,7 +525,8 @@ npm.cmd run check:timing
 24. [ ] `BKK-MRT-Orange`、`Penang-Mutiara-LRT`、`SG-MRT-Cross-Island`、`SG-MY-RTS-Link` 仍為 monitor：正式載客與站名/OSM relation 穩定前不交 5.3。
 25. [x] 下一輪 5.3 current-service seed 已由 5.5 指定為 `MNL-MRT-3` Manila MRT-3：新增 `philippines` region、North Avenue ⇄ Taft Avenue 13-station current line、MRT-3 template/icon、OSM relation/shape 與 Philippines name-tag preference。
 26. [x] `MNL-MRT-3` Manila MRT-3 seed 已完成：`src/rail-data.js`（philippines region / 13 stations / `MRT-3` template）、`scripts/fetch-rail-shapes.mjs`（OSM relation `109159` + corridor shape）、`src/train-icon-registry.js` 與 `public/assets/train-icons/philippines-mnl-mrt-3-mrt-3.png`（MRT-3 yellow icon）。
-27. [ ] 下一輪 5.3 暫無明確 approved seed；不要併入 LRT-1、LRT-2、PNR / NSCR、Metro Manila Subway 或 future extension，需等後續 5.5 gate 指定。
+27. [x] 下一輪 5.3 current-service seed 已由 5.5 指定為 `MNL-LRT-2` Manila LRT-2：沿用 `philippines` region、Recto ⇄ Antipolo 13-station current line、LRT-2 template/icon、OSM relation/shape 與 Philippines name-tag preference。
+28. [ ] 下一輪 5.3 可接 `MNL-LRT-2` Manila LRT-2 seed；不要併入 LRT-1、PNR / NSCR、Metro Manila Subway 或 future extension。
 
 ## 發布前檢查
 
