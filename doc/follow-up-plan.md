@@ -29,6 +29,12 @@
   - OSM 對位風險：站名在德/法/意三語情境下 alias 欠缺時，`name` ↔ `nameEn` 映射需要保留多語別名並先排除停用站；
   - station-to-station 風險：跨地域換乘站重複命名與共線段重疊，首輪只建 `station-to-station` 一對一對位清單，不做 snap 異常修正參數調整；
   - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
+- **2026-05-16 完成 P2-3 德國（5.3 feasibility note）**
+  - 候選線：優先以柏林 S-Bahn / U-Bahn（城市幹線）與慕尼黑-柏林長距軸線中的一條為 representative seed；先以「城市高頻＋長幹線單向共線」兩組做 station-to-station 對位。
+  - 來源：德鐵/各州交通聯盟官方站表（S-Bahn 與地鐵換乘站名冊）、OpenStreetMap route relation / station nodes、區域官方時刻入口輔助比對。
+  - OSM 對位風險：`Bahnhof` 常見複名、歷史建築站與新命名混用，`name` / `nameEn` / `name:de` / `loc_name` 需要保留對應 alias；對跨線換乘站需先人工驗證順序是否與官方一致。
+  - station-to-station 風險：德國長幹線在城際與區間線重疊處容易導致 snap 跨線吸附，需要先用 representative seed 觀察 `maxOffset` 是否在 0.005–0.01 km 區間穩定。
+  - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
 
 ### 5.3 可行性研究待辦
 
@@ -37,7 +43,6 @@
 
 | 狀態 | 候選 | 5.3 待完成 |
 |---|---|---|
-| [ ] | P2-3 德國 | 驗證 `OSM + DB/地方運輸` 的 station 名稱一致性；用代表線測長程共線是否會造成 snap 假異常。 |
 | [ ] | P2-4 法國 | 做 RER / 大城都會 + 一條長途幹線代表 seed 的 station / km 對位測試。 |
 | [ ] | P2-5 英國 | 測 OSM station 對齊與 zone / branch 站序邏輯；先標出 fare pattern、夜間與分流服務不可併入的邊界。 |
 | [ ] | P2-6 俄羅斯 | 研究現有 OSM 對位與長期維運穩定性；暫不安排具體 seed 實作。 |
