@@ -246,7 +246,7 @@ Backlog 執行原則：
 | P0-SG-4 | ☑ A ☑ B | AGT / LRT | `SG-LRT-Bukit-Panjang` | Bukit Panjang LRT | Choa Chu Kang ⇄ Bukit Panjang loop network | 已補 19-stop clockwise loop 站序、`BPLRT` template、OSM relation `1159434`、BPLRT grey icon、Singapore generated shape | 無阻塞；repeated loop stations 保留 indexed km；shape maxOffset 0.508 km |
 | P0-SG-5 | ☑ Sengkang ☑ Punggol | AGT / LRT | `SG-LRT-Sengkang` / `SG-LRT-Punggol` | Sengkang / Punggol LRT | 東西 loops | `SG-LRT-Sengkang` 已完成 16-stop explicit East+West loop seed；`SG-LRT-Punggol` 已完成 17-stop explicit East+West loop seed with Teck Lee、`PGLRT` template、OSM relations `1146942` + `2312984`、Singapore generated shape 與 PGLRT icon | 5.5 已決定 loop 以站序與 `loopAnchor`/indexed km 表示，不合併成多分支 schema |
 | P0-SG-6 | □ monitor | Cross-border LRT | `SG-MY-RTS-Link` | Johor Bahru-Singapore RTS Link | Woodlands North ⇄ Bukit Chagar（4 km / 2 站，目標 2026 年底） | 載客前不建正式 pass；載客後以 `sg-my` cross-border region seed，補 2 站、RTS template、OSM relation、CIQ 提示與圖示 | 5.5 已決定載客前 monitor；不放入單一 `singapore` 或 `malaysia` region |
-| P0-SG-7 | □ monitor | Metro | `SG-MRT-Cross-Island` | Cross Island Line | future stages | 不執行 | 待載客段開通與 LTA current line list 更新 |
+| P0-SG-7 | □ monitor | Metro | `SG-MRT-Cross-Island` | Cross Island Line | future stages | 不執行 | 2026-05-15 已重查 LTA：CRL1 target 2030、CRL2 / Punggol Extension target 2032、CRL3 late 2030s，仍等正式載客與站名/OSM relation 穩定後下放 |
 
 ### P0：馬來西亞補完
 
@@ -295,6 +295,7 @@ Backlog 執行原則：
 10. 已決定 KTM Komuter long-corridor gate：`KTM-Komuter-Batu-Caves-Pulau-Sebang` 與 `KTM-Komuter-Tanjung-Malim-Port-Klang` 皆已完成為獨立 full-corridor commuter seed；短折與臨時/部分班次不納入本輪。
 11. 已重查 Bangkok MRT Orange monitor：MRTA 仍列為 ongoing project，east section 預計 2028-01、west section 預計 2030-07；正式載客前不交 5.3 建資料。
 12. 已重查 Penang Mutiara Line monitor：MRT Corp 修訂鐵路方案仍在 public inspection / construction 階段，預計 2031-12 營運；正式載客前不交 5.3 建資料。
+13. 已重查 Singapore Cross Island Line monitor：LTA 仍列為 upcoming / rail project in progress；CRL1 目標 2030、CRL2 / Punggol Extension 目標 2032、CRL3 late 2030s，正式載客前不交 5.3 建資料。
 
 ## 批次 5 — 香港：MTR（4 條）
 
@@ -495,6 +496,7 @@ Backlog 執行原則：
 14. [x] 決定 KTM Komuter long-corridor / short-turn gate：兩條 Klang Valley full-corridor commuter seeds 可下放；短折、缺站班次與施工期 timetable 另開 service-pattern pass。
 15. [x] 重查 `BKK-MRT-Orange` monitor：MRTA 仍列 east/west sections as ongoing projects；正式載客前維持 monitor，不交 5.3。
 16. [x] 重查 `Penang-Mutiara-LRT` monitor：MRT Corp 仍列為 public inspection / construction-stage project；正式載客前維持 monitor，不交 5.3。
+17. [x] 重查 `SG-MRT-Cross-Island` monitor：LTA 仍列 CRL as upcoming / in progress；CRL1 target 2030、CRL2 / Punggol Extension target 2032、CRL3 late 2030s，正式載客前維持 monitor，不交 5.3。
 
 #### 2026-05-14 5.5 決策：Bangkok straddle monorail category
 
@@ -612,6 +614,15 @@ Backlog 執行原則：
 - `constraints`: Do not seed the pre-service or public-inspection alignment as a current railway line. Do not include provisional stations, PSR placeholder segments, construction access details, road closures, parking, or depot-only information in `RAIL_DATA`. Do not use this future line to force a new Malaysia region split or branch schema before passenger service and final station naming are stable.
 - `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md doc/railway-elf-sop.md`. For a future Mutiara Line data seed, run `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, and `npm.cmd run test:smoke`; run `npm.cmd run build:train-icons` if a new Mutiara Line PNG/contact sheet is generated.
 - `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 Penang Mutiara LRT monitor recheck。blocked remains：Mutiara Line passenger-service monitor; no 5.3 seed before official operation.
+
+#### 2026-05-15 5.5 決策：Singapore Cross Island Line monitor recheck
+
+- `decision`: blocked-until-service。`SG-MRT-Cross-Island` 仍維持 `monitor`，不交 5.3 建 `RAIL_DATA` line、train template、OSM relation 或 generated shape。等至少一段正式載客、LTA current rail line list 納入 CRL、站名與 OSM relation 穩定後，再按 current passenger segment 重開 seed gate。
+- `scope`: Singapore Cross Island Line only, covering CRL Phase 1, Phase 2, Punggol Extension, and Phase 3 planning status. This pass authorizes no Spark-owned code, generated shape, icon, or rail-data changes.
+- `source`: LTA's Cross Island Line project page lists CRL as an upcoming rail expansion project: Phase 1 has commenced construction and is targeted for completion in 2030, CRL-Punggol Extension is targeted for 2032, and CRL2 stations are opening by 2032. LTA's 2026 rail-development factsheet says CRL1 is targeted to open in 2030, CRL2 and CPE are slated for 2032, and CRL3 is slated for completion in the late 2030s. LTA's current Rail Network page still lists today's operating network separately, with current MRT/LRT lines and no CRL entry. Sources: https://www.lta.gov.sg/content/ltagov/en/upcoming_projects/rail_expansion/cross_island_line.html, https://www.lta.gov.sg/content/ltagov/en/newsroom/2026/3/news-releases/next-phase-of-rail-development.html, https://www.lta.gov.sg/content/ltagov/en/getting_around/public_transport/rail_network.html
+- `constraints`: Do not seed CRL from construction-stage station renderings, future alignment maps, or working station codes alone. Do not create partial current-service data until passenger service starts. Keep CRL out of `singapore` production `RAIL_DATA` until official operating materials, station names, route relation geometry, and station list are stable.
+- `checks`: For this policy-only docs pass, run `git diff --check -- doc/east-asia-expansion-plan.md doc/follow-up-plan.md doc/railway-elf-sop.md`. Future data seed checks, if service opens, are `npm.cmd run build:rail-data`, `npm.cmd run check:shapes`, `npm.cmd run check:timing`, `npm.cmd run check:train-icons`, `npm.cmd run test:smoke`, and `npm.cmd run build:train-icons` if a new PNG is generated.
+- `report`: 新增/修改 region 0、line 0、station 0、train template 0、shape mapping 0、icon 0；完成 1 個 5.5 Singapore Cross Island Line monitor recheck。blocked remains：CRL passenger-service monitor; no 5.3 seed before an official operating segment opens.
 
 #### 2026-05-15 5.5 決策：Malaysia airport/commuter next seed
 

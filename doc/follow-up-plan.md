@@ -1,5 +1,11 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.5 Singapore Cross Island Line monitor recheck
+
+- [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now records `SG-MRT-Cross-Island` as still monitor-only based on current LTA official rail expansion and current rail network pages.
+- [x] Cleaned the completed 5.5 option by tightening the `P0-SG-7` monitor row and adding a 5.5 progress-board entry; no 5.3 data seed is authorized before a passenger segment opens and station / OSM relation data stabilizes.
+- [x] No concurrent uncommitted 5.3 diff was present; the Pink Line Muang Thong Thani branch and Gold Line 5.3 work was already committed before this docs-only 5.5 pass.
+
 ## 2026-05-15 5.3 Pink Line Muang Thong Thani branch seed
 
 - [x] Completed one 5.3 seed item: `BKK-MRT-Pink-Muang-Thong-Thani` is now in `RAIL_DATA` as an independent 3-station `Monorail` branch from `Muang Thong Thani` to `Impact Muang Thong Thani` and `Lake Muang Thong Thani`, with a `PK` branch template, OSM route relation `19149752`, generated Thailand shape data, and line-aware Pink Line icon reuse.
