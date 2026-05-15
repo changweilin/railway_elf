@@ -54,6 +54,13 @@
   - station-to-station 風險：長距路段存在暫時性施工改線與站務更名，且 OSM/官方更新頻率不一致，須先做「站名對位＋幾何偏離」雙條件 dry run，不直接調整 snap 參數。
   - 5.3 風險邊界：先不下放 5.3 seed，先完成可行性與維運穩定性評估；合規 / 地緣風險納入 5.5 gate。
   - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
+- **2026-05-16 完成 P2-7 印度（5.3 feasibility note）**
+  - 候選線：以孟買 Suburban、德里 Metro 與一條長距幹線（如 Rajdhani/Golden Chariot 類型）做代表性站序與別名檢核，分別驗證都會高頻與長途規格邏輯。
+  - 來源：Indian Railways 車站站名總表、DMRC / MST / 主要都會 MRT 官方站務清單、OpenStreetMap route relation / station nodes、公開到離峰時刻表。
+  - OSM 對位風險：多語（印地語/英語/地方語言）站名映射與英文轉寫不統一，`name` / `name:en` / `name:hi` / `name:mr` 可能並列出現；站序中也可能混用本地行政代碼，需要 alias 白名單。
+  - station-to-station 風險：都會線與長途線站牌語系切換頻繁，易出現同一站中文拼寫差異、站名更新滯後；須先做 station-to-station 清洗並保留「停用站」例外。
+  - 5.3 風險邊界：短期不做運行圖模式展開（分段快慢車、通勤時段分流）與 full station alias 清洗，僅先驗證是否具備 canonical base route 對齊條件。
+  - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
 
 ### 5.3 可行性研究待辦
 
@@ -62,7 +69,6 @@
 
 | 狀態 | 候選 | 5.3 待完成 |
 |---|---|---|
-| [ ] | P2-7 印度 | 比對主要城市鐵道與長途運輸官方 station list 的名詞版差；建立多語 station alias 原型。 |
 | [ ] | P2-8 荷蘭 | 測 1–2 條高密度都會線 + 1 條長途連線的 OSM 對位與 maxOffset 控制。 |
 | [ ] | P2-9 瑞典 / 挪威 | 評估 `shared Nordic` 或 split region；用都會 + 長途各 1 條 representative seed 做可行性測試。 |
 
