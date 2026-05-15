@@ -21,6 +21,15 @@
 
 依 `doc/railway-elf-sop.md`，P2 先拆成 5.3 可行性研究與 5.5 gate 兩條進度線管理：5.3 只做範圍清楚、來源可驗證、可用既有 pattern 檢查的研究與代表 seed 風險切割；5.5 負責 region / schema / source / 合規 / 下放條件決策，並用 `decision`、`scope`、`source`、`constraints`、`checks`、`report` 格式回覆。
 
+### 5.3 已完成可行性備忘（每輪留存）
+
+- **2026-05-16 完成 P2-2 瑞士（5.3 feasibility note）**
+- 候選線：以蘇黎世都會軸線為先行代表（含德語/法語/意語站序）＋再測 1 條跨境重點都會支線（含法語/意語段）；
+  - 來源：SBB 官方站務與時刻資訊、OpenStreetMap route relation / station nodes；
+  - OSM 對位風險：站名在德/法/意三語情境下 alias 欠缺時，`name` ↔ `nameEn` 映射需要保留多語別名並先排除停用站；
+  - station-to-station 風險：跨地域換乘站重複命名與共線段重疊，首輪只建 `station-to-station` 一對一對位清單，不做 snap 異常修正參數調整；
+  - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
+
 ### 5.3 可行性研究待辦
 
 - [ ] 共通交付：每國先產出 1 份代表 seed feasibility note，列出候選線、資料來源、OSM/官方站序可信度、station-to-station 對位風險、預估 owned files；不得直接新增多線資料。
@@ -28,7 +37,6 @@
 
 | 狀態 | 候選 | 5.3 待完成 |
 |---|---|---|
-| [ ] | P2-2 瑞士 | 盤點 OSM 主幹與都會軌道的 station-to-station 對位品質；確認中德法三語站名在 `name` / `nameEn` 的映射策略。 |
 | [ ] | P2-3 德國 | 驗證 `OSM + DB/地方運輸` 的 station 名稱一致性；用代表線測長程共線是否會造成 snap 假異常。 |
 | [ ] | P2-4 法國 | 做 RER / 大城都會 + 一條長途幹線代表 seed 的 station / km 對位測試。 |
 | [ ] | P2-5 英國 | 測 OSM station 對齊與 zone / branch 站序邏輯；先標出 fare pattern、夜間與分流服務不可併入的邊界。 |
