@@ -558,6 +558,10 @@
       "icon": "assets/train-icons/indonesia-jkt-mrt-north-south-mrtj.png",
       "kind": "metro"
     },
+    "philippines|MNL-MRT-3|MRT-3": {
+      "icon": "assets/train-icons/philippines-mnl-mrt-3-mrt-3.png",
+      "kind": "metro"
+    },
     "vietnam|HCMC-Metro-1|Metro 1": {
       "icon": "assets/train-icons/vietnam-hcmc-metro-1-metro-1.png",
       "kind": "metro"

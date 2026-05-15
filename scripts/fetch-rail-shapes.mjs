@@ -801,6 +801,16 @@ const OSM_LINE_MAP = {
     snapStationCoordsOverKm: 1.0,
   },
 
+  // Manila.
+  "MNL-MRT-3": {
+    name: "Manila MRT-3 (North Avenue to Taft Avenue)",
+    relationIds: [109159],
+    corridor: { corridorKm: 1.0, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
+
   // Vietnam.
   "HCMC-Metro-1": {
     name: "HCMC Metro Line 1 (Ben Thanh→Suoi Tien)",

@@ -4495,6 +4495,41 @@ export const RAIL_DATA = {
     ],
   },
 
+  philippines: {
+    label: "Philippines",
+    center: [14.58, 121.03],
+    zoom: 11,
+    lines: [
+      {
+        id: "MNL-MRT-3",
+        name: "Manila MRT-3",
+        nameEn: "Manila MRT-3",
+        color: "#ffcc00",
+        category: "Metro",
+        directions: { up: "North Avenue bound", down: "Taft Avenue bound" },
+        // Manila MRT-3 current service: North Avenue to Taft Avenue, 13 stations.
+        stations: [
+          { name: "North Avenue",    lat: 14.651694, lng: 121.032633, km: 0.0, dwellSec: 30 },
+          { name: "Quezon Avenue",   lat: 14.642449, lng: 121.038645, km: 1.3 },
+          { name: "GMA Kamuning",    lat: 14.635333, lng: 121.043275, km: 2.3 },
+          { name: "Araneta Cubao",   lat: 14.619478, lng: 121.051057, km: 4.6 },
+          { name: "Santolan",        lat: 14.607541, lng: 121.056574, km: 6.0 },
+          { name: "Ortigas",         lat: 14.587341, lng: 121.056519, km: 8.2 },
+          { name: "Shaw Boulevard",  lat: 14.581102, lng: 121.053408, km: 9.0 },
+          { name: "Boni",            lat: 14.573093, lng: 121.047644, km: 10.1 },
+          { name: "Guadalupe",       lat: 14.566719, lng: 121.045438, km: 10.9 },
+          { name: "Buendia",         lat: 14.553952, lng: 121.033684, km: 12.9 },
+          { name: "Ayala",           lat: 14.548755, lng: 121.027540, km: 13.8 },
+          { name: "Magallanes",      lat: 14.541743, lng: 121.019050, km: 15.0 },
+          { name: "Taft Avenue",     lat: 14.537597, lng: 121.001890, km: 16.9, dwellSec: 30 },
+        ],
+      },
+    ],
+    trainTemplates: [
+      { line: "MNL-MRT-3", type: "MRT-3", badge: "MRT-3", badgeColor: "#ffcc00", speed: 38, interval: 4, accel: 1.00, decel: 1.10, aLat: 0.95, dwellSec: 25 },
+    ],
+  },
+
   vietnam: {
     label: "Việt Nam Vietnam",
     center: [16.0, 107.0],
@@ -4568,6 +4603,7 @@ const RAIL_SHAPE_LOADERS = {
   malaysia:  () => import("./rail-shapes/malaysia.generated.js"),
   thailand:  () => import("./rail-shapes/thailand.generated.js"),
   indonesia: () => import("./rail-shapes/indonesia.generated.js"),
+  philippines: () => import("./rail-shapes/philippines.generated.js"),
   vietnam:   () => import("./rail-shapes/vietnam.generated.js"),
 };
 
