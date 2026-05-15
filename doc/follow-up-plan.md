@@ -35,6 +35,12 @@
   - OSM 對位風險：`Bahnhof` 常見複名、歷史建築站與新命名混用，`name` / `nameEn` / `name:de` / `loc_name` 需要保留對應 alias；對跨線換乘站需先人工驗證順序是否與官方一致。
   - station-to-station 風險：德國長幹線在城際與區間線重疊處容易導致 snap 跨線吸附，需要先用 representative seed 觀察 `maxOffset` 是否在 0.005–0.01 km 區間穩定。
   - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
+- **2026-05-16 完成 P2-4 法國（5.3 feasibility note）**
+  - 候選線：先以巴黎 RER A/B/C/D 代表都會軌道與一條長距 Intercités / TER 幹線（如巴黎—里昂走廊）做站序對位對照。
+  - 來源：SNCF 官方站名與時刻查詢介面、open data route metadata、OpenStreetMap route relation / station nodes；長距段可補用官方簡版時刻表與站序頁。
+  - OSM 對位風險：RER 共線段與進出站命名（法語縮寫）常與官方列表用詞不一致，需先在 representative seed 中建立 `name` / `nameEn` / `name:fr` 對照與可選 alias；RER、TER、Intercités 的站點邏輯可能混用。
+  - station-to-station 風險：需檢查都會段轉乘節點（多線共站）是否有「同名不同站」與長距段時刻站名簡寫差異，避免對位誤差造成 snap 假對齊。
+  - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
 
 ### 5.3 可行性研究待辦
 
@@ -43,7 +49,6 @@
 
 | 狀態 | 候選 | 5.3 待完成 |
 |---|---|---|
-| [ ] | P2-4 法國 | 做 RER / 大城都會 + 一條長途幹線代表 seed 的 station / km 對位測試。 |
 | [ ] | P2-5 英國 | 測 OSM station 對齊與 zone / branch 站序邏輯；先標出 fare pattern、夜間與分流服務不可併入的邊界。 |
 | [ ] | P2-6 俄羅斯 | 研究現有 OSM 對位與長期維運穩定性；暫不安排具體 seed 實作。 |
 | [ ] | P2-7 印度 | 比對主要城市鐵道與長途運輸官方 station list 的名詞版差；建立多語 station alias 原型。 |
