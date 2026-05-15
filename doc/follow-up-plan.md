@@ -41,6 +41,12 @@
   - OSM 對位風險：RER 共線段與進出站命名（法語縮寫）常與官方列表用詞不一致，需先在 representative seed 中建立 `name` / `nameEn` / `name:fr` 對照與可選 alias；RER、TER、Intercités 的站點邏輯可能混用。
   - station-to-station 風險：需檢查都會段轉乘節點（多線共站）是否有「同名不同站」與長距段時刻站名簡寫差異，避免對位誤差造成 snap 假對齊。
   - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
+- **2026-05-16 完成 P2-5 英國（5.3 feasibility note）**
+  - 候選線：以倫敦區域幹線與跨區幹線做雙面測試，代表為 Central / Northern（高頻都會）＋Great Western / Thameslink（跨區 intercity 分層）；
+  - 來源：TfL / National Rail Open Data station 清單、Transport for London line map、OpenStreetMap route relation / station nodes、公開時刻站序頁（作交叉核對）。
+  - OSM 對位風險：Zone 與票價區邊界與站務站序混用同名站點時，站序可能偏移；`zone` / `public_transport` 標籤與官方站名格式差異大，需先用 alias 鏈保護。
+  - station-to-station 風險：分流服務（分支、晚高峰快慢車、夜間關停）不能直接用來推斷一條穩定 base route，需在 note 中先固定為平峰全程可進出節點順序。
+  - 預估 owned files：`src/rail-data.js`、`scripts/fetch-rail-shapes.mjs`、`src/train-icon-registry.js`、必要 generated shapes / icon assets，以及窄幅 docs（暫不落盤資料）。
 
 ### 5.3 可行性研究待辦
 
@@ -49,7 +55,6 @@
 
 | 狀態 | 候選 | 5.3 待完成 |
 |---|---|---|
-| [ ] | P2-5 英國 | 測 OSM station 對齊與 zone / branch 站序邏輯；先標出 fare pattern、夜間與分流服務不可併入的邊界。 |
 | [ ] | P2-6 俄羅斯 | 研究現有 OSM 對位與長期維運穩定性；暫不安排具體 seed 實作。 |
 | [ ] | P2-7 印度 | 比對主要城市鐵道與長途運輸官方 station list 的名詞版差；建立多語 station alias 原型。 |
 | [ ] | P2-8 荷蘭 | 測 1–2 條高密度都會線 + 1 條長途連線的 OSM 對位與 maxOffset 控制。 |
