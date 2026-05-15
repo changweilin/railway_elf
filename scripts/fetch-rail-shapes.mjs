@@ -810,6 +810,14 @@ const OSM_LINE_MAP = {
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
   },
+  "MNL-LRT-2": {
+    name: "Manila LRT-2 (Recto to Antipolo)",
+    relationIds: [8000264],
+    corridor: { corridorKm: 1.0, sampleKm: 0.08 },
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 1.0,
+  },
 
   // Vietnam.
   "HCMC-Metro-1": {

@@ -125,6 +125,7 @@ const VISUALS = {
   "indonesia|JKT-MRT-North-South|MRTJ": { shape: "metro", body: "#f8fafc", accent: "#ce0037", band: "#ce0037" },
 
   "philippines|MNL-MRT-3|MRT-3": { shape: "metro", body: "#f8fafc", accent: "#ffcc00", band: "#ffcc00" },
+  "philippines|MNL-LRT-2|LRT-2": { shape: "metro", body: "#f8fafc", accent: "#7c3aed", band: "#7c3aed" },
 
   "vietnam|HCMC-Metro-1|Metro 1": { shape: "metro", body: "#f8fafc", accent: "#dc2626", band: "#dc2626" },
   "vietnam|Hanoi-Metro-2A|Metro 2A": { shape: "metro", body: "#f8fafc", accent: "#16a34a", band: "#16a34a" },

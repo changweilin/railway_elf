@@ -200,6 +200,7 @@ const lineOverrideSpecs = [
   ["indonesia", "JKT-MRT-North-South", 0, "indonesia-jkt-mrt-north-south-mrtj.png", "metro"],
 
   ["philippines", "MNL-MRT-3", 0, "philippines-mnl-mrt-3-mrt-3.png", "metro"],
+  ["philippines", "MNL-LRT-2", 0, "philippines-mnl-lrt-2-lrt-2.png", "metro"],
 
   ["vietnam", "HCMC-Metro-1", 0, "vietnam-hcmc-metro-1-metro-1.png", "metro"],
   ["vietnam", "Hanoi-Metro-2A", 0, "vietnam-hanoi-metro-2a-metro-2a.png", "metro"],

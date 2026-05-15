@@ -1,15 +1,21 @@
 # Railway Elf ?脣漲?勗?
 
+## 2026-05-15 5.3 Manila LRT-2 seed
+
+- [x] Completed one 5.3 seed item: `MNL-LRT-2` is now in `RAIL_DATA` under the existing `philippines` region with the current 13-station Recto to Antipolo line, an `LRT-2` metro template, OSM route relation `8000264`, generated Philippines shape data, and a line-aware Manila LRT-2 icon.
+- [x] Cleaned the completed 5.3 option by marking `MNL-LRT-2` done in the 5.3 backlog; LRT-1, PNR / NSCR, Metro Manila Subway, LRT-2 west extension, and future extensions remain separate future gates.
+- [x] No concurrent 5.5 diff was detected before editing `follow-up-plan.md`; this round only reconciles the completed Manila LRT-2 seed and downstream docs.
+
 ## 2026-05-15 5.5 Manila LRT-2 next seed decision
 
 - [x] Completed one 5.5 follow-up item: `doc/east-asia-expansion-plan.md` now names `MNL-LRT-2` / Manila LRT-2 as the next current-service 5.3 seed after Manila MRT-3.
-- [x] Cleaned the completed 5.5 option by marking the "nominate next current-service seed" handoff done in `doc/railway-elf-sop.md`; `MNL-LRT-2` is now the explicit next 5.3 target.
+- [x] Cleaned the completed 5.5 option by marking the "nominate next current-service seed" handoff done in `doc/railway-elf-sop.md`; `MNL-LRT-2` became the explicit next 5.3 target and has now been completed.
 - [x] No concurrent uncommitted 5.3 diff was present; the Manila MRT-3 5.3 seed was already committed before this docs-only 5.5 pass.
 
 ## 2026-05-15 5.3 Manila MRT-3 seed
 
 - [x] Completed one 5.3 seed item: `MNL-MRT-3` is now in `RAIL_DATA` under the new `philippines` region with the current 13-station North Avenue to Taft Avenue line, an `MRT-3` metro template, OSM route relation `109159`, generated Philippines shape data, and a line-aware Manila MRT-3 icon.
-- [x] Cleaned the completed 5.3 option by marking `MNL-MRT-3` done in the 5.3 backlog; LRT-1, LRT-2, PNR / NSCR, Metro Manila Subway, and future extensions remain separate future gates.
+- [x] Cleaned the completed 5.3 option by marking `MNL-MRT-3` done in the 5.3 backlog; `MNL-LRT-2` was later completed as its own seed, while LRT-1, PNR / NSCR, Metro Manila Subway, and future extensions remain separate future gates.
 - [x] No concurrent 5.5 diff was detected before editing `follow-up-plan.md`; this round only reconciles the completed Manila MRT-3 seed and downstream docs.
 
 ## 2026-05-15 5.5 P1 Manila MRT-3 next seed decision
@@ -264,7 +270,8 @@
 | 21 | `BKK-BTS-Gold` | done | Bangkok BTS Gold Line optional AGT/APM feeder seed: 3 stations, `GL` template, OSM relation `11681439`, generated Thailand shape, line-aware Gold Line icon | done (shape maxOffset 0.019 km); future Prajadhipok / other extension concepts and non-rail feeder services remain deferred |
 | 22 | `BKK-MRT-Pink-Muang-Thong-Thani` | done | Bangkok MRT Pink Line Muang Thong Thani independent branch seed: 3 stations, `PK` branch template, OSM relation `19149752`, generated Thailand shape, line-aware Pink Line icon reuse | done (shape maxOffset 0.000 km); remains separate from `BKK-MRT-Pink` mainline and no branch graph/schema work was added |
 | 23 | `JKT-MRT-North-South` | done | Jakarta MRT North-South Phase 1 current-service seed (`Lebak Bulus` -> `Bundaran HI`), `MRTJ` metro template, OSM relation `9677669`, generated Indonesia shape, line-aware MRT Jakarta icon, Indonesian name-tag preference | done (shape total 15.653 km, maxOffset 0.005 km, 59 pts); future MRT extensions, KAI Commuter, LRT Jabodebek, LRT Jakarta, and Airport Rail Link remain separate future gates |
-| 24 | `MNL-MRT-3` | done | Manila MRT-3 current-service seed (`North Avenue` -> `Taft Avenue`), `MRT-3` metro template, OSM relation `109159`, generated Philippines shape, line-aware Manila MRT-3 icon, Philippines name-tag preference | done (shape total 16.658 km, maxOffset 0.005 km, 30 pts); LRT-1, LRT-2, PNR / NSCR, Metro Manila Subway, and future extensions remain separate future gates |
+| 24 | `MNL-MRT-3` | done | Manila MRT-3 current-service seed (`North Avenue` -> `Taft Avenue`), `MRT-3` metro template, OSM relation `109159`, generated Philippines shape, line-aware Manila MRT-3 icon, Philippines name-tag preference | done (shape total 16.658 km, maxOffset 0.005 km, 30 pts); `MNL-LRT-2` later completed as its own seed; LRT-1, PNR / NSCR, Metro Manila Subway, and future extensions remain separate future gates |
+| 25 | `MNL-LRT-2` | done | Manila LRT-2 current-service seed (`Recto` -> `Antipolo`), `LRT-2` metro template, OSM relation `8000264`, generated Philippines shape, line-aware Manila LRT-2 icon, existing Philippines name-tag preference | done (shape total 16.492 km, maxOffset 0.027 km, 42 pts); LRT-1, PNR / NSCR, Metro Manila Subway, LRT-2 west extension, and future extensions remain separate future gates |
 
 ### 5.5 ???Ⅱ隤?
 1. 蝣箄?蝚砌?頛芣?行?陸??2 璇???擐砌?镼蹂? 1 璇????啣???1 璇儐?堆???銝甈∟?摰靚瑯?2. 蝣箄? `BKK-MRT-Yellow` / `BKK-MRT-Pink` ??UI 銝剝＊蝷箇 `Monorail`?AGT` ??? `Metro` ????3. 撠?`BKK-SRT-Dark-Red`?KL-LRT-Ampang` / `KL-LRT-Sri-Petaling`?ERL-KLIA-Transit` ?∩?摰蝡?蝑嚗蝺蝺xpress/local 璅∪?銝憛?銵刻? shape ????
@@ -276,7 +283,7 @@
 餈??芸???瘜啣? / ?圈收 P0 seed 撠?賢嚗銵??桐誑銝??銝頛芾???啜皞?
 撌脩宏??follow-up嚗okaido relation ?踵??極蝔? maxOffset 蝎曆耨???/ ??摰閬??ranch/short-turn ?瑟?璅∪??TS Link 頝典? region?evel-2/4 鞈?皞? region UI ??i18n 蝑嚗絞銝餈質馱??`doc/east-asia-expansion-plan.md`??
 ## 撱箄降銝?甇?
-1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-MRT-Pink-Muang-Thong-Thani`, `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `BKK-BTS-Gold`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`, `SG-LRT-Punggol`, `ERL-KLIA-Ekspres`, `KTM-Komuter-Batu-Caves-Pulau-Sebang`, `KTM-Komuter-Tanjung-Malim-Port-Klang`, `JKT-MRT-North-South`, `MNL-MRT-3`. 2. Next explicit 5.3 seed is `MNL-LRT-2`; `BKK-MRT-Orange`, `Penang-Mutiara-LRT`, `SG-MRT-Cross-Island`, `SG-MY-RTS-Link`, and non-canonical KTM short-turn/partial timetable runtime remain deferred until future 5.5 gates.
+1. Done: `BKK-BTS-Silom` Phase A+B, `BKK-MRT-Purple`, `BKK-MRT-Yellow`, `BKK-MRT-Pink`, `BKK-MRT-Pink-Muang-Thong-Thani`, `BKK-SRT-Dark-Red`, `BKK-SRT-Light-Red`, `BKK-BTS-Gold`, `SG-MRT-North-East`, `KL-MRT-Putrajaya`, `SG-MRT-Downtown`, `SG-MRT-Thomson-East-Coast`, `KL-Monorail`, `SG-LRT-Bukit-Panjang`, `KL-LRT-Ampang`, `KL-LRT-Sri-Petaling`, `ERL-KLIA-Transit`, `SG-LRT-Sengkang`, `SG-LRT-Punggol`, `ERL-KLIA-Ekspres`, `KTM-Komuter-Batu-Caves-Pulau-Sebang`, `KTM-Komuter-Tanjung-Malim-Port-Klang`, `JKT-MRT-North-South`, `MNL-MRT-3`, `MNL-LRT-2`. 2. No explicit next 5.3 seed remains after `MNL-LRT-2`; `BKK-MRT-Orange`, `Penang-Mutiara-LRT`, `SG-MRT-Cross-Island`, `SG-MY-RTS-Link`, and non-canonical KTM short-turn/partial timetable runtime remain deferred until future 5.5 gates.
 ## 5.3 vs 5.5 隞餃????脣漲蝞∠?嚗頛芾?銝?頛迎?
 
 ### 5.3 ?舐?亙銵?- ?格?嚗雁?????鞈迎??撽?????啗?銝?頛?P0 seed ?游???- ?嗅?????祈憚??閬??柴歇蝯?嚗ollow-up ?芾蕭頩斗陸??/ ?圈收?芸?鞈??湔嚗??芸??芸???撌脩宏??`doc/east-asia-expansion-plan.md`??
