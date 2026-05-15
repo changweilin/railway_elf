@@ -225,53 +225,26 @@ Backlog 執行原則：
 - 泰國：MRTA Yellow / Pink / Blue / Purple、BTS Sukhumvit / Silom / Gold、SRTET Red Line 官方頁面；Orange 等未全線營運者先列監控。
 - 馬來西亞 / 新馬：MyRapid LRT / MRT / Monorail、KTMB Komuter / ETS / Intercity、LTA JB-Singapore RTS Link；RTS Link 目標 2026 年底載客服務，營運前不進 5.3 實作。
 
-### P0：泰國曼谷補完（下一輪首選）
+### P0：正式載客前維持 monitor 的項目
 
-| 優先 | 狀態 | 類型 | id | 線名 | 起終點 / 範圍 | 5.3 責任 | 5.5 責任 |
-|---|---|---|---|---|---|---|---|
-| P0-TH-1 | ☑ A ☑ B | Metro | `BKK-BTS-Silom` | BTS สายสีลม | National Stadium ⇄ Bang Wa | 已補站表、BTS train template、OSM relation、沿用 BTS 綠線圖示；本輪修正 route relation 與 stop-node 座標 | 無阻塞；若未來與 Sukhumvit 共用圖示策略改變，另開 icon pass |
-| P0-TH-2 | ☑ A ☑ B | Metro | `BKK-MRT-Purple` | MRT สายสีม่วง | Khlong Bang Phai ⇄ Tao Poon | 已補站表、MRT heavy-rail template、OSM relation、BEM purple icon；本輪修正 route relation 與 stop-node 座標 | 無阻塞；若與未來南延伸合併，另開 extension pass |
-| P0-TH-3 | ☑ A ☑ B | Monorail / AGT | `BKK-MRT-Yellow` | MRT สายสีเหลือง | Lat Phrao ⇄ Samrong（30.4 km / 23 站） | 已補站表、`Monorail` template、OSM relation `15806897`、Yellow Line monorail icon、Thailand generated shape | 無阻塞；若未來與 Pink Line 共用 monorail 圖示策略改變，另開 icon pass |
-| P0-TH-4 | ☑ A ☑ B | Monorail / AGT | `BKK-MRT-Pink` / `BKK-MRT-Pink-Muang-Thong-Thani` | MRT สายสีชมพู | Nonthaburi Civic Center ⇄ Min Buri mainline；Muang Thong Thani ⇄ Lake Muang Thong Thani branch | 已補主線 30 站與獨立 branch 3 站、`Monorail` templates、OSM relations `16740886` / `19149752`、Pink Line icon reuse、Thailand generated shapes | mainline and Muang Thong Thani branch complete as separate line objects；future branch graph/schema remains deferred |
-| P0-TH-5 | ☑ A ☑ B | Commuter | `BKK-SRT-Dark-Red` | SRT Dark Red Line | Krung Thep Aphiwat ⇄ Rangsit / Don Mueang corridor | 已補站表、`Commuter` template、OSM relation `13058384`、SRT Red commuter icon、Thailand generated shape | Dark Red 完成；Light Red 仍保留為獨立 future seed，不合併成單一 branch graph |
-| P0-TH-6 | ☑ A ☑ B | Commuter | `BKK-SRT-Light-Red` | SRT Light Red Line | Krung Thep Aphiwat ⇄ Taling Chan / west corridor | 已補 current 4-station segment、`LR` commuter template、OSM relation `13178788`、Light Red commuter icon、Thailand generated shape；shape maxOffset 0.004 km | Salaya / Siriraj extensions 維持 monitor；Dark / Light Red 不合併成 branch graph |
-| P0-TH-7 | ☑ optional seed | AGT | `BKK-BTS-Gold` | BTS Gold Line | Krung Thon Buri ⇄ Khlong San | 已補 3 站、`GL` AGT/APM template、OSM relation `11681439`、Gold Line icon、Thailand generated shape | done (shape maxOffset 0.019 km)；future Prajadhipok / other extension concepts and non-rail feeder services remain deferred |
-| P0-TH-8 | □ monitor | Metro | `BKK-MRT-Orange` | MRT Orange Line | Thailand Cultural Centre ⇄ Min Buri east section / Bang Khun Non ⇄ Thailand Cultural Centre west section | 不執行 | 2026-05-15 已重查 MRTA：east section expected January 2028、west section expected July 2030，仍等正式載客與站名/OSM relation 穩定後下放 |
+已完成的 P0 seed 不再列在 active backlog。此表只保留仍需等待載客、站名或 OSM relation 穩定的項目。
 
-### P0：新加坡 / 新馬補完
+| 優先 | 狀態 | 類型 | id | 範圍 | 下一步 |
+|---|---|---|---|---|---|
+| P0-TH-8 | □ monitor | Metro | `BKK-MRT-Orange` | Thailand Cultural Centre ⇄ Min Buri east section / Bang Khun Non ⇄ Thailand Cultural Centre west section | 等至少一段正式載客、站名與 OSM relation 穩定後，重新開 5.5 gate；2026-05-15 重查仍不下放 5.3 |
+| P0-SG-6 | □ monitor | Cross-border LRT | `SG-MY-RTS-Link` | Woodlands North ⇄ Bukit Chagar（4 km / 2 站，目標 2026 年底 / 2026-12-31） | 載客前不建正式 pass；載客後以 `sg-my` cross-border region seed，補 2 站、RTS template、OSM relation、CIQ 提示與圖示 |
+| P0-SG-7 | □ monitor | Metro | `SG-MRT-Cross-Island` | CRL Phase 1 / Phase 2 / Punggol Extension / Phase 3 | 等正式載客段、LTA current rail list、站名與 OSM relation 穩定後再下放 |
+| P0-MY-9 | □ monitor | LRT | `Penang-Mutiara-LRT` | Silicon Island / KOMTAR / Penang Sentral revised scheme | 等正式營運、passenger-facing station list 與 OSM/官方 route materials 穩定後再下放 |
 
-| 優先 | 狀態 | 類型 | id | 線名 | 起終點 / 範圍 | 5.3 責任 | 5.5 責任 |
-|---|---|---|---|---|---|---|---|
-| P0-SG-1 | ☑ A ☑ B | Metro | `SG-MRT-North-East` | North East Line | HarbourFront ⇄ Punggol Coast（22 km / 17 站） | 已補站表、driverless heavy metro template、OSM relation、NEL purple icon | 無阻塞；Punggol Coast 已納入 current baseline |
-| P0-SG-2 | ☑ A ☑ B | Metro | `SG-MRT-Downtown` | Downtown Line | Bukit Panjang ⇄ Expo（42 km / 35 站，含 Hume） | 已補站表、driverless metro template、OSM relation `2313458`、DTL blue icon | 無阻塞；DTL3e 保留 extension pass；shape maxOffset 0.004 km |
-| P0-SG-3 | ☑ A ☑ B | Metro | `SG-MRT-Thomson-East-Coast` | Thomson-East Coast Line | Woodlands North ⇄ Bayshore current segment（40.6 km / 27 站） | 已補站表、TEL template、OSM relation `2383439`、TEL brown icon；shape maxOffset 0.005 km | 未完工東段與 future extension 不提前進 `RAIL_DATA` |
-| P0-SG-4 | ☑ A ☑ B | AGT / LRT | `SG-LRT-Bukit-Panjang` | Bukit Panjang LRT | Choa Chu Kang ⇄ Bukit Panjang loop network | 已補 19-stop clockwise loop 站序、`BPLRT` template、OSM relation `1159434`、BPLRT grey icon、Singapore generated shape | 無阻塞；repeated loop stations 保留 indexed km；shape maxOffset 0.508 km |
-| P0-SG-5 | ☑ Sengkang ☑ Punggol | AGT / LRT | `SG-LRT-Sengkang` / `SG-LRT-Punggol` | Sengkang / Punggol LRT | 東西 loops | `SG-LRT-Sengkang` 已完成 16-stop explicit East+West loop seed；`SG-LRT-Punggol` 已完成 17-stop explicit East+West loop seed with Teck Lee、`PGLRT` template、OSM relations `1146942` + `2312984`、Singapore generated shape 與 PGLRT icon | 5.5 已決定 loop 以站序與 `loopAnchor`/indexed km 表示，不合併成多分支 schema |
-| P0-SG-6 | □ monitor | Cross-border LRT | `SG-MY-RTS-Link` | Johor Bahru-Singapore RTS Link | Woodlands North ⇄ Bukit Chagar（4 km / 2 站，目標 2026 年底 / 2026-12-31） | 載客前不建正式 pass；載客後以 `sg-my` cross-border region seed，補 2 站、RTS template、OSM relation、CIQ 提示與圖示 | 2026-05-15 已重查 LTA / MOT / MRT Corp：仍為 upcoming / construction-final-phase，fare 未公布，正式載客與站名/OSM relation 穩定前不下放 |
-| P0-SG-7 | □ monitor | Metro | `SG-MRT-Cross-Island` | Cross Island Line | future stages | 不執行 | 2026-05-15 已重查 LTA：CRL1 target 2030、CRL2 / Punggol Extension target 2032、CRL3 late 2030s，仍等正式載客與站名/OSM relation 穩定後下放 |
+### P1：其他亞洲候選池（active）
 
-### P0：馬來西亞補完
-
-| 優先 | 狀態 | 類型 | id | 線名 | 起終點 / 範圍 | 5.3 責任 | 5.5 責任 |
-|---|---|---|---|---|---|---|---|
-| P0-MY-1 | ☑ A ☑ B | Metro | `KL-MRT-Putrajaya` | MRT Putrajaya Line | Kwasa Damansara ⇄ Putrajaya Sentral（57.7 km / 36 站） | 已補站表、PYL MRT template、OSM relation `11313578`、PYL yellow icon | 無阻塞；shape maxOffset 0.080 km |
-| P0-MY-2 | ☑ A ☑ B | Metro / LRT | `KL-LRT-Ampang` | LRT Ampang Line | Sentul Timur ⇄ Ampang | 已補 18 站、`AGL` template、OSM relation `4466552`、AGL orange icon、Malaysia generated shape | 無阻塞；以獨立 shared-trunk line object 建模；shape maxOffset 0.005 km |
-| P0-MY-3 | ☑ A ☑ B | Metro / LRT | `KL-LRT-Sri-Petaling` | LRT Sri Petaling Line | Sentul Timur ⇄ Putra Heights | 已補 29 站、`SPL` template、OSM relation `3374384`、SPL maroon icon、Malaysia generated shape | 無阻塞；以獨立 shared-trunk line object 建模；shape maxOffset 0.008 km |
-| P0-MY-4 | ☑ A ☑ B | Monorail | `KL-Monorail` | KL Monorail | KL Sentral ⇄ Titiwangsa（8.6 km / 11 站） | 已補站表、`Monorail` template、OSM relation `2546881`、MRL monorail icon、Malaysia generated shape | 無阻塞；shape maxOffset 0.005 km，可作東南亞 monorail icon 範例 |
-| P0-MY-5 | ☑ A ☑ B | Commuter | `KTM-Komuter-Batu-Caves-Pulau-Sebang` | KTM Komuter Batu Caves - Pulau Sebang | Batu Caves ⇄ Pulau Sebang/Tampin canonical full corridor | 已補 27 站、`KTM` commuter template、OSM relation `8390976`、KTM Komuter icon、Malaysia generated shape | 無阻塞；shape maxOffset 0.007 km；short-turn / skipped-station / maintenance timetable variants 留 service-pattern pass |
-| P0-MY-6 | ☑ A ☑ B | Commuter | `KTM-Komuter-Tanjung-Malim-Port-Klang` | KTM Komuter Tanjung Malim - Pelabuhan Klang | Tanjung Malim ⇄ Pelabuhan Klang（131 km official route seed） | 已補 34 站、`KTM` commuter template、OSM relation `2565937`、KTM Komuter icon、Malaysia generated shape | 無阻塞；shape maxOffset 0.007 km；short-turn / skipped-station / peak-only / maintenance timetable variants 留 service-pattern pass |
-| P0-MY-7 | ☑ A ☑ B | Airport | `ERL-KLIA-Transit` | KLIA Transit | KL Sentral ⇄ KLIA T2 local stops | 已補 6 站、`ERL` airport template、OSM relation `8119876`、ERL icon、Malaysia generated shape | 無阻塞；shape maxOffset 0.234 km |
-| P0-MY-8 | ☑ A ☑ B | Airport | `ERL-KLIA-Ekspres` | KLIA Ekspres | KL Sentral ⇄ KLIA T1 ⇄ KLIA T2 regular-hours express | 已補 3 站、`ERL` airport template、OSM relation `8119878`、ERL Ekspres icon、Malaysia generated shape | 無阻塞；shape maxOffset 0.094 km；23:00 後 all-stations 與 maintenance combined service 留 service-pattern pass |
-| P0-MY-9 | □ monitor | LRT | `Penang-Mutiara-LRT` | Penang Mutiara Line | Silicon Island / KOMTAR / Penang Sentral revised scheme | 不執行 | 2026-05-15 已重查 MRT Corp：public inspection 2026-02-24→2026-05-24，construction commenced 2025，operations expected 2031-12；正式載客與 OSM/官方站表穩定前不下放 |
-
-### P1：其他亞洲候選池（泰國 / 新馬之後）
-
-| 優先 | 區域 | 候選線群 | 5.3 可先做 | 5.5 先判斷 |
+| 優先 | 狀態 | 區域 | 候選線群 | 下一步 |
 |---|---|---|---|---|
-| P1-ID | 印尼 | Jakarta MRT North-South Phase 1、LRT Jakarta、LRT Jabodebek、KAI Commuter Bogor / Cikarang / Rangkasbitung / Tangerang、Soekarno-Hatta Airport Rail Link | `JKT-MRT-North-South` Jakarta MRT Phase 1 current-service seed 已完成（Lebak Bulus ⇄ Bundaran HI，13 站） | KAI Commuter 多分支與長線直通需 branch/short-turn 規則；future MRT extension、LRT Jabodebek / LRT Jakarta / Airport Rail Link 後續另排 |
-| P1-PH | 菲律賓 | Manila LRT-1、LRT-2、MRT-3、PNR / NSCR future corridor | `MNL-MRT-3` 與 `MNL-LRT-2` 已完成；下一條 current-service seed 暫無明確指定 | LRT-1 extension、LRT-2 west extension、PNR / NSCR future corridor 需確認 current baseline；PNR / NSCR 類長線不併入本 seed |
-| P1-VN | 越南 | HCMC Line 1（已完成）、Hanoi 2A（已完成）、Hanoi Line 3 elevated segment、HCMC Line 2 future | `Hanoi-Metro-3` Hanoi Line 3 elevated current-service seed 已由 5.5 指定（Nhổn ⇄ Cầu Giấy，8 站） | 地下段 Cầu Giấy ⇄ Ga Hà Nội 仍施工 / 2027 目標，不提前建正式資料；future HCMC extensions 另案 |
-| P2-SA | 南亞 / 西亞 | Delhi / Mumbai / Bengaluru / Bangkok-scale 以外大型都會鐵路、Dubai Metro、Doha Metro 等 | 暫不進 5.3 | 需另開大型 region selector、語系與資料量策略 |
+| P1-VN-1 | ready for 5.3 | 越南 | `Hanoi-Metro-3` Hanoi Line 3 current elevated segment | 下一條明確 seed：只建 Nhổn ⇄ Cầu Giấy 8 站；地下段 Cầu Giấy ⇄ Ga Hà Nội 與 future extensions 不併入 |
+| P1-ID-next | 5.5 candidate | 印尼 | LRT Jakarta、LRT Jabodebek、KAI Commuter、Soekarno-Hatta Airport Rail Link、future Jakarta MRT extensions | 先判斷 branch / short-turn / long commuter corridor 邊界，再選 1 條 current-service representative seed |
+| P1-PH-next | 5.5 candidate | 菲律賓 | Manila LRT-1、PNR / NSCR future corridor、Metro Manila Subway、LRT-2 west extension | 先確認 current baseline；future / construction-stage corridor 不提前建正式資料 |
+| P1-VN-future | monitor | 越南 | HCMC Line 2、Hanoi Line 3 underground section、其他 future Hanoi / HCMC extensions | 等正式載客或官方資料穩定後再開 gate |
+| P1-SA | research | 南亞 / 西亞 | Delhi / Mumbai / Bengaluru、Dubai Metro、Doha Metro 等 | 先做 region selector、語系與資料量策略，不直接進 5.3 |
 
 ### P2：全球候選池（2~9）—將路線研究納入本專案可行性待完成清單
 
@@ -292,29 +265,16 @@ Backlog 執行原則：
 
 5.3 可直接執行：
 
-1. 依 P0-TH-1 → P0-TH-5 順序補曼谷已營運線，每條線都完成 Phase A + Phase B、train icon、`check:timing`、`check:shapes`、`test:smoke`。
-2. 泰國前 2 條 monorail seed、`BKK-MRT-Pink-Muang-Thong-Thani` branch、`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`BKK-BTS-Gold`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit`、`SG-LRT-Sengkang`、`SG-LRT-Punggol`、`ERL-KLIA-Ekspres`、`KTM-Komuter-Batu-Caves-Pulau-Sebang`、`KTM-Komuter-Tanjung-Malim-Port-Klang` 與 P1 `JKT-MRT-North-South`、`MNL-MRT-3`、`MNL-LRT-2` 已完成；下一個明確 5.3 seed 指定為 `Hanoi-Metro-3` Hanoi Metro Line 3 current elevated segment（Nhổn ⇄ Cầu Giấy，8 站），`BKK-MRT-Orange` 仍維持 monitor。Dark / Light Red 完成後不批量補完整曼谷，改依 P0/P1 放行狀態輪替。
-3. 馬來西亞 LRT / KTM / ERL 採「先獨立 line object，後續再合併 branch 模型」策略，避免 branch 規則尚未定案時阻塞站表與 shape 回灌。
-4. 新加坡 MRT 補完先做重軌 MRT（North East / Downtown / Thomson-East-Coast current segment），Bukit Panjang LRT loop、Sengkang LRT loop 與 Punggol LRT loop 已完成；RTS Link 載客前仍不下放。
-5. `ERL-KLIA-Transit` all-stop local airport service、`ERL-KLIA-Ekspres` regular-hours 3-station seed、`KTM-Komuter-Batu-Caves-Pulau-Sebang` 與 `KTM-Komuter-Tanjung-Malim-Port-Klang` full-corridor seeds 已完成；KTM Komuter 非 canonical short-turn / skipped-station / maintenance timetable runtime 仍另案。
+1. `Hanoi-Metro-3` current elevated 8-station seed：補 `rail-data`、train template、OSM relation/shape mapping、line-aware icon 與生成輸出。
+2. 每條新 seed 維持「一輪一條線」：完成 icon/template/shape/checks 後才交下一條；不再把同城市多線批量塞進同一輪。
+3. 維持 `maxOffset <= 1.0 km` 目標；若落在 0.75–1.0 km，先確認是否需要官方站點坐標或 stop-node 對站補強。
 
 5.5 需要先決策：
 
-1. 已決定 seed cadence：每輪只做 1 條完整 seed，完成 icon/template/shape/checks 後才交下一條；不採同城市一次補完，固定「泰國 2 → 馬來西亞 1 → 新加坡 1」只作早期 bootstrapping，不再作硬性循環。
-2. 已定義 loop / branch / shared trunk / express service 的資料模型邊界：SG LRT 可用可驗證 loop 站序 seed，KL Ampang / Sri Petaling 與 SRT Red Lines 以獨立 line object 表示共線，ERL KLIA Transit 可先 seed，Ekspres 等 skip-stop template。
-3. 已決定 RTS Link 載客後新增 `sg-my` cross-border region；載客前維持 monitor，不交 5.3 建正式資料。
-4. 已決定排除非鐵路 BRT（例如 Sunway BRT）；除非未來新增明確 non-rail transit category，預設不列入本鐵道路網計畫。
-5. P1 前三條 seed 已完成：印尼 `JKT-MRT-North-South`（Jakarta MRT North-South Phase 1，Lebak Bulus ⇄ Bundaran HI）、菲律賓 `MNL-MRT-3`（North Avenue ⇄ Taft Avenue，13 站）與菲律賓 `MNL-LRT-2`（Recto ⇄ Antipolo，13 站）。下一條 current-service seed 指定為 `Hanoi-Metro-3`（Hanoi Metro Line 3 elevated segment，Nhổn ⇄ Cầu Giấy，8 站）；地下段與 future extensions 不併入本 seed。多 region UI 已決定維持原生 select，12+ regions 時改為群組化 select。
-6. 已完成 Malaysia airport/commuter gate 的 cleared seeds：`ERL-KLIA-Transit`、`ERL-KLIA-Ekspres` regular-hours express、`KTM-Komuter-Batu-Caves-Pulau-Sebang` 與 `KTM-Komuter-Tanjung-Malim-Port-Klang` full-corridor seeds；KTM Komuter 長線 short-turn policy 已放行為 full-corridor seed，非 canonical service-pattern runtime 仍另案。
-7. 已完成 SRT Light Red current segment：`BKK-SRT-Light-Red` 已作為 4-station independent commuter seed 落地；future west/south extensions 不提前建資料。
-8. 已決定 Pink Line Muang Thong Thani branch：另建獨立 branch line object seed，站序 `Muang Thong Thani` ⇄ `Impact Muang Thong Thani` ⇄ `Lake Muang Thong Thani`；不併入 `BKK-MRT-Pink` 主線或新 branch schema。
-9. 已決定 KLIA Ekspres regular-hours gate：`ERL-KLIA-Ekspres` 可作獨立 3-station Airport express seed；23:00 後 all-stations pattern 與 maintenance combined service 不納入本 seed。
-10. 已決定 KTM Komuter long-corridor gate：`KTM-Komuter-Batu-Caves-Pulau-Sebang` 與 `KTM-Komuter-Tanjung-Malim-Port-Klang` 皆已完成為獨立 full-corridor commuter seed；短折與臨時/部分班次不納入本輪。
-11. 已重查 Bangkok MRT Orange monitor：MRTA 仍列為 ongoing project，east section 預計 2028-01、west section 預計 2030-07；正式載客前不交 5.3 建資料。
-12. 已重查 Penang Mutiara Line monitor：MRT Corp 修訂鐵路方案仍在 public inspection / construction 階段，預計 2031-12 營運；正式載客前不交 5.3 建資料。
-13. 已重查 Singapore Cross Island Line monitor：LTA 仍列為 upcoming / rail project in progress；CRL1 目標 2030、CRL2 / Punggol Extension 目標 2032、CRL3 late 2030s，正式載客前不交 5.3 建資料。
-14. 已完成 P1 第二條 current-service seed：`MNL-MRT-3` Manila MRT-3，已建 North Avenue ⇄ Taft Avenue 13-station current line；LRT-1 extension、LRT-2 west extension、PNR / NSCR future corridor 不併入本 seed。
-15. 已完成 P1 下一條 current-service seed：`MNL-LRT-2` Manila LRT-2，已建 Recto ⇄ Antipolo 13-station current line；LRT-1 extension、LRT-2 west extension、PNR / NSCR future corridor 不併入本 seed。
+1. `Hanoi-Metro-3` 完成後，指定下一條 current-service seed。
+2. Monitor 項只有在正式載客與官方/OSM station data 穩定後才重開：`BKK-MRT-Orange`、`Penang-Mutiara-LRT`、`SG-MRT-Cross-Island`、`SG-MY-RTS-Link`。
+3. P2 全球候選池先做 feasibility gate；每國先用代表 seed 風險切割，不直接進入多線 5.3 實作。
+4. Service-pattern / schema 類工作另案：KLIA Ekspres late-night all-stations、KTM Komuter short-turn / skipped-station / maintenance timetable、Red Line future extensions、Pink Line branch graph。
 
 ## 批次 5 — 香港：MTR（4 條）
 
@@ -501,41 +461,24 @@ Backlog 執行原則：
 - 目標：可按既有格式直接落地的資料新增/修正，包含手寫站表、train template、OSM 關聯、shape 回灌與 icon 更新。
 - 交付條件：資料可驗證、可回復、可建置。
 
-#### 進度看板（5.3）
-1. [x] 完成既有 34 條 Phase A / Phase B（含日本・南韓 seed 完成）且 snapshot 已更新到 103 條線。
-2. [x] 實做與文件一致的代表線 SOP（日本 HSR、Japan Airport/Monorail、Japan Tram/LRT、South Korea HSR / Intercity / Commuter / Metro / LRT-AGT / Monorail、Hong Kong/China/SG/MY/Thailand/Indonesia/Vietnam 各區批次）。
-3. [x] 維護資料源（以 OSM 為主）並更新 `OSM_LINE_MAP`、`rail-data`、`trainTemplates` 的常規新增流程。
-4. [x] 針對高誤差路段執行 station-to-station/stop-node 對站修正（已完成：多條南韓與東南亞主要線路）。
-5. [ ] 持續追加入列 backlog 的候選新線前：先完成「單線 seed」→ 生成 icon/template → 驗證 → 推進同營運者其餘線路；`BKK-MRT-Yellow`、`BKK-MRT-Pink` 主線、`BKK-MRT-Pink-Muang-Thong-Thani` branch、`BKK-SRT-Dark-Red`、`BKK-SRT-Light-Red`、`BKK-BTS-Gold`、`KL-Monorail`、`SG-LRT-Bukit-Panjang`、`KL-LRT-Ampang`、`KL-LRT-Sri-Petaling`、`ERL-KLIA-Transit`、`SG-LRT-Sengkang`、`SG-LRT-Punggol`、`ERL-KLIA-Ekspres`、`KTM-Komuter-Batu-Caves-Pulau-Sebang`、`KTM-Komuter-Tanjung-Malim-Port-Klang`、`JKT-MRT-North-South`、`MNL-MRT-3` 與 `MNL-LRT-2` 已完成；下一個明確 5.3 seed 已指定為 `Hanoi-Metro-3` current elevated segment，`BKK-MRT-Orange`、`Penang-Mutiara-LRT`、`SG-MRT-Cross-Island`、`SG-MY-RTS-Link` 仍為 monitor。
-6. [ ] 泰國 / 新馬 P0 seed 執行：每條線都補 `rail-data`、train template、OSM relation、train icon，並跑 `npm run build:rail-data`、`npm run check:shapes`、`npm run check:timing`、`npm run test:smoke`。
-7. [ ] 維持 `maxOffset` 目標 ≤ 1.0 km，對 0.75–1.0 km 的路段做可選精修，必要時補官方站點坐標。
+#### 進度看板（5.3 active）
+1. [ ] `Hanoi-Metro-3` current elevated segment：只建 Nhổn ⇄ Cầu Giấy 8 站，沿用 `vietnam` region，不納入地下段或 future extensions。
+2. [ ] 每條新 seed 維持一輪一條線：補站表、train template、OSM relation / generated shape、line-aware icon，並完成最小驗證後再交下一條。
+3. [ ] 維持 `maxOffset <= 1.0 km`；若落在 0.75–1.0 km，先判斷是否需官方站點坐標或 stop-node 對站。
 
 ### 5.5 需要跨模組判斷（GPT-5.5）
 - 目標：涉及策略、優先序、資料模型邊界與 UI/流程風險的決策性工作。
 - 交付條件：完成規則共識後再下放 5.3 實作，避免反覆退回。
 
-#### 進度看板（5.5）
-1. [x] 確認「完成」與「可選 backlog」邊界（目前結論：必要項目已無）並固定為每輪 1 類型 1 seed 的擴張策略。
-2. [x] 決定亞洲其他區域下一輪優先順序：泰國曼谷補完 → 新加坡 / 馬來西亞補完與新馬 RTS Link 監控 → 印尼 / 菲律賓 / 越南補完。
-3. [x] 評估 loop/複線/共線的策略模板（`loopAnchor`、`corridor`、branch/short-turn）在 `app-core` 與 `app-map` 的長期維運性；優先用於 SG LRT、KL Ampang/Sri Petaling、SRT Red Lines、ERL express/local。
-4. [x] 決定 RTS Link 載客後的 region 歸屬、CIQ 提示、跨境線是否新增 `sg-my` region；載客前只監控，不交給 5.3 建正式資料。
-5. [x] 規劃多 region UI 與地區切換體驗（12+ region 規模）是否改版為下拉/群組，以免後續擴展衝突。
-6. [x] i18n 策略決定（中文、日文、韓文、泰文、馬來文、印尼文、越南文站名對齊）與 `i18n-sync` 執行節奏，避免後續資料新增造成字串裂變。
-7. [x] 決定 Level-2 / Level-4 資料源（政府 API、付費資料）是否在未來輪次納入，及其授權/成本判準。
-8. [x] 決定 P1 印尼 / 菲律賓 / 越南的第一條 seed：`JKT-MRT-North-South` 的 Jakarta MRT Phase 1 現行營運段已完成。
-9. [x] 決定 `BKK-BTS-Gold` 小型 feeder：可納入 rail network 作 optional AGT/APM seed，但不計為必須完成的 trunk/P0 coverage gate。
-10. [x] 決定 Malaysia airport/commuter gate：下一個 cleared seed 為 `ERL-KLIA-Transit`；`ERL-KLIA-Ekspres` 與 KTM Komuter 均已由後續 5.5 gates 放行。
-11. [x] 決定 `BKK-SRT-Light-Red` current segment：只 seed Krung Thep Aphiwat ⇄ Taling Chan 現行 4 站；future extensions 維持 monitor。
-12. [x] 決定並完成 `BKK-MRT-Pink-Muang-Thong-Thani` branch：已作獨立 3-station branch seed；不改 branch schema、不重寫主線。
-13. [x] 決定 `ERL-KLIA-Ekspres` regular-hours express：可作獨立 3-station Airport seed；晚間 all-stations 服務型態另開 runtime pass。
-14. [x] 決定 KTM Komuter long-corridor / short-turn gate：兩條 Klang Valley full-corridor commuter seeds 可下放；短折、缺站班次與施工期 timetable 另開 service-pattern pass。
-15. [x] 重查 `BKK-MRT-Orange` monitor：MRTA 仍列 east/west sections as ongoing projects；正式載客前維持 monitor，不交 5.3。
-16. [x] 重查 `Penang-Mutiara-LRT` monitor：MRT Corp 仍列為 public inspection / construction-stage project；正式載客前維持 monitor，不交 5.3。
-17. [x] 重查 `SG-MRT-Cross-Island` monitor：LTA 仍列 CRL as upcoming / in progress；CRL1 target 2030、CRL2 / Punggol Extension target 2032、CRL3 late 2030s，正式載客前維持 monitor，不交 5.3。
-18. [x] 指定並完成 P1 下一條 current-service seed：`MNL-MRT-3` Manila MRT-3（North Avenue ⇄ Taft Avenue，13 站）；LRT-1 extension、LRT-2 west extension、PNR / NSCR future corridor 仍另案。
-19. [x] 指定並完成 P1 下一條 current-service seed：`MNL-LRT-2` Manila LRT-2（Recto ⇄ Antipolo，13 站）；LRT-1 extension、LRT-2 west extension、PNR / NSCR future corridor 仍另案。
-20. [x] 指定 P1 下一條 current-service seed：`Hanoi-Metro-3` Hanoi Metro Line 3，只下放已載客的 Nhổn ⇄ Cầu Giấy 高架 8 站；Cầu Giấy ⇄ Ga Hà Nội 地下段、future Hanoi / HCMC extensions 不併入本 seed。
-21. [x] 重查 `SG-MY-RTS-Link` monitor：LTA 仍列 passenger-service target as end-2026，MRT Corp Malaysia 2026-01 release 仍指向 2026-12-31，MOT 2026-04 fare reply 顯示 fare 尚待 RTSO 公布；正式載客前維持 monitor，不交 5.3。
+#### 進度看板（5.5 active）
+1. [ ] `Hanoi-Metro-3` 完成後，指定下一條 current-service seed。
+2. [ ] Monitor 項目重開條件：`BKK-MRT-Orange`、`Penang-Mutiara-LRT`、`SG-MRT-Cross-Island`、`SG-MY-RTS-Link` 需有正式載客與穩定官方 / OSM station data。
+3. [ ] P2 全球候選池先做 feasibility gate；不得直接交 5.3 多線落地。
+4. [ ] Service-pattern / schema pass 另案：KLIA Ekspres late-night all-stations、KTM Komuter short-turn / skipped-station / maintenance timetable、Red Line future extensions、Pink Line branch graph。
+
+#### 歷史決策紀錄
+
+以下段落只保留已做過的 5.5 判斷來源與約束，供未來重開 gate 時追溯；不再視為 active 待辦清單。
 
 #### 2026-05-14 5.5 決策：Bangkok straddle monorail category
 
