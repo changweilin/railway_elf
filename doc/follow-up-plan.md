@@ -95,7 +95,6 @@
 | [ ] | P2-3 德國 | 決定 `Commuter` / `Regional` 是否同類建模；先不建 express / short-turn pass；若核准，先切成「高速代表線」或「S-Bahn 代表線」其一。 |
 | [ ] | P2-4 法國 | 決定是否允許官方 GTFS / rail op 作為 Level-2 輔助來源；界定 RER / 都會 / 長途幹線的第一輪範圍。 |
 | [ ] | P2-5 英國 | 決定是否先採「核心都會網」再擴展 intercity；明確排除 zone fare、夜間與分流服務的首輪建模。 |
-| [ ] | P2-6 俄羅斯 | 決定是否因政治 / 合規 / 維運條件暫停；預設維持 `monitor-blocked`，除非 5.5 明確重開。 |
 | [ ] | P2-7 印度 | 決定 i18n alias 策略與資料更新節奏；避免多語 alias 與高頻更新成本在首輪失控。 |
 | [ ] | P2-8 荷蘭 | 決定是否採 `netherlands` 單 region，並共用 icon / train template 策略；可作為中短期第一輪候選。 |
 | [ ] | P2-9 瑞典 / 挪威 | 決定 `shared Nordic` 或 split region；界定高緯度 station alias 與季節運作特性是否納入模板邊界。 |
