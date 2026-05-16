@@ -39,9 +39,9 @@ const PRETTY = args.has("--pretty");
 
 const LINE_OUTPUT_OPTIONS = {
   "THSR": { snapStationCoordsOverKm: 1.0 },
-  "TRA-Pingxi": { snapStationCoordsOverKm: 1.0 },
-  "TRA-Neiwan": { snapStationCoordsOverKm: 1.0 },
-  "TRA-Jiji": { snapStationCoordsOverKm: 1.0 },
+  "TRA-Pingxi": { trimToStations: true, snapStationCoordsOverKm: 0.2 },
+  "TRA-Neiwan": { trimToStations: true, snapStationCoordsOverKm: 0.2 },
+  "TRA-Jiji": { trimToStations: true, snapStationCoordsOverKm: 0.2 },
 };
 const NO_CACHE = args.has("--no-cache");
 const REFRESH_CACHE = args.has("--refresh-cache");
@@ -225,35 +225,63 @@ const OSM_LINE_MAP = {
   // Using a master would pull both directional sub-routes whose tracks may be
   // > 40 m apart, defeating the parallel-way dedupe and yielding a doubled
   // polyline. Pick one direction per line.
-  "TPE-Red":      { name: "Tamsui-Xinyi (S)",  relationIds: [5378981] }, // 南向 淡水→象山
-  "TPE-Blue":     { name: "Bannan",            relationIds: [199038]  }, // 南港→土城
-  "TPE-Green":    { name: "Songshan-Xindian",  relationIds: [4250357] }, // 順向
+  "TPE-Red": {
+    name: "Tamsui-Xinyi (S)",
+    relationIds: [5378981],
+    maxShapeSegmentKm: 1.0,
+  }, // 南向 淡水→象山
+  "TPE-Blue": {
+    name: "Bannan",
+    relationIds: [199038],
+    maxShapeSegmentKm: 1.0,
+  }, // 南港→土城
+  "TPE-Green": {
+    name: "Songshan-Xindian",
+    relationIds: [4250357],
+    maxShapeSegmentKm: 1.0,
+    removeClosedDetours: { minLoopKm: 1.0 },
+  }, // 順向
   "TPE-Brown": {
     name: "Wenhu",
     relationIds: [447449],
+    maxShapeSegmentKm: 1.0,
     orderStationKms: true,
     stationStops: { reverse: true },
+    snapStationCoordsOverKm: 0.2,
   }, // 順向
   // 中和新蘆 is a Y-junction; 4250354 (蘆洲 順向) covers 蘆洲→南勢角 (matches our chain).
-  "TPE-Yellow":   { name: "Zhonghe-Xinlu (蘆洲)", relationIds: [4250354] },
+  "TPE-Yellow": {
+    name: "Zhonghe-Xinlu (蘆洲)",
+    relationIds: [4250354],
+    orderStationKms: true,
+    stationStops: {},
+    trimToStations: true,
+    snapStationCoordsOverKm: 0.2,
+  },
   "TYMRT": {
     name: "Taoyuan Airport MRT",
     relationIds: [8487062],
     corridor: { corridorKm: 3.0, sampleKm: 0.08 },
     orderStationKms: true,
-    snapStationCoordsOverKm: 1.0,
+    stationStops: {},
+    snapStationCoordsOverKm: 0.2,
   }, // 台北→環北
   "KHH-Red": {
     name: "KRTC Red",
     relationIds: [4174828],
     corridor: { corridorKm: 1.0, sampleKm: 0.05 },
-    snapStationCoordsOverKm: 1.0,
+    maxShapeSegmentKm: 1.0,
+    orderStationKms: true,
+    stationStops: {},
+    snapStationCoordsOverKm: 0.2,
   }, // 小港→岡山
   "KHH-Orange": {
     name: "KRTC Orange",
     relationIds: [4174827],
     orderStationKms: true,
     stationStops: {},
+    useStationChainShape: true,
+    snapStationCoordsOverKm: 0.2,
   }, // 哈瑪星→大寮
   // KHH circular LRT — closed loop. Anchor at 籬仔內 (first station in our chain).
   "KHH-LRT": {
@@ -261,15 +289,26 @@ const OSM_LINE_MAP = {
     relationIds: [6826886],
     loopAnchor: { lat: 22.5985, lng: 120.3134 },
     corridor: { corridorKm: 1.0, sampleKm: 0.05 },
+    maxShapeSegmentKm: 1.0,
     orderStationKms: true,
-    snapStationCoordsOverKm: 1.0,
+    stationStops: {},
+    trimToStations: true,
+    snapStationCoordsOverKm: 0.2,
   }, // 順行
-  "Tamsui-LRT":   { name: "Danhai LRT (上行)",  relationIds: [9154523] }, // 紅樹林→崁頂
+  "Tamsui-LRT": {
+    name: "Danhai LRT (上行)",
+    relationIds: [9154523],
+    orderStationKms: true,
+    stationStops: {},
+    trimToStations: true,
+    snapStationCoordsOverKm: 0.2,
+  }, // 紅樹林→崁頂
   // Alishan main line (嘉義→阿里山). Mountain spurs (神木/沼平/祝山) are separate relations.
   "Alishan-Forest": {
     name: "Alishan Forest Railway",
     relationIds: [5570989],
-    snapStationCoordsOverKm: 1.0,
+    trimToStations: true,
+    snapStationCoordsOverKm: 0.2,
   },
 
   // Korea.
@@ -1811,6 +1850,19 @@ async function fetchOsmShape(internalId, cfg, stations) {
   }
   if (cfg.loopAnchor) {
     stitched = rotateLoopToAnchor(stitched, cfg.loopAnchor);
+  }
+  if (cfg.removeClosedDetours) {
+    const opts = typeof cfg.removeClosedDetours === "object" ? cfg.removeClosedDetours : {};
+    const repaired = removeLargeClosedDetours(stitched, opts);
+    stitched = repaired.shape;
+    if (repaired.removed.length > 0) {
+      const detail = repaired.removed
+        .map(r => `${r.km.toFixed(1)}km`)
+        .join(", ");
+      console.log(
+        `[OSM] ${internalId}: removed ${repaired.removed.length} stitched closed detour(s): ${detail}`
+      );
+    }
   }
   return stitched;
 }
