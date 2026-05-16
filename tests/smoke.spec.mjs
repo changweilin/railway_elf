@@ -6,7 +6,7 @@ import { test, expect } from '@playwright/test';
 // runtime issues. Third-party services (favicon proxies, map tile CDNs,
 // unpkg) can flake or return 4xx for individual edge cases without breaking
 // the app, so we filter those out before asserting.
-const BASE_ORIGIN = 'http://localhost:4173';
+const BASE_ORIGIN = process.env.PREVIEW_URL || `http://localhost:${process.env.PREVIEW_PORT || 4173}`;
 const SAME_ORIGIN_RE = new RegExp(`^${BASE_ORIGIN.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/`);
 
 // "Failed to load resource: the server responded with a status of …" is the

@@ -1,6 +1,7 @@
 // Main app component
 import React, { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { RAIL_DATA, RailUtil, TrainGen, loadRailShapesForRegion } from "./rail-data.js";
+import { formatClock, formatCountdown, sameDayISO } from "./app-format.js";
 // Circular import (app-map → app-core too); safe because both sides reference
 // the imported symbols only at call time inside React component bodies.
 import { MapArea, TrainSheet, TrainModal } from "./app-map.js";
@@ -66,6 +67,14 @@ const THEME_STORAGE_KEY = 'relf.theme';
 const MAP_BASE_LAYER_STORAGE_KEY = 'relf.mapBaseLayer';
 const MAP_BASE_LAYER_KEYS = new Set(['streets', 'terrain', 'satellite']);
 
+function safeSetStorageItem(key, value) {
+  try { localStorage.setItem(key, value); } catch {}
+}
+
+function safeSetStorageJson(key, value) {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch {}
+}
+
 function getInitialTheme() {
   try {
     const saved = localStorage.getItem(THEME_STORAGE_KEY);
@@ -90,22 +99,6 @@ function getInitialMapBaseLayer() {
 const Icon = ({ id, size = 18 }) =>
   React.createElement("svg", { width: size, height: size, "aria-hidden": true },
     React.createElement("use", { href: `assets/icons.svg#${id}` }));
-
-function formatClock(d) {
-  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
-}
-function formatCountdown(diffMs) {
-  const min = Math.round(diffMs / 60000);
-  if (min < -60) return { text: '已過', unit: '時', cls: 'past' };
-  if (min < 0)   return { text: String(min),  unit: '分', cls: 'past' };
-  if (min < 1)   return { text: '現', unit: '即將通過', cls: 'imminent' };
-  if (min < 60)  return { text: String(min), unit: min <= 5 ? '分鐘後' : '分鐘', cls: min <= 5 ? 'imminent' : '' };
-  const h = Math.floor(min / 60), m = min % 60;
-  return { text: h + ':' + String(m).padStart(2,'0'), unit: '小時後', cls: '' };
-}
-function sameDayISO(d) {
-  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
-}
 
 // ============================================================
 // App root
@@ -218,11 +211,11 @@ function App() {
     if (document.body) document.body.dataset.theme = theme;
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute('content', theme === 'dark' ? '#0f1117' : '#f6f8fb');
-    try { localStorage.setItem(THEME_STORAGE_KEY, theme); } catch {}
+    safeSetStorageItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
 
   useEffect(() => {
-    try { localStorage.setItem(MAP_BASE_LAYER_STORAGE_KEY, mapBaseLayer); } catch {}
+    safeSetStorageItem(MAP_BASE_LAYER_STORAGE_KEY, mapBaseLayer);
   }, [mapBaseLayer]);
 
   // Service-worker update prompt. main.js dispatches sw:update-ready when a
@@ -251,27 +244,27 @@ function App() {
 
   // Persist favorites
   useEffect(() => {
-    localStorage.setItem('relf.favs', JSON.stringify(favorites));
+    safeSetStorageJson('relf.favs', favorites);
   }, [favorites]);
 
   // Persist category filters
   useEffect(() => {
-    localStorage.setItem('relf.cats', JSON.stringify(enabledCategories));
+    safeSetStorageJson('relf.cats', enabledCategories);
   }, [enabledCategories]);
 
   // Persist 立體化差異 toggle
   useEffect(() => {
-    localStorage.setItem('relf.grades', JSON.stringify(showGrades));
+    safeSetStorageJson('relf.grades', showGrades);
   }, [showGrades]);
 
   // Persist favorites collapse state
   useEffect(() => {
-    localStorage.setItem('relf.favsCollapsed', JSON.stringify(favCollapsed));
+    safeSetStorageJson('relf.favsCollapsed', favCollapsed);
   }, [favCollapsed]);
 
   // Persist detailed-naming toggle
   useEffect(() => {
-    localStorage.setItem('relf.detailedNaming', JSON.stringify(useDetailedNaming));
+    safeSetStorageJson('relf.detailedNaming', useDetailedNaming);
   }, [useDetailedNaming]);
 
   const toggleCategory = (cat) => {
@@ -1006,7 +999,7 @@ function Panel(props) {
   },
     // SEARCH SECTION
     React.createElement("div", { className: "panel-section" },
-      React.createElement(SearchBox, { onSelect: (loc) => { setLocation(loc); onClose && onClose(); } }),
+      React.createElement(SearchBox, { region, onSelect: (loc) => { setLocation(loc); onClose && onClose(); } }),
       React.createElement("div", { className: "search-actions" },
         React.createElement("button", { className: "btn-soft", onClick: useGeolocation },
           React.createElement(Icon, { id: "me-locate", size: 14 }), "使用我的位置"),
@@ -1357,38 +1350,78 @@ function AboutFavicon({ host, label }) {
 // ============================================================
 // SEARCH BOX (OSM Nominatim)
 // ============================================================
-function SearchBox({ onSelect }) {
+function SearchBox({ region, onSelect }) {
   const [q, setQ] = useState('');
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errorText, setErrorText] = useState(null);
   const [open, setOpen] = useState(false);
   const debounceRef = useRef(null);
+  const requestRef = useRef({ seq: 0, controller: null });
+
+  const resultName = (item) => {
+    const fallback = item.name || (item.display_name || '').split(',')[0];
+    return pickRegionName(item.namedetails || {}, region, fallback) || fallback || '未命名地點';
+  };
 
   useEffect(() => {
     clearTimeout(debounceRef.current);
-    if (!q.trim() || q.length < 2) { setResults([]); setErrorText(null); return; }
+    if (requestRef.current.controller) {
+      requestRef.current.controller.abort();
+      requestRef.current.controller = null;
+    }
+    const query = q.trim();
+    const requestSeq = ++requestRef.current.seq;
+    if (!query || query.length < 2) {
+      setResults([]);
+      setErrorText(null);
+      setLoading(false);
+      return;
+    }
+    const controller = new AbortController();
     debounceRef.current = setTimeout(async () => {
+      requestRef.current.controller = controller;
       setLoading(true);
       setErrorText(null);
       try {
-        const url = `https://nominatim.openstreetmap.org/search?format=json&limit=6&accept-language=zh-TW,ja,en&q=${encodeURIComponent(q)}`;
-        const r = await fetch(url, { headers: { 'Accept': 'application/json' } });
+        const lang = REGION_NOMINATIM_LANG[region] || REGION_NOMINATIM_LANG.taiwan;
+        const params = new URLSearchParams({
+          format: 'jsonv2',
+          limit: '6',
+          namedetails: '1',
+          'accept-language': lang,
+          q: query,
+        });
+        const url = `https://nominatim.openstreetmap.org/search?${params.toString()}`;
+        const r = await fetch(url, {
+          headers: { 'Accept': 'application/json' },
+          signal: controller.signal,
+        });
         if (!r.ok) throw new Error(`Nominatim ${r.status}`);
         const data = await r.json();
+        if (requestRef.current.seq !== requestSeq) return;
         setResults(data);
         if (data.length === 0) setErrorText(null);
       } catch (e) {
+        if (e && e.name === 'AbortError') return;
+        if (requestRef.current.seq !== requestSeq) return;
         setResults([]);
         setErrorText('搜尋暫時無法使用,請稍後再試,或在地圖上直接點選位置。');
-      } finally { setLoading(false); }
+      } finally {
+        if (requestRef.current.seq === requestSeq) setLoading(false);
+        if (requestRef.current.controller === controller) requestRef.current.controller = null;
+      }
     }, 400);
-    return () => clearTimeout(debounceRef.current);
-  }, [q]);
+    return () => {
+      clearTimeout(debounceRef.current);
+      controller.abort();
+    };
+  }, [q, region]);
 
   const choose = (item) => {
-    onSelect({ lat: parseFloat(item.lat), lng: parseFloat(item.lon), name: item.display_name.split(',')[0] });
-    setQ(item.display_name.split(',')[0]);
+    const name = resultName(item);
+    onSelect({ lat: parseFloat(item.lat), lng: parseFloat(item.lon), name });
+    setQ(name);
     setOpen(false);
   };
 
@@ -1407,7 +1440,7 @@ function SearchBox({ onSelect }) {
       onFocus: () => setOpen(true),
       onBlur: () => setTimeout(() => setOpen(false), 200),
     }),
-    q && React.createElement("button", { className: "search-clear", onClick: () => { setQ(''); setResults([]); setErrorText(null); } },
+    q && React.createElement("button", { className: "search-clear", onClick: () => { setQ(''); setResults([]); setErrorText(null); setLoading(false); } },
       React.createElement(Icon, { id: "me-close", size: 12 })),
     open && (loading || results.length > 0 || errorText) && React.createElement("div", { className: "search-results" },
       loading
@@ -1420,7 +1453,7 @@ function SearchBox({ onSelect }) {
               React.createElement("div", { className: "search-item-icon" },
                 React.createElement(Icon, { id: "me-waypoint", size: 14 })),
               React.createElement("div", { className: "search-item-main" },
-                React.createElement("div", { className: "search-item-name" }, r.display_name.split(',')[0]),
+                React.createElement("div", { className: "search-item-name" }, resultName(r)),
                 React.createElement("div", { className: "search-item-sub" }, r.display_name.split(',').slice(1).join(',').trim()),
               ),
             )),

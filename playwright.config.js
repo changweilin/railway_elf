@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const PREVIEW_PORT = 4173;
-const PREVIEW_URL = `http://localhost:${PREVIEW_PORT}`;
+const PREVIEW_PORT = Number(process.env.PREVIEW_PORT || 4173);
+const PREVIEW_URL = process.env.PREVIEW_URL || `http://localhost:${PREVIEW_PORT}`;
 
 export default defineConfig({
   testDir: './tests',

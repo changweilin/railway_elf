@@ -15,7 +15,8 @@ import {
 } from "./train-icon-registry.js";
 // Circular: app-core imports from us too. Safe because all references happen
 // inside component bodies / event callbacks, not at module init.
-import { Icon, formatClock, formatCountdown, sameDayISO } from "./app-core.js";
+import { Icon } from "./app-core.js";
+import { formatClock, formatCountdown, sameDayISO } from "./app-format.js";
 
 // Warm the browser cache on script load so the first marker render finds the
 // PNG already decoded — otherwise the icon pops in a frame later.

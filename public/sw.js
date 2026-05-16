@@ -6,11 +6,10 @@
 //   * Other same-origin static files           → stale-while-revalidate
 //   * Cross-origin (OSM tiles, Nominatim, …)   → bypass; let the browser handle it
 //
-// Bump VERSION when the cache shape changes (e.g. new shell entries) so old
-// caches get cleaned up on activate. Hashed bundle filenames already
-// invalidate themselves, so most deploys do NOT require a version bump.
+// Bump VERSION when the cache shape changes (e.g. new shell entries or install
+// discovery logic) so old caches get cleaned up on activate.
 
-const VERSION = "v2";
+const VERSION = "v3";
 const PRECACHE = `railway-elf-precache-${VERSION}`;
 const RUNTIME = `railway-elf-runtime-${VERSION}`;
 
@@ -23,9 +22,15 @@ const SHELL = [
   "./assets/logo-mark.svg",
   "./assets/logo-mark-light.svg",
   "./assets/logo-mark-dark.svg",
+  "./assets/styles.css?v=22",
+  "./assets/tokens.css",
+  "./assets/icons.svg",
+  "./assets/map-layer-reference.json",
+  "./assets/train-icons/train-icon-map.json",
 ];
 
 const HASHED_ASSET_RE = /\/assets\/.+-[A-Za-z0-9_-]{6,}\.(?:js|css|png|jpe?g|svg|webp|woff2?)$/;
+const INDEX_ASSET_RE = /\b(?:src|href)="([^"]+)"/g;
 
 self.addEventListener("install", (event) => {
   // Pre-cache only. Do NOT skipWaiting unconditionally — we want updates to
@@ -34,6 +39,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil((async () => {
     const cache = await caches.open(PRECACHE);
     await cache.addAll(SHELL);
+    await cacheIndexAssets(cache);
   })());
 });
 
@@ -110,5 +116,27 @@ async function staleWhileRevalidate(req, cacheName) {
       return res;
     })
     .catch(() => null);
-  return hit || (await network) || fetch(req);
+  const res = await network;
+  return hit || res || new Response("Offline", { status: 504, statusText: "Gateway Timeout" });
+}
+
+async function cacheIndexAssets(cache) {
+  try {
+    const res = await fetch("./index.html", { cache: "no-cache" });
+    if (!res || !res.ok) return;
+    const html = await res.text();
+    const urls = new Set();
+    for (const match of html.matchAll(INDEX_ASSET_RE)) {
+      const url = new URL(match[1], self.location.href);
+      if (url.origin !== self.location.origin) continue;
+      if (!url.pathname.includes("/assets/")) continue;
+      urls.add(url.href);
+    }
+    await Promise.all([...urls].map(async (url) => {
+      try {
+        const asset = await fetch(url);
+        if (asset && asset.ok) await cache.put(url, asset.clone());
+      } catch {}
+    }));
+  } catch {}
 }

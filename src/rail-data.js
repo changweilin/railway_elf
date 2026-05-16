@@ -4805,6 +4805,9 @@ export function loadRailShapesForRegion(regionKey) {
     loadedShapeRegions.add(regionKey);
     if (merged > 0) railDataRevision++;
     return railDataRevision;
+  }).catch((err) => {
+    delete shapeLoadPromises[regionKey];
+    throw err;
   });
   return shapeLoadPromises[regionKey];
 }

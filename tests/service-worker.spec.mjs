@@ -38,4 +38,25 @@ test.describe("service worker", () => {
     const count = await page.evaluate(() => window.__swApplyUpdateCount);
     expect(count).toBe(1);
   });
+
+  test("serves the app shell after an offline reload", async ({ page, browserName }) => {
+    test.skip(browserName !== "chromium", "SW offline test runs only on chromium");
+
+    await page.goto("/");
+    await page.waitForSelector("#app .toolbar", { timeout: 15_000 });
+
+    await page.waitForFunction(async () => {
+      if (!("serviceWorker" in navigator)) return false;
+      const reg = await navigator.serviceWorker.getRegistration();
+      return Boolean(reg && reg.active && navigator.serviceWorker.controller);
+    }, null, { timeout: 15_000 });
+
+    try {
+      await page.context().setOffline(true);
+      await page.reload({ waitUntil: "domcontentloaded" });
+      await page.waitForSelector("#app .toolbar", { timeout: 15_000 });
+    } finally {
+      await page.context().setOffline(false);
+    }
+  });
 });

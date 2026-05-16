@@ -7,7 +7,7 @@ import { test, expect } from '@playwright/test';
 // silently strip the notice / empty-state code and the smoke tests would
 // not catch it.
 
-const BASE_ORIGIN = 'http://localhost:4173';
+const BASE_ORIGIN = process.env.PREVIEW_URL || `http://localhost:${process.env.PREVIEW_PORT || 4173}`;
 
 // Lightweight ready check that does NOT require .leaflet-tile-loaded —
 // the tile-burst test deliberately blocks every tile, so waiting on a

@@ -46,16 +46,17 @@ jobs:
           if [ "${{ inputs.skip_tw }}" = "true" ]; then FLAGS="$FLAGS --skip-tw"; fi
           if [ "${{ inputs.skip_jp }}" = "true" ]; then FLAGS="$FLAGS --skip-jp"; fi
           node scripts/fetch-rail-shapes.mjs $FLAGS
+          node scripts/split-rail-shapes.mjs
 
       - name: Detect diff
         id: diff
         run: |
-          if git diff --quiet -- public/assets/rail-data.generated.js; then
+          if git diff --quiet -- src/rail-data.generated.js src/rail-shapes scripts/line-shape-snapshot.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
             echo "No shape changes."
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
-            git diff --stat -- public/assets/rail-data.generated.js
+            git diff --stat -- src/rail-data.generated.js src/rail-shapes scripts/line-shape-snapshot.json
           fi
 
       # Ratchet rules (see scripts/check-line-shapes.mjs):
@@ -81,8 +82,8 @@ jobs:
         uses: peter-evans/create-pull-request@v6
         with:
           branch: chore/refresh-rail-shapes
-          title: "chore: refresh rail-data.generated.js"
-          commit-message: "chore: refresh rail-data.generated.js from TDX + OSM"
+          title: "chore: refresh rail shape data"
+          commit-message: "chore: refresh rail shape data from TDX + OSM"
           body: |
             Automated refresh from `scripts/fetch-rail-shapes.mjs`.
 
@@ -90,9 +91,10 @@ jobs:
             Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
 
             Shape ratchet passed (`scripts/check-line-shapes.mjs`); snapshot
-            re-seeded. Review the generated.js + snapshot diff for unexpected
-            line/station shifts before merging.
+            re-seeded. Review the generated source, per-region chunks, and
+            snapshot diff for unexpected line/station shifts before merging.
           add-paths: |
-            public/assets/rail-data.generated.js
+            src/rail-data.generated.js
+            src/rail-shapes/*.generated.js
             scripts/line-shape-snapshot.json
           delete-branch: true

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-const BASE_ORIGIN = 'http://localhost:4173';
+const BASE_ORIGIN = process.env.PREVIEW_URL || `http://localhost:${process.env.PREVIEW_PORT || 4173}`;
 const SAME_ORIGIN_RE = new RegExp(`^${BASE_ORIGIN.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}/`);
 const IGNORED_CONSOLE_PATTERNS = [
   /Failed to load resource:/i,
