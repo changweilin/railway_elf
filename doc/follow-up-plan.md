@@ -92,7 +92,6 @@
 | 狀態 | 候選 | 5.5 待判斷 |
 |---|---|---|
 | [ ] | P2-7 印度 | 決定 i18n alias 策略與資料更新節奏；避免多語 alias 與高頻更新成本在首輪失控。 |
-| [ ] | P2-8 荷蘭 | 決定是否採 `netherlands` 單 region，並共用 icon / train template 策略；可作為中短期第一輪候選。 |
 | [ ] | P2-9 瑞典 / 挪威 | 決定 `shared Nordic` 或 split region；界定高緯度 station alias 與季節運作特性是否納入模板邊界。 |
 
 ## 文件整理規則
