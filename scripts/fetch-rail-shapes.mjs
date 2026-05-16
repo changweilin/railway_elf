@@ -118,7 +118,8 @@ const OSM_LINE_MAP = {
   "Tokaido-Shinkansen": {
     name: "Tōkaidō Shinkansen",
     relationIds: [5263977],
-    corridor: { corridorKm: 0.7, binKm: 0.15, parallelKm: 0.08 },
+    corridor: { corridorKm: 30.0, sampleKm: 0.12, parallelKm: 0.08 },
+    maxShapeSegmentKm: 1.0,
   },
   "JR-Yamanote": {
     name: "Yamanote Line (Outer)",
@@ -127,24 +128,34 @@ const OSM_LINE_MAP = {
     corridor: { corridorKm: 2.0, sampleKm: 0.05 },
     orderStationKms: true,
   }, // 外回り 環狀,以東京站切開
-  "JR-Chuo":            { name: "Chūō Line Rapid (down)", relationIds: [10363876] }, // 下り (Tokyo→west)
+  "JR-Chuo": {
+    name: "Chūō Line Rapid (down)",
+    relationIds: [10363876],
+    maxShapeSegmentKm: 1.0,
+  }, // 下り (Tokyo→west)
   "Sanyo-Shinkansen": {
     name: "Sanyō Shinkansen",
     relationIds: [1837932],
-    corridor: { corridorKm: 2.5, sampleKm: 0.1 },
+    corridor: { corridorKm: 8.0, sampleKm: 0.1 },
+    maxShapeSegmentKm: 1.0,
   }, // 新大阪→博多; relation includes both directions, so rebuild one centerline
   "Nishi-Kyushu-Shinkansen": {
     name: "Nishi-Kyushu Shinkansen (Takeo-Onsen→Nagasaki)",
     relationIds: [7356208],
     stationStops: {},
     orderStationKms: true,
-    corridor: { corridorKm: 1.2, sampleKm: 0.08 },
+    corridor: { corridorKm: 4.0, sampleKm: 0.08 },
     snapStationCoordsOverKm: 1.0,
+    maxShapeSegmentKm: 1.0,
   },
 
   // Tokyo Metro (route=subway).
   "Tokyo-Metro-Ginza":      { name: "Tokyo Metro Ginza Line (浅草→渋谷)",     relationIds: [443281] },  // A 線 (浅草→渋谷) 主行向
-  "Tokyo-Metro-Marunouchi": { name: "Tokyo Metro Marunouchi Line (池袋→荻窪)", relationIds: [8015932] }, // 本線 池袋→荻窪 (不含方南町支線)
+  "Tokyo-Metro-Marunouchi": {
+    name: "Tokyo Metro Marunouchi Line (池袋→荻窪)",
+    relationIds: [8015932],
+    snapStationCoordsOverKm: 0.5,
+  }, // 本線 池袋→荻窪 (不含方南町支線)
   "Tokyo-Monorail": {
     name: "Tokyo Monorail Haneda Airport Line Local (Hamamatsucho→Haneda Airport Terminal 2)",
     relationIds: [3417174],
@@ -157,6 +168,7 @@ const OSM_LINE_MAP = {
     relationIds: [12419659],
     orderStationKms: true,
     snapStationCoordsOverKm: 1.0,
+    maxShapeSegmentKm: 1.0,
   },
 
   // JR Keihin-Tōhoku (大宮↔横浜) + 根岸線 (横浜↔大船) 合併運轉。
@@ -164,7 +176,8 @@ const OSM_LINE_MAP = {
   "JR-Keihin-Tohoku": {
     name: "JR Keihin-Tōhoku + Negishi (大宮→大船)",
     relationIds: [5195691, 10257299],
-    snapStationCoordsOverKm: 1.0,
+    snapStationCoordsOverKm: 0.5,
+    maxShapeSegmentKm: 1.0,
   }, // 京浜東北南行 + 根岸下り
 
   // JR 中央・総武緩行線 (Local) — 三鷹↔千葉。10312043 gives the cleanest
@@ -172,25 +185,40 @@ const OSM_LINE_MAP = {
   "JR-Sobu-Local": {
     name: "Chūō-Sōbu Local (千葉→三鷹)",
     relationIds: [10312043],
+    maxShapeSegmentKm: 1.0,
   },
 
   // 東急東横線 (渋谷→横浜) 順向。
-  "Tokyu-Toyoko":       { name: "Tōkyū Tōyoko Line (渋谷→横浜)", relationIds: [9288982] },
+  "Tokyu-Toyoko": {
+    name: "Tōkyū Tōyoko Line (渋谷→横浜)",
+    relationIds: [9288982],
+    snapStationCoordsOverKm: 0.5,
+  },
 
   // 大阪環状線 — 環狀,錨點為大阪站。OSM 將外回り獨立 relation,以大阪
   // 為起終共用點。
-  "JR-Osaka-Loop":      { name: "JR Osaka Loop (外回り)", relationIds: [10073682], loopAnchor: { lat: 34.7025, lng: 135.4959 } },
+  "JR-Osaka-Loop": {
+    name: "JR Osaka Loop (外回り)",
+    relationIds: [10073682],
+    loopAnchor: { lat: 34.7025, lng: 135.4959 },
+    snapStationCoordsOverKm: 0.5,
+    maxShapeSegmentKm: 1.0,
+  },
 
   // 大阪メトロ御堂筋線 — 2024 北延伸後 relation 為 箕面萱野→中百舌鳥。
-  // 我們站表只覆蓋 江坂↔なかもず,polyline 會延伸到 箕面萱野 (北端外掛
-  // 段約 6 km),站點透過投影映射到 polyline 上保持一致。
-  "Osaka-Metro-Midosuji": { name: "Osaka Metro Midōsuji (箕面萱野→中百舌鳥)", relationIds: [2411153] },
+  // 我們站表只覆蓋 江坂↔なかもず,所以輸出時裁到首末站投影範圍。
+  "Osaka-Metro-Midosuji": {
+    name: "Osaka Metro Midōsuji (箕面萱野→中百舌鳥)",
+    relationIds: [2411153],
+    trimToStations: true,
+  },
 
   // 阪急電鉄神戸本線 (大阪梅田→神戸三宮)。
   "Hankyu-Kobe": {
     name: "Hankyū Kōbe Line (梅田→三宮)",
     relationIds: [11966252],
-    snapStationCoordsOverKm: 1.0,
+    snapStationCoordsOverKm: 0.5,
+    maxShapeSegmentKm: 1.0,
   },
 
   // Taiwan Metro / LRT — single-direction sub-routes (NOT route_masters).
@@ -1010,6 +1038,41 @@ function positionOnShapeAtKm(shape, shapeKm, targetKm) {
     };
   }
   return shape[shape.length - 1];
+}
+
+function sliceShapeByKm(shape, shapeKm, fromKm, toKm) {
+  const totalKm = shapeKm[shapeKm.length - 1] ?? 0;
+  const startKm = Math.max(0, Math.min(fromKm, totalKm));
+  const endKm = Math.max(0, Math.min(toKm, totalKm));
+  if (!(endKm > startKm + 1e-6)) return shape;
+
+  const out = [positionOnShapeAtKm(shape, shapeKm, startKm)];
+  for (let i = 1; i < shape.length - 1; i++) {
+    if (shapeKm[i] > startKm + 1e-6 && shapeKm[i] < endKm - 1e-6) {
+      out.push(shape[i]);
+    }
+  }
+  out.push(positionOnShapeAtKm(shape, shapeKm, endKm));
+  return out.filter((p, i) => i === 0 || haversine(p, out[i - 1]) > 0.001);
+}
+
+function densifyShape(shape, maxSegmentKm) {
+  if (!(maxSegmentKm > 0) || shape.length < 2) return shape;
+  const out = [shape[0]];
+  for (let i = 1; i < shape.length; i++) {
+    const prev = shape[i - 1];
+    const next = shape[i];
+    const steps = Math.ceil(haversine(prev, next) / maxSegmentKm);
+    for (let s = 1; s < steps; s++) {
+      const t = s / steps;
+      out.push({
+        lat: prev.lat + (next.lat - prev.lat) * t,
+        lng: prev.lng + (next.lng - prev.lng) * t,
+      });
+    }
+    out.push(next);
+  }
+  return out;
 }
 
 // Project a station onto the polyline; returns the cumulative km of the closest point.
@@ -1913,6 +1976,20 @@ function buildOutput(rawShapes, stationsByLineId) {
       }
     }
 
+    if (cfg.trimToStations === true && projectionStations.length >= 2) {
+      const firstProjected = stationKmOnShape(projectionStations[0], simplified, shapeKm);
+      const lastProjected = stationKmOnShape(
+        projectionStations[projectionStations.length - 1],
+        simplified,
+        shapeKm,
+        firstProjected.km,
+      );
+      if (lastProjected.km > firstProjected.km + 1e-3) {
+        simplified = sliceShapeByKm(simplified, shapeKm, firstProjected.km, lastProjected.km);
+        shapeKm = cumulativeKm(simplified);
+      }
+    }
+
     // Leading/trailing stations that are far from the polyline endpoints can
     // happen on branch lines whose upstream geometry starts at the branch
     // divergence rather than the junction station (e.g. TDX 內灣線 begins at
@@ -1957,6 +2034,10 @@ function buildOutput(rawShapes, stationsByLineId) {
         simplified = [...simplified, ...stuckSuffix.map(s => ({ lat: s.lat, lng: s.lng }))];
         shapeKm = cumulativeKm(simplified);
       }
+    }
+    if (cfg.maxShapeSegmentKm != null) {
+      simplified = densifyShape(simplified, cfg.maxShapeSegmentKm);
+      shapeKm = cumulativeKm(simplified);
     }
 
     const orderStationKms = cfg.orderStationKms === true;
