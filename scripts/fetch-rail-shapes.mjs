@@ -277,8 +277,14 @@ const OSM_LINE_MAP = {
     name: "Seoul Metropolitan Subway Line 1 (Soyosan→Incheon, clipped to Gwangwoon Univ.→Incheon)",
     relationIds: [8691809],
     corridor: { corridorKm: 1.2, sampleKm: 0.08 },
+    snapStationCoordsOverKm: 0.5,
   },
-  "Seoul-Metro-2": { name: "Seoul Subway Line 2 Outer Circle", relationIds: [2404374], loopAnchor: { lat: 37.5645, lng: 126.9776 } },
+  "Seoul-Metro-2": {
+    name: "Seoul Subway Line 2 Outer Circle",
+    relationIds: [2404374],
+    loopAnchor: { lat: 37.5645, lng: 126.9776 },
+    maxShapeSegmentKm: 1.0,
+  },
   "Seoul-Metro-3": {
     name: "Seoul Metropolitan Subway Line 3 (Daehwa→Ogeum)",
     relationIds: [443803, 4729445],
@@ -327,7 +333,7 @@ const OSM_LINE_MAP = {
     relationIds: [2718888],
     corridor: { corridorKm: 1.2, sampleKm: 0.08 },
     orderStationKms: true,
-    snapStationCoordsOverKm: 1.0,
+    snapStationCoordsOverKm: 0.5,
   },
   "Ui-LRT": {
     name: "Seoul LRT Ui-Sinseol Line (Bukhansan Ui→Sinseol-dong)",
@@ -507,7 +513,7 @@ const OSM_LINE_MAP = {
     relationIds: [8842494, 8817574, 8821065, 8880536, 8880709, 8835676, 8879475],
     corridor: { corridorKm: 3.0, sampleKm: 0.25 },
     forceEndpointAnchors: true,
-    snapStationCoordsOverKm: 1.0,
+    snapStationCoordsOverKm: 0.5,
   },
   "KTX-Jungbu-Naeryuk": {
     name: "KTX Jungbu Naeryuk Line (Pangyo-Mungyeong)",
@@ -560,6 +566,7 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationStops: {},
     stationKmOverrides: { "동대신": 21.2 },
+    snapStationCoordsOverKm: 0.5,
   },
   "Busan-Metro-2": {
     name: "Busan Metro Line 2 (Jangsan→Yangsan)",
@@ -593,7 +600,7 @@ const OSM_LINE_MAP = {
   // Hong Kong MTR.
   "MTR-Tsuen-Wan":       { name: "MTR Tsuen Wan Line (Central→Tsuen Wan)", relationIds: [9736530] },
   "MTR-Island":          { name: "MTR Island Line (Kennedy Town→Chai Wan)", relationIds: [4432666] },
-  "MTR-East-Rail":       { name: "MTR East Rail Line (Admiralty→Lo Wu)", relationIds: [4248592] },
+  "MTR-East-Rail":       { name: "MTR East Rail Line (Admiralty→Lo Wu)", relationIds: [4248592], trimToStations: true },
   "MTR-Airport-Express": { name: "MTR Airport Express (Hong Kong→AsiaWorld-Expo)", relationIds: [5317239] },
 
   // Mainland China. HSR entries use `route=railway` infrastructure relations;
@@ -630,24 +637,32 @@ const OSM_LINE_MAP = {
     corridor: { corridorKm: 3.0, sampleKm: 0.08 },
     orderStationKms: true,
     stationStops: {},
+    snapStationCoordsOverKm: 0.5,
+    maxShapeSegmentKm: 1.0,
   },
   "Beijing-Subway-2": {
     name: "Beijing Subway Line 2 clockwise",
     relationIds: [1667236],
     loopAnchor: { lat: 39.94, lng: 116.349 },
     corridor: { corridorKm: 1.5, sampleKm: 0.08 },
+    snapStationCoordsOverKm: 0.5,
   },
   "Shanghai-Metro-1": {
     name: "Shanghai Metro Line 1 (Fujin Road→Xinzhuang)",
     relationIds: [199200],
+    corridor: { corridorKm: 1.2, sampleKm: 0.05 },
     orderStationKms: true,
     stationStops: {},
+    snapStationCoordsOverKm: 0.5,
   },
   "Shanghai-Metro-2": {
     name: "Shanghai Metro Line 2 (Panxiang Road→Pudong Airport)",
     relationIds: [5611326],
+    corridor: { corridorKm: 2.0, sampleKm: 0.05 },
     orderStationKms: true,
     stationStops: { offset: 1 },
+    snapStationCoordsOverKm: 0.5,
+    maxShapeSegmentKm: 1.0,
   },
 
   // Singapore MRT.
@@ -663,6 +678,7 @@ const OSM_LINE_MAP = {
     loopAnchor: { lat: 1.38471, lng: 103.74458 },
     orderStationKms: true,
     stationStops: {},
+    useStationChainShape: true,
     snapStationCoordsOverKm: 1.0,
   },
   "SG-LRT-Sengkang": {
@@ -688,6 +704,7 @@ const OSM_LINE_MAP = {
     corridor: { corridorKm: 1.5, sampleKm: 0.08 },
     orderStationKms: true,
     stationStops: {},
+    snapStationCoordsOverKm: 0.5,
   },
   "KL-LRT-Ampang": {
     name: "Ampang Line (Sentul Timur→Ampang)",
@@ -710,7 +727,7 @@ const OSM_LINE_MAP = {
     relationIds: [5690837],
     corridor: { corridorKm: 2.0, sampleKm: 0.08 },
     orderStationKms: true,
-    snapStationCoordsOverKm: 1.5,
+    snapStationCoordsOverKm: 0.5,
   },
   "KL-Monorail": {
     name: "KL Monorail Line (KL Sentral→Titiwangsa)",
@@ -726,6 +743,7 @@ const OSM_LINE_MAP = {
     orderStationKms: true,
     stationStops: {},
     snapStationCoordsOverKm: 1.0,
+    maxShapeSegmentKm: 1.0,
   },
   "ERL-KLIA-Ekspres": {
     name: "KLIA Ekspres (KL Sentral to KLIA T2)",
@@ -758,8 +776,12 @@ const OSM_LINE_MAP = {
   "BKK-BTS-Sukhumvit": {
     name: "BTS Sukhumvit Line (Khu Khot→Kheha)",
     relationIds: [444651],
+    corridor: { corridorKm: 1.5, sampleKm: 0.05 },
     orderStationKms: true,
     stationStops: {},
+    stationKmOverrides: { "11th Infantry Regiment": 13.5 },
+    snapStationCoordsOverKm: 0.5,
+    maxShapeSegmentKm: 1.0,
   },
   "BKK-BTS-Silom": {
     name: "BTS Silom Line (National Stadium→Bang Wa)",
@@ -786,12 +808,14 @@ const OSM_LINE_MAP = {
     relationIds: [15806897],
     orderStationKms: true,
     snapStationCoordsOverKm: 0.05,
+    maxShapeSegmentKm: 1.0,
   },
   "BKK-MRT-Pink": {
     name: "MRT Pink Line (Nonthaburi Civic Center→Min Buri)",
     relationIds: [16740886],
     orderStationKms: true,
     stationStops: {},
+    maxShapeSegmentKm: 1.0,
   },
   "BKK-MRT-Pink-Muang-Thong-Thani": {
     name: "MRT Pink Line Muang Thong Thani Branch (Muang Thong Thani→Lake Muang Thong Thani)",
@@ -815,10 +839,19 @@ const OSM_LINE_MAP = {
   "BKK-MRT-Blue": {
     name: "MRT Blue Line (Tha Phra→Lak Song)",
     relationIds: [444659],
+    corridor: { corridorKm: 1.5, sampleKm: 0.05 },
     orderStationKms: true,
     stationStops: {},
+    snapStationCoordsOverKm: 0.5,
+    maxShapeSegmentKm: 1.0,
   },
-  "BKK-Airport-Rail":  { name: "Airport Rail Link (Phaya Thai→Suvarnabhumi)", relationIds: [2148241] },
+  "BKK-Airport-Rail":  {
+    name: "Airport Rail Link (Phaya Thai→Suvarnabhumi)",
+    relationIds: [2148241],
+    corridor: { corridorKm: 1.5, sampleKm: 0.08 },
+    snapStationCoordsOverKm: 0.5,
+    maxShapeSegmentKm: 1.0,
+  },
 
   // Jakarta.
   "JKT-MRT-North-South": {
@@ -853,18 +886,25 @@ const OSM_LINE_MAP = {
     relationIds: [11919223],
     orderStationKms: true,
     stationStops: {},
+    snapStationCoordsOverKm: 0.5,
+    maxShapeSegmentKm: 1.0,
   },
   "Hanoi-Metro-3": {
     name: "Hanoi Metro Line 3 (Nhon to Cau Giay)",
     relationIds: [11899105],
+    corridor: { corridorKm: 1.5, sampleKm: 0.05 },
+    trimToStations: true,
+    forceEndpointAnchors: true,
     orderStationKms: true,
     stationStops: {},
+    snapStationCoordsOverKm: 0.5,
   },
   "Hanoi-Metro-2A": {
     name: "Hanoi Metro Line 2A (Cat Linh→Yen Nghia)",
     relationIds: [9684066],
     orderStationKms: true,
     stationStops: {},
+    snapStationCoordsOverKm: 0.5,
   },
 };
 
@@ -1954,25 +1994,30 @@ function buildOutput(rawShapes, stationsByLineId) {
         })
       : stations;
 
-    // Polyline direction may not match the station order in rail-data.js
-    // (e.g. TDX returns the West Trunk parameterised 桃園→Keelung while
-    // stations are listed Keelung→Kaohsiung; OSM Yamanote loop greedy-stitches
-    // counter-clockwise while stations go clockwise). Reverse the polyline if
-    // the second station projects farther along it than the second-to-last
-    // (works for both linear and loop lines).
-    if (projectionStations.length >= 4) {
-      const probeA = stationKmOnShape(projectionStations[1], simplified, shapeKm).km;
-      const probeB = stationKmOnShape(projectionStations[projectionStations.length - 2], simplified, shapeKm).km;
-      if (probeA > probeB) {
-        simplified = simplified.slice().reverse();
-        shapeKm = cumulativeKm(simplified);
-      }
-    } else if (projectionStations.length >= 2) {
-      const first = stationKmOnShape(projectionStations[0], simplified, shapeKm).km;
-      const last = stationKmOnShape(projectionStations[projectionStations.length - 1], simplified, shapeKm).km;
-      if (first > last) {
-        simplified = simplified.slice().reverse();
-        shapeKm = cumulativeKm(simplified);
+    if (cfg.useStationChainShape === true && projectionStations.length >= 2) {
+      simplified = projectionStations.map(s => ({ lat: s.lat, lng: s.lng }));
+      shapeKm = cumulativeKm(simplified);
+    } else {
+      // Polyline direction may not match the station order in rail-data.js
+      // (e.g. TDX returns the West Trunk parameterised 桃園→Keelung while
+      // stations are listed Keelung→Kaohsiung; OSM Yamanote loop greedy-stitches
+      // counter-clockwise while stations go clockwise). Reverse the polyline if
+      // the second station projects farther along it than the second-to-last
+      // (works for both linear and loop lines).
+      if (projectionStations.length >= 4) {
+        const probeA = stationKmOnShape(projectionStations[1], simplified, shapeKm).km;
+        const probeB = stationKmOnShape(projectionStations[projectionStations.length - 2], simplified, shapeKm).km;
+        if (probeA > probeB) {
+          simplified = simplified.slice().reverse();
+          shapeKm = cumulativeKm(simplified);
+        }
+      } else if (projectionStations.length >= 2) {
+        const first = stationKmOnShape(projectionStations[0], simplified, shapeKm).km;
+        const last = stationKmOnShape(projectionStations[projectionStations.length - 1], simplified, shapeKm).km;
+        if (first > last) {
+          simplified = simplified.slice().reverse();
+          shapeKm = cumulativeKm(simplified);
+        }
       }
     }
 
