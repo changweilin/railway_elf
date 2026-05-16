@@ -91,7 +91,6 @@
 
 | 狀態 | 候選 | 5.5 待判斷 |
 |---|---|---|
-| [ ] | P2-2 瑞士 | 決定是否採 `switzerland` 單 region；先不進入通行費 / 票制模型；若核准，只下放 1 條代表 seed。 |
 | [ ] | P2-3 德國 | 決定 `Commuter` / `Regional` 是否同類建模；先不建 express / short-turn pass；若核准，先切成「高速代表線」或「S-Bahn 代表線」其一。 |
 | [ ] | P2-4 法國 | 決定是否允許官方 GTFS / rail op 作為 Level-2 輔助來源；界定 RER / 都會 / 長途幹線的第一輪範圍。 |
 | [ ] | P2-5 英國 | 決定是否先採「核心都會網」再擴展 intercity；明確排除 zone fare、夜間與分流服務的首輪建模。 |
